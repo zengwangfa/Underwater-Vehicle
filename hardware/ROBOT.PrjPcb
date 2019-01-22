@@ -73,7 +73,24 @@ GenerateClassCluster=0
 DocumentUniqueId=WIOUMGFA
 
 [Document3]
-DocumentPath=..\..\..\..\AD15库文件与学习资料\我的库\集大电协1.1.5.PcbLib
+DocumentPath=Underwater_vehicle.Harness
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
+[Document4]
+DocumentPath=..\..\..\AD15库文件与学习资料\我的库\集大电协1.1.5.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -89,25 +106,8 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=PLYXJNTX
 
-[Document4]
-DocumentPath=..\..\..\..\AD15库文件与学习资料\我的库\集大电协1.1.5.SchLib
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=JJVFMGAP
-
 [Document5]
-DocumentPath=ROBOT.Harness
+DocumentPath=..\..\..\AD15库文件与学习资料\我的库\集大电协1.1.5.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -124,7 +124,24 @@ GenerateClassCluster=0
 DocumentUniqueId=
 
 [Document6]
-DocumentPath=Underwater_vehicle.Harness
+DocumentPath=..\..\..\AD15库文件与学习资料\封装\徐磊封装\HsuLeipreson.PcbLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=OGJSXMLE
+
+[Document7]
+DocumentPath=..\..\..\AD15库文件与学习资料\封装\徐磊封装\HsuLeipreson.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -139,6 +156,10 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
+
+[GeneratedDocument1]
+DocumentPath=Project Outputs for ROBOT\Board Information - Underwater_vehicle.html
+DItemRevisionGUID=
 
 [Configuration1]
 Name=Default Configuration
