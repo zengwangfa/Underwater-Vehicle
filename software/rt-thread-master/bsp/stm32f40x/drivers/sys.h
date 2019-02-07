@@ -1,8 +1,5 @@
 #ifndef __SYS_H
 #define __SYS_H	 
-
-#include <rtthread.h>
-#include <rtdevice.h>
 #include "stm32f4xx.h" 
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
@@ -19,10 +16,6 @@
 //修改说明
 //无
 ////////////////////////////////////////////////////////////////////////////////// 
-
-#define u8   unsigned char
-#define u16  unsigned int
-#define u32  unsigned long
 
 
 //0,不支持ucos
@@ -86,7 +79,11 @@
 #define PIout(n)   BIT_ADDR(GPIOI_ODR_Addr,n)  //输出 
 #define PIin(n)    BIT_ADDR(GPIOI_IDR_Addr,n)  //输入
 
-
+//以下为汇编函数
+void WFI_SET(void);		//执行WFI指令
+void INTX_DISABLE(void);//关闭所有中断
+void INTX_ENABLE(void);	//开启所有中断
+void MSR_MSP(u32 addr);	//设置堆栈地址 
 #endif
 
 

@@ -334,7 +334,7 @@
               <MiscControls />
               <Define>RT_USING_ARM_LIBC, USE_STDPERIPH_DRIVER</Define>
               <Undefine />
-              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\dfs\include;..\..\components\dfs\filesystems\devfs;..\..\components\dfs\filesystems\elmfat;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\libc\pthreads;..\..\components\libc\time;..\..\components\utilities\ulog;..\..\components\utilities\utest</IncludePath>
+              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\dfs\include;..\..\components\dfs\filesystems\devfs;..\..\components\dfs\filesystems\elmfat;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\libc\pthreads;..\..\components\libc\time</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -494,6 +494,13 @@
           <GroupName>Applications</GroupName>
           <Files>
             <File>
+              <FileName>buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\buzzer.c</FilePath>
+            </File>
+          </Files>
+          <Files>
+            <File>
               <FileName>init.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\init.c</FilePath>
@@ -518,6 +525,13 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\main.c</FilePath>
+            </File>
+          </Files>
+          <Files>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\oled.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1207,33 +1221,6 @@
               <FileName>posix_sleep.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\components\libc\time\posix_sleep.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Utilities</GroupName>
-          <Files>
-            <File>
-              <FileName>ulog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\utilities\ulog\ulog.c</FilePath>
-            </File>
-          </Files>
-          <Files>
-            <File>
-              <FileName>console_be.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\utilities\ulog\backend\console_be.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>utest</GroupName>
-          <Files>
-            <File>
-              <FileName>utest.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\utilities\utest\utest.c</FilePath>
             </File>
           </Files>
         </Group>

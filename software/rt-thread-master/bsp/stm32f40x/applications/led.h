@@ -10,7 +10,7 @@
 
 
 void led_blink_task(void);
-
+void system_init_led_blink(rt_uint8_t InputData);
 
 
 
