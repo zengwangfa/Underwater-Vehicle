@@ -45,7 +45,7 @@ int main(void)
 		rt_kprintf("* 2019-02-06     Dwfish       Creat LED / KEY / Buzzer Thread.\n");
 		rt_kprintf("* 2019-02-07     Dwfish       Creat Buzzer Thread & Improve LED Thread\n");
 		rt_kprintf("* 2019-02-07     Dwfish       Creat OLED Thread\n");
-		rt_kprintf("* 2019-02-07     Dwfish       Creat Get_Gyroscope Thread.\n");
+		rt_kprintf("* 2019-02-09     Dwfish       Creat Get_Gyroscope Thread.\n");
 	
 		rt_kprintf("* 2019-02-07     Dwfish       Creat Can change Servo Motor Mid-Value MSH.\n");
 

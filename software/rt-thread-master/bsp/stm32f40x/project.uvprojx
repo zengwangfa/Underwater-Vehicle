@@ -52,7 +52,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\build\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -504,6 +504,11 @@
               <FilePath>applications\drv_oled.c</FilePath>
             </File>
             <File>
+              <FileName>gyroscope.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\gyroscope.c</FilePath>
+            </File>
+            <File>
               <FileName>init.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\init.c</FilePath>
@@ -529,9 +534,14 @@
               <FilePath>applications\oled.c</FilePath>
             </File>
             <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\pwm.c</FilePath>
+            </File>
+            <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\uart.c</FilePath>
+              <FilePath>applications\uart.c</FilePath>
             </File>
           </Files>
         </Group>

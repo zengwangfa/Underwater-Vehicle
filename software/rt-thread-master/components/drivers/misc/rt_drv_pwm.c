@@ -261,5 +261,36 @@ _exit:
 }
 MSH_CMD_EXPORT(pwm_set, pwm_set 1 100 50);
 
+int drv_pwm_init(void)
+{
+#ifdef BSP_USING_PWM1
+    MX_TIM1_Init();
+    rt_device_pwm_register(rt_calloc(1, sizeof(struct rt_device_pwm)), "pwm1", &drv_ops, &htim1);
+#endif
+
+#ifdef BSP_USING_PWM2
+    MX_TIM2_Init();
+    rt_device_pwm_register(rt_calloc(1, sizeof(struct rt_device_pwm)), "pwm2", &drv_ops, &htim2);
+#endif
+
+#ifdef BSP_USING_PWM3
+    MX_TIM3_Init();
+    rt_device_pwm_register(rt_calloc(1, sizeof(struct rt_device_pwm)), "pwm3", &drv_ops, &htim3);
+#endif
+
+#ifdef BSP_USING_PWM4
+    MX_TIM4_Init();
+    rt_device_pwm_register(rt_calloc(1, sizeof(struct rt_device_pwm)), "pwm4", &drv_ops, &htim4);
+#endif
+
+#ifdef BSP_USING_PWM5
+    MX_TIM5_Init();
+    rt_device_pwm_register(rt_calloc(1, sizeof(struct rt_device_pwm)), "pwm5", &drv_ops, &htim5);
+#endif
+    return 0;
+}
+INIT_DEVICE_EXPORT(drv_pwm_init);
+
+
 #endif /* FINSH_USING_MSH */
 #endif /* RT_USING_FINSH */

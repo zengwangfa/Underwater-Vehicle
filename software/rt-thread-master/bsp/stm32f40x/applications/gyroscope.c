@@ -20,13 +20,13 @@ struct SQ       stcQ;
 /*----------------------- Function Implement --------------------------------*/
 
 //CopeSerialData为串口2中断调用函数，串口每收到一个数据，调用一次这个函数。
-void CopeSerial2Data(unsigned char ucData)
+void CopeSerial2Data(unsigned char Data)
 {
 		static unsigned char RxBuffer[250];
 		static unsigned char RxCnt = 0;	
 
 	
-		RxBuffer[RxCnt++]=ucData;	//将收到的数据存入缓冲区中
+		RxBuffer[RxCnt++]=Data;	//将收到的数据存入缓冲区中
 		if (RxBuffer[0]!=0x55) //数据头不对，则重新开始寻找0x55数据头
 		{
 				RxCnt=0;
@@ -53,15 +53,25 @@ void CopeSerial2Data(unsigned char ucData)
 
 }
 
+/* Get时间  time */
+void get_time(void)
+{
+		//数据打包成string型
+		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f\r\n",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
+		rt_kprintf(str);
+}
+MSH_CMD_EXPORT(get_time,get acceleration[a]);
+
 /* Get加速度  acceleration */
 void *get_acc(void)
 {
-		//数据打包成string型
 		sprintf(str,"Acc:%.3f %.3f %.3f\r\n",(float)stcAcc.a[0]/32768*16,(float)stcAcc.a[1]/32768*16,(float)stcAcc.a[2]/32768*16);
 		rt_kprintf(str);
 		return stcAcc.a;
 }
 MSH_CMD_EXPORT(get_acc,get acceleration[a]);
+
+
 
 /* Get 输出角速度  gyroscope*/
 void *get_gyro(void)

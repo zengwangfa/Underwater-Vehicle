@@ -11,12 +11,13 @@ unsigned char recv_data_p=0x00;  //  串口2接收数据指针
 #endif
 
 /*----------------------- Variable Declarations -----------------------------*/
+
 rt_device_t uart2_device;	
 struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT; /* 配置参数 */
-
 static struct rt_semaphore rx_sem;/* 用于接收消息的信号量 */
 
 /*----------------------- Function Implement --------------------------------*/
+
 /* 接收数据回调函数 */
 static rt_err_t uart_input(rt_device_t dev, rt_size_t size)
 {
@@ -34,7 +35,6 @@ static void gyroscope_thread_entry(void *parameter)
 		//char rate[] ={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 10Hz
 		//char led[] ={0xFF,0xAA,0x1B,0x01,0x00}; 	 //0x01 关闭LED    0x00 开启LED
 
-    
 		/* 设置相关配置 */
 		//rt_device_write(uart2_device, 0, package, (sizeof(package)));  
 		//rt_device_write(uart2_device, 0, save, (sizeof(save)));  

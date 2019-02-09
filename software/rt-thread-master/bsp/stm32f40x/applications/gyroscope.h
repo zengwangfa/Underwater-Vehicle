@@ -133,7 +133,7 @@ struct SGPSV
 struct SQ
 { short q[4];
 };
- 
 
-void CopeSerial2Data(unsigned char ucData);
+void CopeSerial2Data(unsigned char Data);
+ 
 #endif
