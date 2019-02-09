@@ -13,7 +13,9 @@
  * 2019-02-06     Dwfish       Creat LED / KEY / Buzzer Thread.
  
  * 2019-02-07     Dwfish       Creat OLED Display Thread.
- * 2019-02-08     Dwfish       Creat Can change Servo Motor Mid-Value MSH. 
+ * 2019-02-09     Dwfish       Creat Get_Gyroscope Thread. 
+ * 2019-02-09     Dwfish       Creat PWM /ADC /Gyroscope . 
+ * 2019-02-09     Dwfish       Creat Can change Servo Motor Mid-Value MSH. 
 *
 ******************************************************************************/
 
@@ -43,6 +45,7 @@ int main(void)
 		rt_kprintf("* 2019-02-06     Dwfish       Creat LED / KEY / Buzzer Thread.\n");
 		rt_kprintf("* 2019-02-07     Dwfish       Creat Buzzer Thread & Improve LED Thread\n");
 		rt_kprintf("* 2019-02-07     Dwfish       Creat OLED Thread\n");
+		rt_kprintf("* 2019-02-07     Dwfish       Creat Get_Gyroscope Thread.\n");
 	
 		rt_kprintf("* 2019-02-07     Dwfish       Creat Can change Servo Motor Mid-Value MSH.\n");
 

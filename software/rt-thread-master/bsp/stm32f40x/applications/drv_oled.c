@@ -3,8 +3,17 @@
 #include "oledfont.h"  	 
 #include "init.h"
 
-
-
+/*---------------------- Constant / Macro Definitions -----------------------*/			   
+#define OLED_CS 	PGout(8)  //未接入
+#define OLED_RST  PGout(10)	
+#define OLED_RS 	PGout(9)
+//#define OLED_WR 	PAout(4)	 	  
+//#define OLED_RD 	PDout(7)
+ 
+//使用4线串行接口时使用 
+#define OLED_SCLK 	PGout(12)    //D0
+#define OLED_SDIN 	PGout(11) 	 //D1
+		     
 //OLED的显存
 //存放格式如下.
 //[0]0 1 2 3 ... 127	

@@ -1,4 +1,4 @@
-#include "init.h"
+#include "buzzer.h"
 
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
@@ -37,7 +37,7 @@ int buzzer_thread_init(void)
     buzzer_tid = rt_thread_create("buzzer",	 //线程名称
                     buzzer_thread_entry,		 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     10,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 

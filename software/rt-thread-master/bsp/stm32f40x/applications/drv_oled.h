@@ -21,17 +21,7 @@
 //1: 并行8080模式 （模块的BS1，BS2均接VCC）
 #define OLED_MODE 	0 
 		    						  
-//-----------------OLED端口定义----------------  					   
-#define OLED_CS 	PGout(8)
-#define OLED_RST  PGout(10)	
-#define OLED_RS 	PGout(9)
-//#define OLED_WR 	PAout(4)	 	  
-//#define OLED_RD 	PDout(7)
- 
-//使用4线串行接口时使用 
-#define OLED_SCLK 	PGout(12)    //D0
-#define OLED_SDIN 	PGout(11) 	 //D1
-		     
+
 #define OLED_CMD  	0		//写命令
 #define OLED_DATA 	1		//写数据
 //OLED控制用函数

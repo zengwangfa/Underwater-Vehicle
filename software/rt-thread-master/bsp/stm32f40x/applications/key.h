@@ -1,7 +1,7 @@
 #ifndef MY_KEY_H
 #define MY_KEY_H
 
-#include <drivers/pin.h>
+#include "init.h"
 
 
 void key_down_task(void);

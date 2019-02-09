@@ -1,7 +1,7 @@
 #ifndef __LED_H
 #define __LED_H
 
-#include <drivers/pin.h>
+#include "init.h"
 
 #define LEDR PEout(15)
 #define LEDG PBout(10)

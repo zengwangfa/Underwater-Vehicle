@@ -1,6 +1,7 @@
 #ifndef __INIT_H
 #define __INIT_H
 
+#include <rtdevice.h>
 
 #include "sys.h" 
 #include "led.h"
@@ -9,7 +10,7 @@
 #include "drv_oled.h"
 #include "oled.h"
 
-
+#include "gyroscope.h"
  	 
 enum VehicleStatus{
 	System_NULL = 1,

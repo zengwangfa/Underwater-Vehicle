@@ -1,7 +1,7 @@
 #ifndef __BUZZER_H
 #define __BUZZER_H
 
-#include <drivers/pin.h>
+#include "init.h"
 
 
 

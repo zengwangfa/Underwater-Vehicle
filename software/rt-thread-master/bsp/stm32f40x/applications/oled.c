@@ -6,7 +6,6 @@
 extern unsigned char Flash_Logo[];
 
 
-
 void Constant_Character()  //固定字幕显示，初始化一次即可 后不占用资源
 {
 		OLED_ShowString(0,0, "Mode:",12); 

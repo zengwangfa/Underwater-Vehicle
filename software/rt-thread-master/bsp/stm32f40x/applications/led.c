@@ -1,12 +1,10 @@
-#include "init.h"
-
+#include "led.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
 #define LED_Red 		68 
 #define LED_Green 	69
 #define LED_Blue 		70
-
 
 //RGB灯共阳极接到+3.3V，电平 0亮 1灭
 #define LED_ON(led_pin) 						rt_pin_write(led_pin ,PIN_LOW )
@@ -77,7 +75,7 @@ int led_thread_init(void)
     led_tid = rt_thread_create("led",//线程名称
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     5,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 

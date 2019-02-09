@@ -1,4 +1,4 @@
-#include "init.h"  
+#include "key.h"  
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
@@ -18,7 +18,6 @@ static rt_uint8_t boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
 
 void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 {
-
 		rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);    //功能按键  上拉输入
 	
 		rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
@@ -26,6 +25,7 @@ void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 		rt_kprintf("KEY_Init()");
 		boma_value = boma_value_get();	//初始化得到当前拨码状态 --> VehicleStatus
 		rt_kprintf("        Current: BOMA_Value = %d\n", boma_value);
+	
     while (1)
     {
 				key_down_task();
@@ -61,15 +61,6 @@ void key_down_task(void)
 }
 
 
-
-
-
-
-
-
-
-
-
 int key_thread_init(void)
 {
    rt_thread_t key_tid;
@@ -77,7 +68,7 @@ int key_thread_init(void)
     key_tid = rt_thread_create("key",
                     key_thread_entry,
                     RT_NULL,
-                    1024,
+                    512,
                     10,
                     10);
 

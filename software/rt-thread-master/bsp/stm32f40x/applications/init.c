@@ -87,6 +87,8 @@ void delay_ms(u32 nTimer)
 	u32 i=1000*nTimer;
 	delay_us(i);
 }
+
+
 //----------------整形转换字符型--------------------//
 char *myitoa(int value, char *string, int radix)
 {
