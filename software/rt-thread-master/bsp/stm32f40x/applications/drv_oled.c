@@ -256,15 +256,6 @@ void OLED_Init(void)
 	OLED_RD=1; 
 #else					//使用4线SPI 串口模式
 	
-//	rt_pin_mode(OLED_SCLK_PIN, PIN_MODE_OUTPUT);  //输出模式
-//	rt_pin_mode(OLED_SDIN_PIN, PIN_MODE_OUTPUT); 
-//	rt_pin_mode(OLED_RST_PIN, PIN_MODE_OUTPUT);  //输出模式
-//	rt_pin_mode(OLED_DC_PIN, PIN_MODE_OUTPUT); 
-//	
-//	rt_pin_write(OLED_SCLK_PIN, PIN_HIGH);
-//	rt_pin_write(OLED_SDIN_PIN, PIN_HIGH);
-//	rt_pin_write(OLED_RST_PIN, PIN_HIGH);
-//	rt_pin_write(OLED_DC_PIN, PIN_HIGH);	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 ;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
@@ -313,6 +304,7 @@ void OLED_Init(void)
 	OLED_WR_Byte(0xA6,OLED_CMD); //设置显示方式;bit0:1,反相显示;0,正常显示	    						   
 	OLED_WR_Byte(0xAF,OLED_CMD); //开启显示	 
 	OLED_Clear();
+	
 }  
 
 

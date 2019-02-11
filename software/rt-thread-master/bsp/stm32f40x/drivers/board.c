@@ -23,6 +23,19 @@
 /*@{*/
 
 /*******************************************************************************
+* Function Name  : reboot
+* Description    : reboot board.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+static void reboot(uint8_t argc, char **argv) {
+    NVIC_SystemReset();
+}
+MSH_CMD_EXPORT(reboot, reboot board);
+
+
+/*******************************************************************************
 * Function Name  : NVIC_Configuration
 * Description    : Configures Vector Table base location.
 * Input          : None

@@ -1,11 +1,11 @@
 #include "buzzer.h"
 
-
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define Buzzer_PIN 	59   //PE8
 
 /*----------------------- Variable Declarations -----------------------------*/
+
 struct 
 {
 	rt_uint8_t time;
@@ -20,7 +20,7 @@ void buzzer_thread_entry(void *parameter)
 {
 		rt_pin_mode (Buzzer_PIN, PIN_MODE_OUTPUT);  //输出模式
 		rt_pin_write(Buzzer_PIN, PIN_LOW);
-		rt_kprintf("Buzzer_Init()\n");
+		LOG_I("Buzzer_Init()");
 		buzzer_bibi(3,1);
     while (1)
     {
@@ -48,7 +48,6 @@ int buzzer_thread_init(void)
 INIT_APP_EXPORT(buzzer_thread_init);
 
 
-
 void buzzer_once()   
 {
 	buzzer.count=1;
@@ -64,8 +63,9 @@ void buzzer_bibi(rt_uint8_t count,rt_uint8_t length)
 	buzzer.number = length*5;
 
 }  
+
 /* 蜂鸣器鸣响任务【可指示系统各个状态】 */
-void buzzer_ring_task()
+void buzzer_ring_task(void)
 {
 		
 	if(buzzer.count >= 1)

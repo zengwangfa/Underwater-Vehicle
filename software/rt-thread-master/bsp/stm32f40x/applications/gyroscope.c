@@ -2,9 +2,8 @@
 #include <string.h>
 
 /*----------------------- Variable Declarations -----------------------------*/
-extern  int sprintf(char *buf, const char *format, ...);
-
 char str[100];
+char string[10] = "";
 
 struct STime		stcTime;
 struct SAcc 		stcAcc;
@@ -52,11 +51,28 @@ void CopeSerial2Data(unsigned char Data)
 		}
 
 }
+void OLED_GyroscopePage(void)
+{
+		sprintf(string,"Acc:%.2f %.2f %.2f",(float)stcAcc.a[0]/32768*16,(float)stcAcc.a[1]/32768*16,(float)stcAcc.a[2]/32768*16);
+		OLED_ShowString(0,0,(u8 *)string,12); 	
+		
+		sprintf(string,"Gyro:%.1f %.1f %.1f",(float)stcGyro.w[0]/32768*2000,(float)stcGyro.w[1]/32768*2000,(float)stcGyro.w[2]/32768*2000);
+		OLED_ShowString(0,16,(u8 *)string,12); 	
+		
+		sprintf(string,"Angle:%.1f %.1f %.1f",(float)stcAngle.Angle[0]/32768*180,(float)stcAngle.Angle[1]/32768*180,(float)stcAngle.Angle[2]/32768*180);
+		OLED_ShowString(0,32,(u8 *)string,12); 	
+		 
+		sprintf(string,"Mag:%d %d %d  ",stcMag.h[0],stcMag.h[1],stcMag.h[2]);
+		OLED_ShowString(0,48,(u8 *)string,12); 
+	  OLED_Refresh_Gram();//更新显示到OLED
+}
+
+
 
 /* Get时间  time */
 void get_time(void)
 {
-		//数据打包成string型
+		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出
 		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f\r\n",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
 		rt_kprintf(str);
 }
@@ -70,8 +86,6 @@ void *get_acc(void)
 		return stcAcc.a;
 }
 MSH_CMD_EXPORT(get_acc,get acceleration[a]);
-
-
 
 /* Get 输出角速度  gyroscope*/
 void *get_gyro(void)
@@ -108,7 +122,7 @@ float get_temp(void)
 		rt_kprintf(str);	
 		return (float)stcAcc.T/0x100;
 }
-MSH_CMD_EXPORT(get_temp, get magnetic[T]);
+MSH_CMD_EXPORT(get_temp, get Temperature[T]);
 
 
 

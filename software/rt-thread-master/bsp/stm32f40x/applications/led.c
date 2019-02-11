@@ -9,9 +9,10 @@
 //RGB灯共阳极接到+3.3V，电平 0亮 1灭
 #define LED_ON(led_pin) 						rt_pin_write(led_pin ,PIN_LOW )
 #define LED_OFF(led_pin) 						rt_pin_write(led_pin ,PIN_HIGH)
-#define LED_Turn(led_pin,status) 		rt_pin_write(led_pin ,status = ! status) //取反
+#define LED_Turn(led_pin,status) 		rt_pin_write(led_pin ,status =! status) //取反
 
 /*----------------------- Variable Declarations -----------------------------*/
+
 extern rt_uint8_t VehicleStatus;
 
 /*----------------------- Function Implement --------------------------------*/
@@ -23,7 +24,7 @@ void led_thread_entry(void *parameter)
     rt_pin_mode( LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	
     rt_pin_mode( LED_Green, PIN_MODE_OUTPUT);	
     rt_pin_mode( LED_Blue, 	PIN_MODE_OUTPUT);	
-		rt_kprintf("LED_Init()\n");
+		LOG_I("LED_Init()");
 		while(i <= 7){
 				system_init_led_blink(inputdata[i++]);}
 		

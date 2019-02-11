@@ -65,7 +65,7 @@ int uart_sample(void)
 	  rt_thread_t gyroscope_tid;
 	  /* 查找系统中的串口设备 */
 		uart2_device = rt_device_find(SAMPLE_UART_NAME);
-		rt_kprintf("gy_serial:%s",uart2_device);
+		LOG_I("gy_serial:  %s", uart2_device);
     if (uart2_device != RT_NULL)
     {
 					/* 以读写以及中断接打开串口设备 */

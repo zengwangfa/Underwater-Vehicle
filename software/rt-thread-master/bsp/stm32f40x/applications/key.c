@@ -12,7 +12,8 @@
 
 /*----------------------- Variable Declarations -----------------------------*/
 
-static rt_uint8_t boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
+int page_num = 0;
+u8 boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
 
 /*----------------------- Function Implement --------------------------------*/
 
@@ -22,20 +23,20 @@ void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 	
 		rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
 		rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
-		rt_kprintf("KEY_Init()");
+		LOG_I("KEY_Init()");
 		boma_value = boma_value_get();	//初始化得到当前拨码状态 --> VehicleStatus
-		rt_kprintf("        Current: BOMA_Value = %d\n", boma_value);
+		LOG_I("Current: BOMA_Value = %d", boma_value);
 	
     while (1)
     {
-				key_down_task();
-
+				key_down();
+			
 				if(boma_value != boma_value_get()){
 						buzzer_once();	
 						boma_value = boma_value_get();	
 						rt_kprintf("\nCurrent Change: BOMA_Value = %d", boma_value);
 				}
-				rt_thread_mdelay(50);
+				rt_thread_mdelay(300);
     }
 }
 
@@ -50,13 +51,14 @@ rt_uint8_t boma_value_get(void)
 }
 
 /* 按键按下产生的任务 */
-void key_down_task(void)  
+void key_down(void)  
 {
 		if (rt_pin_read(KEY_PIN) == PIN_LOW){
 				buzzer_once();	
-				rt_kprintf("\nKEY DOWN!\n");
+				page_num ++;
 					
     }while(rt_pin_read(KEY_PIN) == PIN_LOW);
+
 
 }
 

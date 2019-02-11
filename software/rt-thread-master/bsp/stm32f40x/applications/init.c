@@ -1,37 +1,5 @@
 #include "init.h"
-
-
-
-
-
-//void CP2102_SEND_BUFF(void* parameter)  //向串口1  定时发送板子状态信息
-//{
-//	rt_uint8_t count = 0;
-//	buzzer_bibi(3,2);
-//	
-//	while(1)
-//	{	
-//		fx_data1.fx_number = FX_NUMBER;
-//		if(BOMA3)  //BOMA3为1时
-//		{
-//			rt_kprintf("\r\n\r\n1.FX_NUMBER:%d\n", FX_NUMBER);
-//			//
-//			
-//			rt_kprintf("2.left_weight : %d\t right_weight : %d\r\n", Weight[0],Weight[1]);
-//			rt_kprintf("3.Temperature:%d.%dC\r\n",Temperature[1],Temperature[2]);
-//			rt_kprintf("4.Voltage_Vaule:%d.%dv\n", voltage[1],voltage[2]);
-//		  rt_kprintf("5.Now--FW_Status:%d-->%s\r\n",FW_status_flag,FW_status_string[FW_status_flag]);
-// 			rt_kprintf("6.Now--Pi Shu:%d\r\n",PiShu);
-//			count++	;	if(count>=100)count=0;
-//			rt_kprintf("\r\nCount:%d",count);
-//		}
-
-//		rt_thread_delay(1000);  //10s
-//	}
-//	
-//}
-
-
+#include <board.h>
 
 
 
@@ -48,8 +16,16 @@ int MY_TEST(void)
 MSH_CMD_EXPORT(MY_TEST, This is a test example.);
 
 
-
-
+void rt_hw_us_delay(rt_uint32_t us)
+{
+    rt_uint32_t delta;
+    /* 获得延时经过的 tick 数 */
+    us = us * (SysTick->LOAD/(1000000/RT_TICK_PER_SECOND));
+    /* 获得当前时间 */
+    delta = SysTick->VAL;
+    /* 循环获得当前时间，直到达到指定的时间后退出循环 */
+    while (delta - SysTick->VAL< us);
+}
 
 //void delay_us(unsigned int us)
 //{
@@ -74,18 +50,18 @@ void delay_us(u32 nTimer)
 {
 	u32 i=0;
 	for(i=0;i<nTimer;i++){
-		__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-		__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-		__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-		__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-		__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+			__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+			__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+			__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+			__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+			__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
 	}
 }
 
 void delay_ms(u32 nTimer)
 {
-	u32 i=1000*nTimer;
-	delay_us(i);
+		u32 i=1000*nTimer;
+		delay_us(i);
 }
 
 

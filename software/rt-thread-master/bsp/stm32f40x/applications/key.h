@@ -3,8 +3,7 @@
 
 #include "init.h"
 
-
-void key_down_task(void);
+void key_down(void)  ;
 rt_uint8_t boma_value_get(void);
 
 

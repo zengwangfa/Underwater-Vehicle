@@ -134,6 +134,30 @@ struct SQ
 { short q[4];
 };
 
+/*-----------------MSH命令函数----------------*/
+
+/* Get时间  time */
+void get_time(void);
+
+/* Get加速度  acceleration */
+void *get_acc(void);
+
+/* Get 输出角速度  gyroscope*/
+void *get_gyro(void);
+
+/* Get 角度  angle */
+void *get_angle(void);
+
+/* Get 磁场  magnetic */
+void *get_mag(void);
+
+/* Get 温度  Temperature */
+float get_temp(void);
+
+/*-----------------应用函数----------------*/
+
+void OLED_GyroscopePage(void);
+
 void CopeSerial2Data(unsigned char Data);
  
 #endif
