@@ -2,7 +2,7 @@
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
-#define SAMPLE_UART_NAME       "uart2"
+#define JY901_UART_NAME       "uart2"
 #define Query_JY901_data 0     /* "1"为调试查询  "0"为正常发送 */
 
 #if Query_JY901_data
@@ -15,6 +15,11 @@ unsigned char recv_data_p=0x00;  //  串口2接收数据指针
 rt_device_t uart2_device;	
 struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT; /* 配置参数 */
 static struct rt_semaphore rx_sem;/* 用于接收消息的信号量 */
+
+u8 gyroscope_save[5] 		={0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
+u8 gyroscope_package[5] ={0xFF,0xAA,0x02,0xFF,0x07};	 //设置回传的数据包【0xFF 0x07 为所有数据包】
+u8 gyroscope_rate[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
+u8 gyroscope_led[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //0x00-开启LED  0x01-关闭LED   
 
 /*----------------------- Function Implement --------------------------------*/
 
@@ -30,14 +35,6 @@ static rt_err_t uart_input(rt_device_t dev, rt_size_t size)
 static void gyroscope_thread_entry(void *parameter)
 {
     unsigned char ch;
-		//unsigned char save[] ={0xFF,0xAA,0x00,0x00,0x00};	 //设置保存
-		//unsigned char package[] ={0xFF,0xAA,0x02,0xFF,0x07};	 //设置回传的数据包
-		//char rate[] ={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 10Hz
-		//char led[] ={0xFF,0xAA,0x1B,0x01,0x00}; 	 //0x01 关闭LED    0x00 开启LED
-
-		/* 设置相关配置 */
-		//rt_device_write(uart2_device, 0, package, (sizeof(package)));  
-		//rt_device_write(uart2_device, 0, save, (sizeof(save)));  
 		while (1)
 		{
 				/* 从串口读取一个字节的数据，没有读取到则等待接收信号量 */
@@ -60,11 +57,30 @@ static void gyroscope_thread_entry(void *parameter)
 	
 }
 
-int uart_sample(void)
+/* 开启 九轴模块 LED */
+void on_gyroscope_led(void)
+{
+		gyroscope_led[3] = 0x00;
+		rt_device_write(uart2_device, 0, gyroscope_led, 5);   //ON LED
+		rt_device_write(uart2_device, 0, gyroscope_save, 5);  //SAVE
+}
+MSH_CMD_EXPORT(on_gyroscope_led,turn on gyroscope_led);
+
+/* 关闭 九轴模块 LED */
+void off_gyroscope_led(void)
+{
+		gyroscope_led[3] = 0x01;
+		rt_device_write(uart2_device, 0, gyroscope_led, 5);   //OFF LED
+		rt_device_write(uart2_device, 0, gyroscope_save, 5);  //SAVE
+}
+MSH_CMD_EXPORT(off_gyroscope_led,turn off gyroscope_led);
+
+
+int uart_gyroscope(void)
 {
 	  rt_thread_t gyroscope_tid;
 	  /* 查找系统中的串口设备 */
-		uart2_device = rt_device_find(SAMPLE_UART_NAME);
+		uart2_device = rt_device_find(JY901_UART_NAME);
 		LOG_I("gy_serial:  %s", uart2_device);
     if (uart2_device != RT_NULL)
     {
@@ -82,7 +98,12 @@ int uart_sample(void)
 					rt_device_set_rx_indicate(uart2_device, uart_input);
 		}
     /* 创建 serial 线程 */
-		gyroscope_tid = rt_thread_create("gyroscope", gyroscope_thread_entry, RT_NULL, 1024, 25, 10);
+		gyroscope_tid = rt_thread_create("gyroscope",
+																			gyroscope_thread_entry,
+																			RT_NULL, 
+																			1024, 
+																			25,
+																			10);
     /* 创建成功则启动线程 */
     if (gyroscope_tid != RT_NULL)
     {
@@ -91,7 +112,7 @@ int uart_sample(void)
 		return 0;
 }
 
-INIT_APP_EXPORT(uart_sample);
+INIT_APP_EXPORT(uart_gyroscope);
 
 
 

@@ -19,11 +19,7 @@ u8 boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
 
 void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 {
-		rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);    //功能按键  上拉输入
-	
-		rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
-		rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
-		LOG_I("KEY_Init()");
+
 		boma_value = boma_value_get();	//初始化得到当前拨码状态 --> VehicleStatus
 		LOG_I("Current: BOMA_Value = %d", boma_value);
 	
@@ -32,7 +28,7 @@ void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 				key_down();
 			
 				if(boma_value != boma_value_get()){
-						buzzer_once();	
+						buzzer_bibi(1,1);	
 						boma_value = boma_value_get();	
 						rt_kprintf("\nCurrent Change: BOMA_Value = %d", boma_value);
 				}
@@ -54,7 +50,6 @@ rt_uint8_t boma_value_get(void)
 void key_down(void)  
 {
 		if (rt_pin_read(KEY_PIN) == PIN_LOW){
-				buzzer_once();	
 				page_num ++;
 					
     }while(rt_pin_read(KEY_PIN) == PIN_LOW);
@@ -74,8 +69,13 @@ int key_thread_init(void)
                     10,
                     10);
 
-    if (key_tid != RT_NULL)
-     rt_thread_startup(key_tid);
+    if (key_tid != RT_NULL){			
+				rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);    //功能按键  上拉输入
+				rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
+				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
+				LOG_I("KEY_Init()");
+				rt_thread_startup(key_tid);
+		}
 		return 0;
 }
 INIT_APP_EXPORT(key_thread_init);

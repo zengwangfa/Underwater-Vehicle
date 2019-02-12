@@ -29,6 +29,7 @@ void menu_define(void) //菜单定义
 	if(page_num > 3) page_num = 0;
 	if(page_num < 0) page_num = 0;
 	if(page_change != page_num){
+			buzzer_bibi(1,1);
 			rt_kprintf("\n Current Menu_Page: %s \n",PageName[page_num]);
 			OLED_Clear();
 	}
@@ -54,8 +55,7 @@ void menu_define(void) //菜单定义
 void oled_thread_entry(void* parameter)
 {
 
-	OLED_Init();
-	LOG_I("OLED_Init()");
+
 	Boot_Animation();	//开机动画
 	OLED_Clear();
 	
@@ -128,8 +128,11 @@ int oled_thread_init(void)
                     10,								  //线程优先级【priority】
                     10);							  //线程的时间片大小【tick】= 100ms
 
-    if (oled_tid != RT_NULL)
-     rt_thread_startup(oled_tid);
+    if (oled_tid != RT_NULL){
+				OLED_Init();
+				LOG_I("OLED_Init()");
+				rt_thread_startup(oled_tid);
+		}
 		return 0;
 }
 INIT_APP_EXPORT(oled_thread_init);

@@ -20,11 +20,7 @@ void led_thread_entry(void *parameter)
 {
 	  rt_int8_t i=0;/*颜色节拍表> 空   红   绿   蓝   青   粉   黄   白 */
 		rt_int8_t inputdata[8] = {0x00,0x04,0x02,0x01,0x03,0x05,0x06,0x07};
-
-    rt_pin_mode( LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	
-    rt_pin_mode( LED_Green, PIN_MODE_OUTPUT);	
-    rt_pin_mode( LED_Blue, 	PIN_MODE_OUTPUT);	
-		LOG_I("LED_Init()");
+		
 		while(i <= 7){
 				system_init_led_blink(inputdata[i++]);}
 		
@@ -65,7 +61,7 @@ void system_init_led_blink(rt_uint8_t InputData)
 		if(InputData & 0x01){	
 					LED_ON(LED_Blue); }
 		else{ LED_OFF(LED_Blue);}
-		rt_thread_mdelay(300);//等待系统初始化  完毕，使系统更稳定
+		rt_thread_mdelay(300);//等待系统初始化  完毕，系统稳定后，在读取数据
 }
 
 
@@ -80,8 +76,13 @@ int led_thread_init(void)
                     5,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
-    if (led_tid != RT_NULL)
-     rt_thread_startup(led_tid);
+    if (led_tid != RT_NULL){
+				rt_pin_mode( LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	
+				rt_pin_mode( LED_Green, PIN_MODE_OUTPUT);	
+				rt_pin_mode( LED_Blue, 	PIN_MODE_OUTPUT);	
+				LOG_I("LED_Init()");
+				rt_thread_startup(led_tid);
+		}
 		return 0;
 }
 INIT_APP_EXPORT(led_thread_init);

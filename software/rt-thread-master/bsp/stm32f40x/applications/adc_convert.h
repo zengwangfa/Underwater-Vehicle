@@ -9,8 +9,7 @@ void  adc_init(void);
 
 u16 get_adc(u8 ch);
 
-u16 get_vol(u8 ch,u8 times);
-
+void get_voltage(void);
 
 
 

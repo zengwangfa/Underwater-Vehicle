@@ -64,9 +64,7 @@ void TIM1_PWM_Init(u32 arr,u32 psc)
 void pwm_thread_entry(void *parameter)
 {
 
-		TIM1_PWM_Init(20000-1,168-1);	//168M/64=2Mhz的计数频率,重装载值20000，所以PWM频率为 2M/10000=200Hz.  
-		LOG_I("pwm_init()");
-	
+
 	
 		while(1)
 		{
@@ -96,8 +94,11 @@ int pwm_thread_init(void)
                     10,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
-    if (pwm_tid != RT_NULL)
-     rt_thread_startup(pwm_tid);
+    if (pwm_tid != RT_NULL){
+				TIM1_PWM_Init(20000-1,168-1);	//168M/64=2Mhz的计数频率,重装载值20000，所以PWM频率为 2M/10000=200Hz.  
+				LOG_I("pwm_init()");
+				rt_thread_startup(pwm_tid);
+		}
 		return 0;
 }
 INIT_APP_EXPORT(pwm_thread_init);

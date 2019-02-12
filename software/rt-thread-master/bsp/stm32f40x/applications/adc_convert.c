@@ -11,12 +11,12 @@
 void adc_thread_entry(void *parameter)
 {
 
-		adc_init();
-		LOG_I("adc_init()");
+
+
 	
 		while(1)
 		{
-				//get_vol(ADC_Channel_10,1);
+				//get_voltage();
 				//LOG_E("volage:%d",get_voltage(ADC_Channel_10,10));
 				rt_thread_mdelay(1000);
 
@@ -36,8 +36,11 @@ int adc_thread_init(void)
                     10,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
-    if (adc_tid != RT_NULL)
-     rt_thread_startup(adc_tid);
+    if (adc_tid != RT_NULL){
+				adc_init();
+				LOG_I("adc_init()");
+				rt_thread_startup(adc_tid);
+		}
 		return 0;
 }
 INIT_APP_EXPORT(adc_thread_init);
@@ -45,34 +48,19 @@ INIT_APP_EXPORT(adc_thread_init);
 
 
 
-u16 get_vol(u8 ch,u8 times)
-{
-	u32 temp_val=0;
-	u8 t=0;
-	for(t=0;t<times;t++)
-	{
-		temp_val+=get_adc(ch);
-	//	delay_ms(1);
-	}
-	return temp_val/times;
-} 
-
-
-
-
 
 void get_voltage(void)
 {
-	u32 temp_val=0;
+	u32 temp_val = 0;
+	char str[128] = "";
 	u8 t=0;
-	char str[128];
-	for(t=0;t<5;t++)
-	{
-		temp_val+=get_adc(ADC_Channel_10);
-
-	}
 	
-	sprintf(str,"voltage:%.3f\r\n",(float)temp_val);
+	for(t=0;t<10;t++)
+	{
+			temp_val += get_adc(ADC_Channel_10);
+			delay_ms(1);
+	}
+	sprintf(str,"voltage:%.3f\r\n",(float)temp_val/10);
 	rt_kprintf(str);
 	
 } 
@@ -85,7 +73,7 @@ MSH_CMD_EXPORT(get_voltage,get voltage[u]);
 //返回值:转换结果
 u16 get_adc(u8 ch)   
 {
-	  	//设置指定ADC的规则组通道，一个序列，采样时间
+	//设置指定ADC的规则组通道，一个序列，采样时间
 	ADC_RegularChannelConfig(ADC2, ch, 1, ADC_SampleTime_480Cycles );	//ADC1,ADC通道,480个周期,提高采样时间可以提高精确度			    
   
 	ADC_SoftwareStartConv(ADC2);		//使能指定的ADC1的软件转换启动功能	
@@ -94,7 +82,6 @@ u16 get_adc(u8 ch)
 
 	return ADC_GetConversionValue(ADC2);	//返回最近一次ADC1规则组的转换结果
 }
-
 
 
 //初始化ADC															   
@@ -107,7 +94,7 @@ void  adc_init(void)
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);//使能GPIOA时钟
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2, ENABLE); //使能ADC1时钟
 
-	 //初始化ADC1通道10 IO口
+	 //初始化ADC2通道10 IO口
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;//PC0 通道10
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;//模拟输入
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;//不带上下拉
@@ -119,7 +106,7 @@ void  adc_init(void)
 	
   ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;//独立模式
   ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;//两个采样阶段之间的延迟5个时钟
-  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_1; //DMA失能
+  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled; //DMA失能
   ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4;//预分频4分频。ADCCLK=PCLK2/4=84/4=21Mhz,ADC时钟最好不要超过36Mhz 
   ADC_CommonInit(&ADC_CommonInitStructure);//初始化
 	
@@ -133,10 +120,7 @@ void  adc_init(void)
 	
 	ADC_Cmd(ADC2, ENABLE);//开启AD转换器	
 
-}		  
-
-
-
+}
 
 
 
