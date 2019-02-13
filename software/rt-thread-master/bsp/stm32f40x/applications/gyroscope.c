@@ -68,7 +68,6 @@ void OLED_GyroscopePage(void)
 }
 
 
-
 /* GetÊ±¼ä  time */
 void get_time(void)
 {
@@ -116,13 +115,13 @@ void *get_mag(void)
 MSH_CMD_EXPORT(get_mag, get magnetic[B]);
 
 /* Get ÎÂ¶È  Temperature */
-float get_temp(void)
+float get_temperature(void)
 {
 		sprintf(str,"Temperature:%.2f C\r\n",(float)stcAcc.T/0x100);
 		rt_kprintf(str);	
 		return (float)stcAcc.T/0x100;
 }
-MSH_CMD_EXPORT(get_temp, get Temperature[T]);
+MSH_CMD_EXPORT(get_temperature, get Temperature[T]);
 
 
 

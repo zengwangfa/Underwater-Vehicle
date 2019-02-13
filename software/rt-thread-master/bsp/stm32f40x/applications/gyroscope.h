@@ -152,7 +152,7 @@ void *get_angle(void);
 void *get_mag(void);
 
 /* Get 温度  Temperature */
-float get_temp(void);
+float get_temperature(void);
 
 /*-----------------应用函数----------------*/
 

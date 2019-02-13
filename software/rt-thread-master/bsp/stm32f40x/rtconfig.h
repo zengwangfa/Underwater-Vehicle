@@ -102,6 +102,8 @@
 #define RT_USING_ADC
 #define RT_USING_PWM
 #define RT_USING_RTC
+#define RT_USING_SPI
+#define RT_USING_W25QXX
 
 /* Using WiFi */
 

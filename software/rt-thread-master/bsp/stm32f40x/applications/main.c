@@ -15,10 +15,9 @@
  * 2019-02-07     Dwfish       Creat OLED Display Thread.
  * 2019-02-09     Dwfish       Creat Get_Gyroscope Thread. 
  * 2019-02-09     Dwfish       Creat PWM / ADC Thread.  
- 
  * 2019-02-11     Dwfish       Creat some MSHs (get methods) & Improved OLED display methods. 
-
- * 2019-02-15     Dwfish       Creat Can change Servo Motor Mid-Value MSH. 
+ * 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH. 
+ 
 *
 ******************************************************************************/
 
@@ -51,11 +50,9 @@ int main(void)
 		rt_kprintf("* 2019-02-09     Dwfish       Creat Get_Gyroscope Thread.\n");
 		rt_kprintf("* 2019-02-09     Dwfish       Creat PWM / ADC Thread.\n");
 	
-		rt_kprintf("* 2019-02-11     Dwfish       Creat some MSHs (get methods) & Improved OLED Display. \n");
-
+		rt_kprintf("* 2019-02-11     Dwfish       Creat MSHs (some get methods) & Improved OLED Display. \n");
+		rt_kprintf("* 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH-methods.  \n");
 		rt_kprintf("* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");	
-
-
 
     return 0;
 }

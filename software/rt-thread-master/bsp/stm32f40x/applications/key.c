@@ -65,7 +65,7 @@ int key_thread_init(void)
     key_tid = rt_thread_create("key",
                     key_thread_entry,
                     RT_NULL,
-                    512,
+                    1024,
                     10,
                     10);
 

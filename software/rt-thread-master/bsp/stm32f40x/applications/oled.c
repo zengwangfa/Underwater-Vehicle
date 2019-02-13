@@ -80,7 +80,7 @@ void OLED_StatusPage(void)
 		}		
 		//显示温度 
 		OLED_ShowString(0,48,(u8 *)"Temperature:",12);
-		OLED_ShowNum(70,48,stcAcc.T/0x100,2,12); 
+		OLED_ShowNum(75,48,stcAcc.T/0x100,2,12); 
 		OLED_ShowString(90,48,(u8 *)" C",12);
 	
 		OLED_Refresh_Gram();//更新显示到OLED

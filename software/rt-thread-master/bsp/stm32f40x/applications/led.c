@@ -40,27 +40,26 @@ void led_thread_entry(void *parameter)
 void led_blink_task(void)
 {
 		static rt_uint8_t status = 1;
-		if(boma_value_get() == 1)
-		{
+		if(boma_value_get() == 1){
 				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
 		}
 }
 	
+
 /* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白 ] */
 void system_init_led_blink(rt_uint8_t InputData)
 {
-
     if(InputData & 0x04){	
-					LED_ON(LED_Red); }
-		else{ LED_OFF(LED_Red);}
+						LED_ON(LED_Red); }
+		else{ 	LED_OFF(LED_Red);}
 		
 	  if(InputData & 0x02){	
 					LED_ON(LED_Green); }
 		else{ LED_OFF(LED_Green);}
 		
 		if(InputData & 0x01){	
-					LED_ON(LED_Blue); }
-		else{ LED_OFF(LED_Blue);}
+					 LED_ON(LED_Blue); }
+		else{  LED_OFF(LED_Blue);}
 		rt_thread_mdelay(300);//等待系统初始化  完毕，系统稳定后，在读取数据
 }
 
@@ -88,6 +87,36 @@ int led_thread_init(void)
 INIT_APP_EXPORT(led_thread_init);
 
 
+/* led on MSH方法 */
+static int led_on(int argc, char **argv)
+{
+    int result = 0;
+
+    if (argc != 2){
+        rt_kprintf("Usage: led_on 68\nSpecies:[red[68]/green[69]/blue[70] \n");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		LED_ON(atoi(argv[1]));
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(led_on,ag:led_on 68  Species:[red[68]/green[69]/blue[70]] );
 
 
+/* led off MSH方法 */
+static int led_off(int argc, char **argv)
+{
 
+    int result = 0;
+
+    if (argc != 2){
+        rt_kprintf("Usage: led_off 68\nSpecies:[red[68]/green[69]/blue[70] \n");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		LED_OFF(atoi(argv[1]));
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(led_off,ag:led_off 68  Species:[red[68]/green[69]/blue[70]] );
