@@ -7,6 +7,97 @@ struct
 }servo_motor;
 
 
+
+
+
+void pwm_thread_entry(void *parameter)
+{
+	
+		while(1)
+		{
+				TIM_SetCompare1(TIM1,2000);  		//最高转速信号   	水平推进器1号
+				TIM_SetCompare2(TIM1,4000);  		//最高转速信号    水平推进器2号
+				TIM_SetCompare3(TIM1,6000); 		//最高转速信号    水平推进器3号
+				TIM_SetCompare4(TIM1,10000);  	//最高转速信号    水平推进器4号
+				rt_thread_mdelay(100);
+
+		}
+	
+}
+
+
+int pwm_thread_init(void)
+{
+    rt_thread_t pwm_tid;
+		/*创建动态线程*/
+    pwm_tid = rt_thread_create("pwm",//线程名称
+                    pwm_thread_entry,				 //线程入口函数【entry】
+                    RT_NULL,							   //线程入口函数参数【parameter】
+                    512,										 //线程栈大小，单位是字节【byte】
+                    10,										 	 //线程优先级【priority】
+                    10);										 //线程的时间片大小【tick】= 100ms
+
+    if (pwm_tid != RT_NULL){
+				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值20000，所以PWM频率为 1M/20000=50Hz.  
+				LOG_I("pwm_init()");
+				rt_thread_startup(pwm_tid);
+		}
+
+		return 0;
+}
+INIT_APP_EXPORT(pwm_thread_init);
+
+
+
+/*【机械臂】舵机 修改 开启值MSH方法 */
+static int servo_motor_OpenValue_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        rt_kprintf("Usage: servo_motor_OpenValue_set 1600\n");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		servo_motor.open_value = atoi(argv[1]);
+		rt_kprintf("Writer_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(servo_motor_OpenValue_set,ag: servo_motor_OpenValue_set 1600);
+
+
+
+/*【机械臂】舵机 修改 开启值MSH方法 */
+static int servo_motor_CloseValue_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        rt_kprintf("Usage: servo_motor_CloseValue_set 1150\n");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		servo_motor.close_value = atoi(argv[1]);
+		rt_kprintf("Writer_Successed! Current ser_CloseValue:  %d\n",servo_motor.close_value);
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(servo_motor_CloseValue_set,ag: servo_motor_CloseValue_set 1150);
+
+
+
+/*【机械臂】舵机 修改 开启值MSH方法 */
+void list_value(void)
+{
+		rt_kprintf("variable name    value\n");
+    rt_kprintf("--------------  ---------\n");
+	  rt_kprintf("ser_OpenValue  	 %d\n",servo_motor.open_value);
+	  rt_kprintf("ser_CloseValue   %d\n",servo_motor.close_value);
+
+}
+MSH_CMD_EXPORT(list_value,list some important values);
+
+
+
 //TIM1 PWM部分初始化 
 //PWM输出初始化
 //arr：自动重装值
@@ -14,7 +105,6 @@ struct
 void TIM1_PWM_Init(u32 arr,u32 psc)
 {		 					 
 	//此部分需手动修改IO口设置
-	
 	GPIO_InitTypeDef GPIO_InitStructure;
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	TIM_OCInitTypeDef  TIM_OCInitStructure;
@@ -52,110 +142,13 @@ void TIM1_PWM_Init(u32 arr,u32 psc)
   TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 	
 	TIM_OC1Init(TIM1, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
-
 	TIM_OC2Init(TIM1, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
-
 	TIM_OC3Init(TIM1, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
-	
 	TIM_OC4Init(TIM1, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 	
 	TIM_CtrlPWMOutputs(TIM1,ENABLE);
-	
 	TIM_Cmd(TIM1, ENABLE);  //使能TIM14
 }  
-
-
-
-void pwm_thread_entry(void *parameter)
-{
-	
-		while(1)
-		{
-				TIM_SetCompare1(TIM1,2000);  		//最高转速信号   	水平推进器1号
-				TIM_SetCompare2(TIM1,4000);  		//最高转速信号    水平推进器2号
-				TIM_SetCompare3(TIM1,6000); 		//最高转速信号    水平推进器3号
-				TIM_SetCompare4(TIM1,10000);  	//最高转速信号    水平推进器4号
-				rt_thread_mdelay(100);
-
-		}
-	
-}
-
-
-int pwm_thread_init(void)
-{
-    rt_thread_t pwm_tid;
-		/*创建动态线程*/
-    pwm_tid = rt_thread_create("pwm",//线程名称
-                    pwm_thread_entry,				 //线程入口函数【entry】
-                    RT_NULL,							   //线程入口函数参数【parameter】
-                    512,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
-
-    if (pwm_tid != RT_NULL){
-				TIM1_PWM_Init(20000-1,168-1);	//168M/64=2Mhz的计数频率,重装载值20000，所以PWM频率为 2M/10000=200Hz.  
-				LOG_I("pwm_init()");
-				rt_thread_startup(pwm_tid);
-		}
-		return 0;
-}
-INIT_APP_EXPORT(pwm_thread_init);
-
-
-
-/*【机械臂】舵机 修改 开启值MSH方法 */
-static int servo_motor_OpenValue_set(int argc, char **argv)
-{
-
-    int result = 0;
-
-    if (argc != 2){
-        rt_kprintf("Usage: servo_motor_OpenValue_set 1600\n");
-				result = -RT_ERROR;
-        goto _exit;
-    }
-		servo_motor.open_value = atoi(argv[1]);
-_exit:
-    return result;
-}
-MSH_CMD_EXPORT(servo_motor_OpenValue_set,ag: servo_motor_OpenValue_set 1600);
-
-
-
-
-
-/*【机械臂】舵机 修改 开启值MSH方法 */
-static int servo_motor_CloseValue_set(int argc, char **argv)
-{
-
-    int result = 0;
-
-    if (argc != 2){
-        rt_kprintf("Usage: servo_motor_CloseValue_set 1150\n");
-				result = -RT_ERROR;
-        goto _exit;
-    }
-		servo_motor.close_value = atoi(argv[1]);
-_exit:
-    return result;
-}
-MSH_CMD_EXPORT(servo_motor_CloseValue_set,ag: servo_motor_CloseValue_set 1150);
-
-
-
-/*【机械臂】舵机 修改 开启值MSH方法 */
-void list_value(void)
-{
-		rt_kprintf("variable name    value\n");
-    rt_kprintf("--------------  ---------\n");
-	  rt_kprintf("ser_OpenValue  	 %d\n",servo_motor.open_value);
-	  rt_kprintf("ser_CloseValue   %d\n",servo_motor.close_value);
-
-}
-MSH_CMD_EXPORT(list_value,list some important values);
-
-
 
 
 ///*---------------------- Constant / Macro Definitions -----------------------*/

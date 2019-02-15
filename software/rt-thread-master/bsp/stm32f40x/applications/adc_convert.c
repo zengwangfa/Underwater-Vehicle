@@ -3,7 +3,7 @@
 
 /*----------------------- Variable Declarations -----------------------------*/
 
-
+u32 volatge = 0;
 
 
 /*----------------------- Function Implement --------------------------------*/
@@ -11,13 +11,10 @@
 void adc_thread_entry(void *parameter)
 {
 
-
-
-	
 		while(1)
 		{
-				//get_voltage();
-				//LOG_E("volage:%d",get_voltage(ADC_Channel_10,10));
+
+
 				rt_thread_mdelay(1000);
 
 		}
@@ -47,23 +44,38 @@ INIT_APP_EXPORT(adc_thread_init);
 
 
 
+/* 冒泡 get电压 */
+double get_vol(void)
+{
+		u8 i,j;
+		u32 res = 0;   //reserve
+		u32 adc_value[10] = {0};
 
+		for(i = 0;i < 20;i+=2){
+				adc_value[i/2] = get_adc(ADC_Channel_10);
+				//rt_thread_mdelay(10);
+		}
+		for(j = 0;j < 10;j++){
+				for(i = 0;i < 9-j;i++){
+						if( adc_value[i] > adc_value[i+1] ){ //从小到大
+								res = adc_value[i];
+								adc_value[i] = adc_value[i+1];
+								adc_value[i+1] = res;
+						}
+					
+				}
+		}
+		volatge = (*(adc_value+4)+ *(adc_value+5)+ *(adc_value+6))/3;		
+		return (double)volatge*3.3*1.52/4096;
+} 
 
+/* MSH  get 电压方法 */
 void get_voltage(void)
 {
-	u32 temp_val = 0;
-	char str[128] = "";
-	u8 t=0;
-	
-	for(t=0;t<10;t++)
-	{
-			temp_val += get_adc(ADC_Channel_10);
-			delay_ms(1);
-	}
-	sprintf(str,"voltage:%.3f\r\n",(float)temp_val/10);
-	rt_kprintf(str);
-	
-} 
+		char str[128];
+		sprintf(str,"voltage:%.2f\r\n",(double)volatge*3.3*1.52/4096 ); // 1.52为分压电路系数
+		rt_kprintf(str);
+}
 MSH_CMD_EXPORT(get_voltage,get voltage[u]);
 
 
@@ -124,6 +136,33 @@ void  adc_init(void)
 
 
 
+
+
+//static void timeout1(void* parameter)// 定时器1超时函数
+//{
+//		//get_voltage();
+//		
+//	
+
+//}
+
+
+//int timer_init(void)
+//{
+//		/* 定时器的控制块 */
+//		static rt_timer_t timer1;
+//    /* 创建定时器1 */
+//    timer1 = rt_timer_create("timer1",  /* 定时器名字是 timer1 */
+//                        timeout1, 			/* 超时时回调的处理函数 */
+//                        RT_NULL, 			  /* 超时函数的入口参数 */
+//                        100,      			  /* 定时长度，以OS Tick为单位，即10个OS Tick   --> 10MS*/  
+//                        RT_TIMER_FLAG_PERIODIC); /* 周期性定时器 */
+//    /* 启动定时器 */
+//    if (timer1 != RT_NULL) rt_timer_start(timer1);
+
+//    return 0;
+//}
+//INIT_APP_EXPORT(timer_init);
 
 
 

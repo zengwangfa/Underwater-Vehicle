@@ -7,7 +7,9 @@
 //初始化ADC															   
 void  adc_init(void);
 
-u16 get_adc(u8 ch);
+u16 get_adc(u8 ch);  //get adc通道值
+
+double get_vol(void);//返回电压值
 
 void get_voltage(void);
 

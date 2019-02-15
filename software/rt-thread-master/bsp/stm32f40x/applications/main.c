@@ -52,6 +52,7 @@ int main(void)
 	
 		rt_kprintf("* 2019-02-11     Dwfish       Creat MSHs (some get methods) & Improved OLED Display. \n");
 		rt_kprintf("* 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH-methods.  \n");
+		rt_kprintf("* 2019-02-15     Dwfish       TEST WiFi serial Download.  \n");
 		rt_kprintf("* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");	
 
     return 0;

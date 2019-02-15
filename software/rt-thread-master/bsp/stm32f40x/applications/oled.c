@@ -1,4 +1,5 @@
 #include "init.h"
+#include "math.h"
 	
 /*---------------------- Constant / Macro Definitions -----------------------*/
 extern struct SAcc stcAcc;
@@ -46,7 +47,7 @@ void menu_define(void) //菜单定义
 				MENU = FlashPage;		 											break;
 			}
 			case 3:{
-				MENU = PicturePage;											  break;
+				MENU = PicturePage;Boot_Animation();		  break;
 			}	
 	}
 }
@@ -58,7 +59,7 @@ void oled_thread_entry(void* parameter)
 
 	Boot_Animation();	//开机动画
 	OLED_Clear();
-	
+	page_num = 3;
 	while(1)
 	{	
 			menu_define();
@@ -69,8 +70,9 @@ void oled_thread_entry(void* parameter)
 
 void OLED_StatusPage(void)
 {
+		char str[100];
 		OLED_ShowString(0,0, (u8 *)"Mode:",12); 
-	  OLED_ShowString(0,16,(u8 *) "Vol:",12); 	
+
 	
 		if(boma_value_get() != AUV_Mode){
 				OLED_ShowString(50,0,(u8 *)"[ ROV ]",12);
@@ -78,42 +80,75 @@ void OLED_StatusPage(void)
 		else {
   			OLED_ShowString(50,0,(u8 *)"[ AUV ]",12);			
 		}		
-		//显示温度 
-		OLED_ShowString(0,48,(u8 *)"Temperature:",12);
-		OLED_ShowNum(75,48,stcAcc.T/0x100,2,12); 
-		OLED_ShowString(90,48,(u8 *)" C",12);
-	
+		//显示温度  get_vol  	  OLED_ShowString(0,16,(u8 *) "Vol:",12); 	
+		
+		sprintf(str,"Voltage:%.2f v\r\n",get_vol());
+		OLED_ShowString(0,16,(u8 *)str,12); 
+		sprintf(str,"Temperature:%.2f C\r\n",(float)stcAcc.T/0x100);
+		OLED_ShowString(0,48,(u8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }
 
 
-
+/* OLED 坐标系如下: */
+/*
+	127 ↑y
+			---------
+			|	      |
+			|				|
+			|				|
+			|				|
+			|				|
+			|				|
+			0———→x  
+							63
+*/
 /* 开机动画 */
 void Boot_Animation(void)
 {
 		static u8 x=0,y=0;
 
-		for(x = 63;x>=18;x--){
-				OLED_DrawPoint(108-0.7*x,x,1);//画斜线
-				OLED_DrawPoint(17 +0.7*x,x,1);
-				y = 64-x;
-				OLED_DrawPoint(64-0.7*y,y,1);
-				OLED_DrawPoint(64+0.7*y,y,1);
-				rt_thread_delay(2);
-			  OLED_Refresh_Gram();//更新显示到OLED
-		}
-		
-		for(x = 30;x <= 94;x++){
-				OLED_DrawPoint(125-x,47,1);
-				OLED_DrawPoint(x,18,1);
-				rt_thread_delay(2);
-			  OLED_Refresh_Gram();//更新显示到OLED
+		for(y = 59;y <= 67;y++){
+				OLED_DrawPoint(y,0,1);
+				OLED_DrawPoint(y,63,1);
 		}
 
-		OLED_ShowString(60,20,(u8 *)"E",16);
+		for(x = 0;x <= 63;x++){
+				y = sqrt(pow(32,2)-pow(x-31,2))+64; //圆方程  x,y反置
+				OLED_DrawPoint(y,x,1);
+				OLED_DrawPoint(127-y,x,1);
+		}
+//		for(x = 63;x>=18;x--){
+//				OLED_DrawPoint(108-0.7*x,x,1);//画斜线 x,y反置
+//				OLED_DrawPoint(17 +0.7*x,x,1);
+//				y = 64-x;
+//				OLED_DrawPoint(64-0.7*y,y,1);
+//				OLED_DrawPoint(64+0.7*y,y,1);
+//				rt_thread_delay(2);
+//			  OLED_Refresh_Gram();//更新显示到OLED
+//		}
+//		
+//		for(x = 30;x <= 94;x++){
+//				OLED_DrawPoint(125-x,47,1);
+//				OLED_DrawPoint(x,18,1);
+//				rt_thread_delay(2);
+//			  OLED_Refresh_Gram();//更新显示到OLED
+//		}
+
+//		OLED_ShowString(60,20,(u8 *)"E",16);
 	  OLED_Refresh_Gram();//更新显示到OLED
 		rt_thread_delay(100);
 		
+}
+
+
+void draw_circle(u8 x,u8 y,u8 R) //圆心(x,y),半径R
+{
+		for(x = 0;x <= 63;x++){
+				y = sqrt(pow(R,2)-pow(x-31,2))+64; //圆方程  x,y反置
+				OLED_DrawPoint(y,x,1);
+				OLED_DrawPoint(127-y,x,1);
+		}
 }
 
 /* OLED 线程初始化 */
