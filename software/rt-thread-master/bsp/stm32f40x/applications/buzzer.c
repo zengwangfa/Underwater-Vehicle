@@ -1,10 +1,12 @@
-#include "buzzer.h"
-
+#include "init.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define Buzzer_PIN 	59   //PE8
 
 /*----------------------- Variable Declarations -----------------------------*/
+
+/* ALL_init ÊÂ¼þ¿ØÖÆ¿é */
+extern struct rt_event init_event;
 
 struct 
 {
@@ -44,6 +46,7 @@ int buzzer_thread_init(void)
 				rt_pin_write(Buzzer_PIN, PIN_LOW);
 				LOG_I("Buzzer_Init()");
 				rt_thread_startup(buzzer_tid);
+				rt_event_send(&init_event, BUZZ_EVENT);
 		}
 		return 0;
 }

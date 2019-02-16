@@ -1,4 +1,4 @@
-#include "led.h"
+#include "init.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
@@ -12,7 +12,8 @@
 #define LED_Turn(led_pin,status) 		rt_pin_write(led_pin ,status =! status) //取反
 
 /*----------------------- Variable Declarations -----------------------------*/
-
+/* ALL_init 事件控制块 */
+extern struct rt_event init_event;
 extern rt_uint8_t VehicleStatus;
 
 /*----------------------- Function Implement --------------------------------*/
@@ -72,7 +73,7 @@ int led_thread_init(void)
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
-                    5,										 	 //线程优先级【priority】
+                    8,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (led_tid != RT_NULL){
@@ -80,6 +81,7 @@ int led_thread_init(void)
 				rt_pin_mode( LED_Green, PIN_MODE_OUTPUT);	
 				rt_pin_mode( LED_Blue, 	PIN_MODE_OUTPUT);	
 				LOG_I("LED_Init()");
+				rt_event_send(&init_event, LED_EVENT);
 				rt_thread_startup(led_tid);
 		}
 		return 0;

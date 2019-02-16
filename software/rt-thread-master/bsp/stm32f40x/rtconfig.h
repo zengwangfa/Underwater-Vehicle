@@ -97,13 +97,9 @@
 #define RT_USING_SERIAL
 #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
-#define RT_USING_HWTIMER
 #define RT_USING_PIN
 #define RT_USING_ADC
 #define RT_USING_PWM
-#define RT_USING_RTC
-#define RT_USING_SPI
-#define RT_USING_W25QXX
 
 /* Using WiFi */
 

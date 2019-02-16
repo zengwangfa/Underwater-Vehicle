@@ -1,10 +1,14 @@
-#include "adc_convert.h"
+#include "init.h"
+
+/*---------------------- Constant / Macro Definitions -----------------------*/		
+
 
 
 /*----------------------- Variable Declarations -----------------------------*/
-
+/* ALL_init 事件控制块 */
+extern struct rt_event init_event;
 u32 volatge = 0;
-
+u32 adc_value[10] = {0};
 
 /*----------------------- Function Implement --------------------------------*/
 
@@ -24,7 +28,15 @@ void adc_thread_entry(void *parameter)
 
 int adc_thread_init(void)
 {
+		rt_err_t result;
     rt_thread_t adc_tid;
+    /* 初始化事件对象 */
+    result = rt_event_init(&init_event, "event", RT_IPC_FLAG_FIFO);
+
+    if (result != RT_EOK){
+        LOG_E("init event failed.\n");
+        return -1;
+		}
 		/*创建动态线程*/
     adc_tid = rt_thread_create("adc",				 //线程名称
                     adc_thread_entry,				 //线程入口函数【entry】
@@ -36,7 +48,10 @@ int adc_thread_init(void)
     if (adc_tid != RT_NULL){
 				adc_init();
 				LOG_I("adc_init()");
+			
+				rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
 				rt_thread_startup(adc_tid);
+
 		}
 		return 0;
 }
@@ -49,11 +64,11 @@ double get_vol(void)
 {
 		u8 i,j;
 		u32 res = 0;   //reserve
-		u32 adc_value[10] = {0};
+
 
 		for(i = 0;i < 20;i+=2){
 				adc_value[i/2] = get_adc(ADC_Channel_10);
-				//rt_thread_mdelay(10);
+				rt_thread_mdelay(10);
 		}
 		for(j = 0;j < 10;j++){
 				for(i = 0;i < 9-j;i++){
@@ -73,7 +88,7 @@ double get_vol(void)
 void get_voltage(void)
 {
 		char str[128];
-		sprintf(str,"voltage:%.2f\r\n",(double)volatge*3.3*1.52/4096 ); // 1.52为分压电路系数
+		sprintf(str,"voltage:%.2f\r\n",(double)volatge*3.3*1.52/4096 ); // 23.4为分压电路系数
 		rt_kprintf(str);
 }
 MSH_CMD_EXPORT(get_voltage,get voltage[u]);

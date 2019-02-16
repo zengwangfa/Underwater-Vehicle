@@ -11,7 +11,8 @@ unsigned char recv_data_p=0x00;  //  串口2接收数据指针
 #endif
 
 /*----------------------- Variable Declarations -----------------------------*/
-
+/* ALL_init 事件控制块 */
+extern struct rt_event init_event;
 rt_device_t uart2_device;	
 struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT; /* 配置参数 */
 static struct rt_semaphore rx_sem;/* 用于接收消息的信号量 */
@@ -56,6 +57,14 @@ static void gyroscope_thread_entry(void *parameter)
 		}
 	
 }
+
+/* 开启 九轴模块 LED */
+void on_gyroscope_package(void)
+{
+		rt_device_write(uart2_device, 0, gyroscope_package, 5);   //ON package 开启回传数据包
+		rt_device_write(uart2_device, 0, gyroscope_save, 5);  //SAVE
+}
+MSH_CMD_EXPORT(on_gyroscope_package,turn on gyroscope_led);
 
 /* 开启 九轴模块 LED */
 void on_gyroscope_led(void)
@@ -108,6 +117,7 @@ int uart_gyroscope(void)
     if (gyroscope_tid != RT_NULL)
     {
         rt_thread_startup(gyroscope_tid);
+				rt_event_send(&init_event, GYRO_EVENT); //发送事件  表示初始化完成
     }
 		return 0;
 }

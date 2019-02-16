@@ -1,14 +1,19 @@
-#include "pwm.h"
+#include "init.h"
+/*---------------------- Constant / Macro Definitions -----------------------*/		
 
+u32 	FLASH_SIZE=16*1024*1024;	//FLASH 大小为16字节
+
+/*----------------------- Variable Declarations -----------------------------*/
+/* ALL_init 事件控制块 */
+extern struct rt_event init_event;
 struct 
 {
 		u16 open_value;		 //机械臂 打开的PWM值 
 		u16 close_value;	 //机械臂 关闭的PWM值
 }servo_motor;
 
-
-
-
+u8 servo_motor_value[2] = {0};
+/*----------------------- Function Implement --------------------------------*/
 
 void pwm_thread_entry(void *parameter)
 {
@@ -39,8 +44,11 @@ int pwm_thread_init(void)
 
     if (pwm_tid != RT_NULL){
 				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值20000，所以PWM频率为 1M/20000=50Hz.  
+
 				LOG_I("pwm_init()");
+
 				rt_thread_startup(pwm_tid);
+				rt_event_send(&init_event, PWM_EVENT); //发送事件  表示初始化完成
 		}
 
 		return 0;
@@ -49,7 +57,7 @@ INIT_APP_EXPORT(pwm_thread_init);
 
 
 
-/*【机械臂】舵机 修改 开启值MSH方法 */
+/*【机械臂】舵机 修改 【开启值】MSH方法 */
 static int servo_motor_OpenValue_set(int argc, char **argv)
 {
     int result = 0;
@@ -59,7 +67,10 @@ static int servo_motor_OpenValue_set(int argc, char **argv)
         goto _exit;
     }
 		servo_motor.open_value = atoi(argv[1]);
-		rt_kprintf("Writer_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
+		servo_motor_value[0] = servo_motor.open_value/10;
+		
+		W25QXX_Write(servo_motor_value,0,sizeof(servo_motor_value));		//从倒数第100个地址处开始,写入SIZE长度的数据
+		rt_kprintf("Write_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
 _exit:
     return result;
 }
@@ -67,7 +78,8 @@ MSH_CMD_EXPORT(servo_motor_OpenValue_set,ag: servo_motor_OpenValue_set 1600);
 
 
 
-/*【机械臂】舵机 修改 开启值MSH方法 */
+
+/*【机械臂】舵机 修改 【关闭值】 MSH方法 */
 static int servo_motor_CloseValue_set(int argc, char **argv)
 {
     int result = 0;
@@ -77,7 +89,10 @@ static int servo_motor_CloseValue_set(int argc, char **argv)
         goto _exit;
     }
 		servo_motor.close_value = atoi(argv[1]);
-		rt_kprintf("Writer_Successed! Current ser_CloseValue:  %d\n",servo_motor.close_value);
+		servo_motor_value[1] = servo_motor.close_value/10;
+		W25QXX_Write(servo_motor_value,0,2);		//从倒数第100个地址处开始,写入SIZE长度的数据
+		
+		rt_kprintf("Write_Successed! Current ser_CloseValue:  %d\n",servo_motor.close_value);
 _exit:
     return result;
 }
@@ -85,9 +100,14 @@ MSH_CMD_EXPORT(servo_motor_CloseValue_set,ag: servo_motor_CloseValue_set 1150);
 
 
 
-/*【机械臂】舵机 修改 开启值MSH方法 */
+
+/* list 相关重要参数 */
 void list_value(void)
 {
+		W25QXX_Read((u8*)servo_motor_value,0,2);		//从倒数第100个地址处开始,写入SIZE长度的数据
+	
+		servo_motor.open_value	= servo_motor_value[0] * 10;
+		servo_motor.close_value = servo_motor_value[1] * 10;
 		rt_kprintf("variable name    value\n");
     rt_kprintf("--------------  ---------\n");
 	  rt_kprintf("ser_OpenValue  	 %d\n",servo_motor.open_value);
@@ -102,6 +122,7 @@ MSH_CMD_EXPORT(list_value,list some important values);
 //PWM输出初始化
 //arr：自动重装值
 //psc：时钟预分频数
+
 void TIM1_PWM_Init(u32 arr,u32 psc)
 {		 					 
 	//此部分需手动修改IO口设置

@@ -1,4 +1,4 @@
-#include "key.h"  
+#include "init.h" 
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
@@ -11,7 +11,8 @@
 #define boma2_read 					rt_pin_read(BOMA2_PIN)
 
 /*----------------------- Variable Declarations -----------------------------*/
-
+/* ALL_init ÊÂ¼þ¿ØÖÆ¿é */
+extern struct rt_event init_event;
 int page_num = 0;
 u8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
 
@@ -32,7 +33,7 @@ void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 						boma_value = boma_value_get();	
 						rt_kprintf("\nCurrent Change: BOMA_Value = %d", boma_value);
 				}
-				rt_thread_mdelay(300);
+				rt_thread_mdelay(100);
     }
 }
 
@@ -75,6 +76,7 @@ int key_thread_init(void)
 				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
 				LOG_I("KEY_Init()");
 				rt_thread_startup(key_tid);
+				rt_event_send(&init_event, KEY_EVENT);
 		}
 		return 0;
 }

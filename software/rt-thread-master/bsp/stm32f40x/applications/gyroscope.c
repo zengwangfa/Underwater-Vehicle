@@ -3,7 +3,7 @@
 
 /*----------------------- Variable Declarations -----------------------------*/
 char str[100];
-char string[10] = "";
+char string[100];
 
 struct STime		stcTime;
 struct SAcc 		stcAcc;
