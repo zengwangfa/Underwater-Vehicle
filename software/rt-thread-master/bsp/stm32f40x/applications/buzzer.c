@@ -10,17 +10,15 @@ extern struct rt_event init_event;
 
 struct 
 {
-	rt_uint8_t time;
-	rt_uint8_t count;
-	rt_uint8_t number;
-	
+		rt_uint8_t time;
+		rt_uint8_t count;
+		rt_uint8_t number;	
 }buzzer;
 
 /*----------------------- Function Implement --------------------------------*/
 
 void buzzer_thread_entry(void *parameter)
 {
-
 		buzzer_bibi(3,1);
     while (1)
     {

@@ -43,8 +43,8 @@ int W25QXX_Init(void)
 	SPI2_SetSpeed(SPI_BaudRatePrescaler_2);		//设置为42M时钟,高速模式 
 	
 	W25QXX_TYPE=W25QXX_ReadID();	//读取FLASH ID.
-	
-	LOG_W("Detection W25Q128,The FLASH_ID:%x",W25QXX_TYPE);
+	if(W25QXX_TYPE == W25Q128){
+			LOG_W("Detection W25Q128,The FLASH_ID:%x",W25QXX_TYPE);}
 	return W25QXX_TYPE;
 }  
 INIT_APP_EXPORT(W25QXX_Init);

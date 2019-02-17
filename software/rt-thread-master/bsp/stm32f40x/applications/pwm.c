@@ -4,15 +4,15 @@
 u32 	FLASH_SIZE=16*1024*1024;	//FLASH 大小为16字节
 
 /*----------------------- Variable Declarations -----------------------------*/
-/* ALL_init 事件控制块 */
-extern struct rt_event init_event;
-struct 
+
+extern struct rt_event init_event;/* ALL_init 事件控制块 */
+
+struct  /* 定义u8 为方便 FLASH读写，使用时需要乘以 10 得到PWM值 */
 {
-		u16 open_value;		 //机械臂 打开的PWM值 
-		u16 close_value;	 //机械臂 关闭的PWM值
+		u8 open_value;		//机械臂 打开的PWM值 
+		u8 close_value;	 //机械臂 关闭的PWM值
 }servo_motor;
 
-u8 servo_motor_value[2] = {0};
 /*----------------------- Function Implement --------------------------------*/
 
 void pwm_thread_entry(void *parameter)
@@ -58,45 +58,44 @@ INIT_APP_EXPORT(pwm_thread_init);
 
 
 /*【机械臂】舵机 修改 【开启值】MSH方法 */
-static int servo_motor_OpenValue_set(int argc, char **argv)
+static int servo_motor_openvalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        rt_kprintf("Usage: servo_motor_OpenValue_set 1600\n");
+        rt_kprintf("Usage: servo_motor_OpenValue_set 160\n");
 				result = -RT_ERROR;
         goto _exit;
     }
 		servo_motor.open_value = atoi(argv[1]);
-		servo_motor_value[0] = servo_motor.open_value/10;
 		
-		W25QXX_Write(servo_motor_value,0,sizeof(servo_motor_value));		//从倒数第100个地址处开始,写入SIZE长度的数据
+		W25QXX_Write(&servo_motor.open_value,0,1);		//从0个地址处写入数据
 		rt_kprintf("Write_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(servo_motor_OpenValue_set,ag: servo_motor_OpenValue_set 1600);
+MSH_CMD_EXPORT(servo_motor_openvalue_set,ag: servo_motor_OpenValue_set 160);
 
 
 
 
 /*【机械臂】舵机 修改 【关闭值】 MSH方法 */
-static int servo_motor_CloseValue_set(int argc, char **argv)
+static int servo_motor_closevalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        rt_kprintf("Usage: servo_motor_CloseValue_set 1150\n");
+        rt_kprintf("Usage: servo_motor_CloseValue_set 115\n");
 				result = -RT_ERROR;
         goto _exit;
     }
 		servo_motor.close_value = atoi(argv[1]);
-		servo_motor_value[1] = servo_motor.close_value/10;
-		W25QXX_Write(servo_motor_value,0,2);		//从倒数第100个地址处开始,写入SIZE长度的数据
+
+		W25QXX_Write(&servo_motor.close_value,1,1);	//从1个地址处写入数据
 		
 		rt_kprintf("Write_Successed! Current ser_CloseValue:  %d\n",servo_motor.close_value);
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(servo_motor_CloseValue_set,ag: servo_motor_CloseValue_set 1150);
+MSH_CMD_EXPORT(servo_motor_closevalue_set,ag: servo_motor_CloseValue_set 115);
 
 
 
@@ -104,15 +103,14 @@ MSH_CMD_EXPORT(servo_motor_CloseValue_set,ag: servo_motor_CloseValue_set 1150);
 /* list 相关重要参数 */
 void list_value(void)
 {
-		W25QXX_Read((u8*)servo_motor_value,0,2);		//从倒数第100个地址处开始,写入SIZE长度的数据
+		W25QXX_Read(&servo_motor.open_value,0,1);		// 地址0
+		W25QXX_Read(&servo_motor.close_value,1,1);	// 地址1
 	
-		servo_motor.open_value	= servo_motor_value[0] * 10;
-		servo_motor.close_value = servo_motor_value[1] * 10;
 		rt_kprintf("variable name    value\n");
     rt_kprintf("--------------  ---------\n");
 	  rt_kprintf("ser_OpenValue  	 %d\n",servo_motor.open_value);
 	  rt_kprintf("ser_CloseValue   %d\n",servo_motor.close_value);
-
+    rt_kprintf("                         \n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);
 

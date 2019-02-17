@@ -108,6 +108,17 @@ void OLED_Clear(void)
 	for(i=0;i<8;i++)for(n=0;n<128;n++)OLED_GRAM[n][i]=0X00;  
 	OLED_Refresh_Gram();//更新显示
 }
+
+//清屏函数,清完屏,整个屏幕是黑色的!和没点亮一样!!!	
+
+void Half_OLED_Clear(void)
+{	
+	u8 i,n;  
+	for(i=0;i<8;i++)
+			for(n=0;n<64;n++)
+					OLED_GRAM[n][i]=0X00;  
+	OLED_Refresh_Gram();//更新显示
+}
 //画点 
 //x:0~127
 //y:0~63

@@ -13,7 +13,8 @@
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块 */
 extern struct rt_event init_event;
-int page_num = 0;
+extern oled_t oled;
+
 u8 boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
 
 /*----------------------- Function Implement --------------------------------*/
@@ -51,7 +52,8 @@ rt_uint8_t boma_value_get(void)
 void key_down(void)  
 {
 		if (rt_pin_read(KEY_PIN) == PIN_LOW){
-				page_num ++;
+
+				oled.pagenum ++;
 					
     }while(rt_pin_read(KEY_PIN) == PIN_LOW);
 
@@ -75,6 +77,7 @@ int key_thread_init(void)
 				rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
 				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
 				LOG_I("KEY_Init()");
+			
 				rt_thread_startup(key_tid);
 				rt_event_send(&init_event, KEY_EVENT);
 		}

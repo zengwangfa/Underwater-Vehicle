@@ -52,12 +52,12 @@ int main(void)
 	
 		rt_kprintf("* 2019-02-11     Dwfish       Creat MSHs (some get methods) & Improved OLED Display. \n");
 		rt_kprintf("* 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH-methods.  \n");
-		rt_kprintf("* 2019-02-16     Dwfish       Creat System self-check methods [ Events ->事件集 ].\n");
+		rt_kprintf("* 2019-02-16     Dwfish       Creat System self-check methods [ Events ].\n");
 		rt_kprintf("* 2019-02-16     Dwfish       Add W25Q128 FLASH To Save Important Parameters.\n");
 		rt_kprintf("* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");	 
 		
-
-		
+		rt_thread_mdelay(1000);
+		get_time();  //打印参考时间戳
     return 0;
 }
 

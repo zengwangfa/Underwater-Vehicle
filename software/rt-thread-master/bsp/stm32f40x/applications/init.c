@@ -2,8 +2,8 @@
 #include <board.h>
 
 /*----------------------- Variable Declarations -----------------------------*/
-/* ALL_init 事件控制块 */
-struct rt_event init_event;
+
+struct rt_event init_event;/* ALL_init 事件控制块 */
 
 rt_thread_t 	init_tid;
 
@@ -11,19 +11,20 @@ void init_thread_entry(void* parameter)
 {
 	  rt_uint32_t e;
 		rt_err_t result;
+
 		 /* 接收事件，判断是否所有外设初始化完成 ，接收完后清除事件标志 */
     if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT),
                       RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR,
                       RT_WAITING_FOREVER, &e) == RT_EOK)
     {
-				LOG_W("System Self-Check Completed :0x%x Success!!!\n ", e);
-				//rt_thread_delete(init_tid);
-				result = rt_thread_suspend (init_tid);
+				LOG_W("System Self-Check Completed :0x%x Success!!! ", e);
+				result = rt_thread_suspend (init_tid);  //挂起
 			  if (result != RT_EOK){
 						LOG_E("init_tid thread suspend failed.\n");
 				}
 
 		}
+		
     
 		rt_thread_mdelay(1000);
 

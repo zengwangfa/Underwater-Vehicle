@@ -47,6 +47,7 @@ int adc_thread_init(void)
 
     if (adc_tid != RT_NULL){
 				adc_init();
+				LOG_W("System Self-Checking... ");
 				LOG_I("adc_init()");
 			
 				rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
@@ -148,37 +149,6 @@ void  adc_init(void)
 	ADC_Cmd(ADC2, ENABLE);//开启AD转换器	
 
 }
-
-
-
-
-
-//static void timeout1(void* parameter)// 定时器1超时函数
-//{
-//		//get_voltage();
-//		
-//	
-
-//}
-
-
-//int timer_init(void)
-//{
-//		/* 定时器的控制块 */
-//		static rt_timer_t timer1;
-//    /* 创建定时器1 */
-//    timer1 = rt_timer_create("timer1",  /* 定时器名字是 timer1 */
-//                        timeout1, 			/* 超时时回调的处理函数 */
-//                        RT_NULL, 			  /* 超时函数的入口参数 */
-//                        100,      			  /* 定时长度，以OS Tick为单位，即10个OS Tick   --> 10MS*/  
-//                        RT_TIMER_FLAG_PERIODIC); /* 周期性定时器 */
-//    /* 启动定时器 */
-//    if (timer1 != RT_NULL) rt_timer_start(timer1);
-
-//    return 0;
-//}
-//INIT_APP_EXPORT(timer_init);
-
 
 
 

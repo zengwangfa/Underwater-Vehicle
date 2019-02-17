@@ -86,6 +86,8 @@ struct STime
 	unsigned char ucSecond;
 	unsigned short usMiliSecond;
 };
+
+
 struct SAcc
 {
 	short a[3];
@@ -98,7 +100,7 @@ struct SGyro
 };
 struct SAngle
 {
-	short Angle[3];
+	short angle[3];
 	short T;
 };
 struct SMag
@@ -134,6 +136,18 @@ struct SQ
 { short q[4];
 };
 
+
+struct JY901_t
+{
+	float Acc[3]; 		  //加速度
+	float Gyro[3]; 			//角速度
+	float Angle[3];			//角度
+	short Mag[3];
+	float Temperature;	//温度
+};
+
+
+
 /*-----------------MSH命令函数----------------*/
 
 /* Get时间  time */
@@ -156,8 +170,16 @@ float get_temperature(void);
 
 /*-----------------应用函数----------------*/
 
+void Convert_Acc(void);
+void Convert_Gyro(void);
+void Convert_Angle(void);
+
+
 void OLED_GyroscopePage(void);
 
 void CopeSerial2Data(unsigned char Data);
+ 
+ 
+ 
  
 #endif
