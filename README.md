@@ -5,21 +5,45 @@
 码云是开源中国推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
 无论是个人、团队、或是企业，都能够用码云实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
 
+
+该航控 基于国产 RT-Thread 实时操作系统，目前完成外设驱动及数据采集，后续为姿态算法 与 抗洋流算法.
+
 #### 软件架构
 软件架构说明
+```c
 
+RT-Thread 
+├──STM32F407ZGT6                  
+│   └──Peripherals
+│       ├── RGB [IO]   
+│       ├── KEY [IO] 
+│       ├── BUZZER [IO]             
+│       ├── OLED [Software SPI]       
+│       ├── Voltage Detection [ADC]             
+│       ├── Wifi [UART]             
+│       ├── Bluetooth [UART]       
+│       ├── Nine axis gyroscope [UART]
+│       ├── USB to serial port [CP2102 UART Bridge]
+│       ├── OV2640 Camera [unfinished]
+│       └── Be continued     
+├── hardware
+├── README.md  
+├── docs           //documents      
+└── Be continued  
+
+```
 
 #### 安装教程
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. KEIL5
+2. STM32F4XX package
+3. RT-Thread
 
 #### 使用说明
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. NULL available
+2. NULL available
+3. NULL available
 
 #### 参与贡献
 
@@ -37,3 +61,5 @@
 4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
 5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
 6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+
+
