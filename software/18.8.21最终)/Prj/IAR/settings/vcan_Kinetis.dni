@@ -1,0 +1,187 @@
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[JLinkDriver]
+CStepIntDis=_ 0
+TraceBufferSize=0x00010000
+TraceStallIfFIFOFull=0x00000000
+TracePortSize=0x00000004
+LeaveTargetRunning=_ 0
+[DebugChecksum]
+Checksum=-1078613131
+[Exceptions]
+StopOnUncaught=_ 0
+StopOnThrow=_ 0
+[CodeCoverage]
+Enabled=_ 0
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[SWOTraceHWSettings]
+OverrideDefaultClocks=0
+CpuClock=72000000
+ClockAutoDetect=0
+ClockWanted=2000000
+JtagSpeed=2250000
+Prescaler=32
+TimeStampPrescIndex=0
+TimeStampPrescData=0
+PcSampCYCTAP=1
+PcSampPOSTCNT=15
+PcSampIndex=0
+DataLogMode=0
+ITMportsEnable=0
+ITMportsTermIO=0
+ITMportsLogFile=0
+ITMlogFile=$PROJ_DIR$\ITM.log
+[array_types]
+Fmt0=int8[40]	3	0
+Fmt1=uint8[2]	3	0
+Fmt2=uint8[60]	3	0
+Fmt3=uint8[80]	3	0
+[watch_formats]
+Fmt0={W}42:A	0	9
+Fmt1={W}42:All_white_line	3	0
+Fmt2={W}42:camera_integral_flag	3	0
+Fmt3={W}42:edge_sum_left	3	0
+Fmt4={W}42:edge_sum_right	3	0
+Fmt5={W}42:first_meet_flag	3	0
+Fmt6={W}42:meet_seq	3	0
+Fmt7={W}42:road_flag	3	0
+[Trace1]
+Enabled=0
+ShowSource=1
+[Trace2]
+Enabled=0
+ShowSource=0
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[PowerLog]
+Title_0=I0
+Symbol_0=0 4 0
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+LiveEnabled=0
+LiveFile=PowerLogLive.log
+[DataLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+[EventLog]
+Title_0=Ch3
+Symbol_0=0 4 1
+Title_1=Ch2
+Symbol_1=0 4 1
+Title_2=Ch1
+Symbol_2=0 4 1
+Title_3=Ch0
+Symbol_3=0 4 1
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+SumSortOrder=0
+[InterruptLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+SumSortOrder=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=
+[CallStackLog]
+Enabled=0
+[CallStackStripe]
+ShowTiming=1
+[PowerProbe]
+Frequency=10000
+Probe0=I0
+ProbeSetup0=2 1 1 2 0 0
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\my}.828.6" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\18.7.21(圆环修订完善)}.895.1" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\my\key.c}.877.2" 0 0 1 "" 0 "" 0
+Count=3
+[Aliases]
+A0=_ "C:\Users\SEAMAN\Desktop\18.4.25\Lib\CMSIS\Inc\core_cm4.h" ""
+A1=_ "C:\Users\SEAMAN\Desktop\18.4.25\my\main.c" ""
+A2=_ "C:\Users\SEAMAN\Desktop\18.4.28\Chip\src\MK60_PIT.c" ""
+A3=_ "C:\Users\SEAMAN\Desktop\18.4.29\Lib\CMSIS\Inc\core_cm4.h" ""
+A4=_ "C:\Users\SEAMAN\Desktop\18.4.29\my\main.c" ""
+A5=_ "C:\Users\SEAMAN\Desktop\18.5.15\Lib\CMSIS\Inc\core_cm4.h" ""
+A6=_ "C:\Users\SEAMAN\Desktop\18.5.15\my\main.c" ""
+A7=_ "C:\Users\SEAMAN\Desktop\18.5.16\Chip\src\IAR\system_MK60DZ10.c" ""
+A8=_ "C:\Users\SEAMAN\Desktop\18.5.16\Chip\src\MK60_SysTick.c" ""
+A9=_ "C:\Users\SEAMAN\Desktop\18.5.16\Chip\src\MK60_adc.c" ""
+A10=_ "C:\Users\SEAMAN\Desktop\18.5.16\Chip\src\MK60_gpio.c" ""
+A11=_ "C:\Users\SEAMAN\Desktop\18.5.16\Chip\src\MK60_wdog.c" ""
+A12=_ "C:\Users\SEAMAN\Desktop\18.5.16\Lib\CMSIS\Inc\core_cm4.h" ""
+A13=_ "C:\Users\SEAMAN\Desktop\18.5.16\my\main.c" ""
+A14=_ "C:\Users\SEAMAN\Desktop\18.5.2.1\Lib\CMSIS\Inc\core_cm4.h" ""
+A15=_ "C:\Users\SEAMAN\Desktop\18.5.2.1\my\main.c" ""
+A16=_ "C:\Users\SEAMAN\Desktop\18.5.23\Lib\CMSIS\Inc\core_cm4.h" ""
+A17=_ "C:\Users\SEAMAN\Desktop\18.5.23\my\main.c" ""
+A18=_ "C:\Users\SEAMAN\Desktop\18.5.25.2\Lib\CMSIS\Inc\core_cm4.h" ""
+A19=_ "C:\Users\SEAMAN\Desktop\18.5.25.2\my\main.c" ""
+A20=_ "C:\Users\SEAMAN\Desktop\18.5.29\Lib\CMSIS\Inc\core_cm4.h" ""
+A21=_ "C:\Users\SEAMAN\Desktop\18.5.31\Lib\CMSIS\Inc\core_cm4.h" ""
+A22=_ "C:\Users\SEAMAN\Desktop\18.5.4\Lib\CMSIS\Inc\core_cm4.h" ""
+A23=_ "C:\Users\SEAMAN\Desktop\18.5.4\my\main.c" ""
+A24=_ "C:\Users\SEAMAN\Desktop\18.5.8\Chip\src\IAR\system_MK60DZ10.c" ""
+A25=_ "C:\Users\SEAMAN\Desktop\18.5.8\Chip\src\MK60_uart.c" ""
+A26=_ "C:\Users\SEAMAN\Desktop\18.5.8\Chip\src\MK60_wdog.c" ""
+A27=_ "C:\Users\SEAMAN\Desktop\18.5.8\Lib\CMSIS\Inc\core_cm4.h" ""
+A28=_ "C:\Users\SEAMAN\Desktop\18.5.8\my\main.c" ""
+A29=_ "C:\Users\zengwangfa\Desktop\18.7.14\Lib\CMSIS\Inc\core_cm4.h" ""
+A30=_ "C:\Users\zengwangfa\Desktop\18.7.20.1\18.7.20.1\Lib\CMSIS\Inc\core_cm4.h" ""
+A31=_ "C:\Users\zengwangfa\Desktop\18.7.26(ring_size)\my\main.c" ""
+A32=_ "C:\Users\zengwangfa\Desktop\18.8.20(嘉鑫)\my\main.c" ""
+A33=_ "H:\智能车\鑫之所向\会车正式版\18.4.28\Chip\src\IAR\system_MK60DZ10.c" ""
+A34=_ "H:\智能车\鑫之所向\会车正式版\18.5.22\Chip\src\IAR\system_MK60DZ10.c" ""
+A35=_ "H:\智能车\鑫之所向\会车正式版\18.5.22\Chip\src\MK60_PIT.c" ""
+A36=_ "H:\智能车\鑫之所向\会车正式版\18.5.22\Chip\src\MK60_mcg.c" ""
+A37=_ "H:\智能车\鑫之所向\会车正式版\18.5.22\Chip\src\MK60_uart.c" ""
+A38=_ "H:\智能车\鑫之所向\会车正式版\18.5.2\Chip\src\IAR\system_MK60DZ10.c" ""
+A39=_ "H:\智能车\鑫之所向\会车正式版\18.5.2\Chip\src\MK60_wdog.c" ""
+A40=_ "H:\智能车\鑫之所向\会车正式版\18.5.2\Lib\CMSIS\Inc\core_cm4.h" ""
+A41=_ "H:\智能车\鑫之所向\会车正式版\18.5.2\my\main.c" ""
+A42=_ "H:\智能车\鑫之所向\会车正式版\18.7.20.1\my\main.c" ""
+A43=_ "H:\智能车\鑫之所向\会车正式版\18.7.23.5(超级圆环汇车一天写完牛逼啊)\my\main.c" ""
+A44=_ "H:\智能车\鑫之所向\会车正式版\18.7.24(下午)\my\main.c" ""
+A45=_ "H:\智能车\鑫之所向\会车正式版\GPIO_LED\Chip\src\MK60_dma.c" ""
+A46=_ "H:\智能车\鑫之所向\会车正式版\GPIO_LED\Chip\src\VCAN_SCCB.c" ""
+Count=47
+SuppressDialog=1

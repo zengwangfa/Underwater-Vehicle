@@ -1,0 +1,17 @@
+"Z:\Software\IAR8.3\arm\bin\armproc.dll" 
+
+"Z:\Software\IAR8.3\arm\bin\armjlink2.dll" 
+
+"D:\My\K60\集力车\18.8.21最终)\Prj\IAR\DZ10_Debug\Exe\vcan_Kinetis.out" 
+
+--plugin="Z:\Software\IAR8.3\arm\bin\armbat.dll" 
+
+--device_macro="Z:\Software\IAR8.3\arm\config\debugger\NXP\Kxx.dmac" 
+
+--device_macro="Z:\Software\IAR8.3\arm\config\debugger\NXP\Kxx_Trace.dmac" 
+
+--flash_loader="Z:\Software\IAR8.3\arm\config\flashloader\NXP\FlashK60Dxxx128K.board" 
+
+
+
+

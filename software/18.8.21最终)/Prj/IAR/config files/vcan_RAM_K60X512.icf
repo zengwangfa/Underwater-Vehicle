@@ -1,0 +1,67 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x1fff0000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_ROM_start__ = 0x00000000;
+define symbol __ICFEDIT_region_ROM_end__   = 0x00080000;            //0x00040000:P-flashk 256k  D-flash 256k   0x00080000:P-flashk 512k
+define symbol __ICFEDIT_region_RAM_start__ = 0x1fff0000;            //前面的0x410 RAM留给 RAM User Vector Table 。 
+define symbol __ICFEDIT_region_RAM_end__   = 0x20000000;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__ = 0x2000;
+define symbol __ICFEDIT_size_heap__   = 0x2000;
+/**** End of ICF editor section. ###ICF###*/
+
+
+/**** 上边是由ICF编辑，下面是由我们手动配置 ****/
+
+define symbol __region_RAM2_start__ = 0x20000000;       //SRAM 是分成两块的，RAM2即SRAM_U ，RAM 为 SRAM_L
+define symbol __region_RAM2_end__ = 0x20000000 + __ICFEDIT_region_RAM_end__ - __ICFEDIT_region_RAM_start__;
+
+define symbol __region_RAM3_start__ = 0x14000000 ;       //FlexRAM
+define symbol __region_RAM3_end__ = __region_RAM3_start__ + 16*1024 -1;
+
+define symbol __region_ROM2_start__ = 0x10000000 ;       //FlexNVM
+define symbol __region_ROM2_end__ = __region_ROM2_start__ + 512*1024 -1;
+
+define exported symbol __VECTOR_TABLE = __ICFEDIT_intvec_start__;       //代码编译进 ROM ,则 0x00000000 ；RAM，则 __ICFEDIT_region_RAM_start__
+define exported symbol __VECTOR_RAM = __ICFEDIT_region_RAM_start__;  //前面的RAM留给 RAM User Vector Table,即这里的设置。所以减 0x410
+                                                                                //common_startup函数就是把 __VECTOR_TABLE 的数据复制到  __VECTOR_RAM
+                                                                                
+define exported symbol __BOOT_STACK_ADDRESS = __region_RAM2_end__ - 8;  //0x2000FFF8;       //启动栈地址
+
+/* 决定代码编译的地址 */
+define exported symbol __code_start__ = __ICFEDIT_intvec_start__ + 0x410;   //代码编译进 ROM ,则  __ICFEDIT_region_ROM_start__ + 0x410 ， RAM，则   __ICFEDIT_region_RAM_start__  + 0x410
+                                                                                                               //+0x410 ,是前面的留给 Vector Table 
+                                                                        
+define memory mem with size = 4G;           //4G的虚拟寻址空间
+define region ROM_region   = mem:[from __ICFEDIT_region_ROM_start__   to __ICFEDIT_region_ROM_end__]
+                           | mem:[from __region_ROM2_start__   to __region_ROM2_end__];
+define region RAM_region   = mem:[from __ICFEDIT_region_RAM_start__  to __ICFEDIT_region_RAM_end__] 
+                           | mem:[from __region_RAM2_start__ to __region_RAM2_end__]
+                           | mem:[from __region_RAM3_start__ to __region_RAM3_end__]
+                           ;
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };    //堆
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };    //栈
+
+
+//手动初始化，在 common_startup函数 里完成
+initialize manually { readwrite };             // 未初始化数据 .bss
+initialize manually { section .data};          // 已初始化数据
+initialize manually { section .textrw };       // __ramfunc声明的函数
+do not initialize  { section .noinit };        // 复位中断向量服务函数
+
+
+define block CodeRelocate { section .textrw_init };
+define block CodeRelocateRam { section .textrw };         // CodeRelocateRam  把代码复制到RAM中(对flash操作的函数必须这样)
+
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };//vectors.c 中设置 #pragma location = ".intvec"   ，告诉编译器，这个是中断向量表，编译进去 .intvec
+place at address mem:__code_start__ { readonly section .noinit };       //在crt0.s 中设置了 SECTION .noinit : CODE  ，即把代码编辑进去 .noinit
+
+place in RAM_region   { readonly, block CodeRelocate };             //把代码编译进去 ROM (调试用) ，非调试，则设为 ROM_region
+
+place in RAM_region   { readwrite, block CodeRelocateRam,
+                        block CSTACK, block HEAP };                             
