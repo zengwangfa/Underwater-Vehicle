@@ -1,0 +1,17 @@
+"Z:\Install Bag\iar7.8\arm\bin\armproc.dll" 
+
+"Z:\Install Bag\iar7.8\arm\bin\armjlink2.dll" 
+
+"D:\我的心里只有学习\K60\集力车\18.8.21最终)\Prj\IAR\FX15_Debug\Exe\vcan_Kinetis.out" 
+
+--plugin "Z:\Install Bag\iar7.8\arm\bin\armbat.dll" 
+
+--device_macro "Z:\Install Bag\iar7.8\arm\config\debugger\NXP\Kxx.dmac" 
+
+--device_macro "Z:\Install Bag\iar7.8\arm\config\debugger\NXP\Kxx_Trace.dmac" 
+
+--flash_loader "Z:\Install Bag\iar7.8\arm\config\flashloader\Freescale\FlashK60Fxxx128K.board" 
+
+
+
+
