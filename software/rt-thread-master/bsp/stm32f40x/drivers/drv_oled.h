@@ -32,6 +32,8 @@ void OLED_Refresh_Gram(void);
 							   		    
 void OLED_Init(void);
 void OLED_Clear(void);
+void OLED_ShowMyChar(u8 x,u8 y,u8 chr,u8 size,u8 mode);
+
 void Half_OLED_Clear(void) ;
 void OLED_DrawPoint(u8 x,u8 y,u8 t);
 void OLED_Fill(u8 x1,u8 y1,u8 x2,u8 y2,u8 dot);

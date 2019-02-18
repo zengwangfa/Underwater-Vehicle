@@ -77,7 +77,7 @@ void menu_define(void) //菜单定义
 	
 void oled_thread_entry(void* parameter)
 {
-	Boot_Animation();	//开机动画
+	//Boot_Animation();	//开机动画
 	OLED_Clear();
 
 	while(1)
@@ -92,8 +92,11 @@ void oled_thread_entry(void* parameter)
 void OLED_StatusPage(void)
 {
 		char str[100];
-
-		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[1],boma_value_get());
+		OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
+	
+		//OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
+	
+		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[MODE],boma_value_get());
 		OLED_ShowString(0,0, (u8 *)str,12); 
 	
 		sprintf(str,"Voltage:%.2f v\r\n",get_vol());
@@ -127,26 +130,33 @@ void OLED_PicturePage(void)
 {
 		static u8 y=0;
 		char str[100];
+		static int Angle_z = 0,Angle_y = 0;
+		
 	
+		draw_fill_circle(31+Angle_z,31+Angle_y,6,0);
+
 		draw_line(31,31,slope,0); //清除上一次画的线 进行刷新
 		OLED_Refresh_Gram();//更新显示到OLED
 	
+
+		Angle_z = JY901.Angle[0]/9;
+		Angle_y = JY901.Angle[1]/9;
 		slope = tan((float)(JY901.Angle[2]*Pi/180));  //转化弧度制 解算东北天坐标系下 航向斜率slope
 	
 		for(y = 28;y <= 36;y++){ //补圆顶底部的缺失点
 				OLED_DrawPoint(y,0,1);
 				OLED_DrawPoint(y,63,1);
 		}
-	
+
 		draw_line(31,31,slope,1);
 		
-		sprintf(str,"Rol:%3.1f  ",JY901.Angle[0]); //横滚脚Roll
+		sprintf(str,"Pit:%3.1f  ",JY901.Angle[0]); //俯仰角Pitch
 		OLED_ShowString(65,0, (u8 *)str,12);
 		
-		sprintf(str,"Pit:%3.1f  ",JY901.Angle[1]); //俯仰角Pitch
+		sprintf(str,"Rol:%3.1f  ",JY901.Angle[1]);  //横滚脚Roll
 		OLED_ShowString(65,16, (u8 *)str,12);
 		
-		sprintf(str,"Yaw:%3.1f  ",JY901.Angle[2]); //俯仰角Yaw
+		sprintf(str,"Yaw:%3.1f  ",JY901.Angle[2]); //偏航角Yaw
 		OLED_ShowString(65,32, (u8 *)str,12);
 		
 		sprintf(str,"k:%.1f   ",slope);
@@ -157,8 +167,9 @@ void OLED_PicturePage(void)
 		OLED_ShowString(29,51,(u8 *)"S",12);
 		OLED_ShowString(3	,28,(u8 *)"W",12);
 		OLED_ShowString(55,28,(u8 *)"E",12);
+		
 		draw_circle(31,31,32);
-
+		draw_fill_circle(31+Angle_z,31+Angle_y,6,1);
 	
 		OLED_Refresh_Gram();//更新显示到OLED						
 }
@@ -195,18 +206,20 @@ void Boot_Animation(void)
 
 
 
-void draw_fill_circle(u8 x0,u8 y0,u8 r)//圆心(x0,y0),半径r
+
+void draw_fill_circle(u8 x0,u8 y0,u8 r,u8 dot)//写画实心圆心(x0,y0),半径r
 {	
-		u8 x,y,L;
-		for(x = 19;x <= 43;x++){
-				L = sqrt(pow(r,2)-pow(x-x0,2))+y0; //圆方程  x,y反置		
-				if( y >= 31 && y < L ) {  //点限制在 圆方程内	
-						OLED_DrawPoint(y,x,1);}
-				
-				if( y < 31 && y < 63-L ) {  //点限制在 圆方程内	
-						OLED_DrawPoint(y,x,1);}
-			}
+		u8 x = 0,y = 0,R = 0;
+		for(x = x0-r;x <= x0+r;x++){
+				for(y = y0-r; y <= y0+r ;y++ ){
+						R = sqrt(pow(r,2)-pow(x-x0,2))+y0; //圆方程  x,y反置		
+						if( (y >= y0 && y <= R) || (y < y0 && y >= 2*y0-R )|| dot == 0 ) {  //点限制在 圆方程内	
+								OLED_DrawPoint(y,x,dot);
+						}	
+				}
+		}
 }
+
 
 void draw_circle(u8 x0,u8 y0,u8 r) //圆心(x0,y0),半径r
 {
@@ -220,11 +233,21 @@ void draw_circle(u8 x0,u8 y0,u8 r) //圆心(x0,y0),半径r
 		
 }
 
+/* 使用不同坐标系 为了解决函数上 x映射y时只能多对一的关系 */
 void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;1,填充	  
 {
 		u8 x,y;
 		//y = (k*(x-x0)+y0); 直线函数
-	
+/* 以下函数使用该坐标系: 
+	                127 ↑y
+			-----------------
+			|								|
+			|								|
+			|								|
+			|								|
+		←---------------(0,0)x  
+			63
+*/
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 			
@@ -238,7 +261,18 @@ void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;
 								OLED_DrawPoint(x,((x-x0)/k+y0),dot);}
 				}
 		}
-
+/* 以下函数使用该坐标系: 
+	127 ↑y
+			---------
+			|	      |
+			|				|
+			|				|
+			|				|
+			|				|
+			|				|
+		(0,0)-----→x  
+							63
+*/
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 		
@@ -263,7 +297,7 @@ int oled_thread_init(void)
                     oled_thread_entry,	//线程入口函数【entry】
                     RT_NULL,				    //线程入口函数参数【parameter】
                     1024,							  //线程栈大小，单位是字节【byte】
-                    10,								  //线程优先级【priority】
+                    8,								  //线程优先级【priority】
                     10);							  //线程的时间片大小【tick】= 100ms
 
     if (oled_tid != RT_NULL){
@@ -282,8 +316,6 @@ INIT_APP_EXPORT(oled_thread_init);
 /* OLED 下一页 */
 void next_oled_page(void)
 {
-		//数据打包成string型
-		buzzer_once();	
 		oled.pagenum ++;
 }
 MSH_CMD_EXPORT(next_oled_page,next_oled_page[page++]);
@@ -291,7 +323,6 @@ MSH_CMD_EXPORT(next_oled_page,next_oled_page[page++]);
 /* OLED 上一页 */
 void last_oled_page(void)
 {
-		buzzer_once();	
 		oled.pagenum --;
 }
 MSH_CMD_EXPORT(last_oled_page,last_oled_page[page--]);

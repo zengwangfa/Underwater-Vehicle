@@ -177,6 +177,36 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
 		}  	 
     }          
 }
+
+
+
+void OLED_ShowMyChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
+{      			    
+	u8 temp,t,t1;
+	u8 y0=y;
+	u8 csize=(size/8+((size%8)?1:0))*(size/2);		//得到字体一个字符对应点阵集所占的字节数
+	//chr=chr-' ';//得到偏移后的值		 
+  for(t=0;t<csize;t++)
+  {   
+		if(size==12)temp=my_font_1206[chr][t]; 	 	//调用1206字体
+		else if(size==16)temp=my_font_1608[chr][t];	//调用1608字体
+		else if(size==24)temp=asc2_2412[chr][t];	//调用2412字体
+		else return;								//没有的字库
+    for(t1=0;t1<8;t1++)
+		{
+			if(temp&0x80)OLED_DrawPoint(x,y,mode);
+			else OLED_DrawPoint(x,y,!mode);
+			temp<<=1;
+			y++;
+			if((y-y0)==size)
+			{
+				y=y0;
+				x++;
+				break;
+			}
+		}  	 
+    }          
+}
 //m^n函数
 u32 mypow(u8 m,u8 n)
 {

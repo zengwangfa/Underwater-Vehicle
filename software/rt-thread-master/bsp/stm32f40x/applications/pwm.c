@@ -7,7 +7,7 @@ u32 	FLASH_SIZE=16*1024*1024;	//FLASH 大小为16字节
 
 extern struct rt_event init_event;/* ALL_init 事件控制块 */
 
-struct  /* 定义u8 为方便 FLASH读写，使用时需要乘以 10 得到PWM值 */
+struct  /* 定义u8 为方便 FLASH读写，使用时需要乘以 10 得到 真实PWM值 */
 {
 		u8 open_value;		//机械臂 打开的PWM值 
 		u8 close_value;	 //机械臂 关闭的PWM值

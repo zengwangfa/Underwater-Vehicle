@@ -1,10 +1,10 @@
 #include "init.h"
 #include <string.h>
+#include "board.h"
+#include <rthw.h>
 
 /*----------------------- Variable Declarations -----------------------------*/
-
-
-
+		short res[10] = {0};
 struct STime		stcTime;
 struct SAcc 		stcAcc;
 struct SGyro 		stcGyro;
@@ -51,7 +51,9 @@ void CopeSerial2Data(unsigned char Data)
 }
 static void JY901_Convert(void* parameter)// ¶¨Ê±Æ÷1³¬Ê±º¯Êý  ½øÐÐJY901Ä£¿éÊý¾Ý×ª»»
 {
-		u8 i;
+		static u8 i = 0;
+
+
 		for(i = 0;i < 3;i++){	
 				JY901.Acc[i] = (float)stcAcc.a[i]/32768*16;
 				JY901.Gyro[i] = (float)stcGyro.w[i]/32768*2000;
@@ -59,6 +61,7 @@ static void JY901_Convert(void* parameter)// ¶¨Ê±Æ÷1³¬Ê±º¯Êý  ½øÐÐJY901Ä£¿éÊý¾Ý×
 				JY901.Mag[i] 		= stcMag.h[i];
 		}
 		JY901.Temperature = (float)stcAcc.T/100;
+
 }
 
 

@@ -1,5 +1,7 @@
 #include "init.h"
 #include <board.h>
+#include <stdio.h>
+
 
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -13,19 +15,16 @@ void init_thread_entry(void* parameter)
 		rt_err_t result;
 
 		 /* 接收事件，判断是否所有外设初始化完成 ，接收完后清除事件标志 */
-    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT),
+    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT | W25Q128_EVENT),
                       RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR,
                       RT_WAITING_FOREVER, &e) == RT_EOK)
     {
-				LOG_W("System Self-Check Completed :0x%x Success!!! ", e);
-				result = rt_thread_suspend (init_tid);  //挂起
+				LOG_W("System Self-Check Completed :0x%x ---> Success!!! ", e);
+				result = rt_thread_suspend (init_tid);  //线程挂起
 			  if (result != RT_EOK){
 						LOG_E("init_tid thread suspend failed.\n");
 				}
-
 		}
-		
-    
 		rt_thread_mdelay(1000);
 
 }
@@ -49,6 +48,32 @@ int All_thread_init(void)
 		return 0;
 }
 INIT_APP_EXPORT(All_thread_init);
+
+
+
+
+/* 冒泡 get电压 */
+short bubble(short *adc_value)
+{
+		u8 i,j;
+		short res = 0;   //reserve
+		short value = 0;
+
+		for(j = 0;j < 10;j++){
+				for(i = 0;i < 9-j;i++){
+						if( adc_value[i] > adc_value[i+1] ){ //从小到大
+								res = adc_value[i];
+								adc_value[i] = adc_value[i+1];
+								adc_value[i+1] = res;
+						}
+					
+				}
+		}
+		value = (*(adc_value+4)+ *(adc_value+5)+ *(adc_value+6))/3;		
+		return (short)value;
+} 
+
+
 
 
 

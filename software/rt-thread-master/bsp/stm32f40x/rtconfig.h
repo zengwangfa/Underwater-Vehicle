@@ -132,6 +132,7 @@
 
 /* Utilities */
 
+#define RT_USING_RYM
 #define RT_USING_ULOG
 #define ULOG_OUTPUT_LVL_D
 #define ULOG_OUTPUT_LVL 7

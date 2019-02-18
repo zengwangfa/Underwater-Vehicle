@@ -14,7 +14,8 @@
 //Copyright(C) 广州市星翼电子科技有限公司 2014-2024
 //All rights reserved									  
 ////////////////////////////////////////////////////////////////////////////////// 	
- 
+
+extern struct rt_event init_event;/* ALL_init 事件控制块 */
 u16 W25QXX_TYPE=W25Q128;	//默认是W25Q128
 
 //4Kbytes为一个Sector
@@ -44,7 +45,10 @@ int W25QXX_Init(void)
 	
 	W25QXX_TYPE=W25QXX_ReadID();	//读取FLASH ID.
 	if(W25QXX_TYPE == W25Q128){
-			LOG_W("Detection W25Q128,The FLASH_ID:%x",W25QXX_TYPE);}
+			LOG_I("W25Q128_Init()");
+			LOG_W("Detection W25Q128,The FLASH_ID:  %x",W25QXX_TYPE);//打印 FLASH_ID
+			rt_event_send(&init_event, W25Q128_EVENT);//发送初始化完成 信号量
+	}
 	return W25QXX_TYPE;
 }  
 INIT_APP_EXPORT(W25QXX_Init);

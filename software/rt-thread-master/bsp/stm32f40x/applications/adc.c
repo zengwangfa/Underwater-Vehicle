@@ -5,8 +5,8 @@
 
 
 /*----------------------- Variable Declarations -----------------------------*/
-/* ALL_init 事件控制块 */
-extern struct rt_event init_event;
+
+extern struct rt_event init_event;/* ALL_init 事件控制块 */
 u32 volatge = 0;
 u32 adc_value[10] = {0};
 

@@ -19,6 +19,7 @@
  * 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH. 
  * 2019-02-16     Dwfish       Creat System self-check methods[events]. 
  * 2019-02-16     Dwfish       Add W25Q128 FLASH To Save Important Parameters.
+ * 2019-02-16     Dwfish       Creat OLED Electronic compass.
 *
 ******************************************************************************/
 
@@ -58,6 +59,8 @@ int main(void)
 		
 		rt_thread_mdelay(1000);
 		get_time();  //打印参考时间戳
+		
+
     return 0;
 }
 
