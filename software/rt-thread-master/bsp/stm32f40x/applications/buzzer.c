@@ -15,6 +15,7 @@ struct
 		rt_uint8_t number;	
 }buzzer;
 
+
 /*----------------------- Function Implement --------------------------------*/
 
 void buzzer_thread_entry(void *parameter)

@@ -5,7 +5,7 @@
 
 /*----------------------- Variable Declarations -----------------------------*/
 
-struct rt_event init_event;/* ALL_init 事件控制块 */
+struct rt_event init_event;/* ALL_init 事件控制块. */
 
 rt_thread_t 	init_tid;
 

@@ -32,7 +32,7 @@ char *VehicleModeName[2] = {"AUV","ROV"};
 volatile MENU_LIST_e MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
 																				//volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接读值。
 
-/* OLED 变量 初始化 */
+/* OLED 变量 初始化. */
 oled_t oled = {	 StatusPage,		 //页码 pagenum
 								 StatusPage,	   //暂存页码 检测页码是否改变 pagechange
 								 0,              //页码改变标志位 pagechange flag

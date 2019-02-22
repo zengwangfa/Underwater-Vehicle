@@ -5,7 +5,7 @@
 #define VCAN_UART "uart3"
 
 
-/*----------------------- Variable Declarations -----------------------------*/
+/*----------------------- Variable Declarations. -----------------------------*/
 
 extern rt_device_t debug_uart_device;	
 extern struct JY901_t JY901; //JY901真实值结构体

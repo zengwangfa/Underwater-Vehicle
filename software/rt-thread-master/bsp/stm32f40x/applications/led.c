@@ -12,7 +12,7 @@
 #define LED_Turn(led_pin,status) 		rt_pin_write(led_pin ,status =! status) //取反
 
 /*----------------------- Variable Declarations -----------------------------*/
-/* ALL_init 事件控制块 */
+/* ALL_init 事件控制块. */
 extern struct rt_event init_event;
 extern rt_uint8_t VehicleStatus;
 

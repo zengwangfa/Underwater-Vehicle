@@ -34,7 +34,7 @@
 /* 打印相关日志信息 */
 int main(void)
 {
-    /* user app entry */
+    /* user app entry. */
 	  RCC_ClocksTypeDef Get_RCC_Clocks;
 		RCC_GetClocksFreq(&Get_RCC_Clocks); 
 	

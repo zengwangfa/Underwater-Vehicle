@@ -94,13 +94,10 @@ int timer1_init(void)
 INIT_APP_EXPORT(timer1_init);
 
 
-
-
-
 /* Get时间  time */
 void get_time(void)
 {
-		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出
+		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出.
 		char str[100];
 		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f\r\n",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
 		rt_kprintf(str);

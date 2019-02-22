@@ -11,7 +11,7 @@
 #define boma2_read 					rt_pin_read(BOMA2_PIN)
 
 /*----------------------- Variable Declarations -----------------------------*/
-/* ALL_init 事件控制块 */
+/* ALL_init 事件控制块. */
 extern struct rt_event init_event;
 extern oled_t oled;
 

@@ -14,7 +14,7 @@ unsigned char recv_data_p=0x00;  //  串口2接收数据指针
 #endif
 
 /*----------------------- Variable Declarations -----------------------------*/
-/* ALL_init 事件控制块 */
+/* ALL_init 事件控制块. */
 extern struct rt_event init_event;
 
 rt_device_t debug_uart_device;	

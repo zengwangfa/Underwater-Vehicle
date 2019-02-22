@@ -3,7 +3,6 @@
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
-
 /*----------------------- Variable Declarations -----------------------------*/
 
 extern struct rt_event init_event;/* ALL_init ÊÂ¼ş¿ØÖÆ¿é */
