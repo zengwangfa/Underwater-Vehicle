@@ -1,49 +1,57 @@
-# 航行器控制中心
+# 1.航行器控制中心
 
 该航控 基于国产 RT-Thread 实时操作系统，目前完成外设驱动及数据采集，后续为姿态算法 与 抗洋流算法.
 
 
-```gantt
-
-    title 项目开发流程
-    section 项目确定
-        需求分析       :a1, 2018-12-22, 3d
-        可行性方案     :after a1, 5d
-        
-    section 项目实施
-        核心控制板      :2019-01-05  , 5d
-        添加底层硬件驱动      :2019-01-08, 10d
-        算法          :2019-01-15, 10d
-        测试          :2019-01-22, 5d
-    section 发布验收
-        发布: 2d
-        验收: 3d
+# 2.目录说明
+```
++——Underwater_vehicle
+|--------+ docs 
+|--------+ hardware       
+|            └──.SchDoc
+|            ├──.PcbDoc
+|            └──.pdf
+|--------+ sofrware
+|            └──rt-thread-master
+|               └──bsp
+|                   └──stm32f40x
+|--------+ README.md
 ```
 
 
-#### 软件架构
-软件架构说明
+# 3.硬件架构
 ```
-RT-Thread 
-├──STM32F407ZGT6                  
-│   └──Peripherals
-│       ├── RGB [IO]   
-│       ├── KEY [IO] 
-│       ├── BUZZER [IO]             
-│       ├── OLED [Software SPI]       
-│       ├── Voltage Detection [ADC]             
-│       ├── Wifi [UART]             
-│       ├── Bluetooth [UART]       
-│       ├── Nine axis gyroscope [UART]
-│       ├── USB to serial port [CP2102 UART Bridge]
-│       ├── OV2640 Camera [unfinished]
-│       └── Be continued     
-├── hardware
-├── README.md  
-├── docs           //documents      
-└── Be continued  
++——Underwater_vehicle
+|--------+──DC 24V/48V 【Power management】 
+|--------+──STM32F407ZGT6 【Control-Center】                  
+|        |       └──【Normal Peripherals】
+|        │       ├── RGB [GPIO]   
+|        │       ├── KEY [GPIO] 
+|        │       ├── BUZZER [GPIO]      
+|        │       ├── Dial Switch [GPIO]   
+|        │       ├── OLED [Software SPI]       
+|        │       ├── Voltage Detection [ADC]             
+|        │       ├── Bluetooth [UART]       
+|        │       ├── W25Q128 FLASH [SPI]
+|        │       ├── USB to serial port CP2102 UART Bridge [UART]
+|        │       └──......  
+|        |       └── 【Important Peripherals】
+|        |       ├── Nine axis gyroscope [UART]
+|        |       ├── USR-C216 Wifi [UART]   
+|        |       ├── OV2640 Camera [unfinished]
+|        |       └──...... 
+|        +──Vehicle Devices
+|        └── Searchlights [GPIO]
+|        ├── Propellers [PWM]
+|        ├── Servo Motor - Mechanical arm [PWM]
+|        ├── CAMERAs 
+|        └──...... 
+```
 
-```
+![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
+
+
+# 4.软件
 
 #### 安装教程
 
@@ -63,7 +71,6 @@ RT-Thread
 2. 新建 Feat_xxx 分支
 3. 提交代码
 4. 新建 Pull Request
-
 
 
 
