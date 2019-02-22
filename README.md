@@ -10,8 +10,7 @@
 
 #### 软件架构
 软件架构说明
-```html
-
+```
 RT-Thread 
 ├──STM32F407ZGT6                  
 │   └──Peripherals
