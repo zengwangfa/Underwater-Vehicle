@@ -4,19 +4,19 @@
 
 | 硬件 | 描述 |
 | -- | -- |
-|芯片型号| STM32F40x全系列 |
+|芯片型号| STM32F407ZGT6 |
 |CPU| Cortex-M4 |
 |主频| 84MHz-168MHz |
 
 # 2.目录说明
 ```
 +——Underwater_vehicle
-|--------+ docs 
-|--------+ hardware       
+|--------+ docs: 一些设计参考文档
+|--------+ hardware:相关电路设计      
 |            └──.SchDoc
 |            ├──.PcbDoc
 |            └──.pdf
-|--------+ sofrware
+|--------+ software:相关软件设计
 |            └──rt-thread-master
 |               └──bsp
 |                   └──stm32f40x
@@ -78,16 +78,15 @@
 
 |接口|数量|备注|
 |:-:|:-:|:-:|
-|OLED|1路|soft SPI|
-|气压计|1路|soft I2C|
-|SWD调试接口|1路|SWD|
-|Bluetooth|1路|UART4|
-|BOOT|1路|BOOT0|
 |POWER IN|1路|电源电压接入口|
+|Bluetooth|1路|UART4|
+|SWD调试接口|1路|SWD|
+|气压计|1路|soft I2C|
+|OLED|1路|soft SPI|
+|BOOT|1路|BOOT0|
+|GND|2路|电源地接入口|
 |+5V|1路|+5V电压接入口|
 |+3.3V|1路|+3.3V电压接入口|
-|GND|2路|电源地接入口|
-
 
 ## 3.4 指示灯
 - Power-LED:+3.3V电源指示灯
@@ -101,19 +100,39 @@
 
 
 
-# 4.软件
+# 4.软件架构
+```
++——RT-Thread
+|    └──Kernel 【RT-Thread内核初始化】                  
+|    ├── Normal Peripherals Init 【普通外设初始化】
+|    ├── System self-check 【系统自检:检测是否所有外设初始化完成】 
+|           └── Read Gyroscope data 【读取JY901 九轴数据】 
+|           ├── Detection input devices 【检测输入设别】 
+|    └──...... 
+```
+
+
+
+# 5.Underwater Vehicle 的进展
+
+- [X] 基础功能
+    - [X] 普通外设初始化 by [@zengwangfa](https://github.com/zengwangfa)
+    - [X] 普通外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
+        - [X] Add LED/KEY/BUZZER by [@zengwangfa](https://github.com/zengwangfa) 
+        - [X] Add OLED/Gyroscope/ADC/PWM/FLASH by [@zengwangfa](https://github.com/zengwangfa) 
+    - [X] 内置MSH方法 by [@zengwangfa](https://github.com/zengwangfa)
+
 
 #### 安装教程
 
-1. KEIL5
+1. Keil5
 2. STM32F4XX package
 3. RT-Thread
 
 #### 使用说明
 
-1. NULL available
-2. NULL available
-3. NULL available
+- NULL available
+
 
 #### 参与贡献
 
@@ -121,6 +140,8 @@
 2. 新建 Feat_xxx 分支
 3. 提交代码
 4. 新建 Pull Request
+
+
 
 
 
