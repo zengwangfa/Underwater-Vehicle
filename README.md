@@ -2,6 +2,11 @@
 
 该航控 基于国产 RT-Thread 实时操作系统，目前完成外设驱动及数据采集，后续为姿态算法 与 抗洋流算法.
 
+| 硬件 | 描述 |
+| -- | -- |
+|芯片型号| STM32F40x全系列 |
+|CPU| Cortex-M4 |
+|主频| 84MHz-168MHz |
 
 # 2.目录说明
 ```
@@ -54,6 +59,8 @@
 ![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
 
 ------
+## 3.1 电源及 USB
+核心板可以通过 Micro-USB 或 5V 电源供电。使用 Micro-USB 接到电脑时，电脑上虚拟出一个串口。连接该串口后，可以通过 shell 命令行工具进行交互，也可以查看实时的日志信息。
 
 ## 3.2 功能接口
 |接口|数量|备注|
@@ -73,7 +80,7 @@
 |:-:|:-:|:-:|
 |OLED|1路|soft SPI|
 |气压计|1路|soft I2C|
-|SWD下载接口|1路|SWD|
+|SWD调试接口|1路|SWD|
 |Bluetooth|1路|UART4|
 |BOOT|1路|BOOT0|
 |POWER IN|1路|电源电压接入口|
@@ -87,7 +94,10 @@
 - RGB: User 自定义指示灯
 - Wifi-LED: Wifi连接指示灯
 
-
+## 3.5 按键
+- WRST:Wifi RESET 恢复出厂设置按键【长按3s】
+- SRST:STM32 RESET 复位
+- D10:GPIO-PD10 User自定义【OLED下一页】
 
 
 
