@@ -49,12 +49,14 @@
 ```
 
 ------
+## 3.1 控制中心
 
 ![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
 
 ------
 
-|功能接口|数量|备注|
+## 3.2 功能接口
+|接口|数量|备注|
 |:-:|:-:|:-:|
 |GPIO|2路|其他路均可复用为GPIO|
 |DAC|1路|DAC2|
@@ -63,15 +65,31 @@
 |UART|2路|UART4 —— UART5|
 |SPI|1路|SPI1|
 |CAN|1路|CAN1|
-|CAMERA|1路|DCMI|
+|OV-Camera|1路|DCMI|
 
-|其余接口|数量|备注|
+## 3.3 其他接口
+
+|接口|数量|备注|
 |:-:|:-:|:-:|
+|OLED|1路|soft SPI|
+|气压计|1路|soft I2C|
+|SWD下载接口|1路|SWD|
+|Bluetooth|1路|UART4|
 |BOOT|1路|BOOT0|
 |POWER IN|1路|电源电压接入口|
 |+5V|1路|+5V电压接入口|
 |+3.3V|1路|+3.3V电压接入口|
 |GND|2路|电源地接入口|
+
+
+## 3.4 指示灯
+- Power-LED:+3.3V电源指示灯
+- RGB: User 自定义指示灯
+- Wifi-LED: Wifi连接指示灯
+
+
+
+
 
 # 4.软件
 
