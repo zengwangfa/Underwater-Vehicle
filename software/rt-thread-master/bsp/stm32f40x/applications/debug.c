@@ -46,7 +46,7 @@ void vcan_sendware(void *wareaddr, unsigned int waresize)
 
 
 
-/*【机械臂】舵机 修改 【关闭值】 MSH方法 */
+/*debug 山外上位机调试 MSH方法 */
 static int debug(int argc, char **argv)
 {
     int result = 0;

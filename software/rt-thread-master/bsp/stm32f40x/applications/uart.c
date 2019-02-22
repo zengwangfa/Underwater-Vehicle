@@ -6,7 +6,7 @@
 #define JY901_UART_NAME       "uart2"
 #define DEBUG_UART_NAME       "uart3"
 
-#define Query_JY901_data 0     /* "1"为调试查询  "0"为正常发送 */
+#define Query_JY901_data 0     /* "1"为调试查询  "0"为正常读取 */
 
 #if Query_JY901_data
 char recv_buffer[128]; 				//串口2接收数据缓冲变量,

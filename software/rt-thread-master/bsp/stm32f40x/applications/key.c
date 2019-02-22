@@ -27,14 +27,13 @@ void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 	
     while (1)
     {
-				key_down();
 			
 				if(boma_value != boma_value_get()){
 						buzzer_bibi(1,1);	
 						boma_value = boma_value_get();	
 						rt_kprintf("\nCurrent Change: BOMA_Value = %d", boma_value);
 				}
-				rt_thread_mdelay(100);
+				rt_thread_mdelay(10);
     }
 }
 
@@ -49,15 +48,9 @@ rt_uint8_t boma_value_get(void)
 }
 
 /* 按键按下产生的任务 */
-void key_down(void)  
+void key_down(void *args)  
 {
-		if (rt_pin_read(KEY_PIN) == PIN_LOW){
-
-				oled.pagenum ++;
-					
-    }while(rt_pin_read(KEY_PIN) == PIN_LOW);
-
-
+				oled.pagenum ++;				
 }
 
 
@@ -76,8 +69,12 @@ int key_thread_init(void)
 				rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);    //功能按键  上拉输入
 				rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
 				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
-				LOG_I("KEY_Init()");
+				
+				rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);	/* 按键引脚为输入模式 */
+				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为beep_on */
+				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
 			
+				LOG_I("KEY_Init()");
 				rt_thread_startup(key_tid);
 				rt_event_send(&init_event, KEY_EVENT);
 		}

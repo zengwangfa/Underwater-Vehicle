@@ -4,7 +4,8 @@
 #include <rthw.h>
 
 /*----------------------- Variable Declarations -----------------------------*/
-		short res[10] = {0};
+short res[10] = {0};
+
 struct STime		stcTime;
 struct SAcc 		stcAcc;
 struct SGyro 		stcGyro;
@@ -16,7 +17,7 @@ struct SLonLat 	stcLonLat;
 struct SGPSV 		stcGPSV;
 struct SQ       stcQ;
 
-struct JY901_t JY901; //JY901真实值结构体
+struct JY901_t JY901 = {0}; //JY901真实值结构体
 
 /*----------------------- Function Implement --------------------------------*/
 
@@ -49,38 +50,48 @@ void CopeSerial2Data(unsigned char Data)
 		}
 
 }
-static void JY901_Convert(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
+
+void JY901_Convert(struct JY901_t * pArr)
 {
 		static u8 i = 0;
-
-
 		for(i = 0;i < 3;i++){	
-				JY901.Acc[i] = (float)stcAcc.a[i]/32768*16;
-				JY901.Gyro[i] = (float)stcGyro.w[i]/32768*2000;
-				JY901.Angle[i] = (float)stcAngle.angle[i]/32768*180;
-				JY901.Mag[i] 		= stcMag.h[i];
+				pArr->Acc[i] = (float)stcAcc.a[i]/32768*16;
+				pArr->Gyro[i] = (float)stcGyro.w[i]/32768*2000;
+				pArr->Angle[i] = (float)stcAngle.angle[i]/32768*180;
+				pArr->Mag[i] 		= stcMag.h[i];
 		}
-		JY901.Temperature = (float)stcAcc.T/100;
-
+		pArr->Temperature = (float)stcAcc.T/100;
 }
 
 
-int timer_init(void)
+static void TIME_OUT(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
+{
+	  /* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
+    rt_enter_critical();
+	
+		JY901_Convert(&JY901);
+
+		/* 调度器解锁 */
+    rt_exit_critical();
+}
+
+
+int timer1_init(void)
 {
 		/* 定时器的控制块 */
 		static rt_timer_t timer1;
     /* 创建定时器1 */
     timer1 = rt_timer_create("timer1",  /* 定时器名字是 timer1 */
-                        JY901_Convert, 	/* 超时时回调的处理函数 */
+                        TIME_OUT, 	/* 超时时回调的处理函数 */
                         RT_NULL, 			  /* 超时函数的入口参数 */
                         5,      			  /* 定时长度，以OS Tick为单位，即5个OS Tick   --> 50MS*/  
-                        RT_TIMER_FLAG_PERIODIC); /* 周期性定时器 */
+                        RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER); /* 周期性定时器 */
     /* 启动定时器 */
     if (timer1 != RT_NULL) rt_timer_start(timer1);
 
     return 0;
 }
-INIT_APP_EXPORT(timer_init);
+INIT_APP_EXPORT(timer1_init);
 
 
 
@@ -96,46 +107,24 @@ void get_time(void)
 }
 MSH_CMD_EXPORT(get_time,get acceleration[a]);
 
+
 /* Get加速度  acceleration */
-void *get_acc(void)
+void get_gyroscope(void)
 {		
 		char str[100];
 		sprintf(str,"Acc:%.3f %.3f %.3f\r\n",JY901.Acc[0],JY901.Acc[1],JY901.Acc[2]);
 		rt_kprintf(str);
-		return JY901.Acc;
-}
-MSH_CMD_EXPORT(get_acc,get acceleration[a]);
-
-/* Get 输出角速度  gyroscope*/
-void *get_gyro(void)
-{
-		char str[100];
 		sprintf(str,"Gyro:%.3f %.3f %.3f\r\n",JY901.Gyro[0],JY901.Gyro[1],JY901.Gyro[2]);
-		rt_kprintf(str);	
-		return JY901.Gyro;
-}
-MSH_CMD_EXPORT(get_gyro, get gyroscope[w]);
-
-/* Get 角度  angle */
-void *get_angle(void)
-{ 
-		char str[100];
+		rt_kprintf(str);
 		sprintf(str,"Angle:%.3f %.3f %.3f\r\n",JY901.Angle[0],JY901.Angle[1],JY901.Angle[2]);
-		rt_kprintf(str);		
-		return JY901.Angle;
-}
-MSH_CMD_EXPORT(get_angle, get angle[o]);
-
-
-/* Get 磁场  magnetic */
-void *get_mag(void)
-{
-		char str[100];
+		rt_kprintf(str);
 		sprintf(str,"Mag:%d %d %d\r\n",JY901.Mag[0],JY901.Mag[1],JY901.Mag[2]);
 		rt_kprintf(str);	
-		return JY901.Mag;
+	
+		return;
 }
-MSH_CMD_EXPORT(get_mag, get magnetic[B]);
+MSH_CMD_EXPORT(get_gyroscope,get JY901[a]);
+
 
 /* Get 温度  Temperature */
 float get_temperature(void)

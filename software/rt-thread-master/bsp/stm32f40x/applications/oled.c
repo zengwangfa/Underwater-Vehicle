@@ -33,9 +33,9 @@ volatile MENU_LIST_e MENU = StatusPage; //OLED³õÊ¼Ò³ÃæÎª ×´Ì¬Ò³. volatileÊÇÒ»ÖÖÀ
 																				//volatile µÄ×÷ÓÃ ÊÇ×÷ÎªÖ¸Áî¹Ø¼ü×Ö£¬È·±£±¾ÌõÖ¸Áî²»»áÒò±àÒëÆ÷µÄÓÅ»¯¶øÊ¡ÂÔ£¬ÇÒÒªÇóÃ¿´ÎÖ±½Ó¶ÁÖµ¡£
 
 /* OLED ±äÁ¿ ³õÊ¼»¯ */
-oled_t oled = {	 PicturePage,		 //Ò³Âë pagenum
-								 PicturePage,	   //ÔÝ´æÒ³Âë ¼ì²âÒ³ÂëÊÇ·ñ¸Ä±ä pagechange
-								 0,              //Ò³Âë¸Ä±ä±êÖ¾Î» pagechangeflag
+oled_t oled = {	 StatusPage,		 //Ò³Âë pagenum
+								 StatusPage,	   //ÔÝ´æÒ³Âë ¼ì²âÒ³ÂëÊÇ·ñ¸Ä±ä pagechange
+								 0,              //Ò³Âë¸Ä±ä±êÖ¾Î» pagechange flag
 								{	"StatusPage",
 									"GyroscopePage",
 									"FlashPage",
@@ -51,7 +51,7 @@ void menu_define(void) //²Ëµ¥¶¨Òå
 	if(oled.pagenum >= OLED_Page_MAX || oled.pagenum < StatusPage) oled.pagenum = StatusPage; //³¬³öÒ³Ãæ·¶Î§ ÔòÎªµÚÒ»Ò³
 	if(oled.pagechange != oled.pagenum){
 			buzzer_bibi(1,1);
-			rt_kprintf("Current Menu_Page: %s \n",oled.pagename[oled.pagenum]);
+			rt_kprintf("Current Menu_Page: %s \n",oled.pagename[oled.pagenum-1]);
 			OLED_Clear();
 			oled.pagechange_flag = 1;
 	}
@@ -77,7 +77,7 @@ void menu_define(void) //²Ëµ¥¶¨Òå
 	
 void oled_thread_entry(void* parameter)
 {
-	//Boot_Animation();	//¿ª»ú¶¯»­
+	Boot_Animation();	//¿ª»ú¶¯»­
 	OLED_Clear();
 
 	while(1)

@@ -23,7 +23,7 @@ void buzzer_thread_entry(void *parameter)
     while (1)
     {
 				buzzer_ring_task();
-				rt_thread_mdelay(30);
+				rt_thread_mdelay(10);
     }
 }
 

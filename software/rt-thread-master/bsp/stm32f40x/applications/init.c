@@ -59,9 +59,9 @@ short bubble(short *adc_value)
 		short res = 0;   //reserve
 		short value = 0;
 
-		for(j = 0;j < 10;j++){
+		for(j = 0;j < 10-1;j++){
 				for(i = 0;i < 9-j;i++){
-						if( adc_value[i] > adc_value[i+1] ){ //从小到大
+						if( adc_value[i] > adc_value[i+1] ){ //>升序   <降序
 								res = adc_value[i];
 								adc_value[i] = adc_value[i+1];
 								adc_value[i+1] = res;

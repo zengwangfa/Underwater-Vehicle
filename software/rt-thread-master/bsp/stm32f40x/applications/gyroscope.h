@@ -153,17 +153,17 @@ struct JY901_t
 /* Get时间  time */
 void get_time(void);
 
-/* Get加速度  acceleration */
-void *get_acc(void);
+/* Get  JY901 */
+void get_gyroscope(void);
 
-/* Get 输出角速度  gyroscope*/
-void *get_gyro(void);
+///* Get 输出角速度  gyroscope*/
+//void *get_gyro(void);
 
-/* Get 角度  angle */
-void *get_angle(void);
+///* Get 角度  angle */
+//void *get_angle(void);
 
-/* Get 磁场  magnetic */
-void *get_mag(void);
+///* Get 磁场  magnetic */
+//void *get_mag(void);
 
 /* Get 温度  Temperature */
 float get_temperature(void);
