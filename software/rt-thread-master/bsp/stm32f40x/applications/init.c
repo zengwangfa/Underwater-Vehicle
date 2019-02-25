@@ -19,7 +19,7 @@ void init_thread_entry(void* parameter)
                       RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR,
                       RT_WAITING_FOREVER, &e) == RT_EOK)
     {
-				LOG_W("System Self-Check Completed :0x%x ---> Success!!! ", e);
+				LOG_H("System Self-Check Completed :0x%x ---> Success!!! ", e);
 				result = rt_thread_suspend (init_tid);  //Ïß³Ì¹ÒÆð
 			  if (result != RT_EOK){
 						LOG_E("init_tid thread suspend failed.\n");

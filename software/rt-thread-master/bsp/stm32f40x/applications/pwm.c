@@ -62,14 +62,14 @@ static int servo_motor_openvalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        rt_kprintf("Usage: servo_motor_OpenValue_set 160\n");
+        LOG_I("Error! Proper Usage: servo_motor_OpenValue_set 160\n");
 				result = -RT_ERROR;
         goto _exit;
     }
 		servo_motor.open_value = atoi(argv[1]);
 		
 		W25QXX_Write(&servo_motor.open_value,0,1);		//从0个地址处写入数据
-		rt_kprintf("Write_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
+		LOG_H("Write_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
 _exit:
     return result;
 }
@@ -83,7 +83,7 @@ static int servo_motor_closevalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        rt_kprintf("Usage: servo_motor_CloseValue_set 115\n");
+        LOG_I("Error! Proper Usage: servo_motor_CloseValue_set 115\n");
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -91,7 +91,7 @@ static int servo_motor_closevalue_set(int argc, char **argv)
 
 		W25QXX_Write(&servo_motor.close_value,1,1);	//从1个地址处写入数据
 		
-		rt_kprintf("Write_Successed! Current ser_CloseValue:  %d\n",servo_motor.close_value);
+		LOG_H("Write_Successed! Current ser_CloseValue:  %d\n",servo_motor.close_value);
 _exit:
     return result;
 }
@@ -106,11 +106,11 @@ void list_value(void)
 		W25QXX_Read(&servo_motor.open_value,0,1);		// 地址0
 		W25QXX_Read(&servo_motor.close_value,1,1);	// 地址1
 	
-		rt_kprintf("variable name    value\n");
-    rt_kprintf("--------------  ---------\n");
-	  rt_kprintf("ser_OpenValue  	 %d\n",servo_motor.open_value);
-	  rt_kprintf("ser_CloseValue   %d\n",servo_motor.close_value);
-    rt_kprintf("                         \n");
+		LOG_H("variable name    value");
+    LOG_H("--------------  ---------");
+	  LOG_H("ser_OpenValue  	 %d",servo_motor.open_value);
+	  LOG_H("ser_CloseValue    %d",servo_motor.close_value);
+    LOG_H("                         \n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);
 

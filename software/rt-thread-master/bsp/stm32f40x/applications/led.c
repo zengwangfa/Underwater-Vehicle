@@ -95,11 +95,14 @@ static int led_on(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        rt_kprintf("Usage: led_on 68\nSpecies:[red[68]/green[69]/blue[70] \n");
+        rt_kprintf("Usage: led_on 68\n Species:[red[68]/green[69]/blue[70] \n");
 				result = -RT_ERROR;
         goto _exit;
     }
-		LED_ON(atoi(argv[1]));
+		if(atoi(argv[1]) == LED_Red || atoi(argv[1]) == LED_Blue || atoi(argv[1]) == LED_Green){
+				LED_ON(atoi(argv[1]));
+		}
+		else {rt_kprintf("Usage: led_on 68\n Species:[red[68]/green[69]/blue[70] \n");}
 _exit:
     return result;
 }
@@ -113,11 +116,14 @@ static int led_off(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        rt_kprintf("Usage: led_off 68\nSpecies:[red[68]/green[69]/blue[70] \n");
+        rt_kprintf("Usage: led_off 68\n Species:[red[68]/green[69]/blue[70] \n");
 				result = -RT_ERROR;
         goto _exit;
     }
-		LED_OFF(atoi(argv[1]));
+		if(atoi(argv[1]) == LED_Red || atoi(argv[1]) == LED_Blue || atoi(argv[1]) == LED_Green){
+				LED_OFF(atoi(argv[1]));
+		}
+		else {rt_kprintf("Usage: led_off 68\n Species:[red[68]/green[69]/blue[70] \n");}
 _exit:
     return result;
 }

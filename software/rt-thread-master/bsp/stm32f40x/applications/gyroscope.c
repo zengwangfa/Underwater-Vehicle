@@ -19,6 +19,8 @@ struct SQ       stcQ;
 
 struct JY901_t JY901 = {0}; //JY901真实值结构体
 
+int JY901_t_size = 0;
+
 /*----------------------- Function Implement --------------------------------*/
 
 //CopeSerialData为串口2中断调用函数，串口每收到一个数据，调用一次这个函数。
@@ -51,7 +53,8 @@ void CopeSerial2Data(unsigned char Data)
 
 }
 
-void JY901_Convert(struct JY901_t * pArr)
+/* JY901 数据转换 */
+void JY901_Convert(struct JY901_t * pArr) //
 {
 		static u8 i = 0;
 		for(i = 0;i < 3;i++){	
@@ -64,7 +67,7 @@ void JY901_Convert(struct JY901_t * pArr)
 }
 
 
-static void TIME_OUT(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
+static void time_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 {
 	  /* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
     rt_enter_critical();
@@ -82,7 +85,7 @@ int timer1_init(void)
 		static rt_timer_t timer1;
     /* 创建定时器1 */
     timer1 = rt_timer_create("timer1",  /* 定时器名字是 timer1 */
-                        TIME_OUT, 	/* 超时时回调的处理函数 */
+                        time_out, 		  /* 超时时回调的处理函数 */
                         RT_NULL, 			  /* 超时函数的入口参数 */
                         5,      			  /* 定时长度，以OS Tick为单位，即5个OS Tick   --> 50MS*/  
                         RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER); /* 周期性定时器 */
@@ -92,6 +95,18 @@ int timer1_init(void)
     return 0;
 }
 INIT_APP_EXPORT(timer1_init);
+
+
+void show_logo(void)
+{
+		rt_kprintf("      *      \n");
+		rt_kprintf(" *  *   *  * \n");
+		rt_kprintf("  *   e   *   \n");
+		rt_kprintf(" *  *   *  * \n");
+		rt_kprintf("      *      \n");	
+	
+}
+MSH_CMD_EXPORT(show_logo,show_logo);
 
 
 /* Get时间  time */

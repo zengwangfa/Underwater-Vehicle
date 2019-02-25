@@ -46,7 +46,7 @@ int W25QXX_Init(void)
 	W25QXX_TYPE=W25QXX_ReadID();	//读取FLASH ID.
 	if(W25QXX_TYPE == W25Q128){
 			LOG_I("W25Q128_Init()");
-			LOG_W("Detection W25Q128,The FLASH_ID:  %x",W25QXX_TYPE);//打印 FLASH_ID
+			LOG_H("Detection W25Q128,The FLASH_ID:  %x",W25QXX_TYPE);//打印 FLASH_ID
 			rt_event_send(&init_event, W25Q128_EVENT);//发送初始化完成 信号量
 	}
 	return W25QXX_TYPE;

@@ -18,7 +18,7 @@ void ware_test(void)
 	list[0] = (int)JY901.Angle[0]; //¸©Ñö½Ç Pitch
 	list[1] = (int)JY901.Angle[1]; //ºá¹ö½Ç Roll
 	list[2] = (int)JY901.Angle[2]; //Æ«º½½Ç Yaw
-	list[3] = (int)(stcAngle.angle[2]);//-(Servo_Duty-Servo_Duty_Md);
+	list[3] = 180;//-(Servo_Duty-Servo_Duty_Md);
 	list[4] = 90;//corner_meet_rn;//edge_start[1];//
 	list[5] = 0;
 	list[6] = 0;//camera_forecast_center;//
@@ -55,10 +55,12 @@ static int debug(int argc, char **argv)
 				rt_kprintf("Usage: debug 10  [notes:debug 10s]\n");
 				result = -RT_ERROR; goto _exit;
     }
-		count = atoi(argv[1])*1000/5;
+		count = atoi(argv[1])*1000/10;
+		rt_kprintf("Debug sending.");
 		while(count--){
 				ware_test();
 				rt_thread_mdelay(5);
+				if(count % 100 == 0){rt_kprintf(".");}
 		}
 		
 		rt_kprintf("Debug compeleted.");

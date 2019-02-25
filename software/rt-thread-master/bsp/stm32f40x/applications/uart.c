@@ -1,6 +1,6 @@
 #include "init.h"
 #include <rthw.h>
-
+#include <string.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define JY901_UART_NAME       "uart2"
@@ -23,10 +23,12 @@ rt_device_t uart2_device;
 struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT; /* 配置参数 */
 static struct rt_semaphore rx_sem;/* 用于接收消息的信号量 */
 
-u8 gyroscope_save[5] 		={0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
-u8 gyroscope_package[5] ={0xFF,0xAA,0x02,0xFF,0x07};	 //设置回传的数据包【0xFF 0x07 为所有数据包】
-u8 gyroscope_rate[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
-u8 gyroscope_led[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //0x00-开启LED  0x01-关闭LED   
+u8 gyroscope_save_array[5] 		={0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
+u8 gyroscope_package_array[5] ={0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据包【0x1F 0x00 为 <时间> <加速度> <角速度> <角度> <磁场>】
+u8 gyroscope_rate_array[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
+u8 gyroscope_led_array[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
+u8 gyroscope_baud_array[5] 		={0xFF,0xAA,0x04,0x02,0x00}; 	 //
+
 
 /*----------------------- Function Implement --------------------------------*/
 
@@ -66,32 +68,133 @@ static void gyroscope_thread_entry(void *parameter)
 	
 }
 
-/* 开启 九轴模块 数据包 */
-void on_gyroscope_package(void)
+/* 设置 九轴模块 保存配置 */
+void gyroscope_save(void)
 {
-		rt_device_write(uart2_device, 0, gyroscope_package, 5);   //ON package 开启回传数据包
-		rt_device_write(uart2_device, 0, gyroscope_save, 5);  //SAVE
+			rt_device_write(uart2_device, 0, gyroscope_save_array, 5);  //进入加速度校准
+			LOG_H("JY901 Save successed!");
 }
-MSH_CMD_EXPORT(on_gyroscope_package,turn on gyroscope_led);
+MSH_CMD_EXPORT(gyroscope_save,gyroscope_save);
+
+
+/* 设置 九轴模块 加速度校准 */
+void gyroscope_Acc_calibration_enter(void)
+{
+			u8 Acc_calibration_enter[5]={0xFF,0xAA,0x01,0x01,0x00};
+			rt_device_write(uart2_device, 0, Acc_calibration_enter, 5);   //ON LED
+			LOG_H("Acc_calibrationing... ");
+			rt_thread_mdelay(500);
+			LOG_H("calibration OK, Next -> <gyroscope_save>");
+}
+MSH_CMD_EXPORT(gyroscope_Acc_calibration_enter,gyroscope_Acc_calibration_enter);
+
+/* 设置 九轴模块 磁场 校准 */
+void gyroscope_Mag_calibration_enter(void)
+{
+			u8 Mag_calibration_enter[5]={0xFF,0xAA,0x01,0x02,0x00};
+			rt_device_write(uart2_device, 0, Mag_calibration_enter, 5);   //进入磁场校准
+			LOG_H("Mag_calibrationing... ");
+			rt_thread_mdelay(2000);
+			LOG_H("After completing the rotation of the three axes... ");
+			LOG_H("Nest -> <gyroscope_Mag_calibration_exit> ");
+
+}
+MSH_CMD_EXPORT(gyroscope_Mag_calibration_enter,gyroscope_Mag_calibration_enter);
+
+
+/* 退出 九轴模块 磁场校准 */
+void gyroscope_Mag_calibration_exit(void)
+{
+			u8 Mag_calibration_exit[5]={0xFF,0xAA,0x01,0x00,0x00};       
+			rt_device_write(uart2_device, 0, Mag_calibration_exit, 5);   //退出磁场校准
+			rt_thread_mdelay(100);
+			gyroscope_save();                                           //保配置
+			LOG_H("Mag_calibration OK & Saved! ");
+}
+MSH_CMD_EXPORT(gyroscope_Mag_calibration_exit,gyroscope_Mag_calibration_exit);
+
+
+
+
+
+
+/*  九轴模块  复位 */
+void gyroscope_reset(void)
+{
+		gyroscope_save_array[3] = 0x01;
+		rt_device_write(uart2_device, 0, gyroscope_save_array, 5);  //保存
+		LOG_H("JY901 Reset!");
+}
+MSH_CMD_EXPORT(gyroscope_reset,gyroscope reset);
+
+/* 开启 九轴模块 数据包 */
+void gyroscope_package_open(void)
+{
+		gyroscope_save_array[3] = 0x00;
+		rt_device_write(uart2_device, 0, gyroscope_package_array, 5);   //ON package 开启回传数据包
+		rt_device_write(uart2_device, 0, gyroscope_save_array, 5);  //SAVE
+		LOG_H("JY901 1.Time  2.Acc  3.Gyro  4.Angle  5.Mag OPEN!");
+}
+MSH_CMD_EXPORT(gyroscope_package_open,gyroscope package open);
 
 /* 开启 九轴模块 LED */
-void on_gyroscope_led(void)
+static int gyroscope_led(int argc, char **argv)
 {
-		gyroscope_led[3] = 0x00;
-		rt_device_write(uart2_device, 0, gyroscope_led, 5);   //ON LED
-		rt_device_write(uart2_device, 0, gyroscope_save, 5);  //SAVE
-}
-MSH_CMD_EXPORT(on_gyroscope_led,turn on gyroscope_led);
+	  int result = 0;
+    if (argc != 2){
+        LOG_E("Proper Usage: gyroscope_led on/off\n");
+				result = -RT_ERROR;
+        goto _exit;
+    }
 
-/* 关闭 九轴模块 LED */
-void off_gyroscope_led(void)
+		if( !strncmp(argv[1],"on",2) ){
+				gyroscope_led_array[3] = 0x00;
+				LOG_H("gyroscope_led on\n");
+		}
+		else if( !strncmp(argv[1],"off",3) ){
+				gyroscope_led_array[3] = 0x01;
+				LOG_H("gyroscope_led off\n");
+		}
+		else {
+				LOG_E("Error! Proper Usage: gyroscope_led on/off\n");goto _exit;
+		}
+		rt_device_write(uart2_device, 0, gyroscope_led_array, 5);   //ON LED
+		rt_device_write(uart2_device, 0, gyroscope_save_array, 5);  //保存
+		
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(gyroscope_led, gyroscope_led on/off);
+
+/* 设置 九轴模块 波特率为9600 */
+void gyroscope_baud_9600(void)
 {
-		gyroscope_led[3] = 0x01;
-		rt_device_write(uart2_device, 0, gyroscope_led, 5);   //OFF LED
-		rt_device_write(uart2_device, 0, gyroscope_save, 5);  //SAVE
+			rt_device_write(uart2_device, 0, gyroscope_baud_array, 5);   //ON LED
+			rt_device_write(uart2_device, 0, gyroscope_save_array, 5);  //保存
+			LOG_H("JY901 baud:9600 ");
 }
-MSH_CMD_EXPORT(off_gyroscope_led,turn off gyroscope_led);
+MSH_CMD_EXPORT(gyroscope_baud_9600,Modify JY901 baud rate);
 
+
+/*
+static int servo_motor_openvalue_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        rt_kprintf("Usage: servo_motor_OpenValue_set 160\n");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		servo_motor.open_value = atoi(argv[1]);
+		
+		W25QXX_Write(&servo_motor.open_value,0,1);		//从0个地址处写入数据
+		rt_kprintf("Write_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(servo_motor_openvalue_set,ag: servo_motor_OpenValue_set 160);
+
+*/
 
 int uart_gyroscope(void)
 {

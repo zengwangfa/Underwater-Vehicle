@@ -2,6 +2,7 @@
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
+#define VoltgeParameter 23.4
 
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -46,7 +47,7 @@ int adc_thread_init(void)
 
     if (adc_tid != RT_NULL){
 				adc_init();
-				LOG_W("System Self-Checking... ");
+				LOG_H("System Self-Checking... ");
 				LOG_I("adc_init()");
 			
 				rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
@@ -81,14 +82,14 @@ double get_vol(void)
 				}
 		}
 		volatge = (*(adc_value+4)+ *(adc_value+5)+ *(adc_value+6))/3;		
-		return (double)volatge*3.3*1.52/4096;
+		return (double)volatge*3.3*VoltgeParameter/4096;
 } 
 
 /* MSH  get 电压方法 */
 void get_voltage(void)
 {
 		char str[128];
-		sprintf(str,"voltage:%.2f\r\n",(double)volatge*3.3*1.52/4096 ); // 23.4为分压电路系数
+		sprintf(str,"voltage:%.2f\r\n",(double)volatge*3.3*VoltgeParameter/4096 ); // 23.4为分压电路系数
 		rt_kprintf(str);
 }
 MSH_CMD_EXPORT(get_voltage,get voltage[u]);

@@ -36,9 +36,9 @@ int main(void)
 {
     /* user app entry. */
 	  RCC_ClocksTypeDef Get_RCC_Clocks;
-		RCC_GetClocksFreq(&Get_RCC_Clocks); 
+		RCC_GetClocksFreq(&Get_RCC_Clocks); //获取系统时钟
 	
-		LOG_W("Clock:%d Hz",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
+		LOG_W("Clock: %d Hz",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
 		rt_kprintf("* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");	
 		rt_kprintf("* ProjectName: Underwater Vehicle Control	\n");
 		rt_kprintf("* Desc:    Peripherals control	\n");
@@ -62,6 +62,7 @@ int main(void)
 		rt_kprintf("* 2019-02-16     Dwfish       Add W25Q128 FLASH To Save Important Parameters.\n");
 		rt_kprintf("* 2019-02-16     Dwfish       Creat OLED Electronic compass.\n");
 		rt_kprintf("* 2019-02-19     Dwfish       Add VACN host computer debug.\n");
+		rt_kprintf("* 2019-02-20     Dwfish       Add log method.\n");
 		rt_kprintf("* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");	 
 		
 		rt_thread_mdelay(1000);
