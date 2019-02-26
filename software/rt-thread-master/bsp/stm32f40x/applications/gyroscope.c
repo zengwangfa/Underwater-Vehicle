@@ -3,6 +3,10 @@
 #include "board.h"
 #include <rthw.h>
 
+/*---------------------- Constant / Macro Definitions -----------------------*/
+
+#define PACKET_LENGTH      11    //数据包长度
+
 /*----------------------- Variable Declarations -----------------------------*/
 short res[10] = {0};
 
@@ -19,36 +23,50 @@ struct SQ       stcQ;
 
 struct JY901_t JY901 = {0}; //JY901真实值结构体
 
-int JY901_t_size = 0;
-
 /*----------------------- Function Implement --------------------------------*/
 
 //CopeSerialData为串口2中断调用函数，串口每收到一个数据，调用一次这个函数。
 void CopeSerial2Data(unsigned char Data)
 {
-		static unsigned char RxBuffer[250];
-		static unsigned char RxCnt = 0;	
-
-		RxBuffer[RxCnt++]=Data;	//将收到的数据存入缓冲区中
+		static unsigned char RxBuffer[50];  //数据包
+		static unsigned char RxCheck = 0;	  //尾校验字
+		static unsigned char RxCount = 0;	    //接收计数
+		static unsigned char i = 0;	   		  //接收计数
+	
+		RxBuffer[RxCount++] = Data;	//将收到的数据存入缓冲区中
+	
 		if (RxBuffer[0]!=0x55){ //数据头不对，则重新开始寻找0x55数据头
-				RxCnt=0;
+				RxCount=0;					  //清空缓存区
 				return;
 		}
-		if (RxCnt<11) {return;}//数据不满11个，则返回
-		else{
+		if (RxCount < PACKET_LENGTH) {return;}//数据不满11个，则返回
+		
+		/*********** 只有接收满11个字节数据 才会进入以下程序 ************/
+		for(i = 0;i < 10;i++){
+				RxCheck += RxBuffer[i]; //校验位累加
+		}
+		
+		if(	RxCheck == RxBuffer[PACKET_LENGTH-1]){//判断数据包校验 是否正确
+	
 				switch(RxBuffer[1]){//判断数据是哪种数据，然后将其拷贝到对应的结构体中，有些数据包需要通过上位机打开对应的输出后，才能接收到这个数据包的数据
-						case 0x50:	memcpy(&stcTime,&RxBuffer[2],8);break;//memcpy为编译器自带的内存拷贝函数，需引用"string.h"，将接收缓冲区的字符拷贝到数据结构体里面，从而实现数据的解析。
-						case 0x51:	memcpy(&stcAcc,&RxBuffer[2],8);break;
-						case 0x52:	memcpy(&stcGyro,&RxBuffer[2],8);break;
-						case 0x53:	memcpy(&stcAngle,&RxBuffer[2],8);break;
-						case 0x54:	memcpy(&stcMag,&RxBuffer[2],8);break;
+						case 0x50:	memcpy(&stcTime,&RxBuffer[2],8);	 break;//memcpy为编译器自带的内存拷贝函数，需引用"string.h"，将接收缓冲区的字符拷贝到数据结构体里面，从而实现数据的解析。
+						case 0x51:	memcpy(&stcAcc,&RxBuffer[2],8);		 break;
+						case 0x52:	memcpy(&stcGyro,&RxBuffer[2],8);	 break;
+						case 0x53:	memcpy(&stcAngle,&RxBuffer[2],8);	 break;
+						case 0x54:	memcpy(&stcMag,&RxBuffer[2],8);		 break;
 						case 0x55:	memcpy(&stcDStatus,&RxBuffer[2],8);break;
-						case 0x56:	memcpy(&stcPress,&RxBuffer[2],8);break;
-						case 0x57:	memcpy(&stcLonLat,&RxBuffer[2],8);break;
-						case 0x58:	memcpy(&stcGPSV,&RxBuffer[2],8);break;
-						case 0x59:	memcpy(&stcQ,&RxBuffer[2],8);break;
+						case 0x56:	memcpy(&stcPress,&RxBuffer[2],8);	 break;
+						case 0x57:	memcpy(&stcLonLat,&RxBuffer[2],8); break;
+						case 0x58:	memcpy(&stcGPSV,&RxBuffer[2],8);	 break;
+						case 0x59:	memcpy(&stcQ,&RxBuffer[2],8);			 break;
 				}
-				RxCnt=0;//清空缓存区
+				RxCount = 0;//清空缓存区
+				RxCheck = 0;//校验位清零
+		}
+		else{  //错误清零
+				RxCount = 0;//清空缓存区
+				RxCheck = 0;//校验位清零
+				return;
 		}
 
 }
@@ -113,9 +131,9 @@ MSH_CMD_EXPORT(show_logo,show_logo);
 void get_time(void)
 {
 		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出.
-		char str[100];
+		char str[50];
 		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f\r\n",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
-		rt_kprintf(str);
+		LOG_H(str);
 }
 MSH_CMD_EXPORT(get_time,get acceleration[a]);
 
@@ -123,15 +141,15 @@ MSH_CMD_EXPORT(get_time,get acceleration[a]);
 /* Get加速度  acceleration */
 void get_gyroscope(void)
 {		
-		char str[100];
-		sprintf(str,"Acc:%.3f %.3f %.3f\r\n",JY901.Acc[0],JY901.Acc[1],JY901.Acc[2]);
-		rt_kprintf(str);
-		sprintf(str,"Gyro:%.3f %.3f %.3f\r\n",JY901.Gyro[0],JY901.Gyro[1],JY901.Gyro[2]);
-		rt_kprintf(str);
-		sprintf(str,"Angle:%.3f %.3f %.3f\r\n",JY901.Angle[0],JY901.Angle[1],JY901.Angle[2]);
-		rt_kprintf(str);
-		sprintf(str,"Mag:%d %d %d\r\n",JY901.Mag[0],JY901.Mag[1],JY901.Mag[2]);
-		rt_kprintf(str);	
+		char str[50];
+		sprintf(str,"Acc:%.3f %.3f %.3f",JY901.Acc[0],JY901.Acc[1],JY901.Acc[2]);
+		LOG_H(str);
+		sprintf(str,"Gyro:%.3f %.3f %.3f",JY901.Gyro[0],JY901.Gyro[1],JY901.Gyro[2]);
+		LOG_H(str);
+		sprintf(str,"Angle:%.3f %.3f %.3f",JY901.Angle[0],JY901.Angle[1],JY901.Angle[2]);
+		LOG_H(str);
+		sprintf(str,"Mag:%d %d %d",JY901.Mag[0],JY901.Mag[1],JY901.Mag[2]);
+		LOG_H(str);	
 	
 		return;
 }
@@ -141,9 +159,9 @@ MSH_CMD_EXPORT(get_gyroscope,get JY901[a]);
 /* Get 温度  Temperature */
 float get_temperature(void)
 {
-		char str[100];
+		char str[50];
 		sprintf(str,"Temperature:%.2f C\r\n",JY901.Temperature);
-		rt_kprintf(str);	
+		LOG_H(str);	
 		return JY901.Temperature;
 }
 MSH_CMD_EXPORT(get_temperature, get Temperature[T]);

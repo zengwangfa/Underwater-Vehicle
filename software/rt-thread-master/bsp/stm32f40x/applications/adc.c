@@ -2,7 +2,7 @@
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
-#define VoltgeParameter 23.4
+#define VoltgeParameter 1.4
 
 /*----------------------- Variable Declarations -----------------------------*/
 

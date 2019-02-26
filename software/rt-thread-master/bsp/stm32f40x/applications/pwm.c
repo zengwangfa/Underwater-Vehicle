@@ -106,10 +106,10 @@ void list_value(void)
 		W25QXX_Read(&servo_motor.open_value,0,1);		// µÿ÷∑0
 		W25QXX_Read(&servo_motor.close_value,1,1);	// µÿ÷∑1
 	
-		LOG_H("variable name    value");
+		LOG_H	("variable name    value");
     LOG_H("--------------  ---------");
-	  LOG_H("ser_OpenValue  	 %d",servo_motor.open_value);
-	  LOG_H("ser_CloseValue    %d",servo_motor.close_value);
+	  LOG_H("ser_OpenValue  	 %d\n",servo_motor.open_value);
+	  LOG_H("ser_CloseValue    %d\n",servo_motor.close_value);
     LOG_H("                         \n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);

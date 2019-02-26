@@ -84,7 +84,7 @@ void gyroscope_Acc_calibration_enter(void)
 			rt_device_write(uart2_device, 0, Acc_calibration_enter, 5);   //ON LED
 			LOG_H("Acc_calibrationing... ");
 			rt_thread_mdelay(500);
-			LOG_H("calibration OK, Next -> <gyroscope_save>");
+			LOG_H("calibration OK, Next -> [gyroscope_save]");
 }
 MSH_CMD_EXPORT(gyroscope_Acc_calibration_enter,gyroscope_Acc_calibration_enter);
 
@@ -96,7 +96,7 @@ void gyroscope_Mag_calibration_enter(void)
 			LOG_H("Mag_calibrationing... ");
 			rt_thread_mdelay(2000);
 			LOG_H("After completing the rotation of the three axes... ");
-			LOG_H("Nest -> <gyroscope_Mag_calibration_exit> ");
+			LOG_H("Nest -> [gyroscope_Mag_calibration_exit] ");
 
 }
 MSH_CMD_EXPORT(gyroscope_Mag_calibration_enter,gyroscope_Mag_calibration_enter);
@@ -115,9 +115,6 @@ MSH_CMD_EXPORT(gyroscope_Mag_calibration_exit,gyroscope_Mag_calibration_exit);
 
 
 
-
-
-
 /*  九轴模块  复位 */
 void gyroscope_reset(void)
 {
@@ -127,13 +124,14 @@ void gyroscope_reset(void)
 }
 MSH_CMD_EXPORT(gyroscope_reset,gyroscope reset);
 
+
 /* 开启 九轴模块 数据包 */
 void gyroscope_package_open(void)
 {
 		gyroscope_save_array[3] = 0x00;
 		rt_device_write(uart2_device, 0, gyroscope_package_array, 5);   //ON package 开启回传数据包
 		rt_device_write(uart2_device, 0, gyroscope_save_array, 5);  //SAVE
-		LOG_H("JY901 1.Time  2.Acc  3.Gyro  4.Angle  5.Mag OPEN!");
+		LOG_H("Open successed! JY901: 1.Time  2.Acc  3.Gyro  4.Angle  5.Mag OPEN!");
 }
 MSH_CMD_EXPORT(gyroscope_package_open,gyroscope package open);
 
@@ -147,13 +145,13 @@ static int gyroscope_led(int argc, char **argv)
         goto _exit;
     }
 
-		if( !strncmp(argv[1],"on",2) ){
+		if( !strcmp(argv[1],"on") ){
 				gyroscope_led_array[3] = 0x00;
-				LOG_H("gyroscope_led on\n");
+				LOG_H("Operation is successful! gyroscope_led on\n");
 		}
 		else if( !strncmp(argv[1],"off",3) ){
 				gyroscope_led_array[3] = 0x01;
-				LOG_H("gyroscope_led off\n");
+				LOG_H("Operation is successful! gyroscope_led off\n");
 		}
 		else {
 				LOG_E("Error! Proper Usage: gyroscope_led on/off\n");goto _exit;
@@ -176,25 +174,6 @@ void gyroscope_baud_9600(void)
 MSH_CMD_EXPORT(gyroscope_baud_9600,Modify JY901 baud rate);
 
 
-/*
-static int servo_motor_openvalue_set(int argc, char **argv)
-{
-    int result = 0;
-    if (argc != 2){
-        rt_kprintf("Usage: servo_motor_OpenValue_set 160\n");
-				result = -RT_ERROR;
-        goto _exit;
-    }
-		servo_motor.open_value = atoi(argv[1]);
-		
-		W25QXX_Write(&servo_motor.open_value,0,1);		//从0个地址处写入数据
-		rt_kprintf("Write_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
-_exit:
-    return result;
-}
-MSH_CMD_EXPORT(servo_motor_openvalue_set,ag: servo_motor_OpenValue_set 160);
-
-*/
 
 int uart_gyroscope(void)
 {
@@ -207,8 +186,8 @@ int uart_gyroscope(void)
 		LOG_I("debug serial:  %s", debug_uart_device);
 		rt_device_open(debug_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
 	
-    if (uart2_device != RT_NULL)
-    {
+    if (uart2_device != RT_NULL){
+			
 					/* 以读写以及中断接打开串口设备 */
 					rt_device_open(uart2_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
 					config.baud_rate = BAUD_RATE_9600;

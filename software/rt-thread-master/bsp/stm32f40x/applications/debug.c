@@ -29,7 +29,6 @@ void ware_test(void)
 }
 
 
-
 void vcan_sendware(void *wareaddr, unsigned int waresize)
 {
 		#define CMD_WARE     3
@@ -46,14 +45,15 @@ void vcan_sendware(void *wareaddr, unsigned int waresize)
 
 
 
-/*debug 山外上位机调试 MSH方法 */
+/* debug 山外上位机调试 MSH方法 */
 static int debug(int argc, char **argv)
 {
     int result = 0;
 		short count = 0;
     if (argc != 2){
 				rt_kprintf("Usage: debug 10  [notes:debug 10s]\n");
-				result = -RT_ERROR; goto _exit;
+				result = -RT_ERROR; 
+				goto _exit;  
     }
 		count = atoi(argv[1])*1000/10;
 		rt_kprintf("Debug sending.");
@@ -61,8 +61,7 @@ static int debug(int argc, char **argv)
 				ware_test();
 				rt_thread_mdelay(5);
 				if(count % 100 == 0){rt_kprintf(".");}
-		}
-		
+		}	
 		rt_kprintf("Debug compeleted.");
 _exit:
     return result;

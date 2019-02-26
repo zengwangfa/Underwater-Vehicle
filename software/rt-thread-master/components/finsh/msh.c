@@ -48,13 +48,13 @@ rt_bool_t msh_is_used(void)
     return __msh_state;
 }
 
-static int msh_exit(int argc, char **argv)
-{
-    /* return to finsh shell mode */
-    __msh_state = RT_FALSE;
-    return 0;
-}
-FINSH_FUNCTION_EXPORT_ALIAS(msh_exit, __cmd_exit, return to RT-Thread shell mode.);
+//static int msh_exit(int argc, char **argv)
+//{
+//    /* return to finsh shell mode */
+//    __msh_state = RT_FALSE;
+//    return 0;
+//}
+//FINSH_FUNCTION_EXPORT_ALIAS(msh_exit, __cmd_exit, return to RT-Thread shell mode.);
 
 static int msh_enter(void)
 {

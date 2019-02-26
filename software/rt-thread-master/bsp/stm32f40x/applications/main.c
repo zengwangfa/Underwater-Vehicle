@@ -73,3 +73,46 @@ int main(void)
 }
 
 
+
+
+
+/*
+
+Notes:
+
+1.JY901 方位角数据漂移
+
+①:使用前需要校准
+②校准时不能受周围磁场干扰
+使用常见问题指南:
+http://wiki.wit-motion.com/doku.php?id=wt901常见问题
+
+
+2.RT-Thread如何输出浮点型：
+
+sample:
+		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出.
+		char str[100];
+		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f\r\n",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
+		rt_kprintf(str);
+
+
+3.W25Q128 ID读取不正确：
+
+SPI初始化配置时:
+		< SPI_BaudRatePrescaler_64 >  -> 定义波特率预分频的值  不能太大也不能太小.
+
+
+
+
+
+
+*/
+
+
+
+
+
+
+
+

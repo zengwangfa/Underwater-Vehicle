@@ -41,8 +41,9 @@ void ulog_deinit(void);
  * LOG_E("this is a error log!");
  */
 #define LOG_E(...)                     ulog_e(LOG_TAG, __VA_ARGS__)
-#define LOG_W(...)                     ulog_w(LOG_TAG, __VA_ARGS__)
-#define LOG_I(...)                     ulog_i(LOG_TAG, __VA_ARGS__)
+#define LOG_H(...)                     ulog_h(LOG_TAG, __VA_ARGS__)//提示
+#define LOG_W(...)                     ulog_w(LOG_TAG, __VA_ARGS__)//警告级
+#define LOG_I(...)                     ulog_i(LOG_TAG, __VA_ARGS__)//
 #define LOG_D(...)                     ulog_d(LOG_TAG, __VA_ARGS__)
 #define LOG_RAW(...)                   ulog_raw(__VA_ARGS__)
 #define LOG_HEX(name, width, buf, size)      ulog_hex(name, width, buf, size)

@@ -17,6 +17,7 @@ extern "C" {
 
 /* logger level, the number is compatible for syslog */
 #define LOG_LVL_ASSERT                 0
+#define LOG_LVL_HINT           				 1
 #define LOG_LVL_ERROR                  3
 #define LOG_LVL_WARNING                4
 #define LOG_LVL_INFO                   6
@@ -57,7 +58,7 @@ extern "C" {
     #if defined(DBG_SECTION_NAME)
         #define LOG_TAG                DBG_SECTION_NAME
     #else
-        #define LOG_TAG                "NO_TAG"
+        #define LOG_TAG                "@ JMU"
     #endif
 #endif /* !defined(LOG_TAG) */
 
@@ -68,8 +69,14 @@ extern "C" {
     #else
         #define LOG_LVL                LOG_LVL_DBG
     #endif
-#endif /* !defined(LOG_LVL) */
+#endif /* !defined(LOG_LVL) ulog_h(LOG_TAG, __VA_ARGS__)*/
 
+#if (LOG_LVL >= LOG_LVL_HINT) && (ULOG_OUTPUT_LVL >= LOG_LVL_HINT)
+    #define ulog_h(TAG, ...)           ulog_output(LOG_LVL_HINT, TAG, RT_TRUE, __VA_ARGS__)
+#else
+    #define ulog_h(TAG, ...)
+#endif /* (LOG_LVL >= LOG_LVL_DBG) && (ULOG_OUTPUT_LVL >= LOG_LVL_DBG) */
+		
 #if (LOG_LVL >= LOG_LVL_DBG) && (ULOG_OUTPUT_LVL >= LOG_LVL_DBG)
     #define ulog_d(TAG, ...)           ulog_output(LOG_LVL_DBG, TAG, RT_TRUE, __VA_ARGS__)
 #else

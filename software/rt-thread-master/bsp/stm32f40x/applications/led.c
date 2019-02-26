@@ -1,4 +1,5 @@
 #include "init.h"
+#include "string.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGBµÆÒý½ÅºÅ
@@ -95,36 +96,41 @@ static int led_on(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        rt_kprintf("Usage: led_on 68\n Species:[red[68]/green[69]/blue[70] \n");
+        rt_kprintf("Error! Proper Usage: led_on R\n Species:R /G /B \n");
 				result = -RT_ERROR;
         goto _exit;
     }
-		if(atoi(argv[1]) == LED_Red || atoi(argv[1]) == LED_Blue || atoi(argv[1]) == LED_Green){
-				LED_ON(atoi(argv[1]));
+		
+		switch(*argv[1]){
+				case 'R':LED_ON(LED_Red);break;
+				case 'G':LED_ON(LED_Green);break;
+				case 'B':LED_ON(LED_Blue);break;
+				default:LOG_E("Error! Proper Usage: led_on R\n Species:R /G /B \n");break;
 		}
-		else {rt_kprintf("Usage: led_on 68\n Species:[red[68]/green[69]/blue[70] \n");}
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(led_on,ag:led_on 68  Species:[red[68]/green[69]/blue[70]] );
+MSH_CMD_EXPORT(led_on,ag: led_on R  );
 
 
 /* led off MSH·½·¨ */
 static int led_off(int argc, char **argv)
 {
-
     int result = 0;
 
     if (argc != 2){
-        rt_kprintf("Usage: led_off 68\n Species:[red[68]/green[69]/blue[70] \n");
+        rt_kprintf("Error! Proper Usage: led_off R\n Species:R /G /B \n");
 				result = -RT_ERROR;
         goto _exit;
     }
-		if(atoi(argv[1]) == LED_Red || atoi(argv[1]) == LED_Blue || atoi(argv[1]) == LED_Green){
-				LED_OFF(atoi(argv[1]));
+		
+		switch(*argv[1]){
+				case 'R':LED_OFF(LED_Red);break;
+				case 'G':LED_OFF(LED_Green);break;
+				case 'B':LED_OFF(LED_Blue);break;
+				default:LOG_E("Error! Proper Usage: led_off R\n Species:R /G /B \n");break;
 		}
-		else {rt_kprintf("Usage: led_off 68\n Species:[red[68]/green[69]/blue[70] \n");}
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(led_off,ag:led_off 68  Species:[red[68]/green[69]/blue[70]] );
+MSH_CMD_EXPORT(led_off,ag:led_off R  );

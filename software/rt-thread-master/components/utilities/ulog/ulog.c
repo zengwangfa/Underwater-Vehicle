@@ -68,6 +68,9 @@
 #ifndef ULOG_COLOR_ASSERT
 #define ULOG_COLOR_ASSERT              (F_MAGENTA)
 #endif
+#ifndef ULOG_COLOR_HINT
+#define ULOG_COLOR_HINT        				 (F_BLUE)
+#endif
 #endif /* ULOG_USING_COLOR */
 
 #if ULOG_LINE_BUF_SIZE < 80
@@ -112,12 +115,12 @@ struct rt_ulog
 static const char * const level_output_info[] =
 {
         "A/",
-        NULL,
+        "H/",
         NULL,
         "E/",
         "W/",
         NULL,
-        "I/",
+        "log/",
         "D/",
 };
 
@@ -126,7 +129,7 @@ static const char * const level_output_info[] =
 static const char * const color_output_info[] =
 {
         ULOG_COLOR_ASSERT,
-        NULL,
+        ULOG_COLOR_HINT,
         NULL,
         ULOG_COLOR_ERROR,
         ULOG_COLOR_WARN,
