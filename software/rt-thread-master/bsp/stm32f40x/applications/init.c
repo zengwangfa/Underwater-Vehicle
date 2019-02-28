@@ -15,14 +15,14 @@ void init_thread_entry(void* parameter)
 		rt_err_t result;
 
 		 /* 接收事件，判断是否所有外设初始化完成 ，接收完后清除事件标志 */
-    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT | W25Q128_EVENT),
+    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT ),
                       RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR,
                       RT_WAITING_FOREVER, &e) == RT_EOK)
     {
-				LOG_H("System Self-Check Completed :0x%x ---> Success!!! ", e);
+				log_i("System Self-Check Completed :0x%x ---> Success!!! ", e);
 				result = rt_thread_suspend (init_tid);  //线程挂起
 			  if (result != RT_EOK){
-						LOG_E("init_tid thread suspend failed.\n");
+						log_e("init_tid thread suspend failed.\n");
 				}
 		}
 		rt_thread_mdelay(1000);
@@ -42,7 +42,7 @@ int All_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (init_tid != RT_NULL){
-				LOG_I("Init_Init()");
+				log_i("Init_Init()");
 				rt_thread_startup(init_tid);
 		}
 		return 0;

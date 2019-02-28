@@ -21,6 +21,7 @@
  * 2019-02-16     Dwfish       Add W25Q128 FLASH To Save Important Parameters.
  * 2019-02-16     Dwfish       Creat OLED Electronic compass.
  * 2019-02-19     Dwfish       Add VACN host computer debug.
+ * 2019-02-20     Dwfish       Add Easylog && Easyflash && <update> msh.
 *
 ******************************************************************************/
 
@@ -37,8 +38,10 @@ int main(void)
     /* user app entry. */
 	  RCC_ClocksTypeDef Get_RCC_Clocks;
 		RCC_GetClocksFreq(&Get_RCC_Clocks); //获取系统时钟
+
 	
-		LOG_W("Clock: %d Hz",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
+		log_w("Clock: %d Hz \n",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
+
 		rt_kprintf("* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");	
 		rt_kprintf("* ProjectName: Underwater Vehicle Control	\n");
 		rt_kprintf("* Desc:    Peripherals control	\n");
@@ -56,18 +59,19 @@ int main(void)
 		rt_kprintf("* 2019-02-09     Dwfish       Creat Get_Gyroscope Thread.\n");
 		rt_kprintf("* 2019-02-09     Dwfish       Creat PWM / ADC Thread.\n");
 	
-		rt_kprintf("* 2019-02-11     Dwfish       Creat MSHs (some get methods) & Improved OLED Display. \n");
+		rt_kprintf("* 2019-02-11     Dwfish       Creat MSHs (some get methods) && Improved OLED Display. \n");
 		rt_kprintf("* 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH-methods.  \n");
 		rt_kprintf("* 2019-02-16     Dwfish       Creat System self-check methods [ Events ].\n");
 		rt_kprintf("* 2019-02-16     Dwfish       Add W25Q128 FLASH To Save Important Parameters.\n");
 		rt_kprintf("* 2019-02-16     Dwfish       Creat OLED Electronic compass.\n");
 		rt_kprintf("* 2019-02-19     Dwfish       Add VACN host computer debug.\n");
-		rt_kprintf("* 2019-02-20     Dwfish       Add log method.\n");
+		rt_kprintf("* 2019-02-20     Dwfish       Add Easylog && Easyflash && <update> msh.\n");
+
 		rt_kprintf("* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");	 
 		
 		rt_thread_mdelay(1000);
 		get_time();  //打印参考时间戳
-		
+
 
     return 0;
 }
@@ -85,7 +89,8 @@ Notes:
 ①:使用前需要校准
 ②校准时不能受周围磁场干扰
 使用常见问题指南:
-http://wiki.wit-motion.com/doku.php?id=wt901常见问题
+		http://wiki.wit-motion.com/doku.php?id=wt901常见问题
+
 
 
 2.RT-Thread如何输出浮点型：
@@ -95,6 +100,7 @@ sample:
 		char str[100];
 		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f\r\n",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
 		rt_kprintf(str);
+
 
 
 3.W25Q128 ID读取不正确：

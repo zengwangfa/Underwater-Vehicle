@@ -43,7 +43,7 @@ int buzzer_thread_init(void)
     if (buzzer_tid != RT_NULL){
 				rt_pin_mode (Buzzer_PIN, PIN_MODE_OUTPUT);  //Êä³öÄ£Ê½
 				rt_pin_write(Buzzer_PIN, PIN_LOW);
-				LOG_I("Buzzer_Init()");
+				log_i("Buzzer_Init()");
 				rt_thread_startup(buzzer_tid);
 				rt_event_send(&init_event, BUZZ_EVENT);
 		}

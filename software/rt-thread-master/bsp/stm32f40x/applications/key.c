@@ -23,7 +23,7 @@ void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
 {
 
 		boma_value = boma_value_get();	//初始化得到当前拨码状态 --> VehicleStatus
-		LOG_I("Current: BOMA_Value = %d", boma_value);
+		log_i("Current: BOMA_Value = %d", boma_value);
 	
     while (1)
     {
@@ -74,7 +74,7 @@ int key_thread_init(void)
 				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为beep_on */
 				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
 			
-				LOG_I("KEY_Init()");
+				log_i("KEY_Init()");
 				rt_thread_startup(key_tid);
 				rt_event_send(&init_event, KEY_EVENT);
 		}

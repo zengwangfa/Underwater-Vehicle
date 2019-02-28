@@ -81,7 +81,7 @@ int led_thread_init(void)
 				rt_pin_mode( LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	
 				rt_pin_mode( LED_Green, PIN_MODE_OUTPUT);	
 				rt_pin_mode( LED_Blue, 	PIN_MODE_OUTPUT);	
-				LOG_I("LED_Init()");
+				log_i("LED_Init()");
 				rt_event_send(&init_event, LED_EVENT);
 				rt_thread_startup(led_tid);
 		}
@@ -105,7 +105,7 @@ static int led_on(int argc, char **argv)
 				case 'R':LED_ON(LED_Red);break;
 				case 'G':LED_ON(LED_Green);break;
 				case 'B':LED_ON(LED_Blue);break;
-				default:LOG_E("Error! Proper Usage: led_on R\n Species:R /G /B \n");break;
+				default:log_e("Error! Proper Usage: led_on R\n Species:R /G /B \n");break;
 		}
 _exit:
     return result;
@@ -128,7 +128,7 @@ static int led_off(int argc, char **argv)
 				case 'R':LED_OFF(LED_Red);break;
 				case 'G':LED_OFF(LED_Green);break;
 				case 'B':LED_OFF(LED_Blue);break;
-				default:LOG_E("Error! Proper Usage: led_off R\n Species:R /G /B \n");break;
+				default:log_e("Error! Proper Usage: led_off R\n Species:R /G /B \n");break;
 		}
 _exit:
     return result;

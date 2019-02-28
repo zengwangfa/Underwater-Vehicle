@@ -16,11 +16,7 @@
 #include "debug.h"
 
 
-#include "w25qxx.h"
-
-
-
-#include "ulog.h"
+#include <elog.h>
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 

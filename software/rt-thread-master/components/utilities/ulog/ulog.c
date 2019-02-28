@@ -12,7 +12,7 @@
 #include "ulog.h"
 #include "rthw.h"
 
-#ifdef ULOG_USING_SYSLOG
+#ifdef ULOG_USING_SYSLOG   //Œ¥∂®“Â
 #include <syslog.h>
 #endif
 

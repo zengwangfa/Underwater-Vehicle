@@ -133,7 +133,7 @@ void get_time(void)
 		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出.
 		char str[50];
 		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f\r\n",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
-		LOG_H(str);
+		log_i(str);
 }
 MSH_CMD_EXPORT(get_time,get acceleration[a]);
 
@@ -143,13 +143,13 @@ void get_gyroscope(void)
 {		
 		char str[50];
 		sprintf(str,"Acc:%.3f %.3f %.3f",JY901.Acc[0],JY901.Acc[1],JY901.Acc[2]);
-		LOG_H(str);
+		log_i(str);
 		sprintf(str,"Gyro:%.3f %.3f %.3f",JY901.Gyro[0],JY901.Gyro[1],JY901.Gyro[2]);
-		LOG_H(str);
+		log_i(str);
 		sprintf(str,"Angle:%.3f %.3f %.3f",JY901.Angle[0],JY901.Angle[1],JY901.Angle[2]);
-		LOG_H(str);
+		log_i(str);
 		sprintf(str,"Mag:%d %d %d",JY901.Mag[0],JY901.Mag[1],JY901.Mag[2]);
-		LOG_H(str);	
+		log_i(str);	
 	
 		return;
 }
@@ -161,7 +161,7 @@ float get_temperature(void)
 {
 		char str[50];
 		sprintf(str,"Temperature:%.2f C\r\n",JY901.Temperature);
-		LOG_H(str);	
+		log_i(str);	
 		return JY901.Temperature;
 }
 MSH_CMD_EXPORT(get_temperature, get Temperature[T]);

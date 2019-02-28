@@ -1,8 +1,16 @@
 #include "init.h"
 
+
+#include <board.h>
+#include <elog_flash.h>
+
+#include <spi_flash.h>
+#include <spi_flash_sfud.h>
+
+#include <easyflash.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
-#define VoltgeParameter 1.4
+#define VoltgeParameter 23.4
 
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -10,19 +18,98 @@ extern struct rt_event init_event;/* ALL_init 事件控制块 */
 u32 volatge = 0;
 u32 adc_value[10] = {0};
 
+rt_spi_flash_device_t nor_flash;
+
+struct rt_thread thread_sys_monitor;
+
 /*----------------------- Function Implement --------------------------------*/
+
+
+
+/**
+ * 系统监控线程
+ * @param parameter parameter
+ */
+
+
+
+
+
+
+
+/**
+ * 系统初始化线程
+ * @param parameter parameter
+ */
+void sys_init_thread(void* parameter){
+
+    /* 初始化 nor_flash Flash 设备 */
+    if ((nor_flash = rt_sfud_flash_probe("nor_flash", "spi20")) == NULL) {
+				rt_kprintf("Error! No find nor_flash!");
+        return;
+    }
+
+    /* 初始化 EasyFlash 模块 */
+    easyflash_init();
+
+    /* 初始化日志系统 */
+    elog_init();
+    elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
+    elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
+    elog_set_fmt(ELOG_LVL_WARN, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
+    elog_set_fmt(ELOG_LVL_INFO, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+    elog_set_fmt(ELOG_LVL_DEBUG, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
+    elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
+
+#ifdef DEBUG
+    elog_set_filter_lvl(ELOG_LVL_VERBOSE);
+#elif RELEASE
+    elog_set_filter_lvl(ELOG_LVL_INFO);
+#endif
+
+#ifdef ELOG_COLOR_ENABLE
+    elog_set_text_color_enabled(true);
+#endif
+    /* 初始化EasyLogger的Flash插件 */
+    elog_flash_init();
+    /* 启动EasyLogger */
+    elog_start();
+		
+}
+
+
+int rt_my_application_init(void)
+{
+    rt_thread_t sys_thread;
+
+
+    sys_thread = rt_thread_create("sys init", sys_init_thread, NULL, 4096, 10, 10);
+    if (sys_thread != NULL) {
+        rt_thread_startup(sys_thread);
+    }
+		else {
+				rt_kprintf("sys init error!");
+		}
+
+    return 0;
+}
+INIT_APP_EXPORT(rt_my_application_init);
+
+
+
+
+
+
+
+
 
 void adc_thread_entry(void *parameter)
 {
-
 		while(1)
 		{
-
-
+			
 				rt_thread_mdelay(1000);
-
 		}
-	
 }
 
 
@@ -32,9 +119,10 @@ int adc_thread_init(void)
     rt_thread_t adc_tid;
     /* 初始化事件对象 */
     result = rt_event_init(&init_event, "event", RT_IPC_FLAG_FIFO);
-
+	
+		
     if (result != RT_EOK){
-        LOG_E("init event failed.\n");
+        log_e("init event failed.\n");
         return -1;
 		}
 		/*创建动态线程*/
@@ -42,13 +130,14 @@ int adc_thread_init(void)
                     adc_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
+                    12,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (adc_tid != RT_NULL){
 				adc_init();
-				LOG_H("System Self-Checking... ");
-				LOG_I("adc_init()");
+				log_w("System Self-Checking... ");
+				log_d("adc_init()");
+
 			
 				rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
 				rt_thread_startup(adc_tid);

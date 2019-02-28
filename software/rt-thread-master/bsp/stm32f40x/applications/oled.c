@@ -302,7 +302,7 @@ int oled_thread_init(void)
 
     if (oled_tid != RT_NULL){
 				OLED_Init();
-				LOG_I("OLED_Init()");
+				log_i("OLED_Init()");
 				rt_thread_startup(oled_tid);
 				rt_event_send(&init_event, OLED_EVENT);
 				oled.pagechange = oled.pagenum;  //≥ı ºªØ‘›¥Ê“≥√Ê

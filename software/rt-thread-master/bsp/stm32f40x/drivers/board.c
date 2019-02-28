@@ -33,7 +33,7 @@ static void reboot(uint8_t argc, char **argv) {
     NVIC_SystemReset();
 }
 MSH_CMD_EXPORT(reboot, reboot board);
-
+FINSH_FUNCTION_EXPORT(reboot, reboot board);
 
 /*******************************************************************************
 * Function Name  : NVIC_Configuration

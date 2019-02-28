@@ -14,6 +14,8 @@
 
 #include <stm32f4xx.h>
 
+
+
 /* board configuration */
 // <o> SDCard Driver <1=>SDIO sdcard <0=>SPI MMC card
 // 	<i>Default: 1
