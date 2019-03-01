@@ -1,3 +1,5 @@
+#define LOG_TAG    "led"
+
 #include "init.h"
 #include "string.h"
 
@@ -74,7 +76,7 @@ int led_thread_init(void)
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
-                    8,										 	 //线程优先级【priority】
+                    15,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (led_tid != RT_NULL){
@@ -96,7 +98,7 @@ static int led_on(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        rt_kprintf("Error! Proper Usage: led_on R\n Species:R /G /B \n");
+        log_d("Error! Proper Usage: led_on R\n Species:R /G /B \n");
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -105,7 +107,7 @@ static int led_on(int argc, char **argv)
 				case 'R':LED_ON(LED_Red);break;
 				case 'G':LED_ON(LED_Green);break;
 				case 'B':LED_ON(LED_Blue);break;
-				default:log_e("Error! Proper Usage: led_on R\n Species:R /G /B \n");break;
+				default:log_d("Error! Proper Usage: led_on R\n Species:R /G /B \n");break;
 		}
 _exit:
     return result;
@@ -119,7 +121,7 @@ static int led_off(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        rt_kprintf("Error! Proper Usage: led_off R\n Species:R /G /B \n");
+        log_d("Error! Proper Usage: led_off R\n Species:R /G /B \n");
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -128,7 +130,7 @@ static int led_off(int argc, char **argv)
 				case 'R':LED_OFF(LED_Red);break;
 				case 'G':LED_OFF(LED_Green);break;
 				case 'B':LED_OFF(LED_Blue);break;
-				default:log_e("Error! Proper Usage: led_off R\n Species:R /G /B \n");break;
+				default:log_d("Error! Proper Usage: led_off R\n Species:R /G /B \n");break;
 		}
 _exit:
     return result;

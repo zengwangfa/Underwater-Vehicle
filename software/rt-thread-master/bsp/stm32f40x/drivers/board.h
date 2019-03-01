@@ -56,7 +56,7 @@ extern int __bss_end;
 #endif
 
 void rt_hw_board_init(void);
-
+void IWDG_Feed(void);
 #endif
 
 // <<< Use Configuration Wizard in Context Menu >>>

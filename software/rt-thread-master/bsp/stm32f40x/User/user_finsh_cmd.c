@@ -4,6 +4,8 @@
  *  Created on: 2013Äê12ÔÂ7ÈÕ
  *      Author: Armink
  */
+#define LOG_TAG    "cmd"
+ 
 #include <rthw.h>
 #include <rtthread.h>
 #include <shell.h>

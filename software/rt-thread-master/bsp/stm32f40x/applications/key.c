@@ -1,3 +1,5 @@
+#define LOG_TAG    "key"
+
 #include "init.h" 
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
@@ -19,19 +21,16 @@ u8 boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
 
 /*----------------------- Function Implement --------------------------------*/
 
-void key_thread_entry(void* parameter)// --- Buzzer   KEY   BOMA ---
+void key_thread_entry(void* parameter)// --- KEY   BOMA ---
 {
 
-		boma_value = boma_value_get();	//初始化得到当前拨码状态 --> VehicleStatus
-		log_i("Current: BOMA_Value = %d", boma_value);
-	
+
     while (1)
     {
-			
 				if(boma_value != boma_value_get()){
 						buzzer_bibi(1,1);	
 						boma_value = boma_value_get();	
-						rt_kprintf("\nCurrent Change: BOMA_Value = %d", boma_value);
+						log_i("\nCurrent Change: BOMA_Value = %d", boma_value);
 				}
 				rt_thread_mdelay(10);
     }
@@ -61,8 +60,8 @@ int key_thread_init(void)
     key_tid = rt_thread_create("key",
                     key_thread_entry,
                     RT_NULL,
-                    1024,
-                    10,
+                    512,
+                    15,
                     10);
 
     if (key_tid != RT_NULL){			
@@ -75,6 +74,9 @@ int key_thread_init(void)
 				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
 			
 				log_i("KEY_Init()");
+				boma_value = boma_value_get();	//初始化得到当前拨码状态 --> VehicleStatus
+				log_i("Current: BOMA_Value = %d", boma_value);
+	
 				rt_thread_startup(key_tid);
 				rt_event_send(&init_event, KEY_EVENT);
 		}

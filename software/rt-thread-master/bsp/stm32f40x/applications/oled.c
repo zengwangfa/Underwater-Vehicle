@@ -1,3 +1,5 @@
+#define LOG_TAG    "oled"
+
 #include "init.h"
 #include "math.h"
 	
@@ -296,8 +298,8 @@ int oled_thread_init(void)
     oled_tid = rt_thread_create("oled", //线程名称
                     oled_thread_entry,	//线程入口函数【entry】
                     RT_NULL,				    //线程入口函数参数【parameter】
-                    1024,							  //线程栈大小，单位是字节【byte】
-                    8,								  //线程优先级【priority】
+                    2048,							  //线程栈大小，单位是字节【byte】
+                    15,								  //线程优先级【priority】
                     10);							  //线程的时间片大小【tick】= 100ms
 
     if (oled_tid != RT_NULL){

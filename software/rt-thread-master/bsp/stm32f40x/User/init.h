@@ -14,7 +14,8 @@
 #include "adc.h"
 #include "pwm.h"
 #include "debug.h"
-
+#include "flash.h"
+#include "self_check.h"
 
 #include <elog.h>
 
@@ -34,10 +35,10 @@
 #define GYRO_EVENT 			(1 << 4)  //Gyroscope事件标志位
 #define ADC_EVENT 			(1 << 5)  //ADC事件标志位
 #define PWM_EVENT 			(1 << 6)  //PWM事件标志位
-#define W25Q128_EVENT   (1 << 7)  //W25Q128事件标志位
 
 
 
+#define FLASH_INIT_ADDRESS  (4096)	//FLASH 大小为16字节
 
 
 

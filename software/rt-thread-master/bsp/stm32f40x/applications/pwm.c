@@ -1,25 +1,22 @@
-#include "init.h"
+#define LOG_TAG    "pwm"
 
+#include "init.h"
 #include <spi_flash.h>
 #include <spi_flash_sfud.h>
 #include <easyflash.h>
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
-u32 	FLASH_INIT_ADDRESS = 4096;	//FLASH 大小为16字节
+
 
 /*----------------------- Variable Declarations -----------------------------*/
 
 extern struct rt_event init_event;/* ALL_init 事件控制块. */
 
-struct  /* 定义u8 为方便 FLASH读写，使用时需要乘以 10 得到 真实PWM值 */
-{
-		u32 open_value;		//机械臂 打开的PWM值 
-		u32 close_value;	 //机械臂 关闭的PWM值
-}servo_motor;
+servo_t servo_motor;
 
 /*----------------------- Function Implement --------------------------------*/
-void Flash_Init_Read(void);
+
 
 
 void pwm_thread_entry(void *parameter)
@@ -51,10 +48,7 @@ int pwm_thread_init(void)
 
     if (pwm_tid != RT_NULL){
 				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值20000，所以PWM频率为 1M/20000=50Hz.  
-				log_i("pwm_init()");
-			
-				Flash_Init_Read();
-				log_i("Flash_Init_Read()");
+				log_i("PWM_init()");
 			
 				rt_thread_startup(pwm_tid);
 				rt_event_send(&init_event, PWM_EVENT); //发送事件  表示初始化完成
@@ -65,24 +59,9 @@ int pwm_thread_init(void)
 INIT_APP_EXPORT(pwm_thread_init);
 
 
-/* FLASH 开机时读取 所有值*/
-void Flash_Init_Read(void)
-{
-		ef_port_read(FLASH_INIT_ADDRESS,&servo_motor.open_value,4);		// 地址0
-		ef_port_read(FLASH_INIT_ADDRESS+4,&servo_motor.close_value,4);		// 地址4
-	
-	
-}
 
-/* FLASH 更新 所有值*/
-void Flash_Init_Update(void)
-{
-	
-		ef_port_write(FLASH_INIT_ADDRESS,&servo_motor.open_value,4);		//从0个地址处写入数据
-		ef_port_write(FLASH_INIT_ADDRESS+4,&servo_motor.close_value,4);	//从4个地址处写入数据
-	
-	
-}
+
+
 
 
 /*【机械臂】舵机 修改 【开启值】MSH方法 */
@@ -90,14 +69,15 @@ static int servo_motor_openvalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        log_i("Error! Proper Usage: servo_motor_OpenValue_set 1600\n");
+        log_i("Error! Proper Usage: servo_motor_OpenValue_set 1600");
 				result = -RT_ERROR;
         goto _exit;
     }
 		servo_motor.open_value = atoi(argv[1]);
 		ef_port_erase(FLASH_INIT_ADDRESS,4);	//先擦后写
-		Flash_Init_Update();
-		log_i("Write_Successed! Current ser_OpenValue:  %d\n",servo_motor.open_value);
+		Flash_Update();
+		
+		log_d("Write_Successed! Current ser_OpenValue:  %d",servo_motor.open_value);
 _exit:
     return result;
 }
@@ -111,16 +91,15 @@ static int servo_motor_closevalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        log_i("Error! Proper Usage: servo_motor_CloseValue_set 1150\n");
+        log_i("Error! Proper Usage: servo_motor_CloseValue_set 1150");
 				result = -RT_ERROR;
         goto _exit;
     }
 		servo_motor.close_value = atoi(argv[1]);
-		ef_port_erase(FLASH_INIT_ADDRESS,4);
+		ef_port_erase(FLASH_INIT_ADDRESS,4);	
+		Flash_Update();
 		
-		Flash_Init_Update();
-		
-		log_i("Write_Successed! Current ser_CloseValue:  %d\n",servo_motor.close_value);
+		log_d("Write_Successed! Current ser_CloseValue:  %d",servo_motor.close_value);
 _exit:
     return result;
 }
@@ -132,9 +111,8 @@ MSH_CMD_EXPORT(servo_motor_closevalue_set,ag: servo_motor_CloseValue_set 115);
 /* list 相关重要参数 */
 void list_value(void)
 {
-		ef_port_read(FLASH_INIT_ADDRESS,&servo_motor.open_value,4);		// 地址0
-		ef_port_read(FLASH_INIT_ADDRESS+4,&servo_motor.close_value,4);		// 地址4
-	
+
+		Flash_Read();
 		log_i	("variable name     value");
     log_i("---------------  ---------");
 	  log_i("ser_OpenValue      %d",servo_motor.open_value);

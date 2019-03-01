@@ -1,9 +1,10 @@
+#define LOG_TAG    "debug"
+
 #include "init.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 #define VCAN_UART "uart3"
-
 
 /*----------------------- Variable Declarations. -----------------------------*/
 
@@ -24,7 +25,6 @@ void ware_test(void)
 	list[6] = 0;//camera_forecast_center;//
 	list[7] = 0;//camera_center;
 	
-             
 	vcan_sendware(list,sizeof(list));
 }
 
@@ -39,10 +39,6 @@ void vcan_sendware(void *wareaddr, unsigned int waresize)
     rt_device_write(debug_uart_device, 0,(u8 *)wareaddr, waresize);    //发送数据
     rt_device_write(debug_uart_device, 0,cmdr, 2);    //发送后命令
 }
-
-
-
-
 
 
 /* debug 山外上位机调试 MSH方法 */
@@ -68,5 +64,19 @@ _exit:
 }
 MSH_CMD_EXPORT(debug,ag: debug 10);
 
+
+
+
+int test(void)
+{
+    rt_uint8_t i;
+    for(i = 1 ; i <= 3 ;i++){       
+        rt_kprintf("Test, count : %d\r\n", i);
+        rt_thread_mdelay(500);
+    }
+		rt_kprintf("Test-->successed!\n");
+    return 0;
+}
+MSH_CMD_EXPORT(test, This is a test example.);
 
 

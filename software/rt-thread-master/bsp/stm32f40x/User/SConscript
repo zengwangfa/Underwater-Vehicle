@@ -1,0 +1,19 @@
+from building import *
+
+cwd = GetCurrentDir()
+
+# add the general drivers.
+src = Split("""
+
+""")
+
+# add others drivers.
+src += ['init.c']
+src += ['main.c']	
+src += ['debug.c']
+src += ['user_finsh_cmd.c']
+CPPPATH = [cwd]
+
+group = DefineGroup('User', src, depend = [''], CPPPATH = CPPPATH)
+
+Return('group')

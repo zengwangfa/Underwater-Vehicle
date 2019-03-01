@@ -1,3 +1,5 @@
+#define LOG_TAG    "uart"
+
 #include "init.h"
 #include <rthw.h>
 #include <string.h>
@@ -179,38 +181,40 @@ int uart_gyroscope(void)
 {
 	  rt_thread_t gyroscope_tid;
 	  /* 查找系统中的串口设备 */
-		uart2_device = rt_device_find(JY901_UART_NAME);
+		uart2_device = rt_device_find(JY901_UART_NAME);       
 		debug_uart_device = rt_device_find(DEBUG_UART_NAME);
-	
-		log_i("gyroscope serial:  %s", uart2_device);
-		log_i("debug serial:  %s", debug_uart_device);
+
+		log_v("console serial: %s", RT_CONSOLE_DEVICE_NAME);	
+		log_v("gyroscope serial: %s", uart2_device);
+		log_v("debug serial: %s", debug_uart_device);
 		rt_device_open(debug_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
 	
-    if (uart2_device != RT_NULL){
+    if (uart2_device != RT_NULL){		
 			
 					/* 以读写以及中断接打开串口设备 */
-					rt_device_open(uart2_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
-					config.baud_rate = BAUD_RATE_9600;
-					config.data_bits = DATA_BITS_8;
-					config.stop_bits = STOP_BITS_1;
-					config.parity = PARITY_NONE;
-			
-					/* 打开设备后才可修改串口配置参数 */
-					rt_device_control(uart2_device, RT_DEVICE_CTRL_CONFIG, &config);
-					rt_sem_init(&rx_sem, "rx_sem", 0, RT_IPC_FLAG_FIFO);
-					/* 设置接收回调函数 */
-					rt_device_set_rx_indicate(uart2_device, uart_input);
+				rt_device_open(uart2_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
+				config.baud_rate = BAUD_RATE_9600;
+				config.data_bits = DATA_BITS_8;
+				config.stop_bits = STOP_BITS_1;
+				config.parity = PARITY_NONE;
+		
+				/* 打开设备后才可修改串口配置参数 */
+				rt_device_control(uart2_device, RT_DEVICE_CTRL_CONFIG, &config);
+				rt_sem_init(&rx_sem, "rx_sem", 0, RT_IPC_FLAG_FIFO);
+				/* 设置接收回调函数 */
+				rt_device_set_rx_indicate(uart2_device, uart_input);
 		}
     /* 创建 serial 线程 */
-		gyroscope_tid = rt_thread_create("gyroscope",
+		gyroscope_tid = rt_thread_create("uart",
 																			gyroscope_thread_entry,
 																			RT_NULL, 
 																			1024, 
-																			25,
+																			12,
 																			10);
     /* 创建成功则启动线程 */
     if (gyroscope_tid != RT_NULL)
     {
+				log_i("Uart_Init()");
         rt_thread_startup(gyroscope_tid);
 				rt_event_send(&init_event, GYRO_EVENT); //发送事件  表示初始化完成
     }
