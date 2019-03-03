@@ -135,14 +135,14 @@ void OLED_PicturePage(void)
 		static int Angle_z = 0,Angle_y = 0;
 		
 	
-		draw_fill_circle(31+Angle_z,31+Angle_y,6,0);
+		draw_fill_circle(31+Angle_z,31+Angle_y,6,0); //清空实心圆，用于刷新坐标
 
 		draw_line(31,31,slope,0); //清除上一次画的线 进行刷新
 		OLED_Refresh_Gram();//更新显示到OLED
 	
 
-		Angle_z = JY901.Angle[0]/9;
-		Angle_y = JY901.Angle[1]/9;
+		Angle_z = JY901.Angle[0]/7;
+		Angle_y = JY901.Angle[1]/7;
 		slope = tan((float)(JY901.Angle[2]*Pi/180));  //转化弧度制 解算东北天坐标系下 航向斜率slope
 	
 		for(y = 28;y <= 36;y++){ //补圆顶底部的缺失点
@@ -170,8 +170,8 @@ void OLED_PicturePage(void)
 		OLED_ShowString(3	,28,(u8 *)"W",12);
 		OLED_ShowString(55,28,(u8 *)"E",12);
 		
-		draw_circle(31,31,32);
-		draw_fill_circle(31+Angle_z,31+Angle_y,6,1);
+		draw_circle(31,31,32);//画固定圆
+		draw_fill_circle(31+Angle_z,31+Angle_y,6,1); //画实心圆
 	
 		OLED_Refresh_Gram();//更新显示到OLED						
 }

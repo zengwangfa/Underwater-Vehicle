@@ -267,7 +267,7 @@ static const struct pin_index pins[] =
     __STM32_PIN_DEFAULT,
     __STM32_PIN_DEFAULT,
 #endif
-#if (STM32_PIN_NUMBERS == 144)
+#if (STM32_PIN_NUMBERS == 144)//----------------------//
     __STM32_PIN_DEFAULT,
     __STM32_PIN(1, AHB1, E, 2),
     __STM32_PIN(2, AHB1, E, 3),

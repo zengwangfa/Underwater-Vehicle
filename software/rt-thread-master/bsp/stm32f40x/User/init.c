@@ -31,7 +31,7 @@ void thread_entry_sys_monitor(void* parameter)
         //rt_memory_info(&total_mem, &used_mem, &max_used_mem);
 				//rt_kprintf("Total_Mem:%ld  Used_Mem:%ld  Max_Used_Mem:%ld\n",total_mem,used_mem,max_used_mem);
         IWDG_Feed(); //喂狗
-
+				rt_thread_mdelay(1000);
     }
 }
 
@@ -42,7 +42,10 @@ void thread_entry_sys_monitor(void* parameter)
  * @param parameter parameter
  */
 void sys_init_thread(void* parameter){
-
+	
+	  /* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
+    rt_enter_critical();
+	
     /* 初始化 nor_flash Flash 设备 */
     if ((nor_flash = rt_sfud_flash_probe("nor_flash", "spi20")) == NULL) {
 				rt_kprintf("Error! No find nor_flash!");
@@ -56,23 +59,21 @@ void sys_init_thread(void* parameter){
 		
 		/* 设置日志格式 */
     elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
-    elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
+    elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
     elog_set_fmt(ELOG_LVL_WARN, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
     elog_set_fmt(ELOG_LVL_INFO, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
     elog_set_fmt(ELOG_LVL_DEBUG,ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
-    elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
+    elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
 
-#ifdef 	DEBUG
-    elog_set_filter_lvl(ELOG_LVL_VERBOSE);
-#elif 	RELEASE
-    elog_set_filter_lvl(ELOG_LVL_INFO);
-#endif
-
-#ifdef 	ELOG_COLOR_ENABLE  //使能日志颜色
+    elog_set_filter_lvl(ELOG_LVL_TOTAL_NUM);
+		
+#ifdef 	ELOG_COLOR_ENABLE  
+		/* 使能日志颜色 */
     elog_set_text_color_enabled(true);
 #endif
     /* 初始化EasyLogger的Flash插件 */
     elog_flash_init();
+		
     /* 启动EasyLogger */
     elog_start();
 		
@@ -81,6 +82,9 @@ void sys_init_thread(void* parameter){
 		
     /* 设置RTT断言钩子 */
     rt_assert_set_hook(rtt_user_assert_hook);
+		
+		/* 调度器解锁 */
+    rt_exit_critical();
 }
 
 
@@ -88,6 +92,8 @@ void sys_init_thread(void* parameter){
 static rt_err_t exception_hook(void *context) {
     extern long list_thread(void);
     uint8_t _continue = 1;
+	
+		Error_LED(); //异常指示灯
     rt_enter_critical();
 
 #ifdef RT_USING_FINSH
@@ -97,8 +103,10 @@ static rt_err_t exception_hook(void *context) {
     return RT_EOK;
 }
 
+
 /* 设置RTT断言钩子 */
 static void rtt_user_assert_hook(const char* ex, const char* func, rt_size_t line) {
+		Error_LED(); //异常指示灯
     rt_enter_critical();
 
 #ifdef ELOG_ASYNC_OUTPUT_ENABLE
@@ -118,7 +126,7 @@ int rt_system_init(void)
 																			 thread_entry_sys_monitor, 
 																			 NULL,
 																			 2048,
-																			 20,
+																			 30,
 																			 10);
 									 
     sys_thread = rt_thread_create("sys_init",
@@ -128,7 +136,7 @@ int rt_system_init(void)
 																	 5,
 																	 10);
     if (monitor_thread != NULL) {
-        //rt_thread_startup(monitor_thread);
+        rt_thread_startup(monitor_thread);
     }
 		else {
 		  	rt_kprintf("monitoring error!");
@@ -141,7 +149,7 @@ int rt_system_init(void)
 		}
     return 0;
 }
-INIT_APP_EXPORT(rt_system_init);
+INIT_DEVICE_EXPORT(rt_system_init);
 
 
 
@@ -177,7 +185,7 @@ short bubble(short *adc_value)
 
 
 
-void rt_hw_us_delay(rt_uint32_t us)
+void rt_hw_us_delay(u32 us)
 {
     rt_uint32_t delta;
     /* 获得延时经过的 tick 数 */
@@ -188,6 +196,10 @@ void rt_hw_us_delay(rt_uint32_t us)
     while (delta - SysTick->VAL< us);
 }
 
+void rt_hw_ms_delay(u32 ms)
+{
+		rt_hw_us_delay(1000 * ms);
+}
 
 void delay_us(u32 nTimer)
 {
@@ -201,11 +213,11 @@ void delay_us(u32 nTimer)
 	}
 }
 
-void delay_ms(u32 nTimer)
-{
-		u32 i=1000*nTimer;
-		delay_us(i);
-}
+//void delay_ms(u32 nTimer)
+//{
+//		u32 i=1000*nTimer;
+//		delay_us(i);
+//}
 
 
 

@@ -35,7 +35,7 @@
 #define GYRO_EVENT 			(1 << 4)  //Gyroscope事件标志位
 #define ADC_EVENT 			(1 << 5)  //ADC事件标志位
 #define PWM_EVENT 			(1 << 6)  //PWM事件标志位
-
+#define CAM_EVENT 			(1 << 7)  //Camera事件标志位
 
 
 #define FLASH_INIT_ADDRESS  (4096)	//FLASH 大小为16字节
@@ -61,10 +61,10 @@ enum VehicleMode{
 //void delay_us(unsigned int us);
 //void delay_ms(unsigned int ms);
 
-void delay_us(u32 nTimer);
-void delay_ms(u32 nTimer);
-void rt_hw_us_delay(rt_uint32_t us);
-
+//void delay_us(u32 nTimer);
+//void delay_ms(u32 nTimer);
+void rt_hw_us_delay(u32 us);
+void rt_hw_ms_delay(u32 ms);
 short bubble(short *adc_value);
 
 int sprintf(char *buf, const char *format, ...);

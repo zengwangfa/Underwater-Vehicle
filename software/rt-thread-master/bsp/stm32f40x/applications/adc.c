@@ -5,7 +5,7 @@
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
-#define VoltgeParameter 23.4
+#define VoltgeParameter 1.58//23.4
 
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -37,12 +37,12 @@ double get_vol(void)
 
 
 		for(i = 0;i < 20;i+=2){
-				adc_value[i/2] = get_adc(ADC_Channel_10);
+				adc_value[i/2] = get_adc(ADC_Channel_10);//取偶次
 				rt_thread_mdelay(10);
 		}
 		for(j = 0;j < 10;j++){
 				for(i = 0;i < 9-j;i++){
-						if( adc_value[i] > adc_value[i+1] ){ //从小到大
+						if( adc_value[i] > adc_value[i+1] ){ //升序
 								res = adc_value[i];
 								adc_value[i] = adc_value[i+1];
 								adc_value[i+1] = res;
@@ -50,8 +50,8 @@ double get_vol(void)
 					
 				}
 		}
-		volatge = (*(adc_value+4)+ *(adc_value+5)+ *(adc_value+6))/3;		
-		return (double)volatge*3.3*VoltgeParameter/4096;
+		volatge = (adc_value[4]+adc_value[5]+adc_value[6])/3;		
+		return (double)volatge*(3.3/4096)*VoltgeParameter;
 } 
 
 /* MSH  get 电压方法 */
@@ -144,7 +144,6 @@ int adc_thread_init(void)
 				adc_init();
 				log_i("adc_init()");
 
-			
 				rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
 				rt_thread_startup(adc_tid);
 

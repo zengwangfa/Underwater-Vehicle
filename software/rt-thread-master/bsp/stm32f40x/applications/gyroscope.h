@@ -156,26 +156,14 @@ void get_time(void);
 /* Get  JY901 */
 void get_gyroscope(void);
 
-///* Get 输出角速度  gyroscope*/
-//void *get_gyro(void);
-
-///* Get 角度  angle */
-//void *get_angle(void);
-
-///* Get 磁场  magnetic */
-//void *get_mag(void);
-
 /* Get 温度  Temperature */
 float get_temperature(void);
 
 /*-----------------应用函数----------------*/
 
-void Convert_Acc(void);
-void Convert_Gyro(void);
-void Convert_Angle(void);
 
 
-void OLED_GyroscopePage(void);
+void JY901_Convert(struct JY901_t * pArr);
 
 void CopeSerial2Data(unsigned char Data);
  

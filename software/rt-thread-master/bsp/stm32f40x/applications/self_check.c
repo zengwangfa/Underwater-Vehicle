@@ -15,27 +15,26 @@ rt_thread_t init_tid;
 void check(void* parameter)
 {
 	  rt_uint32_t e;
-		rt_err_t result;
+	
 	  RCC_ClocksTypeDef Get_RCC_Clocks;
 		RCC_GetClocksFreq(&Get_RCC_Clocks); //获取系统时钟
 
 		 /* 接收事件，判断是否所有外设初始化完成 ，接收完后清除事件标志 */
-    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT ),
+    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT | CAM_EVENT ),
                       RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR,
                       RT_WAITING_FOREVER, &e) == RT_EOK)
     {
 				log_w("System Self-Check:0x%x --> Success!", e);
 				log_w("Clock: %d Hz.",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
-				result = rt_thread_suspend (init_tid);  //线程挂起
-			  if (result != RT_EOK){
-						log_e("init_tid thread suspend failed.");
-				}
+		}
+		else {
+				log_w("some devices initialization failed.");
 		}
 
 }
 
 
-int All_thread_init(void)
+int Self_Check_thread_init(void)
 {
 
 		/*创建动态线程*/
@@ -52,7 +51,7 @@ int All_thread_init(void)
 		}
 		return 0;
 }
-INIT_APP_EXPORT(All_thread_init);
+INIT_APP_EXPORT(Self_Check_thread_init);
 
 
 

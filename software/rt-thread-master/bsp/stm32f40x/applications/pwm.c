@@ -61,23 +61,24 @@ INIT_APP_EXPORT(pwm_thread_init);
 
 
 
-
-
-
 /*【机械臂】舵机 修改 【开启值】MSH方法 */
 static int servo_motor_openvalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        log_i("Error! Proper Usage: servo_motor_OpenValue_set 1600");
+        log_e("Error! Proper Usage: servo_motor_OpenValue_set 1600");
 				result = -RT_ERROR;
         goto _exit;
     }
-		servo_motor.open_value = atoi(argv[1]);
-		ef_port_erase(FLASH_INIT_ADDRESS,4);	//先擦后写
-		Flash_Update();
+		if(atoi(argv[1]) <= 3000){
+				servo_motor.open_value = atoi(argv[1]);
+				Flash_Update();
+				log_d("Write_Successed! Current ser_OpenValue:  %d",servo_motor.open_value);
+		}
 		
-		log_d("Write_Successed! Current ser_OpenValue:  %d",servo_motor.open_value);
+		else {
+				log_e("Error! The value is out of range!");
+		}
 _exit:
     return result;
 }
@@ -91,15 +92,21 @@ static int servo_motor_closevalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        log_i("Error! Proper Usage: servo_motor_CloseValue_set 1150");
+        log_e("Error! Proper Usage: servo_motor_CloseValue_set 1150");
 				result = -RT_ERROR;
         goto _exit;
     }
-		servo_motor.close_value = atoi(argv[1]);
-		ef_port_erase(FLASH_INIT_ADDRESS,4);	
-		Flash_Update();
+		if(atoi(argv[1]) <= 3000){
+				servo_motor.close_value = atoi(argv[1]);
+				Flash_Update();
+				log_d("Write_Successed! Current ser_CloseValue:  %d",servo_motor.close_value);
+		}
+		else {
+				log_e("Error! The value is out of range!");
+		}
+
 		
-		log_d("Write_Successed! Current ser_CloseValue:  %d",servo_motor.close_value);
+		
 _exit:
     return result;
 }

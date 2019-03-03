@@ -117,7 +117,8 @@ void rt_hw_board_init()
 
     /* Configure the SysTick */
     SysTick_Configuration();
-
+	
+		IWDG_Configuration();
 #ifdef RT_USING_HEAP
     rt_system_heap_init((void*)STM32_SRAM_BEGIN, (void*)STM32_SRAM_END);
 #endif

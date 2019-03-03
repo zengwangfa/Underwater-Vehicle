@@ -9,6 +9,9 @@
 #define LED_Green 	69
 #define LED_Blue 		70
 
+//OV Camera 闪光灯
+#define LED_Camera 	141  //高电平点亮
+
 //RGB灯共阳极接到+3.3V，电平 0亮 1灭
 #define LED_ON(led_pin) 						rt_pin_write(led_pin ,PIN_LOW )
 #define LED_OFF(led_pin) 						rt_pin_write(led_pin ,PIN_HIGH)
@@ -26,7 +29,7 @@ void led_thread_entry(void *parameter)
 		rt_int8_t inputdata[8] = {0x00,0x04,0x02,0x01,0x03,0x05,0x06,0x07};
 		
 		while(i <= 7){
-				system_init_led_blink(inputdata[i++]);}
+				system_led_blink(inputdata[i++]);}
 		
 		LED_OFF(LED_Red);			//初始化为高电平 【熄灭】
 		LED_OFF(LED_Green);			
@@ -51,7 +54,7 @@ void led_blink_task(void)
 	
 
 /* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白 ] */
-void system_init_led_blink(rt_uint8_t InputData)
+void system_led_blink(rt_uint8_t InputData)
 {
     if(InputData & 0x04){	
 						LED_ON(LED_Red); }
@@ -98,21 +101,22 @@ static int led_on(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        log_d("Error! Proper Usage: led_on R\n Species:R /G /B \n");
+        log_e("Error! Proper Usage: led_on r\n Species:r \\ g \\ b \\ c\n");
 				result = -RT_ERROR;
         goto _exit;
     }
 		
 		switch(*argv[1]){
-				case 'R':LED_ON(LED_Red);break;
-				case 'G':LED_ON(LED_Green);break;
-				case 'B':LED_ON(LED_Blue);break;
-				default:log_d("Error! Proper Usage: led_on R\n Species:R /G /B \n");break;
+				case 'r':LED_ON(LED_Red);break;
+				case 'g':LED_ON(LED_Green);break;
+				case 'b':LED_ON(LED_Blue);break;
+				case 'c':LED_OFF(LED_Camera);break;
+				default:log_e("Error! Proper Usage: led_on R\n Species:r \\ g \\ b \\ c \n");break;
 		}
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(led_on,ag: led_on R  );
+MSH_CMD_EXPORT(led_on,ag: led_on r  );
 
 
 /* led off MSH方法 */
@@ -121,18 +125,31 @@ static int led_off(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        log_d("Error! Proper Usage: led_off R\n Species:R /G /B \n");
+        log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c \n");
 				result = -RT_ERROR;
         goto _exit;
     }
 		
 		switch(*argv[1]){
-				case 'R':LED_OFF(LED_Red);break;
-				case 'G':LED_OFF(LED_Green);break;
-				case 'B':LED_OFF(LED_Blue);break;
-				default:log_d("Error! Proper Usage: led_off R\n Species:R /G /B \n");break;
+			
+				case 'r':LED_OFF(LED_Red);break;
+				case 'g':LED_OFF(LED_Green);break;
+				case 'b':LED_OFF(LED_Blue);break;
+				case 'c':LED_ON(LED_Camera);break;
+				default:log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c \n");break;
 		}
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(led_off,ag:led_off R  );
+MSH_CMD_EXPORT(led_off,ag:led_off r  );
+
+
+/* 系统错误指示灯 红色 */
+void Error_LED(void)
+{
+		LED_ON(LED_Red);
+		LED_OFF(LED_Green);
+		LED_OFF(LED_Blue);
+}
+
+

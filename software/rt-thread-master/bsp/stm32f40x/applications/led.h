@@ -7,10 +7,13 @@
 #define LEDG PBout(10)
 #define LEDB PBout(11)
 
+void LED_ON(u32 led_pin);
+void LED_OFF(u32 led_pin);
+void LED_Turn(u32 led_pin);
 
-
+void Error_LED(void);
 void led_blink_task(void);
-void system_init_led_blink(rt_uint8_t InputData);
+void system_led_blink(rt_uint8_t InputData);
 
 
 
