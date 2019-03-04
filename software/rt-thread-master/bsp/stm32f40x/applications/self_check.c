@@ -25,10 +25,10 @@ void check(void* parameter)
                       RT_WAITING_FOREVER, &e) == RT_EOK)
     {
 				log_w("System Self-Check:0x%x --> Success!", e);
-				log_w("Clock: %d Hz.",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
+				log_v("Clock: %d Hz.",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
 		}
 		else {
-				log_w("some devices initialization failed.");
+				log_e("some devices initialization failed.");
 		}
 
 }

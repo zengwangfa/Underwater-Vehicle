@@ -194,6 +194,9 @@ int uart_gyroscope(void)
 		gyro_uart_device = rt_device_find(GYRO_UART_NAME);       
 		debug_uart_device = rt_device_find(DEBUG_UART_NAME);
 
+		log_v("console serial: %s", RT_CONSOLE_DEVICE_NAME);	
+		log_v("gyroscope serial: %s", gyro_uart_device);
+		log_v("debug serial: %s", debug_uart_device);
 
 		rt_device_open(debug_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
 	
@@ -223,10 +226,7 @@ int uart_gyroscope(void)
     if (gyroscope_tid != RT_NULL)
     {
 				log_i("Uart_Init()");
-				log_v("console serial: %s", RT_CONSOLE_DEVICE_NAME);	
-				log_v("gyroscope serial: %s", gyro_uart_device);
-				log_v("debug serial: %s", debug_uart_device);
-        rt_thread_startup(gyroscope_tid);
+				rt_thread_startup(gyroscope_tid);
 				rt_event_send(&init_event, GYRO_EVENT); //发送事件  表示初始化完成
     }
 		return 0;

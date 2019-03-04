@@ -128,6 +128,7 @@ int rt_system_init(void)
 																			 2048,
 																			 30,
 																			 10);
+		rt_kprintf("monitor_thread\n");
 									 
     sys_thread = rt_thread_create("sys_init",
 																	 sys_init_thread, 
@@ -135,6 +136,7 @@ int rt_system_init(void)
 																	 2048,
 																	 5,
 																	 10);
+		rt_kprintf("sys_thread\n");
     if (monitor_thread != NULL) {
         rt_thread_startup(monitor_thread);
     }

@@ -14,7 +14,7 @@
 
 Notes:
 
-重点：编译环境需为c99，系统默认为c89，c89编制只能将定义放在函数内最前面
+重点：编译环境需为c99，旧版本Keil5系统默认为c89，c89编制只能将定义放在函数内最前面
 
 如何添加c99环境：
 				Options -> C/C++ -> Misc Controls ->里面输入【--c99】 ->保存即可
@@ -49,7 +49,15 @@ SPI初始化配置时:
 
 
 
+4.内存占用记录：
 
+Code是代码占用的空间;
+RO-data是 Read Only 只读常量的大小，如const型;
+RW-data是（Read Write） 初始化了的可读写变量的大小;
+ZI-data是（Zero Initialize） 没有初始化的可读写变量的大小。ZI-data不会被算做代码里因为不会被初始化;
+
+
+Program Size: Code=157602 RO-data=27178 RW-data=1684 ZI-data=105348    【2019.3.4】
 
 
 */

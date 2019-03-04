@@ -47,7 +47,7 @@ int pwm_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (pwm_tid != RT_NULL){
-				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值20000，所以PWM频率为 1M/20000=50Hz.  
+				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
 				log_i("PWM_init()");
 			
 				rt_thread_startup(pwm_tid);

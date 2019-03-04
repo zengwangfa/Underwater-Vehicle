@@ -20,6 +20,11 @@ if GetDepend('RT_USING_SPI'):
 	src += ['drv_spi.c']
 	
 src += ['drv_oled.c']
+src += ['drv_ov2640.c']
+src += ['drv_sccb.c']
+src += ['drv_dcmi.c']
+src += ['drv_cpu_temp.c']
+
 CPPPATH = [cwd]
 
 group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)

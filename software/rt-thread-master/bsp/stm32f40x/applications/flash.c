@@ -1,4 +1,5 @@
 #define LOG_TAG       "flash"
+
 #include "init.h"
 
 #include <spi_flash.h>

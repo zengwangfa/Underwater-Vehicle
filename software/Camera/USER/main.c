@@ -57,10 +57,10 @@ void jpeg_data_process(void)
 		}
 		if(jpeg_data_ok==2)	//上一次的jpeg数据已经被处理了
 		{
-			DMA2_Stream1->NDTR=jpeg_buf_size;	
-			DMA_SetCurrDataCounter(DMA2_Stream1,jpeg_buf_size);//传输长度为jpeg_buf_size*4字节
-			DMA_Cmd(DMA2_Stream1, ENABLE);			//重新传输
-			jpeg_data_ok=0;						//标记数据未采集
+				DMA2_Stream1->NDTR=jpeg_buf_size;	
+				DMA_SetCurrDataCounter(DMA2_Stream1,jpeg_buf_size);//传输长度为jpeg_buf_size*4字节
+				DMA_Cmd(DMA2_Stream1, ENABLE);			//重新传输
+				jpeg_data_ok=0;						//标记数据未采集
 		}
 	}
 } 

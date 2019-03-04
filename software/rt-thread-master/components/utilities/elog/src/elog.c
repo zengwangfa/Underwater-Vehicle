@@ -176,11 +176,11 @@ ElogErrCode elog_init(void) {
 
 #ifdef ELOG_COLOR_ENABLE
     /* disable text color by default */
-    elog_set_text_color_enabled(false);
+    elog_set_text_color_enabled(true);
 #endif
 
     /* set level is ELOG_LVL_VERBOSE */
-    elog_set_filter_lvl(ELOG_LVL_VERBOSE);
+    elog_set_filter_lvl(ELOG_LVL_TOTAL_NUM);
 
     return result;
 }
@@ -197,7 +197,7 @@ void elog_start(void) {
 #elif defined(ELOG_BUF_OUTPUT_ENABLE)
     elog_buf_enabled(true);
 #endif
-
+		log_w("System Self-Checking... ");
     /* show version */
     log_i("EasyLogger V%s is initialize success.", ELOG_SW_VERSION);
 }
@@ -275,7 +275,7 @@ void elog_set_filter(uint8_t level, const char *tag, const char *keyword) {
  * @param level level
  */
 void elog_set_filter_lvl(uint8_t level) {
-    ELOG_ASSERT(level <= ELOG_LVL_VERBOSE);
+    ELOG_ASSERT(level <= ELOG_LVL_VERBOSE+2); //0断言
 
     elog.filter.level = level;
 }
@@ -462,7 +462,7 @@ void elog_output(uint8_t level, const char *tag, const char *file, const char *f
         log_len += elog_strcpy(log_len, log_buf + log_len, "(");
         /* package time info */
         if (get_fmt_enabled(level, ELOG_FMT_DIR)) {
-            log_len += elog_strcpy(log_len, log_buf + log_len, file);
+            log_len += elog_strcpy(log_len, log_buf + log_len, file);  //去掉打印 的路径
             if (get_fmt_enabled(level, ELOG_FMT_FUNC)) {
                 log_len += elog_strcpy(log_len, log_buf + log_len, " ");
             } else if (get_fmt_enabled(level, ELOG_FMT_LINE)) {
