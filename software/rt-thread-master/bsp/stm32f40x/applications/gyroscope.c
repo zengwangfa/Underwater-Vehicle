@@ -79,13 +79,23 @@ void CopeSerial2Data(unsigned char Data)
 /* JY901 Êý¾Ý×ª»» */
 void JY901_Convert(struct JY901_t * pArr) 
 {
-		static u8 i = 0;
-		for(i = 0;i < 3;i++){	
-				pArr->Acc[i] = (float)stcAcc.a[i]/32768*16;
-				pArr->Gyro[i] = (float)stcGyro.w[i]/32768*2000;
-				pArr->Angle[i] = (float)stcAngle.angle[i]/32768*180;
-				pArr->Mag[i] 		= stcMag.h[i];
-		}
+
+		pArr->Acc.x  = (float)stcAcc.a[0]/32768*16;
+		pArr->Acc.y  = (float)stcAcc.a[1]/32768*16;
+		pArr->Acc.z  = (float)stcAcc.a[2]/32768*16;
+	
+		pArr->Gyro.x = (float)stcGyro.w[0]/32768*2000;
+		pArr->Gyro.y = (float)stcGyro.w[1]/32768*2000;
+		pArr->Gyro.z = (float)stcGyro.w[2]/32768*2000;
+	
+		pArr->Euler.Roll = (float)stcAngle.angle[0]/32768*180;
+		pArr->Euler.Pitch = (float)stcAngle.angle[1]/32768*180;
+		pArr->Euler.Yaw = (float)stcAngle.angle[2]/32768*180;
+	
+		pArr->Mag.x 	= stcMag.h[0];
+		pArr->Mag.y		= stcMag.h[1];
+		pArr->Mag.z 	= stcMag.h[2];
+	
 		pArr->Temperature = (float)stcAcc.T/100;
 }
 
@@ -121,13 +131,13 @@ MSH_CMD_EXPORT(get_time,get acceleration[a]);
 void get_gyroscope(void)
 {		
 		char str[50];
-		sprintf(str,"Acc:%.3f %.3f %.3f",JY901.Acc[0],JY901.Acc[1],JY901.Acc[2]);
+		sprintf(str,"Acc:%.3f %.3f %.3f",  JY901.Acc.x,  JY901.Acc.y,  JY901.Acc.z);
 		log_i(str);
-		sprintf(str,"Gyro:%.3f %.3f %.3f",JY901.Gyro[0],JY901.Gyro[1],JY901.Gyro[2]);
+		sprintf(str,"Gyro:%.3f %.3f %.3f", JY901.Gyro.x, JY901.Gyro.y, JY901.Gyro.z);
 		log_i(str);
-		sprintf(str,"Angle:%.3f %.3f %.3f",JY901.Angle[0],JY901.Angle[1],JY901.Angle[2]);
+		sprintf(str,"Angle:%.3f %.3f %.3f",JY901.Euler.Roll,JY901.Euler.Pitch,JY901.Euler.Yaw);
 		log_i(str);
-		sprintf(str,"Mag:%d %d %d",JY901.Mag[0],JY901.Mag[1],JY901.Mag[2]);
+		sprintf(str,"Mag:%d %d %d",				 JY901.Mag.x,  JY901.Mag.y,   JY901.Mag.z);
 		log_i(str);	
 	
 		return;

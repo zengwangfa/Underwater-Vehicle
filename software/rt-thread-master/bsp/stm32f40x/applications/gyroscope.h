@@ -44,9 +44,9 @@
 #define HX					0x3a
 #define HY					0x3b
 #define HZ					0x3c			
-#define Roll				0x3d
-#define Pitch				0x3e
-#define Yaw					0x3f
+//#define Roll				0x3d
+//#define Pitch				0x3e
+//#define Yaw					0x3f
 #define TEMP				0x40
 #define D0Status		0x41
 #define D1Status		0x42
@@ -136,13 +136,35 @@ struct SQ
 { short q[4];
 };
 
+typedef struct
+{
+  float x;
+  float y;
+  float z;
+}Vector3f; //3轴向量 float型
+
+typedef struct
+{
+  short x;  
+  short y;
+  short z;
+}Vector3s;//3轴向量 short型 16为短整型
+
+
+
+typedef struct
+{
+  float Roll;		 //x 
+  float Pitch;   //y
+  float Yaw;     //z
+}Euler3f;//欧拉角3轴向量 short型 16为短整型
 
 struct JY901_t
 {
-	float Acc[3]; 		  //加速度
-	float Gyro[3]; 			//角速度
-	float Angle[3];			//角度
-	short Mag[3];
+	Vector3f Acc; 		//加速度
+	Vector3f Gyro; 		//角速度
+	Vector3s Mag;     //磁场
+	Euler3f Euler;		//欧拉角
 	float Temperature;	//温度
 };
 

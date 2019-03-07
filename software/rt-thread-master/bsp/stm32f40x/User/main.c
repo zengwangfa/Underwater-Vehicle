@@ -20,8 +20,8 @@
  * 2019-02-16     Dwfish       Creat System self-check methods[events]. 
  * 2019-02-16     Dwfish       Add W25Q128 FLASH To Save Important Parameters.
  * 2019-02-16     Dwfish       Creat OLED Electronic compass.
- * 2019-02-19     Dwfish       Add VACN host computer debug.
- * 2019-02-20     Dwfish       Add Easylog && Easyflash && <update> msh.
+ * 2019-02-19     Dwfish       Add VACN & ANO host computer debug.
+ * 2019-02-20     Dwfish       Add Easylog & Easyflash && <update> msh.
 *
 ******************************************************************************/
 #define LOG_TAG    "main"
@@ -61,7 +61,7 @@ int main(void)
 		rt_kprintf("* 2019-02-16     Dwfish       Add W25Q128 FLASH To Save Important Parameters.\n");
 		rt_kprintf("* 2019-02-16     Dwfish       Creat OLED Electronic compass.\n");
 		rt_kprintf("* 2019-02-19     Dwfish       Add VACN host computer debug.\n");
-		rt_kprintf("* 2019-02-20     Dwfish       Add Easylog && Easyflash && <update> msh.\n");
+		rt_kprintf("* 2019-02-20     Dwfish       Add Easylog & Easyflash && <update> msh.\n");
 
 		rt_kprintf("* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");	 
 		

@@ -36,7 +36,7 @@ void check(void* parameter)
 
 int Self_Check_thread_init(void)
 {
-
+	
 		/*创建动态线程*/
     init_tid = rt_thread_create("self_check",			 //线程名称
                     check,									 //线程入口函数【entry】

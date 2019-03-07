@@ -6,7 +6,7 @@
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define GYRO_UART_NAME        "uart2"
-#define DEBUG_UART_NAME       "uart3"
+#define DEBUG_UART_NAME       "uart4"
 
 #define Query_JY901_data 0     /* "1"为调试查询  "0"为正常读取 */
 
@@ -204,11 +204,12 @@ int uart_gyroscope(void)
 			
 					/* 以读写以及中断接打开串口设备 */
 				rt_device_open(gyro_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
-				config.baud_rate = BAUD_RATE_460800;
+				config.baud_rate = BAUD_RATE_115200;
 				config.data_bits = DATA_BITS_8;
 				config.stop_bits = STOP_BITS_1;
 				config.parity = PARITY_NONE;
 		
+				log_v("Debug_Uart_Baud Rate:%d",config.baud_rate);
 				/* 打开设备后才可修改串口配置参数 */
 				rt_device_control(debug_uart_device, RT_DEVICE_CTRL_CONFIG, &config);
 				rt_sem_init(&rx_sem, "rx_sem", 0, RT_IPC_FLAG_FIFO);

@@ -9,7 +9,7 @@ void  adc_init(void);
 
 u16 get_adc(u8 ch);  //get adc通道值
 
-double get_vol(void);//返回电压值
+float get_vol(void); //get 电压值
 
 void get_voltage(void);
 

@@ -83,6 +83,7 @@ void sys_init_thread(void* parameter){
     /* 设置RTT断言钩子 */
     rt_assert_set_hook(rtt_user_assert_hook);
 		
+		Buzzer_Init();
 		/* 调度器解锁 */
     rt_exit_critical();
 }
@@ -93,7 +94,7 @@ static rt_err_t exception_hook(void *context) {
     extern long list_thread(void);
     uint8_t _continue = 1;
 	
-		Error_LED(); //异常指示灯
+		Error_LED(); //异常指示灯 红灯
     rt_enter_critical();
 
 #ifdef RT_USING_FINSH
@@ -106,7 +107,8 @@ static rt_err_t exception_hook(void *context) {
 
 /* 设置RTT断言钩子 */
 static void rtt_user_assert_hook(const char* ex, const char* func, rt_size_t line) {
-		Error_LED(); //异常指示灯
+	
+		Error_LED(); //异常指示灯 红灯
     rt_enter_critical();
 
 #ifdef ELOG_ASYNC_OUTPUT_ENABLE

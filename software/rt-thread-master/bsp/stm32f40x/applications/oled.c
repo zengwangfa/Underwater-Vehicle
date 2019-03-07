@@ -112,16 +112,16 @@ void OLED_StatusPage(void)
 void OLED_GyroscopePage(void)
 {
 		char str[100];
-		sprintf(str,"Acc:%.2f %.2f %.2f  ",JY901.Acc[0],JY901.Acc[1],JY901.Acc[2]);
+		sprintf(str,"Acc:%.2f %.2f %.2f  ",JY901.Acc.x,JY901.Acc.y,JY901.Acc.z);
 		OLED_ShowString(0,0,(u8 *)str,12); 	
 		
-		sprintf(str,"Gyro:%.1f %.1f %.1f ",JY901.Gyro[0],JY901.Gyro[1],JY901.Gyro[2]);
+		sprintf(str,"Gyro:%.1f %.1f %.1f ",JY901.Gyro.x,JY901.Gyro.y,JY901.Gyro.z);
 		OLED_ShowString(0,16,(u8 *)str,12); 	
 		
-		sprintf(str,"Ang:%.1f %.1f %.1f  ",JY901.Angle[0],JY901.Angle[1],JY901.Angle[2]);
+		sprintf(str,"Ang:%.1f %.1f %.1f  ",JY901.Euler.Roll,JY901.Euler.Pitch,JY901.Euler.Yaw);
 		OLED_ShowString(0,32,(u8 *)str,12); 	
 		 
-		sprintf(str,"Mag:%d %d %d  ",JY901.Mag[0],JY901.Mag[1],JY901.Mag[2]);
+		sprintf(str,"Mag:%d %d %d  ",JY901.Mag.x,JY901.Mag.y,JY901.Mag.z);
 		OLED_ShowString(0,48,(u8 *)str,12); 
 		
 	  OLED_Refresh_Gram();//更新显示到OLED
@@ -132,18 +132,18 @@ void OLED_PicturePage(void)
 {
 		static u8 y=0;
 		char str[100];
-		static int Angle_z = 0,Angle_y = 0;
+		static int Angle_x = 0,Angle_y = 0;
 		
 	
-		draw_fill_circle(31+Angle_z,31+Angle_y,6,0); //清空实心圆，用于刷新坐标
+		draw_fill_circle(31+Angle_y,31+Angle_x,6,0); //清空实心圆，用于刷新坐标
 
 		draw_line(31,31,slope,0); //清除上一次画的线 进行刷新
 		OLED_Refresh_Gram();//更新显示到OLED
 	
 
-		Angle_z = JY901.Angle[0]/7;
-		Angle_y = JY901.Angle[1]/7;
-		slope = tan((float)(JY901.Angle[2]*Pi/180));  //转化弧度制 解算东北天坐标系下 航向斜率slope
+		Angle_x = JY901.Euler.Roll/5;
+		Angle_y = JY901.Euler.Pitch/5;
+		slope = tan((float)(JY901.Euler.Yaw*Pi/180));  //转化弧度制 解算东北天坐标系下 航向斜率slope
 	
 		for(y = 28;y <= 36;y++){ //补圆顶底部的缺失点
 				OLED_DrawPoint(y,0,1);
@@ -152,13 +152,13 @@ void OLED_PicturePage(void)
 
 		draw_line(31,31,slope,1);
 		
-		sprintf(str,"Pit:%3.1f  ",JY901.Angle[0]); //俯仰角Pitch
+		sprintf(str,"Rol:%3.1f  ",JY901.Euler.Roll); //横滚角Roll 
 		OLED_ShowString(65,0, (u8 *)str,12);
 		
-		sprintf(str,"Rol:%3.1f  ",JY901.Angle[1]);  //横滚脚Roll
+		sprintf(str,"Pit:%3.1f  ",JY901.Euler.Pitch);//俯仰角Pitch
 		OLED_ShowString(65,16, (u8 *)str,12);
 		
-		sprintf(str,"Yaw:%3.1f  ",JY901.Angle[2]); //偏航角Yaw
+		sprintf(str,"Yaw:%3.1f  ",JY901.Euler.Yaw); //偏航角Yaw
 		OLED_ShowString(65,32, (u8 *)str,12);
 		
 		sprintf(str,"k:%.1f   ",slope);
@@ -171,7 +171,7 @@ void OLED_PicturePage(void)
 		OLED_ShowString(55,28,(u8 *)"E",12);
 		
 		draw_circle(31,31,32);//画固定圆
-		draw_fill_circle(31+Angle_z,31+Angle_y,6,1); //画实心圆
+		draw_fill_circle(31+Angle_y,31+Angle_x,6,1); //画实心圆
 	
 		OLED_Refresh_Gram();//更新显示到OLED						
 }
@@ -253,12 +253,12 @@ void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 			
-				if( (JY901.Angle[2] >-135 && JY901.Angle[2] <-90 ) ||(JY901.Angle[2] >90 && JY901.Angle[2] < 145 ) || dot == 0 ){ //上半圆
+				if( (JY901.Euler.Yaw >-135 && JY901.Euler.Yaw <-90 ) ||(JY901.Euler.Yaw >90 && JY901.Euler.Yaw < 145 ) || dot == 0 ){ //上半圆
 						if(  ((x-x0)/k+y0) >= 31 && ((x-x0)/k+y0) < y ) {  //点限制在 圆方程内
 								OLED_DrawPoint(x,((x-x0)/k+y0),dot);}
 				}
 				
-				if( (JY901.Angle[2] < -45 && JY901.Angle[2] > -90) || (JY901.Angle[2] < 90 && JY901.Angle[2] > 45) || dot == 0 ){ //上半圆
+				if( (JY901.Euler.Yaw < -45 && JY901.Euler.Yaw > -90) || (JY901.Euler.Yaw < 90 && JY901.Euler.Yaw> 45) || dot == 0 ){ //上半圆
 						if(  ((x-x0)/k+y0) <= 31 && ((x-x0)/k+y0)> 63-y ) {  //点限制在 圆方程内
 								OLED_DrawPoint(x,((x-x0)/k+y0),dot);}
 				}
@@ -278,12 +278,12 @@ void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 		
-				if( (JY901.Angle[2] >=-45 && JY901.Angle[2] <= 0) || (JY901.Angle[2] >=-180 && JY901.Angle[2] <= -135)  || dot == 0 ){  // JY901.Angle[2] < 0
+				if( (JY901.Euler.Yaw>=-45 && JY901.Euler.Yaw <= 0) || (JY901.Euler.Yaw >=-180 && JY901.Euler.Yaw <= -135)  || dot == 0 ){  // JY901.Angle[2] < 0
 						if( (k*(x-x0)+y0) >= 31 && (k*(x-x0)+y0) < y ) {  //点限制在 圆方程内   上半圆
 								OLED_DrawPoint((k*(x-x0)+y0),x,dot);}
 				}
 				
-				if( (JY901.Angle[2] > 0 && JY901.Angle[2] <= 45) || (JY901.Angle[2] >=135 && JY901.Angle[2] <= 180)  || dot == 0 ){  // JY901.Angle[2] < 0
+				if( (JY901.Euler.Yaw > 0 && JY901.Euler.Yaw <= 45) || (JY901.Euler.Yaw >=135 && JY901.Euler.Yaw <= 180)  || dot == 0 ){  // JY901.Angle[2] < 0
 						if(((k*(x-x0)+y0)< 31 && (k*(x-x0)+y0) > 63-y)) {  //点限制在 圆方程内  下半圆
 								OLED_DrawPoint((k*(x-x0)+y0),x,dot);} 
 				}

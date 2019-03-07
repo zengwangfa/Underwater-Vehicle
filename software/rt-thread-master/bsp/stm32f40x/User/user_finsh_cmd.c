@@ -3,6 +3,7 @@
  *
  *  Created on: 2013年12月7日
  *      Author: Armink
+ *      Notes: 更新固件 Update 方法
  */
 #define LOG_TAG    "cmd"
  
@@ -26,7 +27,7 @@ static enum rym_code ymodem_on_begin(struct rym_ctx *ctx, rt_uint8_t *buf, rt_si
 
     /* calculate and store file size */
     file_name = (char *) &buf[0];
-    file_size = (char *) &buf[rt_strlen(file_name) + 1];
+		file_size = (char *) &buf[rt_strlen(file_name) + 1];
     update_file_total_size = atol(file_size);
     /* 4 bytes align */
     update_file_total_size = (update_file_total_size + 3) / 4 * 4;

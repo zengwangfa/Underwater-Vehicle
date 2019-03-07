@@ -43,9 +43,7 @@ int buzzer_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (buzzer_tid != RT_NULL){
-				rt_pin_mode (Buzzer_PIN, PIN_MODE_OUTPUT);  //输出模式
-				rt_pin_write(Buzzer_PIN, PIN_LOW);
-				log_i("Buzzer_Init()");
+
 				rt_thread_startup(buzzer_tid);
 				rt_event_send(&init_event, BUZZ_EVENT);
 		}
@@ -93,3 +91,11 @@ void buzzer_ring_task(void)
 			buzzer.count = 0;
 	}
 }
+
+void Buzzer_Init(void)
+{
+		rt_pin_mode (Buzzer_PIN, PIN_MODE_OUTPUT);  //输出模式
+		rt_pin_write(Buzzer_PIN, PIN_LOW);
+		log_i("Buzzer_Init()");
+}
+

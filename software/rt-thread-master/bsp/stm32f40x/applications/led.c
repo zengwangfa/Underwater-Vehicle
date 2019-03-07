@@ -151,5 +151,11 @@ void Error_LED(void)
 		LED_OFF(LED_Green);
 		LED_OFF(LED_Blue);
 }
-
+/* Ö¸Ê¾µÆ È«Ï¨Ãð */
+void All_LED_OFF(void)
+{
+		LED_OFF(LED_Red);
+		LED_OFF(LED_Green);
+		LED_OFF(LED_Blue);
+}
 
