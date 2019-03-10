@@ -45,7 +45,7 @@ float get_vol(void)
 				rt_thread_mdelay(10);
 		}
 		
-		for(j = 0;j < 10;j++){
+		for(j = 0;j < 10-1;j++){
 				for(i = 0;i < 9-j;i++){
 						if( adc_value[i] > adc_value[i+1] ){ //ÉýÐò
 								res = adc_value[i];

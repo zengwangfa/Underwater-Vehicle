@@ -16,6 +16,6 @@
 #define _DRV_CPU_TEMP_H_
 
 int stm32_cpu_temperature_init(void);
-uint32_t cpu_temp_get(void);
+float get_cpu_temp(void);
 
 #endif /* _DRV_CPU_TEMP_H_ */

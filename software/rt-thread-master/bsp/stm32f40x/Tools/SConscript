@@ -1,0 +1,17 @@
+from building import *
+
+cwd = GetCurrentDir()
+
+# add the general drivers.
+src = Split("""
+
+""")
+
+# add others drivers.
+src += ['filter.c']
+
+CPPPATH = [cwd]
+
+group = DefineGroup('Utilities', src, depend = [''], CPPPATH = CPPPATH)
+
+Return('group')

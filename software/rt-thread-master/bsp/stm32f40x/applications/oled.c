@@ -2,7 +2,8 @@
 
 #include "init.h"
 #include "math.h"
-	
+#include "drv_cpu_temp.h"
+
 /* 自定义OLED 坐标系如下: 
 
 	127 ↑y
@@ -18,7 +19,7 @@
 */
 /*---------------------- Constant / Macro Definitions -----------------------*/
 	
-#define Pi 3.14159f //float型
+#define Pi 3.1415926f //float型
 	
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -85,7 +86,7 @@ void oled_thread_entry(void* parameter)
 	while(1)
 	{	
 			menu_define();//菜单定义选择
-			rt_thread_mdelay(1000/pow(MENU,2));  //菜单号越大 刷新速率越大
+			rt_thread_mdelay(1000/pow(MENU+1,2));  //菜单号越大 刷新速率越大
 	}
 	
 }
@@ -103,7 +104,7 @@ void OLED_StatusPage(void)
 	
 		sprintf(str,"Voltage:%.2f v\r\n",get_vol());
 		OLED_ShowString(0,16,(u8 *)str,12); 
-		sprintf(str,"Temperature:%.2f C\r\n",JY901.Temperature);
+		sprintf(str,"Temperature:%.2f C\r\n",get_cpu_temp());
 		OLED_ShowString(0,48,(u8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }
@@ -135,9 +136,9 @@ void OLED_PicturePage(void)
 		static int Angle_x = 0,Angle_y = 0;
 		
 	
-		draw_fill_circle(31+Angle_y,31+Angle_x,6,0); //清空实心圆，用于刷新坐标
-
+		draw_fill_circle(31+Angle_x,31+Angle_y,6,0); //清空实心圆，用于刷新坐标
 		draw_line(31,31,slope,0); //清除上一次画的线 进行刷新
+	
 		OLED_Refresh_Gram();//更新显示到OLED
 	
 
@@ -171,7 +172,7 @@ void OLED_PicturePage(void)
 		OLED_ShowString(55,28,(u8 *)"E",12);
 		
 		draw_circle(31,31,32);//画固定圆
-		draw_fill_circle(31+Angle_y,31+Angle_x,6,1); //画实心圆
+		draw_fill_circle(31+Angle_x,31+Angle_y,6,1); //画实心圆
 	
 		OLED_Refresh_Gram();//更新显示到OLED						
 }

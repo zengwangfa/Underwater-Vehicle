@@ -43,7 +43,7 @@ int buzzer_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (buzzer_tid != RT_NULL){
-
+				Buzzer_Init();
 				rt_thread_startup(buzzer_tid);
 				rt_event_send(&init_event, BUZZ_EVENT);
 		}
@@ -54,18 +54,17 @@ INIT_APP_EXPORT(buzzer_thread_init);
 
 void buzzer_once()   
 {
-	buzzer.count=1;
-	buzzer.time=2;
-	buzzer.number=2;
+		buzzer.count=1;
+		buzzer.time=2;
+		buzzer.number=2;
 }  
 
 /* count为响的次数  length响的时间长度  */
 void buzzer_bibi(rt_uint8_t count,rt_uint8_t length)
 {
-	buzzer.count  = count *2;	
-	buzzer.time   = length*5;
-	buzzer.number = length*5;
-
+		buzzer.count  = count *2;	
+		buzzer.time   = length*5;
+		buzzer.number = length*5;
 }  
 
 /* 蜂鸣器鸣响任务【可指示系统各个状态】 */

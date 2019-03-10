@@ -12,11 +12,6 @@
 //OV Camera 闪光灯
 #define LED_Camera 	141  //高电平点亮
 
-//RGB灯共阳极接到+3.3V，电平 0亮 1灭
-#define LED_ON(led_pin) 						rt_pin_write(led_pin ,PIN_LOW )
-#define LED_OFF(led_pin) 						rt_pin_write(led_pin ,PIN_HIGH)
-#define LED_Turn(led_pin,status) 		rt_pin_write(led_pin ,status =! status) //取反
-
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
 extern struct rt_event init_event;

@@ -65,7 +65,7 @@ enum VehicleMode{
 //void delay_ms(u32 nTimer);
 void rt_hw_us_delay(u32 us);
 void rt_hw_ms_delay(u32 ms);
-short bubble(short *adc_value);
+
 
 int sprintf(char *buf, const char *format, ...);
 

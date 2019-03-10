@@ -7,9 +7,10 @@
 #define LEDG PBout(10)
 #define LEDB PBout(11)
 
-void LED_ON(u32 led_pin);
-void LED_OFF(u32 led_pin);
-void LED_Turn(u32 led_pin);
+//RGB灯共阳极接到+3.3V，电平 0亮 1灭
+#define LED_ON(led_pin) 						rt_pin_write(led_pin ,PIN_LOW )
+#define LED_OFF(led_pin) 						rt_pin_write(led_pin ,PIN_HIGH)
+#define LED_Turn(led_pin,status) 		rt_pin_write(led_pin ,status =! status) //取反
 
 
 /* 指示灯 全熄灭 */

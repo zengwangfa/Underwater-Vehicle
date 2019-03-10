@@ -168,7 +168,7 @@ struct JY901_t
 	float Temperature;	//温度
 };
 
-
+extern struct JY901_t JY901; //JY901真实值结构体
 
 /*-----------------MSH命令函数----------------*/
 

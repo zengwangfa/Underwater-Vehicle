@@ -1,5 +1,5 @@
-#ifndef __ADC_CONVERT_H
-#define __ADC_CONVERT_H
+#ifndef __ADC_CONVERT_H_
+#define __ADC_CONVERT_H_
 
 #include "init.h"
 

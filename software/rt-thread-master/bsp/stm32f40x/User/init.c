@@ -31,7 +31,7 @@ void thread_entry_sys_monitor(void* parameter)
         //rt_memory_info(&total_mem, &used_mem, &max_used_mem);
 				//rt_kprintf("Total_Mem:%ld  Used_Mem:%ld  Max_Used_Mem:%ld\n",total_mem,used_mem,max_used_mem);
         IWDG_Feed(); //Î¹¹·
-				rt_thread_mdelay(1000);
+				rt_thread_mdelay(500);
     }
 }
 
@@ -83,7 +83,7 @@ void sys_init_thread(void* parameter){
     /* ÉèÖÃRTT¶ÏÑÔ¹³×Ó */
     rt_assert_set_hook(rtt_user_assert_hook);
 		
-		Buzzer_Init();
+
 		/* µ÷¶ÈÆ÷½âËø */
     rt_exit_critical();
 }
@@ -154,38 +154,6 @@ int rt_system_init(void)
     return 0;
 }
 INIT_DEVICE_EXPORT(rt_system_init);
-
-
-
-
-
-
-
-
-
-/* Ã°ÅÝ getµçÑ¹ */
-short bubble(short *adc_value)
-{
-		u8 i,j;
-		short res = 0;   //reserve
-		short value = 0;
-
-		for(j = 0;j < 10-1;j++){
-				for(i = 0;i < 9-j;i++){
-						if( adc_value[i] > adc_value[i+1] ){ //>ÉýÐò   <½µÐò
-								res = adc_value[i];
-								adc_value[i] = adc_value[i+1];
-								adc_value[i+1] = res;
-						}
-					
-				}
-		}
-		value = (*(adc_value+4)+ *(adc_value+5)+ *(adc_value+6))/3;		
-		return (short)value;
-} 
-
-
-
 
 
 

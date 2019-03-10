@@ -28,8 +28,8 @@ static uint16_t get_adc(u8 ch) {  //对于 STM32F40x 和 STM32F41x 器件，温度传感器
  *
  * @return CPU温度值
  */
-uint32_t get_cpu_temp(void) {
-		char str[100] = {0}; 
+float get_cpu_temp(void) {
+
     uint32_t adc[10] = { 0 }, adc_max = 0, adc_min = 0;
     uint32_t adc_value = 0, adc_sum = 0;
     double temperature = 0.0;
@@ -54,11 +54,11 @@ uint32_t get_cpu_temp(void) {
     temperature = (float) adc_value * (3.3 / 4096);
     temperature = (temperature - 0.76) / 0.0025 + 25;
 
-		sprintf(str,"STM32 CPU Temperature : %.2f C",temperature);
-		log_v(str);
-    return (uint32_t)(temperature);
+//		sprintf(str,"STM32 CPU Temperature : %.2f C",temperature);
+//		log_v(str);
+    return (temperature);
 }
-MSH_CMD_EXPORT(get_cpu_temp,cpu temperature get);
+//MSH_CMD_EXPORT(get_cpu_temp,cpu temperature get);
 
 /**
  * CPU 温度 ADC 硬件初始化

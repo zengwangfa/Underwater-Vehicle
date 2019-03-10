@@ -539,11 +539,6 @@
               <FilePath>applications\flash.c</FilePath>
             </File>
             <File>
-              <FileName>gyroscope.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\gyroscope.c</FilePath>
-            </File>
-            <File>
               <FileName>key.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\key.c</FilePath>
@@ -559,6 +554,21 @@
               <FilePath>applications\oled.c</FilePath>
             </File>
             <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyroscope.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\gyroscope.c</FilePath>
+            </File>
+            <File>
+              <FileName>PID.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\PID.c</FilePath>
+            </File>
+            <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\pwm.c</FilePath>
@@ -572,11 +582,6 @@
               <FileName>camera.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\camera.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\uart.c</FilePath>
             </File>
             <File>
               <FileName>self_check.c</FileName>
@@ -1242,6 +1247,11 @@
               <FileName>ymodem.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\components\utilities\ymodem\ymodem.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tools\filter.c</FilePath>
             </File>
           </Files>
         </Group>

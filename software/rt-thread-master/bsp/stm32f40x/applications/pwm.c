@@ -115,19 +115,6 @@ MSH_CMD_EXPORT(servo_motor_closevalue_set,ag: servo_motor_CloseValue_set 115);
 
 
 
-/* list 相关重要参数 */
-void list_value(void)
-{
-
-		Flash_Read();
-		log_i	("variable name     value");
-    log_i("---------------  ---------");
-	  log_i("ser_OpenValue      %d",servo_motor.open_value);
-	  log_i("ser_CloseValue     %d",servo_motor.close_value);
-    rt_kprintf("                         \n");
-}
-MSH_CMD_EXPORT(list_value,list some important values);
-
 
 
 //TIM1 PWM部分初始化 

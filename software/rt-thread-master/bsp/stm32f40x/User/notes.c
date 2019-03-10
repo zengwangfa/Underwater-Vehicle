@@ -59,5 +59,10 @@ ZI-data是（Zero Initialize） 没有初始化的可读写变量的大小。ZI-data不会被算做代码
 Program Size: Code=157602 RO-data=27178 RW-data=1684 ZI-data=105348    【2019.3.4】
 
 
+【2019.3.9】
+    Total RO  Size (Code + RO Data)               190236 ( 185.78kB)
+    Total RW  Size (RW Data + ZI Data)            108336 ( 105.80kB)
+    Total ROM Size (Code + RO Data + RW Data)     190652 ( 186.18kB)
+
 */
 
