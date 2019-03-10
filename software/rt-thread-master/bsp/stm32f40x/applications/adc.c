@@ -7,7 +7,7 @@
 
 #define REFER_VOLTAGE       3.3         // 参考电压 3.3V,数据精度乘以100保留2位小数
 #define CONVERT_BITS        (1 << 12)   // 转换位数为12位 
-#define Voltge_Parameter    1.6						// 23.4 电压分压系数
+#define Voltge_Parameter    23.4						// 23.4 电压分压系数
 
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -55,9 +55,9 @@ float get_vol(void)
 					
 				}
 		}
-		vol_bubble = (adc_value[4]+adc_value[5]+adc_value[6])/3;	
+		vol_bubble = (float)(adc_value[4]+adc_value[5]+adc_value[6])/3;	
 		
-		volatge = (double) vol_bubble * REFER_VOLTAGE / CONVERT_BITS / Voltge_Parameter;		
+		volatge = (double) vol_bubble * REFER_VOLTAGE / CONVERT_BITS * Voltge_Parameter;		
 		return volatge;
 } 
 

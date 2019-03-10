@@ -94,7 +94,7 @@ static rt_err_t exception_hook(void *context) {
     extern long list_thread(void);
     uint8_t _continue = 1;
 	
-		Error_LED(); //异常指示灯 红灯
+
     rt_enter_critical();
 
 #ifdef RT_USING_FINSH
@@ -108,7 +108,7 @@ static rt_err_t exception_hook(void *context) {
 /* 设置RTT断言钩子 */
 static void rtt_user_assert_hook(const char* ex, const char* func, rt_size_t line) {
 	
-		Error_LED(); //异常指示灯 红灯
+
     rt_enter_critical();
 
 #ifdef ELOG_ASYNC_OUTPUT_ENABLE
@@ -130,15 +130,14 @@ int rt_system_init(void)
 																			 2048,
 																			 30,
 																			 10);
-		rt_kprintf("monitor_thread\n");
-									 
+							 
     sys_thread = rt_thread_create("sys_init",
 																	 sys_init_thread, 
 																	 NULL,
 																	 2048,
 																	 5,
 																	 10);
-		rt_kprintf("sys_thread\n");
+	
     if (monitor_thread != NULL) {
         rt_thread_startup(monitor_thread);
     }

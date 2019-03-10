@@ -365,7 +365,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>RT_USING_ARM_LIBC, USE_STDPERIPH_DRIVER,__FPU_PRESENT=1,__FPU_USED =1</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;User;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\dfs\include;..\..\components\dfs\filesystems\devfs;..\..\components\dfs\filesystems\elmfat;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\spi;..\..\components\drivers\include;..\..\components\drivers\spi\sfud\inc;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\utilities\elog\inc;..\..\components\utilities\elog\plugins\flash;..\..\components\utilities\flash\inc;..\..\components\utilities\ymodem</IncludePath>
+              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;User;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\dfs\include;..\..\components\dfs\filesystems\devfs;..\..\components\dfs\filesystems\elmfat;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\spi;..\..\components\drivers\include;..\..\components\drivers\spi\sfud\inc;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\utilities\elog\inc;..\..\components\utilities\elog\plugins\flash;..\..\components\utilities\flash\inc;..\..\components\utilities\ymodem;.\Tools</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -642,6 +642,11 @@
               <FileName>drv_cpu_temp.c</FileName>
               <FileType>1</FileType>
               <FilePath>drivers\drv_cpu_temp.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_ano.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\drv_ano.c</FilePath>
             </File>
           </Files>
         </Group>

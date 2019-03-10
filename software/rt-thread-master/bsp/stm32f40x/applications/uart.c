@@ -3,6 +3,7 @@
 #include "init.h"
 #include <rthw.h>
 #include <string.h>
+#include "drv_ano.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define GYRO_UART_NAME        "uart2"
@@ -21,6 +22,9 @@ extern struct rt_event init_event;
 
 rt_device_t debug_uart_device;	
 rt_device_t gyro_uart_device;	
+/* 串口 线程句柄 */
+rt_thread_t gyroscope_tid;
+rt_thread_t debug_tid;
 
 struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT; /* 配置参数 */
 
@@ -33,7 +37,7 @@ u8 gyroscope_rate_array[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  
 u8 gyroscope_led_array[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
 u8 gyroscope_baud_array[5] 		={0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
 
-
+u8 debug_startup_flag = 0;
 /*----------------------- Function Implement --------------------------------*/
 
 /* 接收数据回调函数 */
@@ -215,8 +219,7 @@ MSH_CMD_EXPORT(gyroscope_baud_115200,Modify JY901 baud rate);
 
 int device_uart_init(void)
 {
-	  rt_thread_t gyroscope_tid;
-		rt_thread_t debug_tid;
+
 	  /* 查找系统中的串口设备 */
 		gyro_uart_device = rt_device_find(GYRO_UART_NAME);       
 		debug_uart_device = rt_device_find(DEBUG_UART_NAME);
@@ -278,6 +281,7 @@ int device_uart_init(void)
 		/* 创建成功则启动线程 */
     if (debug_tid != RT_NULL){
 				rt_thread_startup(debug_tid);
+				debug_startup_flag = 1;
     }
 		return 0;
 }
