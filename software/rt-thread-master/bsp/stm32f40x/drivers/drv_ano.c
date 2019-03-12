@@ -1,8 +1,21 @@
-
+/*
+ * File      : drv_ano.c
+ * This file is part of RT-Thread RTOS
+ * COPYRIGHT (C) 2019 JMU Electronic Technology Association Team 
+ *
+ * Change Logs:
+ * Date         Author          Notes
+ * 2019.3				zengwangfa      匿名地面站(ANO_TC)通信协议移植v1.0
+ * 
+ * Attention: 接收只需要调用 -> ANO_DT_Data_Receive_Prepare(u8 data);
+ *【统一接口】发送只需要调用 -> ANO_SEND_StateMachine(void);
+ *            保存参数需调用 -> void Save_Or_Reset_PID_Parameter(void);
+ */
 #include "drv_ano.h"
 #include "sys.h"
 #include "PID.h"
 #include "led.h"
+#include "flash.h"
 #include "gyroscope.h"
 #include <rtdevice.h>
 
@@ -13,9 +26,9 @@
 #define BYTE2(dwTemp)       ( *( (char *)(&dwTemp) + 2) )
 #define BYTE3(dwTemp)       ( *( (char *)(&dwTemp) + 3) )
 	
-#define PID_USE_NUM  	8
 
-#define HardwareType 	1.00  //硬件种类
+
+#define HardwareType 	0.00  //硬件种类  00为其他硬件版本
 #define HardwareVER 	2.00  //硬件版本
 #define SoftwareVER 	3.10  //软件版本  3月10日
 #define ProtocolVER 	1  		//协议版本
@@ -33,10 +46,12 @@ Vector3f_pid PID_Parameter[PID_USE_NUM]={0};
 u8 Sort_PID_Cnt=0;
 u8 Sort_PID_Flag=0; //PID状态标志位：1存FLASH  2复位原始数据
 
+
+//---------------这里是分隔符↓↓↓↓↓↓↓↓↓↓<以下为接收 函数>↓↓↓↓↓↓↓↓↓↓这里是分隔符------------------//
 /*******************************************
 * 函 数 名：ANO_DT_Data_Receive_Prepare
 * 功    能：ANO地面站数据解析
-* 输入参数：串口传入的一个字节data
+* 输入参数：串口循环传入的一个数据data
 * 返 回 值：none
 * 注    意：none
 ********************************************/
@@ -121,20 +136,19 @@ static void ANO_DT_Send_Check(u8 head, u8 check_sum)
 void ANO_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
 {
 		u8 sum = 0,i=0;
-		static u8 status = 1;
 		for(i=0;i<(num-1);i++)  sum += *(data_buf+i);
 		if(!(sum==*(data_buf+num-1)))    return; //判断sum
 		if(!(*(data_buf)==0xAA && *(data_buf+1)==0xAF))     return;//判断帧头
-		if(*(data_buf+2)==0X01)
+		if(*(data_buf+2)==0x01)
 		{
-				if(*(data_buf+4)==0X01) {;}
-				if(*(data_buf+4)==0X02) {;}
-				if(*(data_buf+4)==0X03) {;}
+				if(*(data_buf+4)==0x01) {;}
+				if(*(data_buf+4)==0x02) {;}
+				if(*(data_buf+4)==0x03) {;}
 		}
 		
-		if(*(data_buf+2)==0X02)
+		if(*(data_buf+2)==0x02)
 		{
-				if(*(data_buf+4)==0X01)		//读取当前PID参数
+				if(*(data_buf+4)==0x01)		//读取当前PID参数
 				{
 						ANO_Send_PID_Flag[0]=1;
 						ANO_Send_PID_Flag[1]=1;
@@ -142,82 +156,82 @@ void ANO_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
 						ANO_Send_PID_Flag[3]=1;
 						ANO_Send_PID_Flag[4]=1;
 						ANO_Send_PID_Flag[5]=1;
-					
-						Bling_Set(&Light_2,500,50,0.5,0,0,69,0);
-						Bling_Set(&Light_3,500,100,0.5,0,0,70,0);
+				
+						Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
+						Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
 				}
-				if(*(data_buf+4)==0X02)
+				if(*(data_buf+4)==0x02)//读取飞行模式设置请求
 				{
 						;
 				}
-				if(*(data_buf+4)==0XA0)     //读取版本信息
+				if(*(data_buf+4)==0xA0)//读取下位机版本信息
 				{
 						;
 				}
-				if(*(data_buf+4)==0XA1)     //恢复默认参数
+				if(*(data_buf+4)==0xA1)//恢复默认参数
 				{
-						Sort_PID_Flag = 2;
-						LED_Turn(69,status);	//初始化为高电平 【熄灭】
-						Bling_Set(&Light_1,1000,50,0.5,0,0,68,0);
-						Bling_Set(&Light_2,1000,50,0.5,0,0,69,0);
+						Sort_PID_Flag = 2;	
+						Bling_Set(&Light_1,300,100,0.5,0,0,68,0);
+						Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
 				}
 		}
 		
-		if(*(data_buf+2)==0X10)                             //接收PID1
+		if(*(data_buf+2)==0x10)                             //接收PID1
 		{
 				Total_Controller.Roll_Gyro_Control.Kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 				Total_Controller.Roll_Gyro_Control.Ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
-				Total_Controller.Roll_Gyro_Control.Kd  = 0.01*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
-				Total_Controller.Pitch_Gyro_Control.Kp   = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
-				Total_Controller.Pitch_Gyro_Control.Ki   = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
-				Total_Controller.Pitch_Gyro_Control.Kd   = 0.01*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
-				Total_Controller.Yaw_Gyro_Control.Kp    = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
-				Total_Controller.Yaw_Gyro_Control.Ki    = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
-				Total_Controller.Yaw_Gyro_Control.Kd    = 0.01*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+				Total_Controller.Roll_Gyro_Control.Kd  = 0.01 *( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+				Total_Controller.Pitch_Gyro_Control.Kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+				Total_Controller.Pitch_Gyro_Control.Ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+				Total_Controller.Pitch_Gyro_Control.Kd = 0.01 *( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+				Total_Controller.Yaw_Gyro_Control.Kp   = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+				Total_Controller.Yaw_Gyro_Control.Ki   = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+				Total_Controller.Yaw_Gyro_Control.Kd   = 0.01 *( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 		}
-		if(*(data_buf+2)==0X11)                             //接收PID2
+		if(*(data_buf+2)==0x11)                             //接收PID2
 		{
 				Total_Controller.Roll_Angle_Control.Kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 				Total_Controller.Roll_Angle_Control.Ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
-				Total_Controller.Roll_Angle_Control.Kd  = 0.01*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
-				Total_Controller.Pitch_Angle_Control.Kp   = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
-				Total_Controller.Pitch_Angle_Control.Ki   = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
-				Total_Controller.Pitch_Angle_Control.Kd   = 0.01*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
-				Total_Controller.Yaw_Angle_Control.Kp    = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
-				Total_Controller.Yaw_Angle_Control.Ki    = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
-				Total_Controller.Yaw_Angle_Control.Kd    = 0.01*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+				Total_Controller.Roll_Angle_Control.Kd  = 0.01 *( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+				Total_Controller.Pitch_Angle_Control.Kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+				Total_Controller.Pitch_Angle_Control.Ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+				Total_Controller.Pitch_Angle_Control.Kd = 0.01 *( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+				Total_Controller.Yaw_Angle_Control.Kp   = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+				Total_Controller.Yaw_Angle_Control.Ki   = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+				Total_Controller.Yaw_Angle_Control.Kd   = 0.01 *( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
 				ANO_DT_Send_Check(*(data_buf+2),sum); 
 		}
-		if(*(data_buf+2)==0X12)                             //接收PID3
+		if(*(data_buf+2)==0x12)                             //接收PID3
 		{
 				Total_Controller.High_Speed_Control.Kp    = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 				Total_Controller.High_Speed_Control.Ki    = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
-				Total_Controller.High_Speed_Control.Kd    = 0.01*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+				Total_Controller.High_Speed_Control.Kd    = 0.01 *( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
 				Total_Controller.High_Position_Control.Kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
 				Total_Controller.High_Position_Control.Ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
-				Total_Controller.High_Position_Control.Kd = 0.01*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+				Total_Controller.High_Position_Control.Kd = 0.01 *( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
 				ANO_DT_Send_Check(*(data_buf+2),sum); 
 		}
-		if(*(data_buf+2)==0X13)                             //接收PID4
+		if(*(data_buf+2)==0x13)                             //接收PID4
 		{
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 		}
-		if(*(data_buf+2)==0X14)                             //接收PID5
+		if(*(data_buf+2)==0x14)                             //接收PID5
 		{
 	 
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 		}
-		if(*(data_buf+2)==0X15)                             //接收PID6
+		if(*(data_buf+2)==0x15)                             //接收PID6
 		{
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 				Sort_PID_Cnt++;
 				Sort_PID_Flag=1;
-			
+				Bling_Set(&Light_1,300,50,0.5,0,0,68,0);
+				Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
 		}
 }
 
-//*****************************匿名地面站发送 子函数***************************************//
+//---------------这里是分隔符↓↓↓↓↓↓↓↓↓↓<以下为发送 子函数>↓↓↓↓↓↓↓↓↓↓这里是分隔符------------------//
 /*******************************************
 * 函 数 名：ANO_Data_Send_Version
 * 功    能：发送基本版本信息（硬件种类、硬件、软件、协议、Bootloader版本）【第一组】
@@ -511,6 +525,10 @@ void ANO_Data_Send_Voltage_Current(void)
 		rt_device_write(debug_uart_device, 0,data_to_send, _cnt);    //发送后命令
 }
 
+
+
+
+//---------------这里是分隔符↓↓↓↓↓↓↓↓↓↓<以下为发送 子函数>↓↓↓↓↓↓↓↓↓↓这里是分隔符------------------//
 /*******************************************
 * 函 数 名：ANO_SEND_StateMachine
 * 功    能：各组数据循环发送
@@ -635,48 +653,49 @@ void ANO_SEND_StateMachine(void)
 		else if(ANO_Cnt == 11 && ANO_Send_PID_Flag[5] == 1)//第6帧 PID
 		{
 				ANO_DT_Send_PID(6,  
-												6,
-												6,
-												6,
-												6,
-												6,
-												6,
-												6,
-												6,
-												6);
+												0,
+												0,
+												0,
+												0,
+												0,
+												0,
+												0,
+												0,
+												0);
 				ANO_Send_PID_Flag[5]=0;
 				ANO_Cnt=0;
-		}
-							
+		}					
 }
 
 
 
 
 
-void Save_Or_Reset_PID_Parameter()
+//---------------这里是分隔符↓↓↓↓↓↓↓↓↓↓<以下为发送 函数>↓↓↓↓↓↓↓↓↓↓这里是分隔符------------------//
+
+void Save_Or_Reset_PID_Parameter(void) 
 {
 		if(Sort_PID_Flag == 1)//将地面站设置PID参数写入Flash
 		{
-				PID_Parameter[0].p=Total_Controller.Pitch_Gyro_Control.Kp;
-				PID_Parameter[0].i=Total_Controller.Pitch_Gyro_Control.Ki;
-				PID_Parameter[0].d=Total_Controller.Pitch_Gyro_Control.Kd;
-				
-				PID_Parameter[1].p=Total_Controller.Roll_Gyro_Control.Kp;
-				PID_Parameter[1].i=Total_Controller.Roll_Gyro_Control.Ki;
-				PID_Parameter[1].d=Total_Controller.Roll_Gyro_Control.Kd;
+				PID_Parameter[0].p=Total_Controller.Roll_Gyro_Control.Kp;
+				PID_Parameter[0].i=Total_Controller.Roll_Gyro_Control.Ki;
+				PID_Parameter[0].d=Total_Controller.Roll_Gyro_Control.Kd;
+			
+				PID_Parameter[1].p=Total_Controller.Pitch_Gyro_Control.Kp;
+				PID_Parameter[1].i=Total_Controller.Pitch_Gyro_Control.Ki;
+				PID_Parameter[1].d=Total_Controller.Pitch_Gyro_Control.Kd;
 				
 				PID_Parameter[2].p=Total_Controller.Yaw_Gyro_Control.Kp;
 				PID_Parameter[2].i=Total_Controller.Yaw_Gyro_Control.Ki;
 				PID_Parameter[2].d=Total_Controller.Yaw_Gyro_Control.Kd;
 				
-				PID_Parameter[3].p=Total_Controller.Pitch_Angle_Control.Kp;
-				PID_Parameter[3].i=Total_Controller.Pitch_Angle_Control.Ki;
-				PID_Parameter[3].d=Total_Controller.Pitch_Angle_Control.Kd;
-				
-				PID_Parameter[4].p=Total_Controller.Roll_Angle_Control.Kp;
-				PID_Parameter[4].i=Total_Controller.Roll_Angle_Control.Ki;
-				PID_Parameter[4].d=Total_Controller.Roll_Angle_Control.Kd;
+				PID_Parameter[3].p=Total_Controller.Roll_Angle_Control.Kp;
+				PID_Parameter[3].i=Total_Controller.Roll_Angle_Control.Ki;
+				PID_Parameter[3].d=Total_Controller.Roll_Angle_Control.Kd;
+			
+				PID_Parameter[4].p=Total_Controller.Pitch_Angle_Control.Kp;
+				PID_Parameter[4].i=Total_Controller.Pitch_Angle_Control.Ki;
+				PID_Parameter[4].d=Total_Controller.Pitch_Angle_Control.Kd;
 				
 				PID_Parameter[5].p=Total_Controller.Yaw_Angle_Control.Kp;
 				PID_Parameter[5].i=Total_Controller.Yaw_Angle_Control.Ki;
@@ -690,33 +709,34 @@ void Save_Or_Reset_PID_Parameter()
 				PID_Parameter[7].i=Total_Controller.High_Position_Control.Ki;
 				PID_Parameter[7].d=Total_Controller.High_Position_Control.Kd;			
 
-				//Save_PID_Parameter();
-				Bling_Set(&Light_1,500,100,0.5,0,0,68,0);
-				Bling_Set(&Light_3,500,100,0.5,0,0,69,0);
+				log_v("PID_Save_Flash - > Success!");
+				Save_PID_Parameter();
 				Sort_PID_Flag=0;
 		}
 		else if(Sort_PID_Flag==2)//将复位PID参数，并写入Flash
 		{
-				//Total_PID_Init();//将PID参数重置为参数Control_Unit表里面参数
-				PID_Parameter[0].p=Total_Controller.Pitch_Gyro_Control.Kp;
-				PID_Parameter[0].i=Total_Controller.Pitch_Gyro_Control.Ki;
-				PID_Parameter[0].d=Total_Controller.Pitch_Gyro_Control.Kd;
-				
-				PID_Parameter[1].p=Total_Controller.Roll_Gyro_Control.Kp;
-				PID_Parameter[1].i=Total_Controller.Roll_Gyro_Control.Ki;
-				PID_Parameter[1].d=Total_Controller.Roll_Gyro_Control.Kd;
+			
+				Total_PID_Init();//将PID参数重置为参数Control_Unit表里面参数
+						
+				PID_Parameter[0].p=Total_Controller.Roll_Gyro_Control.Kp;
+				PID_Parameter[0].i=Total_Controller.Roll_Gyro_Control.Ki;
+				PID_Parameter[0].d=Total_Controller.Roll_Gyro_Control.Kd;
+			
+				PID_Parameter[1].p=Total_Controller.Pitch_Gyro_Control.Kp;
+				PID_Parameter[1].i=Total_Controller.Pitch_Gyro_Control.Ki;
+				PID_Parameter[1].d=Total_Controller.Pitch_Gyro_Control.Kd;
 				
 				PID_Parameter[2].p=Total_Controller.Yaw_Gyro_Control.Kp;
 				PID_Parameter[2].i=Total_Controller.Yaw_Gyro_Control.Ki;
 				PID_Parameter[2].d=Total_Controller.Yaw_Gyro_Control.Kd;
 				
-				PID_Parameter[3].p=Total_Controller.Pitch_Angle_Control.Kp;
-				PID_Parameter[3].i=Total_Controller.Pitch_Angle_Control.Ki;
-				PID_Parameter[3].d=Total_Controller.Pitch_Angle_Control.Kd;
-				
-				PID_Parameter[4].p=Total_Controller.Roll_Angle_Control.Kp;
-				PID_Parameter[4].i=Total_Controller.Roll_Angle_Control.Ki;
-				PID_Parameter[4].d=Total_Controller.Roll_Angle_Control.Kd;
+				PID_Parameter[3].p=Total_Controller.Roll_Angle_Control.Kp;
+				PID_Parameter[3].i=Total_Controller.Roll_Angle_Control.Ki;
+				PID_Parameter[3].d=Total_Controller.Roll_Angle_Control.Kd;
+			
+				PID_Parameter[4].p=Total_Controller.Pitch_Angle_Control.Kp;
+				PID_Parameter[4].i=Total_Controller.Pitch_Angle_Control.Ki;
+				PID_Parameter[4].d=Total_Controller.Pitch_Angle_Control.Kd;
 				
 				PID_Parameter[5].p=Total_Controller.Yaw_Angle_Control.Kp;
 				PID_Parameter[5].i=Total_Controller.Yaw_Angle_Control.Ki;
@@ -730,13 +750,11 @@ void Save_Or_Reset_PID_Parameter()
 				PID_Parameter[7].i=Total_Controller.High_Position_Control.Ki;
 				PID_Parameter[7].d=Total_Controller.High_Position_Control.Kd;
 				
-				//Save_PID_Parameter();
+				Save_PID_Parameter();
 				
-				Bling_Set(&Light_1,500,100,0.5,0,0,68,0);
-				Bling_Set(&Light_3,500,100,0.5,0,0,69,0);
 				Sort_PID_Flag=0;
-				
-				ANO_Send_PID_Flag[0]=1;//回复默认参数后，将更新的数据发送置地面站
+				log_v("PID_Reset_Flash - > Success!");
+				ANO_Send_PID_Flag[0]=1;//回复默认参数后，将更新的数据发送置地面站		
 				ANO_Send_PID_Flag[1]=1;
 				ANO_Send_PID_Flag[2]=1;
 				ANO_Send_PID_Flag[3]=1;
@@ -748,4 +766,5 @@ void Save_Or_Reset_PID_Parameter()
 				return;
 		}
 }
+
 

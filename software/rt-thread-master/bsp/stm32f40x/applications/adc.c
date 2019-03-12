@@ -38,7 +38,7 @@ float get_vol(void)
 {
 		u8 i,j;
 		u32 res = 0;   //reserve
-		float vol_bubble = 0.0f;
+		double vol_bubble = 0.0f;
 
 		for(i = 0;i < 20;i+=2){
 				adc_value[i/2] = get_adc(ADC_Channel_10);//取偶次
@@ -52,12 +52,11 @@ float get_vol(void)
 								adc_value[i] = adc_value[i+1];
 								adc_value[i+1] = res;
 						}
-					
 				}
 		}
 		vol_bubble = (float)(adc_value[4]+adc_value[5]+adc_value[6])/3;	
 		
-		volatge = (double) vol_bubble * REFER_VOLTAGE / CONVERT_BITS * Voltge_Parameter;		
+		volatge = vol_bubble * REFER_VOLTAGE / CONVERT_BITS * Voltge_Parameter;		
 		return volatge;
 } 
 
@@ -153,7 +152,6 @@ int adc_thread_init(void)
 
 				rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
 				rt_thread_startup(adc_tid);
-
 		}
 		return 0;
 }

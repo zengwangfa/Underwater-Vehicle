@@ -5,9 +5,7 @@
 
 short bubble(short *adc_value);
 
-float KalmanFilter(float *Measure);
-
-float kalmanFilter(float *Original_Data);
+float KalmanFilter(float *Original_Data);
 
 
 

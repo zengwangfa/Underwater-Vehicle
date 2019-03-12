@@ -30,6 +30,9 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include "init.h"
+#include "flash.h"
+#include "drv_ano.h"
+
 /**
  * @addtogroup STM32
  */
@@ -68,9 +71,8 @@ int main(void)
 		
 		rt_thread_mdelay(1000);
 		get_time();  //打印参考时间戳
-
-
-    return 0;
+		
+		return 0;
 }
 
 /*
@@ -81,6 +83,7 @@ int main(void)
 4.[D]：调试(Debug)
 5.[V]：详细(Verbose)
 */
+
 
 
 

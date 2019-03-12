@@ -10,6 +10,8 @@
 #include <string.h>
 #include <stdio.h>
 #include "drv_cpu_temp.h"
+#include "filter.h"
+
 /**
  * 获取ADC值函数
  *
@@ -53,12 +55,20 @@ float get_cpu_temp(void) {
     adc_value = ((adc_sum - adc_max - adc_min) / 8);//减去最大最小值 取平均
     temperature = (float) adc_value * (3.3 / 4096);
     temperature = (temperature - 0.76) / 0.0025 + 25;
-
-//		sprintf(str,"STM32 CPU Temperature : %.2f C",temperature);
-//		log_v(str);
+	
     return (temperature);
 }
-//MSH_CMD_EXPORT(get_cpu_temp,cpu temperature get);
+
+
+void get_cpu_temperature(void)
+{
+		char str[50]={0};
+		float temp = 0.0f;
+		temp = get_cpu_temp();
+		sprintf(str,"STM32 CPU Temperature : %.2f C",KalmanFilter(&temp));
+		log_v(str);
+}
+MSH_CMD_EXPORT(get_cpu_temperature,cpu temperature get);
 
 /**
  * CPU 温度 ADC 硬件初始化

@@ -38,7 +38,7 @@
 #define CAM_EVENT 			(1 << 7)  //Camera事件标志位
 
 
-#define FLASH_INIT_ADDRESS  (4096)	//FLASH 大小为16字节
+
 
 
 

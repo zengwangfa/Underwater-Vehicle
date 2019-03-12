@@ -1,14 +1,58 @@
 #ifndef _FLASH_H_
 #define _FLASH_H_
 
-/* FLASH 开机时读取 所有值 */
-int Flash_Read(void);
+#define FLIGHT_PARAMETER_TABLE_NUM  60
+
+#include "sys.h"
+
+typedef struct
+{
+  float Parameter_Table[FLIGHT_PARAMETER_TABLE_NUM];
+}FLIGHT_PARAMETER;
 
 
-/* FLASH 更新 所有值 */
+typedef enum
+{
+		SERVO_Open_Value_N,
+		SERVO_Close_Value_N,
+		DEBUG_TOOL_N,
+	
+		PID1_PARAMETER_KP,
+		PID1_PARAMETER_KI,
+		PID1_PARAMETER_KD,
+		PID2_PARAMETER_KP,
+		PID2_PARAMETER_KI,
+		PID2_PARAMETER_KD,
+		PID3_PARAMETER_KP,
+		PID3_PARAMETER_KI,
+		PID3_PARAMETER_KD,
+		PID4_PARAMETER_KP,
+		PID4_PARAMETER_KI,
+		PID4_PARAMETER_KD,
+		PID5_PARAMETER_KP,
+		PID5_PARAMETER_KI,
+		PID5_PARAMETER_KD,
+		PID6_PARAMETER_KP,
+		PID6_PARAMETER_KI,
+		PID6_PARAMETER_KD,
+		PID7_PARAMETER_KP,
+		PID7_PARAMETER_KI,
+		PID7_PARAMETER_KD,
+		PID8_PARAMETER_KP,
+		PID8_PARAMETER_KI,
+		PID8_PARAMETER_KD
+
+}FLIGHT_PARAMETER_TABLE;
+
+
+
+/* FLASH 更新 普通值 */
 void Flash_Update(void);
 
-
+int Nor_Paramter_Init_With_Flash(void);
+															 
+void Save_PID_Parameter(void);			
+															 
 #endif
 
 

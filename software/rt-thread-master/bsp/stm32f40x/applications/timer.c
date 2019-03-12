@@ -1,11 +1,12 @@
 #define LOG_TAG    "timer"
 
 #include "init.h"
+#include <rthw.h>
 #include <string.h>
 #include "board.h"
-#include <rthw.h>
 #include "timer.h"
 #include "debug.h"
+#include "flash.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
@@ -41,7 +42,6 @@ static void time_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 				count = 0;
 				ov_frame = 0;
 		}
-
 }
 
 

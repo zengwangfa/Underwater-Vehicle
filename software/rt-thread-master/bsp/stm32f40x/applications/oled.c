@@ -1,7 +1,8 @@
 #define LOG_TAG    "oled"
 
 #include "init.h"
-#include "math.h"
+#include <math.h>
+#include "filter.h"
 #include "drv_cpu_temp.h"
 
 /* 自定义OLED 坐标系如下: 
@@ -95,16 +96,18 @@ void oled_thread_entry(void* parameter)
 void OLED_StatusPage(void)
 {
 		char str[100];
-		OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
+		float temp = 0.0f;  //暂存cpu温度初始采集值
+		temp = get_cpu_temp();
 	
+		OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
 		//OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
+	
 	
 		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[MODE],boma_value_get());
 		OLED_ShowString(0,0, (u8 *)str,12); 
-	
 		sprintf(str,"Voltage:%.2f v\r\n",get_vol());
 		OLED_ShowString(0,16,(u8 *)str,12); 
-		sprintf(str,"Temperature:%.2f C\r\n",get_cpu_temp());
+		sprintf(str,"Temperature:%.2f C\r\n",KalmanFilter(&temp));//显示卡尔曼滤波后的温度
 		OLED_ShowString(0,48,(u8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }

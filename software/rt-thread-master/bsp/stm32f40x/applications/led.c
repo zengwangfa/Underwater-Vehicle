@@ -2,7 +2,8 @@
 
 #include "init.h"
 #include "string.h"
-
+#include "flash.h"
+#include "drv_ano.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
 #define LED_Red 		68 
@@ -36,7 +37,8 @@ void led_thread_entry(void *parameter)
     {			
 
 				Bling_Working(0);
-
+				Save_Or_Reset_PID_Parameter();  //FLASH保存 或者 复位PID参数
+				
 				//led_blink_task();
 				rt_thread_mdelay(5);
     }
@@ -189,7 +191,7 @@ void Bling_Process(Bling_Light *Light)//闪烁运行线程
   if(Light->Bling_Contiune_Time>=1) {
 			Light->Bling_Contiune_Time--;
 	}
-  else {rt_pin_write(Light->Pin ,0);}//置高,亮GPIO_WriteBit
+  else {rt_pin_write(Light->Pin ,0);}//亮
   if(Light->Bling_Contiune_Time != 0//总时间未清0
 			||Light->Endless_Flag==1)//判断无尽模式是否开启
   {
@@ -198,10 +200,14 @@ void Bling_Process(Bling_Light *Light)//闪烁运行线程
 					Light->Bling_Cnt=0;//计满清零
 			}
 			if(5*Light->Bling_Cnt <= Light->Bling_Period * Light->Bling_Percent){	
-					rt_pin_write(Light->Pin ,0);//置高，亮
+					rt_pin_write(Light->Pin ,0);   //亮
 			}
-			else {rt_pin_write(Light->Pin ,1);}//置低，灭
+			else {rt_pin_write(Light->Pin ,1);}//灭
   }
+	else {	
+			LED_OFF(LED_Red);			//初始化为高电平 【熄灭】		
+			LED_OFF(LED_Blue);
+	}
 }
 
 

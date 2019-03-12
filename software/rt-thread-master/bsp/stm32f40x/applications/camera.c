@@ -96,7 +96,7 @@ void camera_thread_entry(void* paramter)
 	  u32 i,jpgstart,jpglen; 
 		u8 headok=0;
 		u8 *p;
-		u8 effect=0,saturation=2,contrast=2;
+		//u8 effect=0,saturation=2,contrast=2;
 		u8 size=1;			//Ä¬ÈÏÊÇQVGA 320*240³ß´ç
 
 		log_v("JPEG Size:%s ",JPEG_SIZE_TBL[size]);
