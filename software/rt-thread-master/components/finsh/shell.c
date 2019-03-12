@@ -844,8 +844,10 @@ int finsh_system_init(void)
     rt_sem_init(&(shell->rx_sem), "shrx", 0, 0);
     finsh_set_prompt_mode(1);
 
-    if (tid != NULL && result == RT_EOK)
+    if (tid != NULL && result == RT_EOK){
+				rt_kprintf("shell on");	
         rt_thread_startup(tid);
+		}
     return 0;
 }
 INIT_APP_EXPORT(finsh_system_init);
