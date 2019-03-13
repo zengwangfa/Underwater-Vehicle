@@ -7,22 +7,44 @@
 |芯片型号| STM32F407ZGT6 |
 |CPU| Cortex-M4 |
 |主频| 84MHz-168MHz |
+|FLASH| 1MB |
+|SRAM| 192KB |
+|单元| FPU、DSP |
 
 # 2.目录说明
 ```
 +——Underwater_vehicle
-|--------+ docs: 一些设计参考文档
-|--------+ hardware:相关电路设计      
+|--------+ docs: 【设计参考文档】
+|--------+ hardware:【相关电路设计】      
 |            └──.SchDoc
 |            ├──.PcbDoc
 |            └──.pdf
-|--------+ software:相关软件设计
+|--------+ software:【相关软件设计】
 |            └──rt-thread-master
 |               └──bsp
 |                   └──stm32f40x
 |--------+ README.md
 ```
+**software:【相关软件设计】**
+   └──rt-thread-master
+        └──bsp
+            └──stm32f40x 【控制中心】 详细目录说明**
 
+| 目录组 | 描述 |
+| -- | -- |
+|Kernel| 它用于存放RT-Thread内核源文件 |
+|User| 它用于存放用户应用文件 |
+|Applications| 它用于存放外设应用程序 |
+|Drivers|  它用于存放相关外设驱动 |
+|STM32_StdPeriph| 它用于存放STM32固件库文件 |
+|cpu|  它用于存放内核相关文件 |
+|Fliesystem| 它用于存放虚拟文件系统 |
+|DeviceDrivers|  它用于存放RT-Thread驱动 |
+|finsh| 它用于存放RT-Thread Finsh组件 |
+|libc| 它用于存放RT-Thread 相关文件 |
+|Easylogger| 它用于存放RT-Thread Easylogger组件 |
+|EasyFlash| 它用于存放RT-Thread EasyFlash |
+|Utilities| 它用于存放相关工具与滤波算法 |
 
 # 3.硬件架构
 ```
@@ -43,12 +65,12 @@
 |        |       └── 【Important Peripherals】
 |        |       ├── Nine axis gyroscope [UART]
 |        |       ├── USR-C216 Wifi [UART]   
-|        |       ├── OV2640 Camera [unfinished]
+|        |       ├── OV2640 Camera [DCMI-DMA]
 |        |       └──...... 
 |        +──Vehicle Devices
 |        └── Searchlights [GPIO]
 |        ├── Propellers [PWM]
-|        ├── Servo Motor - Mechanical arm [PWM]
+|        ├── Servo Motor for Mechanical Arm [PWM]
 |        ├── CAMERAs 
 |        └──...... 
 ```
@@ -57,7 +79,7 @@
 ## 3.1 控制中心
 
 ![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
-
+![实物图](https://img-blog.csdnimg.cn/20190313152949776.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM5NDkyOTMy,size_16,color_FFFFFF,t_70)
 ------
 ## 3.1 电源及 USB
 核心板可以通过 Micro-USB 或 5V 电源供电。使用 Micro-USB 接到电脑时，电脑上虚拟出一个串口。连接该串口后，可以通过 shell 命令行工具进行交互，也可以查看实时的日志信息。
