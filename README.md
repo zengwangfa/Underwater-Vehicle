@@ -13,7 +13,7 @@
 
 ![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
 
-![实物图](https://images.gitee.com/uploads/images/2019/0313/193501_e952cf85_2330851.jpeg "实物图")
+![实物图](https://images.gitee.com/uploads/images/2019/0313/193831_547328c9_2330851.jpeg "实物图")
 # 2.目录说明
 ```
 +——Underwater_vehicle
