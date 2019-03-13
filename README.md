@@ -10,6 +10,7 @@
 |FLASH| 1MB |
 |SRAM| 192KB |
 |单元| FPU、DSP |
+![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
 
 # 2.目录说明
 ```
@@ -78,11 +79,9 @@
 ------
 ## 3.1 控制中心
 
-![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
-![实物图](https://img-blog.csdnimg.cn/20190313152949776.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM5NDkyOTMy,size_16,color_FFFFFF,t_70)
 ------
 ## 3.1 电源及 USB
-核心板可以通过 Micro-USB 或 5V 电源供电。使用 Micro-USB 接到电脑时，电脑上虚拟出一个串口。连接该串口后，可以通过 shell 命令行工具进行交互，也可以查看实时的日志信息。
+核心板可以通过 Micro-USB 或 5V 电源供电。使用 Micro-USB 接到电脑时，电脑弹出串口CP210x USB to UART Bridge。连接该串口后，可以通过 shell 命令行工具进行交互，也可以查看实时的日志信息。
 
 ## 3.2 功能接口
 |接口|数量|备注|
