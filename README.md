@@ -1,4 +1,4 @@
-# 一.ROV航行器控制中心
+## 1、ROV航行器控制中心
 
 该航控 基于RT-Thread实时操作系统
 
@@ -15,7 +15,7 @@
 
 ![构建图](https://images.gitee.com/uploads/images/2019/0314/162025_6336b3f6_2330851.png "构建图")
 
-# 二.目录说明
+## 2、目录说明
 ```
 +——Underwater_vehicle
 |--------+ docs: 【设计参考文档】
@@ -32,7 +32,18 @@
 |--------+ README.md
 ```
 
-# 三.硬件架构
+## 3、软件结构
+```
++——RT-Thread
+|    └──Kernel 【RT-Thread内核初始化】                  
+|    ├── Normal Peripherals Init 【普通外设初始化】
+|    ├── System self-check 【系统自检:检测是否所有外设初始化完成】 
+|           └── Read Gyroscope data 【读取JY901 九轴数据】 
+|           ├── Detection input devices 【检测输入设备】 
+|    └──...... 
+```
+
+## 4、硬件结构
 ```
 +——Underwater_vehicle
 |--------+──DC 24V/48V 【Power management】 
@@ -63,35 +74,24 @@
 
 
 
-# 四.软件架构
-```
-+——RT-Thread
-|    └──Kernel 【RT-Thread内核初始化】                  
-|    ├── Normal Peripherals Init 【普通外设初始化】
-|    ├── System self-check 【系统自检:检测是否所有外设初始化完成】 
-|           └── Read Gyroscope data 【读取JY901 九轴数据】 
-|           ├── Detection input devices 【检测输入设备】 
-|    └──...... 
-```
 
 
 
-# 无.Underwater Vehicle 的进展
+## 5、Underwater Vehicle 的进展
 
 - [X] 基础功能
-    - [X] 普通外设初始化 by [@zengwangfa](https://github.com/zengwangfa)
     - [X] 普通外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
         - [X] Add LED/KEY/BUZZER by [@zengwangfa](https://github.com/zengwangfa) 
         - [X] Add OLED/Gyroscope/ADC/PWM/FLASH by [@zengwangfa](https://github.com/zengwangfa) 
     - [X] 内置MSH方法 by [@zengwangfa](https://github.com/zengwangfa)
+    - [X] PID调试方法 by [@zengwangfa](https://github.com/zengwangfa)
 
 
 	
 	
 #### 使用说明
 
-- NULL available
-
+- 暂无添加
 
 #### 参与贡献
 
