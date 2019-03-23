@@ -22,7 +22,6 @@ struct
 
 void buzzer_thread_entry(void *parameter)
 {
-		//buzzer_bibi(3,1);
     while (1)
     {
 				buzzer_ring_task();

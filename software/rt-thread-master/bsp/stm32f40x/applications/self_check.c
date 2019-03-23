@@ -7,12 +7,12 @@
 
 struct rt_event init_event;/* ALL_init 事件控制块. */
 
-rt_thread_t init_tid;
+rt_thread_t self_check_tid;
 
 /*----------------------- Function Implement --------------------------------*/
 
 
-void check(void* parameter)
+void self_check_entry(void* parameter)
 {
 	  rt_uint32_t e;
 	
@@ -30,7 +30,6 @@ void check(void* parameter)
 		else {
 				log_e("some devices initialization failed.");
 		}
-
 }
 
 
@@ -38,16 +37,16 @@ int Self_Check_thread_init(void)
 {
 	
 		/*创建动态线程*/
-    init_tid = rt_thread_create("self_check",			 //线程名称
-                    check,									 //线程入口函数【entry】
+    self_check_tid = rt_thread_create("self_check",			 //线程名称
+                    self_check_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
                     8,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
-    if (init_tid != RT_NULL){
-				log_i("Init_Init()");
-				rt_thread_startup(init_tid);
+    if (self_check_tid != RT_NULL){
+				log_i("SelfCheck_Init()");
+				rt_thread_startup(self_check_tid);
 		}
 		return 0;
 }

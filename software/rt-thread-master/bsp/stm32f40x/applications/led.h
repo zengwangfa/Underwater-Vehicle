@@ -39,13 +39,13 @@ void Bling_Set(Bling_Light *Light,
                u32 Pin,
 							 u8 Flag);
 void Bling_Process(Bling_Light *Light);
-void Bling_Working(u16 bling_mode);
+void Bling_Working(u8 bling_mode);
 							 
 							 
 void Bling_Init(void);
 void Quad_Start_Bling(void);
 extern Bling_Light Light_1,Light_2,Light_3,Light_4;
-extern uint16_t Bling_Mode;
+extern u8 Bling_Mode;
 							 
 							 
 #endif

@@ -3,9 +3,6 @@
 #include "filter.h"
 
 
-
-
-
 /* ц╟ещ  */
 short bubble(short *adc_value)
 {

@@ -9,6 +9,29 @@
 * Date          : 2019.01.25							调试log【优先级】按序号
 *******************************************************************************/
 
+/*
+
+程序笔记：
+  1.①当拨码值=1（即拨码都拨下）为正常模式
+正常模式：
+				开启摄像头
+				开启LED系统运行 闪烁指示灯（绿LED 约0.5s闪烁）
+				开启开机 蜂鸣器响三声指示
+
+    ②当拨码值!=1 为 调试模式
+调试模式：
+				关闭正常模式下的几个属性
+				
+------------------------------------------------------		
+
+	2.FLASH读取有 普通参数与PID参数
+	
+
+
+
+
+
+*/
 
 /*
 
@@ -63,6 +86,11 @@ Program Size: Code=157602 RO-data=27178 RW-data=1684 ZI-data=105348    【2019.3.
     Total RO  Size (Code + RO Data)               190236 ( 185.78kB)
     Total RW  Size (RW Data + ZI Data)            108336 ( 105.80kB)
     Total ROM Size (Code + RO Data + RW Data)     190652 ( 186.18kB)
+
+【2019.3.23】
+		Total RO  Size (Code + RO Data)               194360 ( 189.80kB)
+		Total RW  Size (RW Data + ZI Data)            108392 ( 105.85kB)
+		Total ROM Size (Code + RO Data + RW Data)     194788 ( 190.22kB)
 
 */
 

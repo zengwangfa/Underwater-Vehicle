@@ -4,10 +4,15 @@
 #include <rthw.h>
 #include <string.h>
 #include "drv_ano.h"
+#include "wifi.h"
+
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define GYRO_UART_NAME        "uart2"
-#define DEBUG_UART_NAME       "uart4"
+#define WIFI_UART_NAME        "uart3"   // uart3 WIFI 
+#define BLUETOOTH_UART_NAME   "uart4"   // uart4 蓝牙
+
+#define DEBUG_UART_NAME       "uart4"   //可更改为uart3 WIFI 、 uart4 蓝牙
 
 #define Query_JY901_data 0     /* "1"为调试查询  "0"为正常读取 */
 
@@ -22,14 +27,13 @@ extern struct rt_event init_event;
 
 rt_device_t debug_uart_device;	
 rt_device_t gyro_uart_device;	
-/* 串口 线程句柄 */
-rt_thread_t gyroscope_tid;
-rt_thread_t debug_tid;
+rt_device_t wifi_uart_device;	
 
 struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT; /* 配置参数 */
 
-static struct rt_semaphore gyro_rx_sem;/* 用于接收消息的信号量 */
-static struct rt_semaphore debug_rx_sem;/* 用于接收消息的信号量 */
+struct rt_semaphore gyro_rx_sem;/* 用于接收消息的信号量 */
+struct rt_semaphore debug_rx_sem;/* 用于接收消息的信号量 */
+struct rt_semaphore wifi_rx_sem;/* 用于接收消息的信号量 */
 
 u8 gyroscope_save_array[5] 		={0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
 u8 gyroscope_package_array[5] ={0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据包【0x1F 0x00 为 <时间> <加速度> <角速度> <角度> <磁场>】
@@ -37,7 +41,7 @@ u8 gyroscope_rate_array[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  
 u8 gyroscope_led_array[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
 u8 gyroscope_baud_array[5] 		={0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
 
-u8 debug_startup_flag = 0;
+u8 debug_startup_flag = 0; //debug串口 初始化完成标志位
 /*----------------------- Function Implement --------------------------------*/
 
 /* 接收数据回调函数 */
@@ -220,9 +224,13 @@ MSH_CMD_EXPORT(gyroscope_baud_115200,Modify JY901 baud rate);
 int device_uart_init(void)
 {
 
+		/* 串口 线程句柄 */
+		rt_thread_t gyroscope_tid;
+		rt_thread_t debug_tid;
 	  /* 查找系统中的串口设备 */
 		gyro_uart_device = rt_device_find(GYRO_UART_NAME);       
 		debug_uart_device = rt_device_find(DEBUG_UART_NAME);
+	  wifi_uart_device = rt_device_find(WIFI_UART_NAME);
 
 		log_v("console serial: %s", RT_CONSOLE_DEVICE_NAME);	
 		log_v("gyroscope serial: %s", gyro_uart_device);
@@ -255,7 +263,15 @@ int device_uart_init(void)
 				/* 设置接收回调函数 */
 				rt_device_set_rx_indicate(debug_uart_device, debug_uart_input);
 		}
-		
+		if (wifi_uart_device != RT_NULL){		
+			
+					/* 以读写以及中断接打开串口设备 */
+				rt_device_open(wifi_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
+			
+				rt_sem_init(&wifi_rx_sem, "rx_sem", 0, RT_IPC_FLAG_FIFO);
+				/* 设置接收回调函数 */
+				rt_device_set_rx_indicate(wifi_uart_device, wifi_uart_input);
+		}
     /* 创建 serial 线程 */
 		gyroscope_tid = rt_thread_create("gyro_uart",
 																			gyroscope_thread_entry,

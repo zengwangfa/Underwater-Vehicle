@@ -20,8 +20,8 @@
 */
 /*---------------------- Constant / Macro Definitions -----------------------*/
 	
-#define Pi 3.1415926f //float型
-	
+#define PI 3.1415926f //float型
+#define RAD2DEG (180.0f / PI)
 /*----------------------- Variable Declarations -----------------------------*/
 
 
@@ -92,7 +92,14 @@ void oled_thread_entry(void* parameter)
 	
 }
 
-/* 系统第一页 【状态页】boma_value_get*/
+
+/*******************************************
+* 函 数 名：OLED_StatusPage
+* 功    能：显示系统状态页面
+* 输入参数：none
+* 返 回 值：none
+* 注    意：系统第一页 【状态页】
+********************************************/
 void OLED_StatusPage(void)
 {
 		char str[100];
@@ -101,7 +108,6 @@ void OLED_StatusPage(void)
 	
 		OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
 		//OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
-	
 	
 		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[MODE],boma_value_get());
 		OLED_ShowString(0,0, (u8 *)str,12); 
@@ -112,7 +118,14 @@ void OLED_StatusPage(void)
 		OLED_Refresh_Gram();//更新显示到OLED
 }
 
-/* OLED第二页 【九轴参数页】*/
+
+/*******************************************
+* 函 数 名：OLED_GyroscopePage
+* 功    能：显示九轴模块参数【加速度、角速度、欧拉角、磁场】
+* 输入参数：none
+* 返 回 值：none
+* 注    意：OLED第二页 【九轴参数页】
+********************************************/
 void OLED_GyroscopePage(void)
 {
 		char str[100];
@@ -131,25 +144,30 @@ void OLED_GyroscopePage(void)
 	  OLED_Refresh_Gram();//更新显示到OLED
 }
 
-/* OLED第四页 【图像页】*/
+
+/*******************************************
+* 函 数 名：OLED_PicturePage
+* 功    能：显示OLED电子罗盘图像页面
+* 输入参数：none
+* 返 回 值：none
+* 注    意：OLED第四页 【图像页】
+********************************************/
 void OLED_PicturePage(void)
 {
 		static u8 y=0;
 		char str[100];
 		static int Angle_x = 0,Angle_y = 0;
 		
-	
 		draw_fill_circle(31+Angle_x,31+Angle_y,6,0); //清空实心圆，用于刷新坐标
 		draw_line(31,31,slope,0); //清除上一次画的线 进行刷新
 	
 		OLED_Refresh_Gram();//更新显示到OLED
 	
-
 		Angle_x = JY901.Euler.Roll/5;
 		Angle_y = JY901.Euler.Pitch/5;
-		slope = tan((float)(JY901.Euler.Yaw*Pi/180));  //转化弧度制 解算东北天坐标系下 航向斜率slope
+		slope = tan((float)(JY901.Euler.Yaw * RAD2DEG));  //转化弧度制 解算东北天坐标系下 航向斜率slope
 	
-		for(y = 28;y <= 36;y++){ //补圆顶底部的缺失点
+		for(y = 28;y <= 36;y++){ //补圆顶、底部的缺失点
 				OLED_DrawPoint(y,0,1);
 				OLED_DrawPoint(y,63,1);
 		}
@@ -182,7 +200,14 @@ void OLED_PicturePage(void)
 
 
 
-/* 开机动画 */
+/*******************************************
+* 函 数 名：Boot_Animation
+* 功    能：开机动画
+* 输入参数：none
+* 返 回 值：none
+* 注    意：none
+* 说    明：绘制ETA简易LOGO
+********************************************/
 void Boot_Animation(void)
 {
 		static u8 x=0,y=0;
@@ -212,7 +237,14 @@ void Boot_Animation(void)
 
 
 
-
+/*******************************************
+* 函 数 名：draw_fill_circle
+* 功    能：绘制填充圆
+* 输入参数：(x0,y0)圆心坐标、r为半径
+						dot为1时 画实心圆，dot为0时 清空实心圆
+* 返 回 值：none
+* 注    意：none
+********************************************/
 void draw_fill_circle(u8 x0,u8 y0,u8 r,u8 dot)//写画实心圆心(x0,y0),半径r
 {	
 		u8 x = 0,y = 0,R = 0;
@@ -226,7 +258,13 @@ void draw_fill_circle(u8 x0,u8 y0,u8 r,u8 dot)//写画实心圆心(x0,y0),半径r
 		}
 }
 
-
+/*******************************************
+* 函 数 名：draw_circle
+* 功    能：绘制空心圆
+* 输入参数：(x0,y0)圆心坐标、r为半径
+* 返 回 值：none
+* 注    意：none
+********************************************/
 void draw_circle(u8 x0,u8 y0,u8 r) //圆心(x0,y0),半径r
 {
 		u8 x,y;
@@ -239,12 +277,20 @@ void draw_circle(u8 x0,u8 y0,u8 r) //圆心(x0,y0),半径r
 		
 }
 
-/* 使用不同坐标系 为了解决函数上 x映射y时只能多对一的关系 */
+
+/*******************************************
+* 函 数 名：draw_line
+* 功    能：画一过固定点线段
+* 输入参数：(x0,y0)为固定点坐标、k为斜率
+* 返 回 值：none
+* 注    意：使用不同坐标系 为了解决函数上 x映射y时只能多对一的关系
+						该线段长度为圆方程的半径，将线段长度限制在圆内
+********************************************/
 void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;1,填充	  
 {
 		u8 x,y;
-		//y = (k*(x-x0)+y0); 直线函数
 /* 以下函数使用该坐标系: 
+	
 	                127 ↑y
 			-----------------
 			|								|
@@ -271,6 +317,7 @@ void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;
 	127 ↑y
 			---------
 			|	      |
+			|				|
 			|				|
 			|				|
 			|				|

@@ -28,13 +28,10 @@ void thread_entry_sys_monitor(void* parameter)
 {
     while (1)
     {
-        //rt_memory_info(&total_mem, &used_mem, &max_used_mem);
-				//rt_kprintf("Total_Mem:%ld  Used_Mem:%ld  Max_Used_Mem:%ld\n",total_mem,used_mem,max_used_mem);
         IWDG_Feed(); //喂狗
 				rt_thread_mdelay(500);
     }
 }
-
 
 
 /**
@@ -83,7 +80,6 @@ void sys_init_thread(void* parameter){
     /* 设置RTT断言钩子 */
     rt_assert_set_hook(rtt_user_assert_hook);
 		
-
 		/* 调度器解锁 */
     rt_exit_critical();
 }

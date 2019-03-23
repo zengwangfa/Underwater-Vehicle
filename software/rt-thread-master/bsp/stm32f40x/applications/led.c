@@ -19,7 +19,8 @@ extern struct rt_event init_event;
 extern rt_uint8_t VehicleStatus;
 
 Bling_Light Light_1,Light_2,Light_3;
-u16 Bling_Mode=0;
+
+u8 Bling_Mode = 0;
 /*----------------------- Function Implement --------------------------------*/
 void led_thread_entry(void *parameter)
 {
@@ -35,12 +36,11 @@ void led_thread_entry(void *parameter)
 				
     while (1)
     {			
-
-				Bling_Working(0);
-				Save_Or_Reset_PID_Parameter();  //FLASH保存 或者 复位PID参数
-				
-				//led_blink_task();
-				rt_thread_mdelay(5);
+				/* FLASH保存 或者 复位PID参数 */
+				Save_Or_Reset_PID_Parameter();  
+				Bling_Working(Bling_Mode);
+				led_blink_task();
+				rt_thread_mdelay(50);
     }
 }
 
@@ -48,13 +48,16 @@ void led_thread_entry(void *parameter)
 void led_blink_task(void)
 {
 		static rt_uint8_t status = 1;
-		if(boma_value_get() == 1){
+	  static rt_uint8_t cut = 0;
+		cut++;
+		if(boma_value_get() == 1 && cut >= 10 ){
+				cut = 0;
 				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
 		}
 }
 	
 
-/* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白 ] */
+/* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白] */
 void system_led_blink(rt_uint8_t InputData)
 {
     if(InputData & 0x04){	
@@ -79,8 +82,8 @@ int led_thread_init(void)
     led_tid = rt_thread_create("led",//线程名称
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    2048,										 //线程栈大小，单位是字节【byte】
-                    30,										 	 //线程优先级【priority】
+                    1024,										 //线程栈大小，单位是字节【byte】
+                    25,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (led_tid != RT_NULL){
@@ -105,7 +108,7 @@ static int led_on(int argc, char **argv)
     if (argc != 2){
         log_e("Error! Proper Usage: led_on r\n Species:r \\ g \\ b \\ c");
 				result = -RT_ERROR;
-        goto _exit;
+				return result;
     }
 		
 		switch(*argv[1]){
@@ -115,8 +118,8 @@ static int led_on(int argc, char **argv)
 				case 'c':LED_OFF(LED_Camera);break;
 				default:log_e("Error! Proper Usage: led_on R\n Species:r \\ g \\ b \\ c");break;
 		}
-_exit:
-    return result;
+
+		return result;
 }
 MSH_CMD_EXPORT(led_on,ag: led_on r  );
 
@@ -205,8 +208,7 @@ void Bling_Process(Bling_Light *Light)//闪烁运行线程
 			else {rt_pin_write(Light->Pin ,1);}//灭
   }
 	else {	
-			LED_OFF(LED_Red);			//初始化为高电平 【熄灭】		
-			LED_OFF(LED_Blue);
+			rt_pin_write(Light->Pin ,1);		//高电平 【熄灭】		
 	}
 }
 
@@ -219,9 +221,9 @@ void Bling_Process(Bling_Light *Light)//闪烁运行线程
 出口:	无
 备注:	程序初始化后、始终运行
 ****************************************************/
-void Bling_Working(u16 bling_mode)
+void Bling_Working(u8 bling_mode)
 {
-		if(bling_mode==0)
+		if(bling_mode == 0)
 		{
 				Bling_Process(&Light_1);
 				Bling_Process(&Light_2);
@@ -229,15 +231,16 @@ void Bling_Working(u16 bling_mode)
 		}
 		else if(bling_mode==1)//加速度计6面校准模式
 		{
-		 
+				Bling_Process(&Light_1);
+
 		}
 		else if(bling_mode==2)//磁力计校准模式
 		{
-			
+				Bling_Process(&Light_2);
 		}
 		else if(bling_mode==3)//全灭
 		{
-
+				Bling_Process(&Light_3);
 		}
 		 
 }

@@ -160,13 +160,17 @@ int camera_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (camera_tid != RT_NULL){
-		while(OV2640_Init())//初始化OV2640
-		{
-				log_e("OV2640_Init_Error\r\n");
-		}
-				log_i("OV2640_Init()");
-				rt_event_send(&init_event, CAM_EVENT);
-				rt_thread_startup(camera_tid);
+				if(boma_value_get() == 1)
+				{
+						while(OV2640_Init())//初始化OV2640
+						{
+								log_e("OV2640_Init_Error\r\n");
+						}
+								log_i("OV2640_Init()");
+								rt_event_send(&init_event, CAM_EVENT);
+								rt_thread_startup(camera_tid);
+				 }
+				else {log_i("Don't Open OV2640 Camera!");}
 		}
 		return 0;
 }
@@ -224,6 +228,6 @@ static int ov2640_set_size(int argc,char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(ov2640_set_size,ov2640 set size [QQVGA....]);
+MSH_CMD_EXPORT(ov2640_set_size,ov2640 set size [QQVGA...]);
 
 

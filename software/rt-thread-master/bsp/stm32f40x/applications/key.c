@@ -23,8 +23,8 @@ u8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
 
 void key_thread_entry(void* parameter)// --- KEY   BOMA ---
 {
-
-
+		if(boma_value_get() == 1)
+				buzzer_bibi(3,1);
     while (1)
     {
 				if(boma_value != boma_value_get()){
@@ -60,8 +60,8 @@ int key_thread_init(void)
     key_tid = rt_thread_create("key",
                     key_thread_entry,
                     RT_NULL,
-                    512,
-                    15,
+                    1024,
+                    25,
                     10);
 
     if (key_tid != RT_NULL){			
