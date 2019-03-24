@@ -19,6 +19,7 @@
 
 #include <rthw.h>
 #include <rtthread.h>
+#include "drv_cpuusage.h"
 
 #ifdef RT_USING_USER_MAIN
 #ifndef RT_MAIN_THREAD_STACK_SIZE
@@ -237,7 +238,9 @@ int rtthread_startup(void)
     /* signal system initialization */
     rt_system_signal_init();
 #endif
-
+    /* Add CPU usage to system */
+    cpu_usage_init();
+		
     /* create init_thread */
     rt_application_init();
 

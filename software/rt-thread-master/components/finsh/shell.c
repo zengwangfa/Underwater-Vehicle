@@ -829,8 +829,11 @@ int finsh_system_init(void)
         return -1;
     }
     tid = rt_thread_create(FINSH_THREAD_NAME,
-                           finsh_thread_entry, RT_NULL,
-                           FINSH_THREAD_STACK_SIZE, FINSH_THREAD_PRIORITY, 10);
+                           finsh_thread_entry, 
+													 RT_NULL,
+                           FINSH_THREAD_STACK_SIZE, 
+													 FINSH_THREAD_PRIORITY,
+													 10);
 #else
     shell = &_shell;
     tid = &finsh_thread;
@@ -844,10 +847,15 @@ int finsh_system_init(void)
     rt_sem_init(&(shell->rx_sem), "shrx", 0, 0);
     finsh_set_prompt_mode(1);
 
-    if (tid != NULL && result == RT_EOK){
-				rt_kprintf("shell on");	
+    if (tid != RT_NULL && result == RT_EOK){
+				rt_kprintf("Shell Open\r\n");	
         rt_thread_startup(tid);
 		}
+		else {
+				rt_kprintf("Shell Not Open\r\n");	
+		}
+		
+		
     return 0;
 }
 INIT_APP_EXPORT(finsh_system_init);

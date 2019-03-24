@@ -15,7 +15,7 @@ typedef struct
 
 typedef struct
 {
-		u8 Err_Limit_Flag :1;//偏差限幅标志
+		u8 Err_Limit_Flag :1;//偏差限幅标志   位定义
 		u8 Integrate_Limit_Flag :1;//积分限幅标志
 		u8 Integrate_Separation_Flag :1;//积分分离标志
 		float Expect;//期望

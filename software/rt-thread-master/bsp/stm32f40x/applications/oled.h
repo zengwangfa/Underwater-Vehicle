@@ -21,7 +21,7 @@ typedef struct {
 		u8 pagechange;
 	  u8 pagechange_flag;
 		char *pagename[20]; //Ò³Ãû
-}oled_t;
+}OledType;
 
 
 typedef enum

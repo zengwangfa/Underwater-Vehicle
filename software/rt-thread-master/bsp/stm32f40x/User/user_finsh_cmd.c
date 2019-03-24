@@ -3,7 +3,7 @@
  *
  *  Created on: 2013年12月7日
  *      Author: Armink
- *      Notes: 更新固件 Update 方法
+ *      Notes:  更新固件 Update 方法
  */
 #define LOG_TAG    "cmd"
  

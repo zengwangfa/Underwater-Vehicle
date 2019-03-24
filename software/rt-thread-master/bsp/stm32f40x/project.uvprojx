@@ -564,6 +564,11 @@
               <FilePath>applications\gyroscope.c</FilePath>
             </File>
             <File>
+              <FileName>wifi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\wifi.c</FilePath>
+            </File>
+            <File>
               <FileName>PID.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\PID.c</FilePath>

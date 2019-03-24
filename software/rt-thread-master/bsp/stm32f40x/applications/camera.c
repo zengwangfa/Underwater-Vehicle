@@ -150,27 +150,29 @@ void camera_thread_entry(void* paramter)
 
 int camera_thread_init(void)
 {
+		static u8 ErrorCount = 0;//错误计数  用于防止摄像头初始化卡死
     rt_thread_t camera_tid;
 		/*创建动态线程*/
     camera_tid = rt_thread_create("camera",	 //线程名称
                     camera_thread_entry,		 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     20,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (camera_tid != RT_NULL){
-				if(boma_value_get() == 1)
+				if(boma_value_get() == System_NORMAL_STATUS)//系统状态
 				{
-						while(OV2640_Init())//初始化OV2640
+						while(OV2640_Init() && ErrorCount <5)//初始化OV2640
 						{
+								ErrorCount ++;
 								log_e("OV2640_Init_Error\r\n");
 						}
 								log_i("OV2640_Init()");
 								rt_event_send(&init_event, CAM_EVENT);
 								rt_thread_startup(camera_tid);
 				 }
-				else {log_i("Don't Open OV2640 Camera!");}
+				else {log_w("Not Open OV2640 Camera!");}
 		}
 		return 0;
 }

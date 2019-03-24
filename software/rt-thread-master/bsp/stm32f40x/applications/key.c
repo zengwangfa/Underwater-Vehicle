@@ -15,7 +15,7 @@
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init ÊÂ¼þ¿ØÖÆ¿é. */
 extern struct rt_event init_event;
-extern oled_t oled;
+extern OledType oled;
 
 u8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
 
@@ -23,7 +23,7 @@ u8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
 
 void key_thread_entry(void* parameter)// --- KEY   BOMA ---
 {
-		if(boma_value_get() == 1)
+		if(boma_value_get() == System_NORMAL_STATUS)
 				buzzer_bibi(3,1);
     while (1)
     {
@@ -60,7 +60,7 @@ int key_thread_init(void)
     key_tid = rt_thread_create("key",
                     key_thread_entry,
                     RT_NULL,
-                    1024,
+                    512,
                     25,
                     10);
 

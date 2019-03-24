@@ -1,16 +1,21 @@
 #define LOG_TAG       "flash"
 
 #include "init.h"
-#include "PID.h"
-#include "drv_ano.h"
 #include <math.h>
 #include <spi_flash.h>
 #include <spi_flash_sfud.h>
 #include <easyflash.h>
+
+#include "PID.h"
+#include "debug.h"
+#include "flash.h"
+#include "drv_ano.h"
+#include "PropellerControl.h"
 //FLASH起始地址 
 #define WQ_FLASH_ADDRESS    (0x0000) 	//  W25Q128 FLASH的起始地址
 
-extern  servo_t servo_motor;
+extern PropellerParamter_Type PropellerParamter;
+extern ServoType servo_motor;
 extern u8 debug_tool;
 
 typedef struct

@@ -72,7 +72,7 @@ static void gyroscope_thread_entry(void *parameter)
 				if(recv_data_p>127)recv_data_p = 0;
 		
 #else 
-				CopeSerial2Data(ch); //正常传输模式
+				CopeSerial2Data(ch); //正常传输模式 筛选数据包
 #endif
 		}
 }
@@ -263,15 +263,15 @@ int device_uart_init(void)
 				/* 设置接收回调函数 */
 				rt_device_set_rx_indicate(debug_uart_device, debug_uart_input);
 		}
-		if (wifi_uart_device != RT_NULL){		
-			
-					/* 以读写以及中断接打开串口设备 */
-				rt_device_open(wifi_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
-			
-				rt_sem_init(&wifi_rx_sem, "rx_sem", 0, RT_IPC_FLAG_FIFO);
-				/* 设置接收回调函数 */
-				rt_device_set_rx_indicate(wifi_uart_device, wifi_uart_input);
-		}
+//		if (wifi_uart_device != RT_NULL){		
+//			
+//					/* 以读写以及中断接打开串口设备 */
+//				rt_device_open(wifi_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
+//			
+//				rt_sem_init(&wifi_rx_sem, "rx_sem", 0, RT_IPC_FLAG_FIFO);
+//				/* 设置接收回调函数 */
+//				rt_device_set_rx_indicate(wifi_uart_device, wifi_uart_input);
+//		}
     /* 创建 serial 线程 */
 		gyroscope_tid = rt_thread_create("gyro_uart",
 																			gyroscope_thread_entry,

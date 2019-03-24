@@ -50,7 +50,7 @@ void led_blink_task(void)
 		static rt_uint8_t status = 1;
 	  static rt_uint8_t cut = 0;
 		cut++;
-		if(boma_value_get() == 1 && cut >= 10 ){
+		if(boma_value_get() == System_NORMAL_STATUS && cut >= 10 ){
 				cut = 0;
 				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
 		}
@@ -82,7 +82,7 @@ int led_thread_init(void)
     led_tid = rt_thread_create("led",//线程名称
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     25,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 

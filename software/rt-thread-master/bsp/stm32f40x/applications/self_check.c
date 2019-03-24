@@ -1,7 +1,7 @@
 #define LOG_TAG    "self_check"
 
 #include "init.h"
-
+#include "self_check.h"
 
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -28,7 +28,7 @@ void self_check_entry(void* parameter)
 				log_v("Clock: %d Hz.",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
 		}
 		else {
-				log_e("some devices initialization failed.");
+				log_w("some devices initialization failed.");
 		}
 }
 
@@ -40,7 +40,7 @@ int Self_Check_thread_init(void)
     self_check_tid = rt_thread_create("self_check",			 //线程名称
                     self_check_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     8,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 

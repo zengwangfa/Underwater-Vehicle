@@ -22,7 +22,8 @@
  * 2019-02-16     Dwfish       Creat OLED Electronic compass.
  * 2019-02-19     Dwfish       Add VACN & ANO host computer debug.
  * 2019-02-20     Dwfish       Add Easylog & Easyflash & <update> msh.
- * 2019-02-20     Dwfish       LED ?.
+ * 2019-03-23     Dwfish       Fix some bugs.
+ * 2019-03-24     Dwfish       Add Cpuusage.
 *
 ******************************************************************************/
 #define LOG_TAG    "main"

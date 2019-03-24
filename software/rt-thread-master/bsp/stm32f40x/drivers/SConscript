@@ -24,7 +24,7 @@ src += ['drv_ov2640.c']
 src += ['drv_sccb.c']
 src += ['drv_dcmi.c']
 src += ['drv_cpu_temp.c']
-
+src += ['drv_cpuusage.c']
 CPPPATH = [cwd]
 
 group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)

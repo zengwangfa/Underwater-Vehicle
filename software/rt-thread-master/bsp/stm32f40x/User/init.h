@@ -13,9 +13,6 @@
 #include "gyroscope.h"
 #include "adc.h"
 #include "pwm.h"
-#include "debug.h"
-#include "flash.h"
-#include "self_check.h"
 
 #include <elog.h>
 
@@ -23,7 +20,10 @@
 
 /************重要定义****************/
 
-#define MODE  ROV_Mode
+#define AUV_Mode     0
+#define ROV_Mode     1
+
+#define VehicleMode  ROV_Mode   //ROV_Mode or AUV_Mode
 
 /************重要定义***************/
 
@@ -38,24 +38,18 @@
 #define CAM_EVENT 			(1 << 7)  //Camera事件标志位
 
 
-
-
-
-
+#define PI 3.1415926f //float型
+#define Rad2Deg(Rad) (Rad * 180.0f / PI)
+#define Deg2Rad(Deg) (Deg * PI / 180.0f)
 
 
 enum VehicleStatus{
-	System_NULL = 1,
-	System_Er,
-	System_OK
-
+	System_NORMAL_STATUS = 1,//正常模式
+  System_DEBUG_STATUS = 2, //调试模式
+	System_ERROR_STATUS,
 };  //枚举系统状态
 
 
-enum VehicleMode{
-	AUV_Mode,
-	ROV_Mode
-};  //枚举系统模式
 
 
 //void delay_us(unsigned int us);

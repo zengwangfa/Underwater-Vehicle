@@ -4,7 +4,7 @@
 #include <math.h>
 #include "filter.h"
 #include "drv_cpu_temp.h"
-
+#include "drv_cpuusage.h"
 /* 自定义OLED 坐标系如下: 
 
 	127 ↑y
@@ -20,8 +20,7 @@
 */
 /*---------------------- Constant / Macro Definitions -----------------------*/
 	
-#define PI 3.1415926f //float型
-#define RAD2DEG (180.0f / PI)
+
 /*----------------------- Variable Declarations -----------------------------*/
 
 
@@ -35,9 +34,9 @@ float slope = 0.0; //东北天坐标系下 航向斜率 slope
 char *VehicleModeName[2] = {"AUV","ROV"};
 volatile MENU_LIST_e MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
 																				//volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接读值。
-
+u32 total_mem,used_mem,max_used_mem;
 /* OLED 变量 初始化. */
-oled_t oled = {	 StatusPage,		 //页码 pagenum
+OledType oled = {	 StatusPage,		 //页码 pagenum
 								 StatusPage,	   //暂存页码 检测页码是否改变 pagechange
 								 0,              //页码改变标志位 pagechange flag
 								{	"StatusPage",
@@ -46,9 +45,15 @@ oled_t oled = {	 StatusPage,		 //页码 pagenum
 									"PicturePage"} //页名 pagename
 								
 };
-
 /*----------------------- Function Implement --------------------------------*/
 
+/*******************************************
+* 函 数 名：menu_define
+* 功    能：菜单选择
+* 输入参数：none
+* 返 回 值：none
+* 注    意：页码切换时，蜂鸣器响一声
+********************************************/
 void menu_define(void) //菜单定义
 {
 
@@ -78,20 +83,24 @@ void menu_define(void) //菜单定义
 	}
 }
 
-	
+/*******************************************
+* 函 数 名：oled_thread_entry
+* 功    能：OLED线程任务
+* 输入参数：none
+* 返 回 值：none
+* 注    意：菜单号越大 刷新速率越大
+********************************************/
 void oled_thread_entry(void* parameter)
 {
 	Boot_Animation();	//开机动画
 	OLED_Clear();
-
 	while(1)
 	{	
 			menu_define();//菜单定义选择
-			rt_thread_mdelay(1000/pow(MENU+1,2));  //菜单号越大 刷新速率越大
+			rt_thread_mdelay(1000/pow(MENU+1,2)); //菜单号越大 刷新速率越大
 	}
 	
 }
-
 
 /*******************************************
 * 函 数 名：OLED_StatusPage
@@ -104,15 +113,24 @@ void OLED_StatusPage(void)
 {
 		char str[100];
 		float temp = 0.0f;  //暂存cpu温度初始采集值
-		temp = get_cpu_temp();
+	  u8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
 	
+		temp = get_cpu_temp();
+
 		OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
 		//OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
 	
-		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[MODE],boma_value_get());
+		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[VehicleMode],boma_value_get());
 		OLED_ShowString(0,0, (u8 *)str,12); 
+	
 		sprintf(str,"Voltage:%.2f v\r\n",get_vol());
 		OLED_ShowString(0,16,(u8 *)str,12); 
+	
+    cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
+
+	  sprintf(str,"CPU usage:%d.%d %%",cpu_usage_major, cpu_usage_minor);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
+		OLED_ShowString(0,32,(u8 *)str,12); 
+		
 		sprintf(str,"Temperature:%.2f C\r\n",KalmanFilter(&temp));//显示卡尔曼滤波后的温度
 		OLED_ShowString(0,48,(u8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
@@ -165,7 +183,7 @@ void OLED_PicturePage(void)
 	
 		Angle_x = JY901.Euler.Roll/5;
 		Angle_y = JY901.Euler.Pitch/5;
-		slope = tan((float)(JY901.Euler.Yaw * RAD2DEG));  //转化弧度制 解算东北天坐标系下 航向斜率slope
+		slope = tan((float)Deg2Rad(JY901.Euler.Yaw));  //转化弧度制 解算东北天坐标系下 航向斜率slope
 	
 		for(y = 28;y <= 36;y++){ //补圆顶、底部的缺失点
 				OLED_DrawPoint(y,0,1);
@@ -388,4 +406,14 @@ void get_slope(void)
 		rt_kprintf(str);
 }
 MSH_CMD_EXPORT(get_slope,get_slope[k]);
+
+
+void get_cpuusage(void)
+{
+		rt_memory_info(&total_mem, &used_mem, &max_used_mem);
+    rt_kprintf("Total_Mem:%ld  Used_Mem:%ld  Max_Used_Mem:%ld\n",total_mem,used_mem,max_used_mem);
+
+}
+MSH_CMD_EXPORT(get_cpuusage,get_cpuusage);
+//STM32F405RGT6   Total_Mem:131048  Used_Mem:22044  Max_Used_Mem:22368
 
