@@ -91,7 +91,6 @@ void Vcan_Send_Cmd(void *wareaddr, unsigned int waresize)
 }
 
 
-
 void Vcan_Send_Data(void)
 {   
 		float temp = 0.0f;
@@ -125,12 +124,13 @@ static int debug(int argc, char **argv)
 				result = -RT_ERROR; 
 				goto _exit;  
     }
-		
 		if( !strcmp(argv[1],"on") ){ //设置为 山外上位机 strcmp 检验两边相等 返回0
 				debug_startup_flag = 1;
+				log_v("debug open\r\n");
 		}
 		else if( !strcmp(argv[1],"off") ){ //设置为 山外上位机 strcmp 检验两边相等 返回0
 				debug_startup_flag = 0;
+				log_v("debug off\r\n");
 		}
 		else {
 				log_e("Proper Usage: debug on /off");//用法:设置上位机工具

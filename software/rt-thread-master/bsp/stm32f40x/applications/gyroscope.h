@@ -159,7 +159,7 @@ typedef struct
   float Yaw;     //z
 }Euler3f;//欧拉角3轴向量 short型 16为短整型
 
-struct JY901_t
+struct JY901Type
 {
 	Vector3f Acc; 		//加速度
 	Vector3f Gyro; 		//角速度
@@ -168,7 +168,7 @@ struct JY901_t
 	float Temperature;	//温度
 };
 
-extern struct JY901_t JY901; //JY901真实值结构体
+extern struct JY901Type JY901; //JY901真实值结构体
 
 /*-----------------MSH命令函数----------------*/
 
@@ -185,7 +185,7 @@ float get_temperature(void);
 
 
 
-void JY901_Convert(struct JY901_t * pArr);
+void JY901_Convert(struct JY901Type * pArr);
 
 void CopeSerial2Data(unsigned char Data);
  

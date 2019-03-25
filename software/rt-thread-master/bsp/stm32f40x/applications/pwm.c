@@ -14,8 +14,16 @@
 
 extern struct rt_event init_event;/* ALL_init 事件控制块. */
 
-ServoType servo_motor;
-
+ServoType RoboticArm = { //机械臂
+												 .OpenValue = 1800,
+												 .CloseValue = 1300,
+											   .CurrentValue = 0
+};
+ServoType YunTai ={  //云台
+										.OpenValue = 1800,
+										.CloseValue = 1300,
+										 .CurrentValue = 0
+}; 
 /*----------------------- Function Implement --------------------------------*/
 
 
@@ -63,18 +71,18 @@ INIT_APP_EXPORT(pwm_thread_init);
 
 
 /*【机械臂】舵机 修改 【开启值】MSH方法 */
-static int servo_motor_openvalue_set(int argc, char **argv)
+static int robotic_arm_openvalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        log_e("Error! Proper Usage: servo_motor_OpenValue_set 1600");
+        log_e("Error! Proper Usage: robotic_arm_openvalue_set 1600");
 				result = -RT_ERROR;
         goto _exit;
     }
-		if(atoi(argv[1]) <= 3000){
-				servo_motor.open_value = atoi(argv[1]);
+		if(atoi(argv[1]) <= 5000){
+				RoboticArm.OpenValue = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current ser_OpenValue:  %d",servo_motor.open_value);
+				log_d("Write_Successed! Current RoboticArm_OpenValue:  %d",RoboticArm.OpenValue);
 		}
 		
 		else {
@@ -83,24 +91,24 @@ static int servo_motor_openvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(servo_motor_openvalue_set,ag: servo_motor_OpenValue_set 160);
+MSH_CMD_EXPORT(robotic_arm_openvalue_set,ag: robotic_arm_openvalue_set 160);
 
 
 
 
 /*【机械臂】舵机 修改 【关闭值】 MSH方法 */
-static int servo_motor_closevalue_set(int argc, char **argv)
+static int robotic_arm_closevalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        log_e("Error! Proper Usage: servo_motor_CloseValue_set 1150");
+        log_e("Error! Proper Usage: robotic_arm_closevalue_set 1150");
 				result = -RT_ERROR;
         goto _exit;
     }
 		if(atoi(argv[1]) <= 3000){
-				servo_motor.close_value = atoi(argv[1]);
+				RoboticArm.CloseValue = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current ser_CloseValue:  %d",servo_motor.close_value);
+				log_d("Write_Successed! Current RoboticArm_CloseValue:  %d",RoboticArm.CloseValue);
 		}
 		else {
 				log_e("Error! The value is out of range!");
@@ -111,7 +119,7 @@ static int servo_motor_closevalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(servo_motor_closevalue_set,ag: servo_motor_CloseValue_set 115);
+MSH_CMD_EXPORT(robotic_arm_closevalue_set,ag: robotic_arm_closevalue_set 115);
 
 
 

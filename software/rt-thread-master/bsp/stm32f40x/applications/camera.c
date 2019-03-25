@@ -161,9 +161,9 @@ int camera_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (camera_tid != RT_NULL){
-				if(boma_value_get() == System_NORMAL_STATUS)//系统状态
+				if(boma_value_get() == System_NORMAL_STATUS)//正常模式下 检测有没有OV-Camera
 				{
-						while(OV2640_Init() && ErrorCount <5)//初始化OV2640
+						while(OV2640_Init() && ErrorCount < 1)//初始化OV2640
 						{
 								ErrorCount ++;
 								log_e("OV2640_Init_Error\r\n");
@@ -171,7 +171,7 @@ int camera_thread_init(void)
 								log_i("OV2640_Init()");
 								rt_event_send(&init_event, CAM_EVENT);
 								rt_thread_startup(camera_tid);
-				 }
+				}
 				else {log_w("Not Open OV2640 Camera!");}
 		}
 		return 0;

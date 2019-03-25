@@ -11,12 +11,8 @@ typedef struct
 }FLIGHT_PARAMETER;
 
 
-typedef enum
+typedef enum //FLASH 地址address枚举
 {
-		SERVO_Open_Value_N,
-		SERVO_Close_Value_N,
-		DEBUG_TOOL_N,
-	
 		PID1_PARAMETER_KP,
 		PID1_PARAMETER_KI,
 		PID1_PARAMETER_KD,
@@ -40,7 +36,23 @@ typedef enum
 		PID7_PARAMETER_KD,
 		PID8_PARAMETER_KP,
 		PID8_PARAMETER_KI,
-		PID8_PARAMETER_KD
+		PID8_PARAMETER_KD,   //地址枚举
+		
+		DEBUG_TOOL_A,                //Debug工具
+		
+		ROBOTIC_ARM_OPEN_VALUE_A,    //机械臂开启最大值  
+		ROBOTIC_ARM_CLOSE_VALUE_A,   //机械臂关闭值
+		ROBOTIC_ARM_CURRENT_VALUE_A, //机械臂当前值
+		
+		YUNTAI_OPEN_VALUE_A,     //云台向上最大当前值
+		YUNTAI_CLOSE_VALUE_A,	 //云台向下当前值	
+		YUNTAI_CURRENT_VALUE_A,    //云台当前值
+	
+		PropellerParamter_MED_A,   //推进器中值
+		PropellerParamter_MAX_A,   //推进器正转最大值
+		PropellerParamter_MIN_A,   //推进器反转最大值
+		
+		
 
 }FLIGHT_PARAMETER_TABLE;
 

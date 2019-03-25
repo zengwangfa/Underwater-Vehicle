@@ -518,6 +518,11 @@
               <FileType>1</FileType>
               <FilePath>User\notes.c</FilePath>
             </File>
+            <File>
+              <FileName>PropellerControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\PropellerControl.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -652,6 +657,11 @@
               <FileName>drv_ano.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\drivers\drv_ano.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_cpuusage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\drv_cpuusage.c</FilePath>
             </File>
           </Files>
         </Group>

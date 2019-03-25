@@ -27,7 +27,8 @@
 extern struct rt_event init_event;/* ALL_init ÊÂ¼ş¿ØÖÆ¿é */
 extern struct SAngle 	stcAngle;
 
-extern struct JY901_t JY901;
+extern struct JY901Type JY901;
+
 
 float slope = 0.0; //¶«±±Ìì×ø±êÏµÏÂ º½ÏòĞ±ÂÊ slope
 
@@ -36,10 +37,12 @@ volatile MENU_LIST_e MENU = StatusPage; //OLED³õÊ¼Ò³ÃæÎª ×´Ì¬Ò³. volatileÊÇÒ»ÖÖÀ
 																				//volatile µÄ×÷ÓÃ ÊÇ×÷ÎªÖ¸Áî¹Ø¼ü×Ö£¬È·±£±¾ÌõÖ¸Áî²»»áÒò±àÒëÆ÷µÄÓÅ»¯¶øÊ¡ÂÔ£¬ÇÒÒªÇóÃ¿´ÎÖ±½Ó¶ÁÖµ¡£
 u32 total_mem,used_mem,max_used_mem;
 /* OLED ±äÁ¿ ³õÊ¼»¯. */
-OledType oled = {	 StatusPage,		 //Ò³Âë pagenum
-								 StatusPage,	   //Ôİ´æÒ³Âë ¼ì²âÒ³ÂëÊÇ·ñ¸Ä±ä pagechange
-								 0,              //Ò³Âë¸Ä±ä±êÖ¾Î» pagechange flag
-								{	"StatusPage",
+OledType oled = {	 
+								 .pagenum = StatusPage,		 //Ò³Âë pagenum
+								 .pagechange = StatusPage,	   //Ôİ´æÒ³Âë ¼ì²âÒ³ÂëÊÇ·ñ¸Ä±ä pagechange
+								 .pagechange_flag = 0,              //Ò³Âë¸Ä±ä±êÖ¾Î» pagechange flag
+								 .pagename = {	
+									"StatusPage",
 									"GyroscopePage",
 									"FlashPage",
 									"PicturePage"} //Ò³Ãû pagename
@@ -367,7 +370,7 @@ int oled_thread_init(void)
     oled_tid = rt_thread_create("oled", //Ïß³ÌÃû³Æ
                     oled_thread_entry,	//Ïß³ÌÈë¿Úº¯Êı¡¾entry¡¿
                     RT_NULL,				    //Ïß³ÌÈë¿Úº¯Êı²ÎÊı¡¾parameter¡¿
-                    2048,							  //Ïß³ÌÕ»´óĞ¡£¬µ¥Î»ÊÇ×Ö½Ú¡¾byte¡¿
+                    1024,							  //Ïß³ÌÕ»´óĞ¡£¬µ¥Î»ÊÇ×Ö½Ú¡¾byte¡¿
                     15,								  //Ïß³ÌÓÅÏÈ¼¶¡¾priority¡¿
                     10);							  //Ïß³ÌµÄÊ±¼äÆ¬´óĞ¡¡¾tick¡¿= 100ms
 

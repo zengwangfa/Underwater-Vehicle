@@ -41,7 +41,7 @@ u8 gyroscope_rate_array[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  
 u8 gyroscope_led_array[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
 u8 gyroscope_baud_array[5] 		={0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
 
-u8 debug_startup_flag = 0; //debug串口 初始化完成标志位
+u8 debug_startup_flag = 1; //debug串口 初始化完成标志位
 /*----------------------- Function Implement --------------------------------*/
 
 /* 接收数据回调函数 */
@@ -276,7 +276,7 @@ int device_uart_init(void)
 		gyroscope_tid = rt_thread_create("gyro_uart",
 																			gyroscope_thread_entry,
 																			RT_NULL, 
-																			1024, 
+																			512, 
 																			12,
 																			10);
 		
@@ -284,7 +284,7 @@ int device_uart_init(void)
 		debug_tid = 	rt_thread_create("debug_uart",
 																			debug_thread_entry,
 																			RT_NULL, 
-																			1024, 
+																			512, 
 																			13,
 																			10);
     /* 创建成功则启动线程 */

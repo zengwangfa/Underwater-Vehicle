@@ -11,11 +11,12 @@
 #include "flash.h"
 #include "drv_ano.h"
 #include "PropellerControl.h"
+
 //FLASH起始地址 
 #define WQ_FLASH_ADDRESS    (0x0000) 	//  W25Q128 FLASH的起始地址
 
 extern PropellerParamter_Type PropellerParamter;
-extern ServoType servo_motor;
+extern ServoType RoboticArm,YunTai;
 extern u8 debug_tool;
 
 typedef struct
@@ -28,26 +29,41 @@ float Parameter_Table[FLIGHT_PARAMETER_TABLE_NUM];
 
 
 /* 读取 FLASH 普通参数*/
-int Nor_Paramter_Init_With_Flash(void)
+int Normal_Paramter_Init_With_Flash(void)
 {
-		ef_port_read(WQ_FLASH_ADDRESS+4*SERVO_Open_Value_N,&servo_motor.open_value,4);		// 地址0
-		ef_port_read(WQ_FLASH_ADDRESS+4*SERVO_Close_Value_N,&servo_motor.close_value,4); // 地址4
-		ef_port_read(WQ_FLASH_ADDRESS+8*DEBUG_TOOL_N,(u32 *)(&debug_tool),4);		  // 地址8
+		ef_port_read(WQ_FLASH_ADDRESS+4*DEBUG_TOOL_A,(u32 *)(&debug_tool),4);		  
+	
+		ef_port_read(WQ_FLASH_ADDRESS+4*ROBOTIC_ARM_OPEN_VALUE_A,&RoboticArm.OpenValue,4);		// 地址
+		ef_port_read(WQ_FLASH_ADDRESS+4*ROBOTIC_ARM_CLOSE_VALUE_A,&RoboticArm.CloseValue,4); // 地址
+		ef_port_read(WQ_FLASH_ADDRESS+4*ROBOTIC_ARM_CURRENT_VALUE_A,&RoboticArm.CurrentValue,4); // 地址
+	
+		ef_port_read(WQ_FLASH_ADDRESS+4*YUNTAI_OPEN_VALUE_A,&YunTai.OpenValue,4);		// 地址
+		ef_port_read(WQ_FLASH_ADDRESS+4*YUNTAI_CLOSE_VALUE_A,&YunTai.CloseValue,4); // 地址
+		ef_port_read(WQ_FLASH_ADDRESS+4*YUNTAI_CURRENT_VALUE_A,&YunTai.CurrentValue,4); // 地址
+	
+
 	
 		log_i("Flash_Read()");
 		return 0;
 	
 }
-INIT_APP_EXPORT(Nor_Paramter_Init_With_Flash);
+INIT_APP_EXPORT(Normal_Paramter_Init_With_Flash);
 
 /* FLASH 更新 所有值*/
 void Flash_Update(void)
 {
 		ef_port_erase(WQ_FLASH_ADDRESS,4);	//先擦后写  擦除的为一个扇区4096 Byte
+//------------------------------------------------------------------------------------------//
+		ef_port_write(WQ_FLASH_ADDRESS+4*DEBUG_TOOL_A,(u32 *)(&debug_tool),4);		  
 	
-		ef_port_write(WQ_FLASH_ADDRESS+4*SERVO_Open_Value_N,&servo_motor.open_value,4);		// 地址0
-		ef_port_write(WQ_FLASH_ADDRESS+4*SERVO_Close_Value_N,&servo_motor.close_value,4); // 地址4
-		ef_port_write(WQ_FLASH_ADDRESS+8*DEBUG_TOOL_N,(u32 *)(&debug_tool),4);		  // 地址8
+		ef_port_write(WQ_FLASH_ADDRESS+4*ROBOTIC_ARM_OPEN_VALUE_A,&RoboticArm.OpenValue,4);		// 地址
+		ef_port_write(WQ_FLASH_ADDRESS+4*ROBOTIC_ARM_CLOSE_VALUE_A,&RoboticArm.CloseValue,4); // 地址
+		ef_port_write(WQ_FLASH_ADDRESS+4*ROBOTIC_ARM_CURRENT_VALUE_A,&RoboticArm.CurrentValue,4); // 地址
+	
+		ef_port_write(WQ_FLASH_ADDRESS+4*YUNTAI_OPEN_VALUE_A,&YunTai.OpenValue,4);		// 地址
+		ef_port_write(WQ_FLASH_ADDRESS+4*YUNTAI_CLOSE_VALUE_A,&YunTai.CloseValue,4); // 地址
+		ef_port_write(WQ_FLASH_ADDRESS+4*YUNTAI_CURRENT_VALUE_A,&YunTai.CurrentValue,4); // 地址
+	
 }
 
 
@@ -55,12 +71,13 @@ void Flash_Update(void)
 void list_value(void)
 {
 
-		Nor_Paramter_Init_With_Flash();
-		log_i	("variable name     value");
-    log_i("---------------  ---------");
-	  log_i("ser_OpenValue      %d",servo_motor.open_value);
-	  log_i("ser_CloseValue     %d",servo_motor.close_value);
-		log_i("debug_tool         %s",debug_tool_name[debug_tool]);
+		Normal_Paramter_Init_With_Flash();
+		log_i	("variable  name          value");
+    log_i("----------------------   ---------");
+	  log_i("RoboticArm_OpenValue      %d",RoboticArm.OpenValue);
+	  log_i("RoboticArm_CloseValue     %d",RoboticArm.CloseValue);
+		log_i("RoboticArm_CurrentValue   %d",RoboticArm.CurrentValue);
+		log_i("debug_tool                %s",debug_tool_name[debug_tool]);
     rt_kprintf("                         \n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);

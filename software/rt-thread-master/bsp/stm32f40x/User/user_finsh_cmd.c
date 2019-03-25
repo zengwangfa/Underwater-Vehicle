@@ -98,3 +98,14 @@ __exit:
     elog_set_output_enabled(true);
 }
 MSH_CMD_EXPORT(update, Update user application firmware);
+
+void get_memory_situation(void)
+{
+		 static rt_uint32_t total_mem, used_mem, max_used_mem;
+	   rt_memory_info(&total_mem, &used_mem, &max_used_mem);
+     rt_kprintf("Total_Mem:%ld  Used_Mem:%ld  Max_Used_Mem:%ld\n",total_mem,used_mem,max_used_mem);
+}
+MSH_CMD_EXPORT(get_memory_situation,get memory situation);
+
+
+

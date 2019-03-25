@@ -14,7 +14,7 @@
 
 /*----------------------- Variable Declarations -----------------------------*/
 
-extern struct JY901_t JY901; //JY901真实值结构体
+extern struct JY901Type JY901; //JY901真实值结构体
 
 u8 ov_frame = 0;
 u8 ov_frame_flag = 0;

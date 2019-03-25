@@ -23,7 +23,7 @@ struct SLonLat 	stcLonLat;
 struct SGPSV 		stcGPSV;
 struct SQ       stcQ;
 
-struct JY901_t JY901 = {0}; //JY901真实值结构体
+struct JY901Type JY901 = {0}; //JY901真实值结构体
 
 
 
@@ -77,7 +77,7 @@ void CopeSerial2Data(unsigned char Data)
 }
 
 /* JY901 数据转换 */
-void JY901_Convert(struct JY901_t * pArr) 
+void JY901_Convert(struct JY901Type * pArr) 
 {
 
 		pArr->Acc.x  = (float)stcAcc.a[0]/32768*16;

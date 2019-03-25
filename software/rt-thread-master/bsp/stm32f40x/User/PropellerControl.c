@@ -3,10 +3,10 @@
 #include "PropellerControl.h"
 
 PropellerParamter_Type PropellerParamter = {//初始化推进器参数值
-		 1500,//中值
-		 1800,//最大值
-		 1200,//最小值
-	   100	//死区值
+		 .PowerMed = 1500,//中值
+		 .PowerMax = 1800,//正向最大值
+		 .PowerMin = 1200,//反向最小值【反向推力最大】
+	   .PowerDeadband = 100	//死区值
 }; 
 
 ActionTypeEnum       Posture_Flag; //机器人姿态标志位
