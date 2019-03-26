@@ -1,6 +1,7 @@
 #include "init.h"
 #include "wifi.h"
-
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 #define WIFI_UART_NAME        "uart3"   // uart3 WIFI 
 

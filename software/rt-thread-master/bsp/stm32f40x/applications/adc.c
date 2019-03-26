@@ -1,7 +1,8 @@
 #define LOG_TAG    "adc"
 
 #include "init.h"
-
+#include <rtdevice.h>
+#include <elog.h>
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 

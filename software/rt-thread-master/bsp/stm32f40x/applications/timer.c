@@ -1,13 +1,13 @@
 #define LOG_TAG    "timer"
 
 #include "init.h"
-#include <rthw.h>
 #include <string.h>
 #include "board.h"
 #include "timer.h"
 #include "debug.h"
 #include "flash.h"
-
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 
@@ -33,8 +33,8 @@ static void time_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
     rt_exit_critical();
 	
 		count ++;
-		if(count == 20){	
-				if(ov_frame_flag == 1)
+		if(20 == count){	
+				if(1 == ov_frame_flag)
 				{
 						rt_kprintf("OV Frame:%d\n",ov_frame);
 						ov_frame_flag = 0; //清零

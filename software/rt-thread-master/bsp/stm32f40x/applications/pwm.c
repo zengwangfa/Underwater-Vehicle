@@ -1,129 +1,31 @@
 #define LOG_TAG    "pwm"
 
 #include "init.h"
-#include "flash.h"
-#include <spi_flash.h>
-#include <spi_flash_sfud.h>
-#include <easyflash.h>
-
+#include <rtdevice.h>
+#include <elog.h>
+#include "propeller.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
 
 /*----------------------- Variable Declarations -----------------------------*/
 
-extern struct rt_event init_event;/* ALL_init 事件控制块. */
 
-ServoType RoboticArm = { //机械臂
-												 .OpenValue = 1800,
-												 .CloseValue = 1300,
-											   .CurrentValue = 0
-};
-ServoType YunTai ={  //云台
-										.OpenValue = 1800,
-										.CloseValue = 1300,
-										 .CurrentValue = 0
-}; 
+
+
 /*----------------------- Function Implement --------------------------------*/
 
 
 
-void pwm_thread_entry(void *parameter)
-{
-	
-		while(1)
-		{
-				TIM_SetCompare1(TIM1,2000);  		//最高转速信号   	水平推进器1号
-				TIM_SetCompare2(TIM1,4000);  		//最高转速信号    水平推进器2号
-				TIM_SetCompare3(TIM1,6000); 		//最高转速信号    水平推进器3号
-				TIM_SetCompare4(TIM1,10000);  	//最高转速信号    水平推进器4号
-				rt_thread_mdelay(100);
 
-		}
-	
-}
+/*
+（1）当APB1和APB2分频数为1的时候，TIM1、TIM8~TIM11的时钟为APB2的时钟，TIM2~TIM7、TIM12~TIM14的时钟为APB1的时钟；
 
-
-int pwm_thread_init(void)
-{
-    rt_thread_t pwm_tid;
-		/*创建动态线程*/
-    pwm_tid = rt_thread_create("pwm",//线程名称
-                    pwm_thread_entry,				 //线程入口函数【entry】
-                    RT_NULL,							   //线程入口函数参数【parameter】
-                    512,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
-
-    if (pwm_tid != RT_NULL){
-				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
-				log_i("PWM_init()");
-			
-				rt_thread_startup(pwm_tid);
-				rt_event_send(&init_event, PWM_EVENT); //发送事件  表示初始化完成
-		}
-
-		return 0;
-}
-INIT_APP_EXPORT(pwm_thread_init);
-
-
-
-
-/*【机械臂】舵机 修改 【开启值】MSH方法 */
-static int robotic_arm_openvalue_set(int argc, char **argv)
-{
-    int result = 0;
-    if (argc != 2){
-        log_e("Error! Proper Usage: robotic_arm_openvalue_set 1600");
-				result = -RT_ERROR;
-        goto _exit;
-    }
-		if(atoi(argv[1]) <= 5000){
-				RoboticArm.OpenValue = atoi(argv[1]);
-				Flash_Update();
-				log_d("Write_Successed! Current RoboticArm_OpenValue:  %d",RoboticArm.OpenValue);
-		}
-		
-		else {
-				log_e("Error! The value is out of range!");
-		}
-_exit:
-    return result;
-}
-MSH_CMD_EXPORT(robotic_arm_openvalue_set,ag: robotic_arm_openvalue_set 160);
-
-
-
-
-/*【机械臂】舵机 修改 【关闭值】 MSH方法 */
-static int robotic_arm_closevalue_set(int argc, char **argv)
-{
-    int result = 0;
-    if (argc != 2){
-        log_e("Error! Proper Usage: robotic_arm_closevalue_set 1150");
-				result = -RT_ERROR;
-        goto _exit;
-    }
-		if(atoi(argv[1]) <= 3000){
-				RoboticArm.CloseValue = atoi(argv[1]);
-				Flash_Update();
-				log_d("Write_Successed! Current RoboticArm_CloseValue:  %d",RoboticArm.CloseValue);
-		}
-		else {
-				log_e("Error! The value is out of range!");
-		}
-
-		
-		
-_exit:
-    return result;
-}
-MSH_CMD_EXPORT(robotic_arm_closevalue_set,ag: robotic_arm_closevalue_set 115);
-
-
-
-
+（2）而如果APB1和APB2分频数不为1，那么TIM1、TIM8~TIM11的时钟为APB2的时钟的两倍，TIM2~TIM7、TIM12~TIM14的时钟为APB1的时钟的两倍。
+		 根据时钟分析，可知
+		 因为系统初始化SystemInit函数里初始化APB1总线时钟为4分频即42M，APB2总线时钟为2分频即84M，
+		 所以TIM1、TIM8~TIM11的时钟为APB2时钟的两倍即168M，TIM2~TIM7、TIM12~TIM14的时钟为APB1的时钟的两倍即84M。
+*/
 
 
 //TIM1 PWM部分初始化 
@@ -151,7 +53,7 @@ void TIM1_PWM_Init(u32 arr,u32 psc)
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;	//速度100MHz
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;      //推挽复用输出
 		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;        //上拉
-		GPIO_Init(GPIOE,&GPIO_InitStructure);              //初始化PF9
+		GPIO_Init(GPIOE,&GPIO_InitStructure);              //初始化P
 			
 		TIM_TimeBaseStructure.TIM_Prescaler=psc;  //定时器分频
 		TIM_TimeBaseStructure.TIM_CounterMode=TIM_CounterMode_Up; //向上计数模式
@@ -159,7 +61,7 @@ void TIM1_PWM_Init(u32 arr,u32 psc)
 		TIM_TimeBaseStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
 		TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
 		
-		TIM_TimeBaseInit(TIM1,&TIM_TimeBaseStructure);//初始化定时器14
+		TIM_TimeBaseInit(TIM1,&TIM_TimeBaseStructure);//初始化定时器1
 		
 		//初始化TIM14 Channel1 PWM模式	 
 		TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //选择定时器模式:TIM脉冲宽度调制模式2
@@ -176,65 +78,61 @@ void TIM1_PWM_Init(u32 arr,u32 psc)
 		TIM_OC4Init(TIM1, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 		
 		TIM_CtrlPWMOutputs(TIM1,ENABLE);
-		TIM_Cmd(TIM1, ENABLE);  //使能TIM14
+
 }  
 
+//TIM4 PWM部分初始化 
+//PWM输出初始化
+//arr：自动重装值
+//psc：时钟预分频数
+void TIM4_PWM_Init(u32 arr,u32 psc)
+{		 					 
+		//此部分需手动修改IO口设置
+		
+		GPIO_InitTypeDef GPIO_InitStructure;
+		TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+		TIM_OCInitTypeDef  TIM_OCInitStructure;
+		
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);  	//TIM1时钟使能    
+		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 	//使能PORTF时钟	
+		
+		GPIO_PinAFConfig(GPIOD,GPIO_PinSource12,GPIO_AF_TIM4);
+		GPIO_PinAFConfig(GPIOD,GPIO_PinSource13,GPIO_AF_TIM4);
+		GPIO_PinAFConfig(GPIOD,GPIO_PinSource14,GPIO_AF_TIM4);
+		GPIO_PinAFConfig(GPIOD,GPIO_PinSource15,GPIO_AF_TIM4);
+		
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;//GPIOD
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;        //复用功能
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;	//速度100MHz
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;      //推挽复用输出
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;        //上拉
+		GPIO_Init(GPIOD,&GPIO_InitStructure);              //初始化PF9
+			
+		TIM_TimeBaseStructure.TIM_Prescaler=psc;  //定时器分频
+		TIM_TimeBaseStructure.TIM_CounterMode=TIM_CounterMode_Up; //向上计数模式
+		TIM_TimeBaseStructure.TIM_Period=arr;   //自动重装载值
+		TIM_TimeBaseStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
+		TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+		
+		TIM_TimeBaseInit(TIM4,&TIM_TimeBaseStructure);//初始化定时器4
+		
+		//初始化TIM4 Channel PWM模式	 
+		TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //选择定时器模式:TIM脉冲宽度调制模式2
+		TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //比较输出使能
+		TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
+		TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //输出极性:TIM输出比较极性低
+		TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCPolarity_High;
+		TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
+		TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+		
+		TIM_OC1Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM4 4OC1
+		TIM_OC2Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM4 4OC1
+		TIM_OC3Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM4 4OC1		
+		TIM_OC4Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM4 4OC1
+		
+		TIM_CtrlPWMOutputs(TIM4,ENABLE);
+		
 
-///*---------------------- Constant / Macro Definitions -----------------------*/
-
-//#define TIM1_CH1_PIN 		60 //	E9
-//#define TIM1_CH2_PIN 		64 //	E11
-//#define TIM1_CH3_PIN 		66 //	E13
-//#define TIM1_CH4_PIN 		67 //	E14
-
-//#define PWM_DEV_NAME        "pwm"  /* PWM设备名称 */
-//#define PWM_DEV_CHANNEL     1       /* PWM通道 */
-
-
-///*----------------------- Variable Declarations -----------------------------*/
-
-//struct rt_device_pwm *pwm_dev;      /* PWM设备句柄 */
-///*----------------------- Function Implement --------------------------------*/
-
-//void pwm_thread_entry(void *parameter)
-//{
-//		rt_uint32_t period = 50000, pulse = 0;
-//	
-//    rt_pin_mode(TIM1_CH1_PIN, PIN_MODE_OUTPUT);
-//	  rt_pin_mode(TIM1_CH2_PIN, PIN_MODE_OUTPUT);
-//	  rt_pin_mode(TIM1_CH3_PIN, PIN_MODE_OUTPUT);
-//	  rt_pin_mode(TIM1_CH4_PIN, PIN_MODE_OUTPUT);
-//	
-//		/* 查找设备 */
-//    pwm_dev = (struct rt_device_pwm *)rt_device_find(PWM_DEV_NAME);
-//	  if (pwm_dev == RT_NULL)
-//    {
-//        rt_kprintf("pwm sample run failed! can't find %s device!\n", PWM_DEV_NAME);
-//    }
-
-//		/* 设置PWM周期和脉冲宽度默认值 */
-//    rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL, 	 period, pulse);
-//		rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL+1, period, pulse);
-//		rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL+2, period, pulse);
-//		rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL+3, period, pulse);
-//	
-//    /* 使能设备 */
-//    rt_pwm_enable(pwm_dev, PWM_DEV_CHANNEL	);
-//		rt_pwm_enable(pwm_dev, PWM_DEV_CHANNEL+1);
-//		rt_pwm_enable(pwm_dev, PWM_DEV_CHANNEL+2);
-//		rt_pwm_enable(pwm_dev, PWM_DEV_CHANNEL+3);
-//    while (1)
-//    {	
-//				rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL, period, 20000);
-//				rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL, period, 40000);
-//				rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL, period, 60000);
-//				rt_pwm_set(pwm_dev, PWM_DEV_CHANNEL, period, 80000);
-//			
-//				rt_thread_mdelay(500);
-//    }
-//}
-
-
-
-
+ 							  
+} 
 

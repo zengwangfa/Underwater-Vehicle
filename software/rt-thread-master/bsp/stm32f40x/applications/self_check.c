@@ -2,7 +2,8 @@
 
 #include "init.h"
 #include "self_check.h"
-
+#include <rtdevice.h>
+#include <elog.h>
 /*----------------------- Variable Declarations -----------------------------*/
 
 struct rt_event init_event;/* ALL_init ÊÂ¼ş¿ØÖÆ¿é. */

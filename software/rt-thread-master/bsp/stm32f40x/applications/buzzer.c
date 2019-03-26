@@ -1,6 +1,8 @@
 #define LOG_TAG    "buzzer"
 
 #include "init.h"
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define Buzzer_PIN 	59   //PE8
@@ -73,7 +75,7 @@ void buzzer_ring_task(void)
 	if(buzzer.count >= 1)
 	{  
 			if(buzzer.number >= 1){
-						if(buzzer.count%2 == 1)   {rt_pin_write(Buzzer_PIN, PIN_HIGH); }
+						if(1 == buzzer.count%2)   {rt_pin_write(Buzzer_PIN, PIN_HIGH); }
 						else                    	{rt_pin_write(Buzzer_PIN, PIN_LOW);} 
 						buzzer.number--;	
 			}

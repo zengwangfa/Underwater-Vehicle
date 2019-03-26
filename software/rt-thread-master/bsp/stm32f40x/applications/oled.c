@@ -2,6 +2,8 @@
 
 #include "init.h"
 #include <math.h>
+#include <rtdevice.h>
+#include <elog.h>
 #include "filter.h"
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
@@ -28,7 +30,7 @@ extern struct rt_event init_event;/* ALL_init 事件控制块 */
 extern struct SAngle 	stcAngle;
 
 extern struct JY901Type JY901;
-
+extern u8 VehicleMode;
 
 float slope = 0.0; //东北天坐标系下 航向斜率 slope
 
@@ -126,15 +128,15 @@ void OLED_StatusPage(void)
 		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[VehicleMode],boma_value_get());
 		OLED_ShowString(0,0, (u8 *)str,12); 
 	
-		sprintf(str,"Voltage:%.2f v\r\n",get_vol());
+		sprintf(str,"Voltage:%.2f v  \r\n",get_vol());
 		OLED_ShowString(0,16,(u8 *)str,12); 
 	
     cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
 
-	  sprintf(str,"CPU usage:%d.%d %%",cpu_usage_major, cpu_usage_minor);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
+	  sprintf(str,"CPU Usage:%d.%d %% ",cpu_usage_major, cpu_usage_minor);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
 		OLED_ShowString(0,32,(u8 *)str,12); 
 		
-		sprintf(str,"Temperature:%.2f C\r\n",KalmanFilter(&temp));//显示卡尔曼滤波后的温度
+		sprintf(str,"Temperature:%.2f C \r\n",KalmanFilter(&temp));//显示卡尔曼滤波后的温度
 		OLED_ShowString(0,48,(u8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }
@@ -272,7 +274,7 @@ void draw_fill_circle(u8 x0,u8 y0,u8 r,u8 dot)//写画实心圆心(x0,y0),半径r
 		for(x = x0-r;x <= x0+r;x++){
 				for(y = y0-r; y <= y0+r ;y++ ){
 						R = sqrt(pow(r,2)-pow(x-x0,2))+y0; //圆方程  x,y反置		
-						if( (y >= y0 && y <= R) || (y < y0 && y >= 2*y0-R )|| dot == 0 ) {  //点限制在 圆方程内	
+						if( (y >= y0 && y <= R) || (y < y0 && y >= 2*y0-R )|| 0 == dot ) {  //点限制在 圆方程内	
 								OLED_DrawPoint(y,x,dot);
 						}	
 				}
@@ -324,12 +326,12 @@ void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 			
-				if( (JY901.Euler.Yaw >-135 && JY901.Euler.Yaw <-90 ) ||(JY901.Euler.Yaw >90 && JY901.Euler.Yaw < 145 ) || dot == 0 ){ //上半圆
+				if( (JY901.Euler.Yaw >-135 && JY901.Euler.Yaw <-90 ) ||(JY901.Euler.Yaw >90 && JY901.Euler.Yaw < 145 ) || 0 == dot ){ //上半圆
 						if(  ((x-x0)/k+y0) >= 31 && ((x-x0)/k+y0) < y ) {  //点限制在 圆方程内
 								OLED_DrawPoint(x,((x-x0)/k+y0),dot);}
 				}
 				
-				if( (JY901.Euler.Yaw < -45 && JY901.Euler.Yaw > -90) || (JY901.Euler.Yaw < 90 && JY901.Euler.Yaw> 45) || dot == 0 ){ //上半圆
+				if( (JY901.Euler.Yaw < -45 && JY901.Euler.Yaw > -90) || (JY901.Euler.Yaw < 90 && JY901.Euler.Yaw> 45) || 0 == dot  ){ //上半圆
 						if(  ((x-x0)/k+y0) <= 31 && ((x-x0)/k+y0)> 63-y ) {  //点限制在 圆方程内
 								OLED_DrawPoint(x,((x-x0)/k+y0),dot);}
 				}
@@ -350,12 +352,12 @@ void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 		
-				if( (JY901.Euler.Yaw>=-45 && JY901.Euler.Yaw <= 0) || (JY901.Euler.Yaw >=-180 && JY901.Euler.Yaw <= -135)  || dot == 0 ){  // JY901.Angle[2] < 0
+				if( (JY901.Euler.Yaw>=-45 && JY901.Euler.Yaw <= 0) || (JY901.Euler.Yaw >=-180 && JY901.Euler.Yaw <= -135)  || 0 == dot ){  // JY901.Angle[2] < 0
 						if( (k*(x-x0)+y0) >= 31 && (k*(x-x0)+y0) < y ) {  //点限制在 圆方程内   上半圆
 								OLED_DrawPoint((k*(x-x0)+y0),x,dot);}
 				}
 				
-				if( (JY901.Euler.Yaw > 0 && JY901.Euler.Yaw <= 45) || (JY901.Euler.Yaw >=135 && JY901.Euler.Yaw <= 180)  || dot == 0 ){  // JY901.Angle[2] < 0
+				if( (JY901.Euler.Yaw > 0 && JY901.Euler.Yaw <= 45) || (JY901.Euler.Yaw >=135 && JY901.Euler.Yaw <= 180)  || 0 == dot ){  // JY901.Angle[2] < 0
 						if(((k*(x-x0)+y0)< 31 && (k*(x-x0)+y0) > 63-y)) {  //点限制在 圆方程内  下半圆
 								OLED_DrawPoint((k*(x-x0)+y0),x,dot);} 
 				}

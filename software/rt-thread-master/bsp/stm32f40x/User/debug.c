@@ -8,6 +8,8 @@
 #include "drv_ano.h"
 #include "filter.h"
 #include "drv_cpu_temp.h"
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
@@ -40,7 +42,7 @@ void debug_send_thread_entry(void* parameter)
 		{
 
 				rt_thread_mdelay(1);
-				if( debug_startup_flag == 1)//当debug_uart初始化完毕后 才进行上位机通信
+				if( 1 == debug_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
 				{
 							
 						switch(debug_tool)//选择上位机
@@ -155,13 +157,16 @@ static int set_debug_tool(int argc,char **argv)
 
 		if( !strcmp(argv[1],"vcan") ){ //设置为 山外上位机 strcmp 检验两边相等 返回0
 				debug_tool = PC_VCAN;
+				log_v("Debug Tool:VCAN\r\n");
 		}
 
 		else if( !strcmp(argv[1],"ano") ){ //设置为 匿名上位机
 				debug_tool = PC_ANO;
+				log_v("Debug Tool:ANO\r\n");
 		}
-		else if( !strcmp(argv[1],"null") ){ //设置为 匿名上位机
-				debug_tool = PC_ANO;
+		else if( !strcmp(argv[1],"null") ){ //设置为 山外上位机
+				debug_tool = DEBUG_NULL;
+				log_v("Debug Tool:DEBUG_NULL\r\n");
 		}
 		else {
 				log_e("Proper Usage: debug_by vcan / ano / null");//用法:设置上位机工具

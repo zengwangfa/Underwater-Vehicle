@@ -1,17 +1,14 @@
 #include "init.h"
 #include <math.h>
+#include "propeller.h"
 #include "PropellerControl.h"
 
-PropellerParamter_Type PropellerParamter = {//初始化推进器参数值
-		 .PowerMed = 1500,//中值
-		 .PowerMax = 1800,//正向最大值
-		 .PowerMin = 1200,//反向最小值【反向推力最大】
-	   .PowerDeadband = 100	//死区值
-}; 
+extern PropellerParamter_Type PropellerParamter;//初始化推进器参数值
 
-ActionTypeEnum       Posture_Flag; //机器人姿态标志位
-PropellerPower_Type  PropellerPower; //推进器推理控制器
-PropellerError_Type  PropellerError; //推进器偏差值
+extern ActionTypeEnum         Posture_Flag; //机器人姿态标志位
+extern PropellerPower_Type    PropellerPower; //推进器推理控制器
+extern PropellerError_Type    PropellerError; //各个推进器偏差值
+extern u8 VehicleMode;
 
 u8 turnAngle = 45;    //转向角度
 
@@ -93,45 +90,43 @@ void Propeller_Control(void)
 void Propeller_Output_Limit(int MoveValue)
 {
 		
-		#if VehicleMode == AUV_Mode
+		if( VehicleMode == AUV_Mode){
+
 			MoveValue = PropellerParamter.PowerMed + PropellerPower.leftUp;
 			MoveValue = Output_Limit(MoveValue);
 			TIM_SetCompare1(TIM1,MoveValue);			 //左上
-		#else
-			MoveValue = PropellerParamter.PowerMed  + PropellerPower.rightDown;
-			MoveValue = Output_Limit(MoveValue);
-			TIM_SetCompare1(TIM1,MoveValue);			//右下00000000
-		#endif
-//---------------------------------------------------------------------------//
-		#if VehicleMode == AUV_Mode
+		
 			MoveValue = PropellerParamter.PowerMed  + PropellerPower.rightUp;
 			MoveValue = Output_Limit(MoveValue);
 			TIM_SetCompare2(TIM1,MoveValue);			//右上
-		#else
-			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftUp;
-			MoveValue = Output_Limit(MoveValue);
-			TIM_SetCompare2(TIM1,MoveValue);		 //左上0000000000
-		#endif
-//---------------------------------------------------------------------------//
-		#if VehicleMode == AUV_Mode
+			
 			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftDown;
 			MoveValue = Output_Limit(MoveValue);
 			TIM_SetCompare3(TIM1,MoveValue);			//左下
-		#else
-			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftDown;
-			MoveValue = Output_Limit(MoveValue);
-			TIM_SetCompare2(TIM12,MoveValue);	   //	左下 0000000
-		#endif
-//---------------------------------------------------------------------------//
-		#if VehicleMode == AUV_Mode
+			
 			MoveValue = PropellerParamter.PowerMed + PropellerPower.rightDown;
 			MoveValue = Output_Limit(MoveValue);
 			TIM_SetCompare4(TIM1,MoveValue);			//右下
-		#else
+		}
+		else{
+	
+			MoveValue = PropellerParamter.PowerMed  + PropellerPower.rightDown;
+			MoveValue = Output_Limit(MoveValue);
+			TIM_SetCompare1(TIM1,MoveValue);			//右下00000000
+			
+			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftUp;
+			MoveValue = Output_Limit(MoveValue);
+			TIM_SetCompare2(TIM1,MoveValue);		 //左上0000000000
+			
+			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftDown;
+			MoveValue = Output_Limit(MoveValue);
+			TIM_SetCompare2(TIM12,MoveValue);	   //	左下 0000000
+			
 			MoveValue = PropellerParamter.PowerMed + PropellerPower.rightUp;
 			MoveValue = Output_Limit(MoveValue);
 			TIM_SetCompare4(TIM1,MoveValue);			//右上00000000
-		#endif
+		}
+
 }
 
 
@@ -244,35 +239,4 @@ void moveRight(void)  //右移
 		#endif
 }
 
-
-
-/*******************************************
-* 函 数 名：Propeller_Init
-* 功    能：推进器的初始化
-* 输入参数：none
-* 返 回 值：none
-* 注    意：初始化流程：
-*           1,接线,上电，哔-哔-哔三声,表示开机正常
-*           2,给电调2ms或1ms最高转速信号,哔一声
-*           3,给电调1.5ms停转信号,哔一声
-*           4,初始化完成，可以开始控制
-********************************************/
-void Propeller_Init(void)
-{
-		TIM_SetCompare1(TIM12,1000); 	 	//最高转速信号  	垂直推进器1号
-		TIM_SetCompare2(TIM12,1000);	  //最高转速信号  	垂直推进器2号
-		TIM_SetCompare1(TIM1,1000);  		//最高转速信号   	水平推进器1号
-		TIM_SetCompare2(TIM1,1000);  		//最高转速信号    水平推进器2号
-		TIM_SetCompare3(TIM1,1000); 		//最高转速信号    水平推进器3号
-		TIM_SetCompare4(TIM1,1000);  		//最高转速信号    水平推进器4号
-	
-		rt_thread_mdelay(1000);   						 	//1s
-		TIM_SetCompare1(TIM12,PropellerParamter.PowerMed);		//停转信号
-		TIM_SetCompare2(TIM12,PropellerParamter.PowerMed);		//停转信号
-		TIM_SetCompare1(TIM1, PropellerParamter.PowerMed);			//停转信号
-		TIM_SetCompare2(TIM1, PropellerParamter.PowerMed);			//停转信号
-		TIM_SetCompare3(TIM1, PropellerParamter.PowerMed);			//停转信号
-		TIM_SetCompare4(TIM1, PropellerParamter.PowerMed);			//停转信号
-		rt_thread_mdelay(1000);  
-}
 

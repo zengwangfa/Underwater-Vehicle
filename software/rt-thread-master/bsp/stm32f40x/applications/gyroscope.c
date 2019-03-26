@@ -4,7 +4,8 @@
 #include <string.h>
 #include "board.h"
 #include <rthw.h>
-
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define PACKET_LENGTH      11    //数据包长度

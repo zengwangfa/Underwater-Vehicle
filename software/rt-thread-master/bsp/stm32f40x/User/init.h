@@ -2,7 +2,6 @@
 #define __INIT_H_
 
 
-#include <rtdevice.h>
 
 #include "sys.h" 
 #include "led.h"
@@ -14,16 +13,20 @@
 #include "adc.h"
 #include "pwm.h"
 
-#include <elog.h>
+
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 /************重要定义****************/
 
-#define AUV_Mode     0
-#define ROV_Mode     1
 
-#define VehicleMode  ROV_Mode   //ROV_Mode or AUV_Mode
+typedef enum
+{
+	AUV_Mode,
+	ROV_Mode
+	
+}VehicleMode_E;
+
 
 /************重要定义***************/
 

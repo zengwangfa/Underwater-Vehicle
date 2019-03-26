@@ -1,7 +1,8 @@
 #define LOG_TAG    "key"
 
 #include "init.h" 
-
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define KEY_PIN  		79 	 //PD10
@@ -23,7 +24,7 @@ u8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
 
 void key_thread_entry(void* parameter)// --- KEY   BOMA ---
 {
-		if(boma_value_get() == System_NORMAL_STATUS)
+		if(System_NORMAL_STATUS == boma_value_get())
 				buzzer_bibi(3,1);
     while (1)
     {
@@ -38,9 +39,9 @@ void key_thread_entry(void* parameter)// --- KEY   BOMA ---
 
 
 /* get 2Î»²¦ÂëÖµ */
-rt_uint8_t boma_value_get(void)
+u8 boma_value_get(void)
 {
-    rt_uint8_t val; //reserve(´æ´¢)
+    u8 val; //reserve(´æ´¢)
     
 		val = boma1_read *2 + boma2_read *1 + 1; //µÃµ½ËÄÖÖ×´Ì¬
     return val;
@@ -60,7 +61,7 @@ int key_thread_init(void)
     key_tid = rt_thread_create("key",
                     key_thread_entry,
                     RT_NULL,
-                    256,
+                    512,
                     25,
                     10);
 

@@ -15,7 +15,7 @@
 
 
 void led_blink_task(void);
-void system_led_blink(rt_uint8_t InputData);
+void system_led_blink(u8 InputData);
 
 
 typedef struct

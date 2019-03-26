@@ -18,7 +18,7 @@
 #include "flash.h"
 #include "gyroscope.h"
 #include <rtdevice.h>
-
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp) + 0) )
@@ -664,6 +664,7 @@ void ANO_SEND_StateMachine(void)
 												0);
 				ANO_Send_PID_Flag[5]=0;
 				ANO_Cnt=0;
+				log_v("PID_Flash_Read -> success\r\n");
 		}					
 }
 
@@ -709,7 +710,7 @@ void Save_Or_Reset_PID_Parameter(void)
 				PID_Parameter[7].i=Total_Controller.High_Position_Control.Ki;
 				PID_Parameter[7].d=Total_Controller.High_Position_Control.Kd;			
 
-				log_v("PID_Save_Flash - > Success!");
+				log_v("PID_Save_Flash -> Success!");
 				Save_PID_Parameter();
 				Sort_PID_Flag=0;
 		}
@@ -753,7 +754,7 @@ void Save_Or_Reset_PID_Parameter(void)
 				Save_PID_Parameter();
 				
 				Sort_PID_Flag=0;
-				log_v("PID_Reset_Flash - > Success!");
+				log_v("PID_Reset_Flash -> Success!");
 				ANO_Send_PID_Flag[0]=1;//回复默认参数后，将更新的数据发送置地面站		
 				ANO_Send_PID_Flag[1]=1;
 				ANO_Send_PID_Flag[2]=1;

@@ -5,7 +5,8 @@
 #include <string.h>
 #include "drv_ano.h"
 #include "wifi.h"
-
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define GYRO_UART_NAME        "uart2"
@@ -62,7 +63,7 @@ static void gyroscope_thread_entry(void *parameter)
 				/* 从串口读取一个字节的数据，没有读取到则等待接收信号量 */
 				while (rt_device_read(gyro_uart_device, 0, &ch, 1) != 1)
 				{
-						/* 阻塞等待接收信号量，等到信号量后再次读取数据 */
+				  /* 阻塞等待接收信号量，等到信号量后再次读取数据 */
 						rt_sem_take(&gyro_rx_sem, RT_WAITING_FOREVER);
 				}
 #if Query_JY901_data //在线调试 查询模式

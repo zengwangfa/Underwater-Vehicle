@@ -1,11 +1,15 @@
-#include "sys.h"
+#define LOG_TAG    "camera"
+
 #include "init.h"
 #include "led.h"
 #include "key.h"
 #include "drv_ov2640.h" 
 #include "drv_dcmi.h" 
-
-#include "string.h"
+#include <rtdevice.h>
+#include <elog.h>
+#include <string.h>
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define jpeg_buf_size 20 * 1024   //31*1024  定义JPEG数据缓存jpeg_buf的大小(*4字节)
@@ -72,7 +76,7 @@ void jpeg_data_process(void)
 {
 		if(ov2640_mode)//只有在JPEG格式下,才需要做处理.
 		{
-				if(jpeg_data_ok==0)	//jpeg数据还未采集完
+				if(0 == jpeg_data_ok)	//jpeg数据还未采集完
 				{	
 						DMA_Cmd(DMA2_Stream1, DISABLE);//停止当前传输 
 						while (DMA_GetCmdStatus(DMA2_Stream1) != DISABLE){}//等待DMA2_Stream1可配置  
@@ -80,7 +84,7 @@ void jpeg_data_process(void)
 
 						jpeg_data_ok=1; 				//标记JPEG数据采集完按成,等待其他函数处理
 				}
-				if(jpeg_data_ok==2)	//上一次的jpeg数据已经被处理了
+				if(2 == jpeg_data_ok)	//上一次的jpeg数据已经被处理了
 				{
 						DMA2_Stream1->NDTR=jpeg_buf_size;	
 						DMA_SetCurrDataCounter(DMA2_Stream1,jpeg_buf_size);//传输长度为jpeg_buf_size*4字节
@@ -110,7 +114,7 @@ void camera_thread_entry(void* paramter)
 		while(1)
 		{
 	
-				if(jpeg_data_ok == 1)	//已经采集完一帧图像了
+				if(1 == jpeg_data_ok)	//已经采集完一帧图像了
 				{
 				  	p = (u8*)jpeg_buf;
 						jpglen = 0;	//设置jpg文件大小为0

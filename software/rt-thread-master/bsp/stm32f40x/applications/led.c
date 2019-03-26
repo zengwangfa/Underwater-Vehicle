@@ -1,9 +1,11 @@
 #define LOG_TAG    "led"
 
 #include "init.h"
-#include "string.h"
 #include "flash.h"
 #include "drv_ano.h"
+#include <string.h>
+#include <rtdevice.h>
+#include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
 #define LED_Red 		68 
@@ -58,7 +60,7 @@ void led_blink_task(void)
 	
 
 /* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白] */
-void system_led_blink(rt_uint8_t InputData)
+void system_led_blink(u8 InputData)
 {
     if(InputData & 0x04){	
 						LED_ON(LED_Red); }
@@ -82,7 +84,7 @@ int led_thread_init(void)
     led_tid = rt_thread_create("led",//线程名称
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    256,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     25,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
@@ -98,56 +100,6 @@ int led_thread_init(void)
 		return 0;
 }
 INIT_APP_EXPORT(led_thread_init);
-
-
-/* led on MSH方法 */
-static int led_on(int argc, char **argv)
-{
-    int result = 0;
-
-    if (argc != 2){
-        log_e("Error! Proper Usage: led_on r\n Species:r \\ g \\ b \\ c");
-				result = -RT_ERROR;
-				return result;
-    }
-		
-		switch(*argv[1]){
-				case 'r':LED_ON(LED_Red);break;
-				case 'g':LED_ON(LED_Green);break;
-				case 'b':LED_ON(LED_Blue);break;
-				case 'c':LED_OFF(LED_Camera);break;
-				default:log_e("Error! Proper Usage: led_on R\n Species:r \\ g \\ b \\ c");break;
-		}
-
-		return result;
-}
-MSH_CMD_EXPORT(led_on,ag: led_on r  );
-
-
-/* led off MSH方法 */
-static int led_off(int argc, char **argv)
-{
-    int result = 0;
-
-    if (argc != 2){
-        log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c");
-				result = -RT_ERROR;
-        goto _exit;
-    }
-		
-		switch(*argv[1]){
-			
-				case 'r':LED_OFF(LED_Red);break;
-				case 'g':LED_OFF(LED_Green);break;
-				case 'b':LED_OFF(LED_Blue);break;
-				case 'c':LED_ON(LED_Camera);break;
-				default:log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c");break;
-		}
-_exit:
-    return result;
-}
-MSH_CMD_EXPORT(led_off,ag:led_off r);
-
 
 
 
@@ -223,27 +175,77 @@ void Bling_Process(Bling_Light *Light)//闪烁运行线程
 ****************************************************/
 void Bling_Working(u8 bling_mode)
 {
-		if(bling_mode == 0)
+		if(0 == bling_mode)
 		{
 				Bling_Process(&Light_1);
 				Bling_Process(&Light_2);
 				Bling_Process(&Light_3);
 		}
-		else if(bling_mode==1)//加速度计6面校准模式
+		else if(1 == bling_mode)//加速度计6面校准模式
 		{
 				Bling_Process(&Light_1);
 
 		}
-		else if(bling_mode==2)//磁力计校准模式
+		else if(2 == bling_mode)//磁力计校准模式
 		{
 				Bling_Process(&Light_2);
 		}
-		else if(bling_mode==3)//全灭
+		else if(3 == bling_mode)//全灭
 		{
 				Bling_Process(&Light_3);
 		}
 		 
 }
+
+
+
+/* led on MSH方法 */
+static int led_on(int argc, char **argv)
+{
+    int result = 0;
+
+    if (argc != 2){
+        log_e("Error! Proper Usage: led_on r\n Species:r \\ g \\ b \\ c");
+				result = -RT_ERROR;
+				return result;
+    }
+		
+		switch(*argv[1]){
+				case 'r':LED_ON(LED_Red);break;
+				case 'g':LED_ON(LED_Green);break;
+				case 'b':LED_ON(LED_Blue);break;
+				case 'c':LED_OFF(LED_Camera);break;
+				default:log_e("Error! Proper Usage: led_on R\n Species:r \\ g \\ b \\ c");break;
+		}
+
+		return result;
+}
+MSH_CMD_EXPORT(led_on,ag: led_on r  );
+
+
+/* led off MSH方法 */
+static int led_off(int argc, char **argv)
+{
+    int result = 0;
+
+    if (argc != 2){
+        log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		
+		switch(*argv[1]){
+			
+				case 'r':LED_OFF(LED_Red);break;
+				case 'g':LED_OFF(LED_Green);break;
+				case 'b':LED_OFF(LED_Blue);break;
+				case 'c':LED_ON(LED_Camera);break;
+				default:log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c");break;
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(led_off,ag:led_off r);
 
 
 

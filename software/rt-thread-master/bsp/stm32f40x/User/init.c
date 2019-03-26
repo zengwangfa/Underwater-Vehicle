@@ -12,6 +12,8 @@
 
 /*----------------------- Variable Declarations -----------------------------*/
 
+volatile u8 VehicleMode = ROV_Mode;   //ROV_Mode or AUV_Mode
+
 rt_spi_flash_device_t nor_flash;
 struct rt_thread thread_sys_monitor;
 
