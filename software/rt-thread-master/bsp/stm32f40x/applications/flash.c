@@ -99,7 +99,7 @@ void Flash_Update(void)
 void list_value(void)
 {
 
-		Normal_Paramter_Init_With_Flash();
+		Normal_Parameter_Init_With_Flash();
 		log_i	("variable  name          value");
     log_i("----------------------   ---------");
 		log_i("VehicleMode               %s",VehicleModeName[VehicleMode]);

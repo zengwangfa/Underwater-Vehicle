@@ -62,7 +62,7 @@ void Normal_Parameter_SelfCheck_With_Flash(void); //Flash参数自检 若为-1 或 0 则
 /* FLASH 更新 普通值 */
 void Flash_Update(void);
 
-int Nor_Paramter_Init_With_Flash(void);
+int Normal_Parameter_Init_With_Flash(void);
 															 
 void Save_PID_Parameter(void);			
 															 

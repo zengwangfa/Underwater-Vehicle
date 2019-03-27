@@ -30,7 +30,7 @@
 
 #define HardwareType 	0.00  //硬件种类  00为其他硬件版本
 #define HardwareVER 	2.00  //硬件版本
-#define SoftwareVER 	3.10  //软件版本  3月10日
+#define SoftwareVER 	3.27  //软件版本  3月10日
 #define ProtocolVER 	1  		//协议版本
 #define BootloaderVER 1  		//Bootloader版本
 /*----------------------- Variable Declarations. -----------------------------*/

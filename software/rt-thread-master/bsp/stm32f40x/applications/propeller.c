@@ -1,6 +1,11 @@
 #include "init.h"
 #include "propeller.h"
 #include <elog.h>
+
+#define PropellerPower_Med  1500
+#define PropellerPower_Min  1000
+#define PropellerPower_Max  1800
+
 PropellerParamter_Type PropellerParamter = {//初始化推进器参数值
 		 .PowerMed = 1500,//中值
 		 .PowerMax = 1800,//正向最大值
@@ -30,28 +35,28 @@ void Propeller_Init(void)
 {
 
 	
-		TIM_SetCompare1(TIM1,1000);  		//最高转速信号   	水平推进器1号
-		TIM_SetCompare2(TIM1,1000);  		//最高转速信号    水平推进器2号
-		TIM_SetCompare3(TIM1,1000); 		//最高转速信号    水平推进器3号
-		TIM_SetCompare4(TIM1,1000);  		//最高转速信号    水平推进器4号
+		TIM_SetCompare1(TIM1, PropellerPower_Min);  		//最高转速信号   	水平推进器1号
+		TIM_SetCompare2(TIM1, PropellerPower_Min);  		//最高转速信号    水平推进器2号
+		TIM_SetCompare3(TIM1, PropellerPower_Min); 		//最高转速信号    水平推进器3号
+		TIM_SetCompare4(TIM1, PropellerPower_Min);  		//最高转速信号    水平推进器4号
 	
-		TIM_SetCompare1(TIM4,1000); 	 	//最高转速信号  	垂直推进器1号
-		TIM_SetCompare2(TIM4,1000);	  //最高转速信号  	垂直推进器2号
-		TIM_SetCompare3(TIM4,1000); 		//最高转速信号    水平推进器3号
-		TIM_SetCompare4(TIM4,1000);  		//最高转速信号    水平推进器4号
+		TIM_SetCompare1(TIM4, PropellerPower_Min); 	 	//最高转速信号  	垂直推进器1号
+		TIM_SetCompare2(TIM4, PropellerPower_Min);	  //最高转速信号  	垂直推进器2号
+		TIM_SetCompare3(TIM4, PropellerPower_Min); 		//最高转速信号    水平推进器3号
+		TIM_SetCompare4(TIM4, PropellerPower_Min);  		//最高转速信号    水平推进器4号
 		rt_thread_mdelay(1000);   						 	//1s
 
-		TIM_SetCompare1(TIM1, PropellerParamter.PowerMed);			//停转信号
-		TIM_SetCompare2(TIM1, PropellerParamter.PowerMed);			//停转信号
-		TIM_SetCompare3(TIM1, PropellerParamter.PowerMed);			//停转信号
-		TIM_SetCompare4(TIM1, PropellerParamter.PowerMed);			//停转信号
+		TIM_SetCompare1(TIM1, PropellerPower_Med);			//停转信号
+		TIM_SetCompare2(TIM1, PropellerPower_Med);			//停转信号
+		TIM_SetCompare3(TIM1, PropellerPower_Med);			//停转信号
+		TIM_SetCompare4(TIM1, PropellerPower_Med);			//停转信号
 	
-		TIM_SetCompare1(TIM4,PropellerParamter.PowerMed);		//停转信号
-		TIM_SetCompare2(TIM4,PropellerParamter.PowerMed);		//停转信号
-		TIM_SetCompare3(TIM4,PropellerParamter.PowerMed); 		//最高转速信号    水平推进器3号
-		TIM_SetCompare4(TIM4,PropellerParamter.PowerMed);  		//最高转速信号    水平推进器4号
-	
+		TIM_SetCompare1(TIM4, PropellerPower_Med);		//停转信号
+		TIM_SetCompare2(TIM4, PropellerPower_Med);		//停转信号
+		TIM_SetCompare3(TIM4, PropellerPower_Med); 		//最高转速信号    水平推进器3号
+		TIM_SetCompare4(TIM4, PropellerPower_Med);  		//最高转速信号    水平推进器4号
 		rt_thread_mdelay(1000);  
+		
 		log_v("Propeller_Init()\r\n");
 }
 
