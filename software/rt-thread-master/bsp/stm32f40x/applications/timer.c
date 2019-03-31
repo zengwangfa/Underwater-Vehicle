@@ -35,11 +35,10 @@ static void time_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
     rt_exit_critical();
 	
 		count ++;
-	  MS583703BA_getTemperature();//获取温度
-		MS583703BA_getPressure();   //获取大气压
+
 		if(20 == count){	
-				rt_kprintf("MS_Temp:%d\n",TEMP_DEPTH);
-				rt_kprintf("MS_Pressure:%d\n",Pressure);
+				
+
 				if(1 == ov_frame_flag)
 				{
 						rt_kprintf("OV Frame:%d\n",ov_frame);
@@ -66,11 +65,7 @@ int timer1_init(void)
     if (timer1 != RT_NULL){ 
 				
 				rt_timer_start(timer1);
-				IIC_Init();	         //初始化IIC PC11 PC12口子
-				rt_thread_mdelay(100);
-				MS583703BA_RESET();	 // Reset Device  复位MS5837
-				rt_thread_mdelay(100);
-				MS5837_init();
+				
 		}
 
     return 0;

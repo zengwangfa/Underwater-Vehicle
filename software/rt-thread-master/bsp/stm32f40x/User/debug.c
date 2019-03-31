@@ -10,6 +10,7 @@
 #include "drv_cpu_temp.h"
 #include <rtdevice.h>
 #include <elog.h>
+#include "drv_MS5837.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
@@ -105,8 +106,8 @@ void Vcan_Send_Data(void)
 		list[2] = JY901.Euler.Yaw; 	  //Æ«º½½Ç Yaw
 		list[3] = temp;//-(Servo_Duty-Servo_Duty_Md);
 		list[4] = KalmanFilter(&temp);//corner_meet_rn;//edge_start[1];//
-		list[5] = 90;//get_vol();
-		list[6] = 30;	//KalmanFilter(&vol)
+		list[5] = MS_TEMP;//get_vol();
+		list[6] = Pressure;	//KalmanFilter(&vol)
 		list[7] = 0;	//camera_center;
 		
 		Vcan_Send_Cmd(list,sizeof(list));

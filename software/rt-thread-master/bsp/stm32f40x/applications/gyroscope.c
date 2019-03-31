@@ -6,6 +6,7 @@
 #include <rthw.h>
 #include <rtdevice.h>
 #include <elog.h>
+#include "drv_MS5837.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define PACKET_LENGTH      11    //数据包长度
@@ -25,7 +26,6 @@ struct SGPSV 		stcGPSV;
 struct SQ       stcQ;
 
 struct JY901Type JY901 = {0}; //JY901真实值结构体
-
 
 
 /*----------------------- Function Implement --------------------------------*/
@@ -157,6 +157,23 @@ float get_temperature(void)
 MSH_CMD_EXPORT(get_temperature, get Temperature[T]);
 
 
+/* Get 温度  Temperature */
+void get_pressure(void)
+{
+		static char str[50] = {0};
+		/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
+		rt_enter_critical();
+
+		MS583703BA_getTemperature();//获取温度
+		MS583703BA_getPressure();   //获取大气压
+	
+		/* 调度器解锁 */
+		rt_exit_critical();
+		sprintf(str,"MS_Temp2:%f\n",MS_TEMP);
+		rt_kprintf(str);
+		rt_kprintf("MS_Pressure:%d\n",Pressure);
+}
+MSH_CMD_EXPORT(get_pressure, get pressure[pa]);
 
 
 

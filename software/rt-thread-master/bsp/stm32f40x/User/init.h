@@ -62,7 +62,7 @@ enum VehicleStatus{
 //void delay_ms(u32 nTimer);
 void rt_hw_us_delay(u32 us);
 void rt_hw_ms_delay(u32 ms);
-
+void delay_us(u32 nTimer);
 
 int sprintf(char *buf, const char *format, ...);
 
