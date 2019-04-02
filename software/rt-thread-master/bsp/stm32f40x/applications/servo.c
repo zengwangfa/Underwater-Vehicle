@@ -5,17 +5,20 @@
 #include <rtdevice.h>
 #include <elog.h>
 
+#define RoboticArm_MedValue  1500
+#define YunTai_MedValue  		 1500
+
 extern struct rt_event init_event;/* ALL_init 事件控制块. */
 
 ServoType RoboticArm = { //机械臂
 												 .OpenValue = 1800,
 												 .CloseValue = 1300,
-											   .CurrentValue = 0
+											   .CurrentValue = 1500
 };
 ServoType YunTai ={  //云台
 										.OpenValue = 1800,
 										.CloseValue = 1300,
-									  .CurrentValue = 0
+									  .CurrentValue = 1500
 }; 
 
 

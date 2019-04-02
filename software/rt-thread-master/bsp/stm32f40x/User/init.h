@@ -22,10 +22,10 @@
 
 typedef enum
 {
-	AUV_Mode,
-	ROV_Mode
+	AUV_Mode,//0
+	ROV_Mode //1
 	
-}VehicleMode_E;
+}VehicleMode_Enum;
 
 
 /************重要定义***************/
@@ -39,18 +39,18 @@ typedef enum
 #define ADC_EVENT 			(1 << 5)  //ADC事件标志位
 #define PWM_EVENT 			(1 << 6)  //PWM事件标志位
 #define CAM_EVENT 			(1 << 7)  //Camera事件标志位
-
+#define MS5837_EVENT 	  (1 << 8)  //Sensor事件标志位
 
 #define PI 3.1415926f //float型
 #define Rad2Deg(Rad) (Rad * 180.0f / PI)
 #define Deg2Rad(Deg) (Deg * PI / 180.0f)
 
 
-enum VehicleStatus{
+typedef enum {
 	System_NORMAL_STATUS = 1,//正常模式
   System_DEBUG_STATUS = 2, //调试模式
 	System_ERROR_STATUS,
-};  //枚举系统状态
+}VehicleStatus_Enum;  //枚举系统状态
 
 
 
@@ -65,6 +65,8 @@ void rt_hw_ms_delay(u32 ms);
 void delay_us(u32 nTimer);
 
 int sprintf(char *buf, const char *format, ...);
+
+extern  u8 VehicleMode;   //ROV_Mode or AUV_Mode
 
 #endif
 

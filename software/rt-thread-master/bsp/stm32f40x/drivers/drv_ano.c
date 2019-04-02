@@ -19,6 +19,7 @@
 #include "gyroscope.h"
 #include <rtdevice.h>
 #include <elog.h>
+#include "drv_MS5837.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp) + 0) )
@@ -239,7 +240,7 @@ void ANO_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void ANO_Data_Send_Version(void)//发送基本信息（姿态、锁定状态）
+void ANO_Data_Send_Version(void)//发送版本信息
 {
 		u8 _cnt=0;
 		vs16 _temp;
@@ -264,7 +265,7 @@ void ANO_Data_Send_Version(void)//发送基本信息（姿态、锁定状态）
 		data_to_send[_cnt++]=BYTE1(_temp2);
 		data_to_send[_cnt++]=BYTE0(_temp2);
 		
-		_temp2 = (int)(BootloaderVER*100);//单位cm
+		_temp2 = (int)(BootloaderVER*100);//单位cm  MS5837_Pressure
 		data_to_send[_cnt++]=BYTE1(_temp2);
 		data_to_send[_cnt++]=BYTE0(_temp2);
 
@@ -281,7 +282,7 @@ void ANO_Data_Send_Version(void)//发送基本信息（姿态、锁定状态）
 
 /*******************************************
 * 函 数 名：ANO_Data_Send_Status
-* 功    能：发送基本信息（欧拉三角、高度、锁定状态）【第一组】
+* 功    能：发送基本信息（欧拉三角、高度、锁定状态）【第二组】
 * 输入参数：none
 * 返 回 值：none
 * 注    意：none
@@ -308,7 +309,7 @@ void ANO_Data_Send_Status(void)//发送基本信息（姿态、锁定状态）
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
 		
-		_temp2 = 0;//单位cm
+		_temp2 = MS5837_Pressure;//单位cm
 		data_to_send[_cnt++]=BYTE3(_temp2);
 		data_to_send[_cnt++]=BYTE2(_temp2);
 		data_to_send[_cnt++]=BYTE1(_temp2);
@@ -385,6 +386,46 @@ void ANO_DT_Send_Senser(float a_x,float a_y,float a_z,float g_x,float g_y,float 
 		rt_device_write(debug_uart_device, 0,data_to_send, _cnt);    //发送后命令
 }
 
+
+/*******************************************
+* 函 数 名：ANO_DT_Send_High
+* 功    能：发送高度数据 (气压计高度、超声波高低)  【第七组】
+* 输入参数：pressure_high：气压计高度、ultrasonic_high：超声波高度
+* 返 回 值：none
+* 注    意：none
+********************************************/
+void ANO_DT_Send_High(int pressure_high,u16 ultrasonic_high)
+{
+		u8 _cnt=0;
+		int _temp;
+		u16 _temp2;
+		u8 sum = 0;
+		u8 i = 0;
+		data_to_send[_cnt++]=0xAA;
+		data_to_send[_cnt++]=0xAA;
+		data_to_send[_cnt++]=0x07;
+		data_to_send[_cnt++]=0;
+		
+		_temp = (int)(pressure_high);   
+		data_to_send[_cnt++]=BYTE3(_temp);
+		data_to_send[_cnt++]=BYTE2(_temp);
+		data_to_send[_cnt++]=BYTE1(_temp);
+		data_to_send[_cnt++]=BYTE0(_temp);
+	
+		_temp2 = (int)(ultrasonic_high*100);
+		data_to_send[_cnt++]=BYTE1(_temp2);
+		data_to_send[_cnt++]=BYTE0(_temp2);
+	
+		data_to_send[3] = _cnt-4;	
+		sum = 0;
+		for(i=0;i<_cnt;i++){
+				sum += data_to_send[i];
+		}
+		data_to_send[_cnt++] = sum;
+		
+		rt_device_write(debug_uart_device, 0,data_to_send, _cnt);    //发送后命令
+}
+
 /*******************************************
 * 函 数 名：ANO_DT_Send_PID
 * 功    能：发送PID数据
@@ -392,6 +433,7 @@ void ANO_DT_Send_Senser(float a_x,float a_y,float a_z,float g_x,float g_y,float 
 						3组PID数据p,i,d
 * 返 回 值：none
 * 注    意：第一组PID数据：group=1;
+						以此类推
 ********************************************/
 void ANO_DT_Send_PID(u8 group,float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d)
 {
@@ -569,7 +611,12 @@ void ANO_SEND_StateMachine(void)
 				ANO_Data_Send_Voltage_Current();
 		}
 		
-		else if(ANO_Cnt == 5
+		else if(ANO_Cnt == 5)
+		{
+				ANO_DT_Send_High(MS5837_Pressure,0);
+		}
+
+		else if(ANO_Cnt == 6
           &&ANO_Send_PID_Flag[0] == 0
             &&ANO_Send_PID_Flag[1] == 0
               &&ANO_Send_PID_Flag[2] == 0
@@ -581,7 +628,7 @@ void ANO_SEND_StateMachine(void)
 		}
 	
 
-		else if(ANO_Cnt == 6 && ANO_Send_PID_Flag[0] == 1){//第1帧 PID
+		else if(ANO_Cnt == 7 && ANO_Send_PID_Flag[0] == 1){//第1帧 PID
 				ANO_DT_Send_PID(1,Total_Controller.Roll_Gyro_Control.Kp, 
 												Total_Controller.Roll_Gyro_Control.Ki,
 												Total_Controller.Roll_Gyro_Control.Kd,
@@ -594,7 +641,7 @@ void ANO_SEND_StateMachine(void)
 				ANO_Send_PID_Flag[0]=0;
 		}
 		
-		else if(ANO_Cnt == 7 && ANO_Send_PID_Flag[1] == 1)//第2帧 PID
+		else if(ANO_Cnt == 8 && ANO_Send_PID_Flag[1] == 1)//第2帧 PID
 		{
 				ANO_DT_Send_PID(2,Total_Controller.Roll_Angle_Control.Kp,
 												Total_Controller.Roll_Angle_Control.Ki,
@@ -608,7 +655,7 @@ void ANO_SEND_StateMachine(void)
 				ANO_Send_PID_Flag[1]=0;
 		}
 		
-		else if(ANO_Cnt == 8 && ANO_Send_PID_Flag[2] == 1)//第3帧 PID
+		else if(ANO_Cnt == 9 && ANO_Send_PID_Flag[2] == 1)//第3帧 PID
 		{
 				ANO_DT_Send_PID(3,Total_Controller.High_Speed_Control.Kp,
 												Total_Controller.High_Speed_Control.Ki,
@@ -622,7 +669,7 @@ void ANO_SEND_StateMachine(void)
 				ANO_Send_PID_Flag[2]=0;
 		}
 		
-		else if(ANO_Cnt == 9 && ANO_Send_PID_Flag[3] == 1)//第4帧 PID
+		else if(ANO_Cnt == 10 && ANO_Send_PID_Flag[3] == 1)//第4帧 PID
 		{
 				ANO_DT_Send_PID(4,
 												0,
@@ -636,7 +683,7 @@ void ANO_SEND_StateMachine(void)
 												0);
 				ANO_Send_PID_Flag[3]=0;
 		}
-		else if(ANO_Cnt == 10 && ANO_Send_PID_Flag[4] == 1)//第5帧 PID
+		else if(ANO_Cnt == 11 && ANO_Send_PID_Flag[4] == 1)//第5帧 PID
 		{
 				ANO_DT_Send_PID(5,
 												0,
@@ -650,7 +697,7 @@ void ANO_SEND_StateMachine(void)
 												0);
 				ANO_Send_PID_Flag[4]=0;
 		}
-		else if(ANO_Cnt == 11 && ANO_Send_PID_Flag[5] == 1)//第6帧 PID
+		else if(ANO_Cnt == 12 && ANO_Send_PID_Flag[5] == 1)//第6帧 PID
 		{
 				ANO_DT_Send_PID(6,  
 												0,

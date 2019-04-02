@@ -31,23 +31,26 @@
 
 #define FILTER_num 20
 
-u8  MS5837_init(void);
-float Get_High(void);
-void Filter_Hight(unsigned int set_hight);
-void MS583703BA_getPressure(void);
+u8 MS5837_Get_PROM(void);
+u8 MS5837_Init(void);
+u32 MS583703BA_getPressure(void);
 void MS583703BA_getTemperature(void);
 void MS583703BA_RESET(void);
+unsigned long MS583703BA_getConversion(uint8_t command);
+
+
+float Get_High(void);
+void Filter_Hight(unsigned int set_hight);
 double MS583703BA_GetDeep(void);
 
 
-unsigned long MS583703BA_getConversion(uint8_t command);
-void MS583703BA_GetTemperature(void);
+
 
 extern int64_t dT;
 extern int64_t D2_Temp;
 extern float MS_TEMP;
-extern uint32_t Pressure;
-extern int32_t  Cal_C[7];
+extern uint32_t MS5837_Pressure;
+extern uint32_t  Cal_C[7];
 
 #endif
 

@@ -81,17 +81,17 @@ void CopeSerial2Data(unsigned char Data)
 void JY901_Convert(struct JY901Type * pArr) 
 {
 
-		pArr->Acc.x  = (float)stcAcc.a[0]/32768*16;
-		pArr->Acc.y  = (float)stcAcc.a[1]/32768*16;
-		pArr->Acc.z  = (float)stcAcc.a[2]/32768*16;
+		pArr->Acc.x  = (float)stcAcc.a[0]/2048;   //32768*16
+		pArr->Acc.y  = (float)stcAcc.a[1]/2048;
+		pArr->Acc.z  = (float)stcAcc.a[2]/2048;
 	
-		pArr->Gyro.x = (float)stcGyro.w[0]/32768*2000;
-		pArr->Gyro.y = (float)stcGyro.w[1]/32768*2000;
-		pArr->Gyro.z = (float)stcGyro.w[2]/32768*2000;
+		pArr->Gyro.x = (float)stcGyro.w[0]/2048*125;  //32768*2000
+		pArr->Gyro.y = (float)stcGyro.w[1]/2048*125;
+		pArr->Gyro.z = (float)stcGyro.w[2]/2048*125;
 	
-		pArr->Euler.Roll = (float)stcAngle.angle[0]/32768*180;
-		pArr->Euler.Pitch = (float)stcAngle.angle[1]/32768*180;
-		pArr->Euler.Yaw = (float)stcAngle.angle[2]/32768*180;
+		pArr->Euler.Roll = (float)stcAngle.angle[0]/8192*45;   //32768*180; 
+		pArr->Euler.Pitch = (float)stcAngle.angle[1]/8192*45;
+		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45;
 	
 		pArr->Mag.x 	= stcMag.h[0];
 		pArr->Mag.y		= stcMag.h[1];
@@ -171,7 +171,7 @@ void get_pressure(void)
 		rt_exit_critical();
 		sprintf(str,"MS_Temp2:%f\n",MS_TEMP);
 		rt_kprintf(str);
-		rt_kprintf("MS_Pressure:%d\n",Pressure);
+		rt_kprintf("MS_Pressure:%d\n",MS5837_Pressure);
 }
 MSH_CMD_EXPORT(get_pressure, get pressure[pa]);
 

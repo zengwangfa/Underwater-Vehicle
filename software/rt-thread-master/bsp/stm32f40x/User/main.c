@@ -10,11 +10,9 @@
 * -----------------------------------------------------------------
  * Change Logs:
  * Date           Author       Notes
- * 2019-02-06     Dwfish       Creat LED / KEY / Buzzer Thread.
- 
+ * 2019-02-06     Dwfish       Creat LED / KEY / Buzzer /PWM /ADC Thread.
  * 2019-02-07     Dwfish       Creat OLED Display Thread.
  * 2019-02-09     Dwfish       Creat Get_Gyroscope Thread. 
- * 2019-02-09     Dwfish       Creat PWM / ADC Thread.  
  * 2019-02-11     Dwfish       Creat some MSHs (get methods) & Improved OLED display methods. 
  * 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH. 
  * 2019-02-16     Dwfish       Creat System self-check methods[events]. 
@@ -54,11 +52,10 @@ int main(void)
 		rt_kprintf("* Change Logs:\n");
 		rt_kprintf("* Date           Author       Notes\n");
 	
-		rt_kprintf("* 2019-02-06     Dwfish       Creat LED / KEY / Buzzer Thread.\n");
+		rt_kprintf("* 2019-02-06     Dwfish       Creat LED / KEY / Buzzer /PWM /ADC Thread.\n");
 		rt_kprintf("* 2019-02-07     Dwfish       Creat Buzzer Thread & Improve LED Thread\n");
 		rt_kprintf("* 2019-02-07     Dwfish       Creat OLED Thread\n");
 		rt_kprintf("* 2019-02-09     Dwfish       Creat Get_Gyroscope Thread.\n");
-		rt_kprintf("* 2019-02-09     Dwfish       Creat PWM / ADC Thread.\n");
 	
 		rt_kprintf("* 2019-02-11     Dwfish       Creat MSHs (some get methods) && Improved OLED Display. \n");
 		rt_kprintf("* 2019-02-13     Dwfish       Creat Can change Servo Motor Mid-Value MSH-methods.  \n");

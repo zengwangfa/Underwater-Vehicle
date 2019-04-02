@@ -2,9 +2,11 @@
 #include "flash.h"
 #include "PID.h"
 #include "drv_ano.h"
+#include "filter.h"
 
+#define abs(x)  (((x)>0)?(x):-(x))
 AllControler Total_Controller; //总控制器PID
-
+Butter_Parameter Control_Device_Div_LPF_Parameter;
 
 
 /*
@@ -16,8 +18,8 @@ AllControler Total_Controller; //总控制器PID
 */
 const float Control_Unit[18][20]=
 {
-  /*                                          Kp      Ki      Kd            */
-  /*1  2  3  4  5  6   7  8    9   10   11    12      13      14     15  16  17   18*/
+  /*                                          Kp      Ki      Kd                     */
+  /*1  2  3  4  5  6   7  8    9   10   11    12      13      14    15  16   17   18*/
    //好盈天行者20A刷固件F330
   {1  ,1 ,0 ,0 ,0 ,0 , 0 ,500 ,0  ,0 , 200,  0.50   ,2.5000  ,1.80  ,0  ,0 , 500,  1 ,  1 ,  1 },//Roll_Gyro;横滚角速度
   {1  ,1 ,0 ,0 ,0 ,0 , 0 ,500 ,0  ,0 , 200,  0.75   ,3.5000  ,1.80  ,0  ,0 , 500,  1 ,  1 ,  1 },//Pitch_Gyro;俯仰角速度
@@ -72,12 +74,191 @@ void Total_PID_Init(void)
 		PID_Init(&Total_Controller.Yaw_Gyro_Control,Yaw_Gyro_Controler);
 		PID_Init(&Total_Controller.High_Position_Control,High_Position_Controler);
 		PID_Init(&Total_Controller.High_Speed_Control,High_Speed_Controler);
+}
 
+float PID_Control(PID_Controler *Controler)
+{
+
+		/*******偏差计算*********************/
+		Controler->Last_Err = Controler->Err;//保存上次偏差
+		Controler->Err = Controler->Expect-Controler->FeedBack;//期望减去反馈得到偏差
+		if(Controler->Err_Limit_Flag == 1)//偏差限幅度标志位
+		{
+			if(Controler->Err >= Controler->Err_Max)   Controler->Err = Controler->Err_Max;
+			if(Controler->Err <= -Controler->Err_Max)  Controler->Err = -Controler->Err_Max;
+		}
+		/*******积分计算*********************/
+		if(Controler->Integrate_Separation_Flag==1)//积分分离标志位
+		{
+			if(abs(Controler->Err) <= Controler->Integrate_Separation_Err)
+					Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
+		}
+		else
+		{
+			Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
+		}
+		/*******积分限幅*********************/
+		if(Controler->Integrate_Limit_Flag == 1)//积分限制幅度标志
+		{
+			if(Controler->Integrate >= Controler->Integrate_Max)
+				Controler->Integrate = Controler->Integrate_Max;
+			if(Controler->Integrate <= -Controler->Integrate_Max)
+				Controler->Integrate = -Controler->Integrate_Max ;
+		}
+		/*******总输出计算*********************/
+		Controler->Last_Control_OutPut = Controler->Control_OutPut;//输出值递推
+		Controler->Control_OutPut = 
+																  Controler->Scale_Kp * Controler->Kp * Controler->Err//比例
+																+ Controler->Integrate//积分
+																+ Controler->Kd * (Controler->Err - Controler->Last_Err);//微分
+		/*******总输出限幅*********************/
+		if(Controler->Control_OutPut >= Controler->Control_OutPut_Limit)
+			Controler->Control_OutPut = Controler->Control_OutPut_Limit;
+		if(Controler->Control_OutPut <= -Controler->Control_OutPut_Limit)
+			Controler->Control_OutPut = -Controler->Control_OutPut_Limit;
+		/*******返回总输出*********************/
+		return Controler->Control_OutPut;
+}
+
+float PID_Control_Yaw(PID_Controler *Controler)
+{
+
+		/*******偏差计算*********************/
+		Controler->Last_Err = Controler->Err;//保存上次偏差
+		Controler->Err = Controler->Expect - Controler->FeedBack;//期望减去反馈得到偏差
+		/***********************偏航角偏差超过+-180处理*****************************/
+		if(Controler->Err < -180)  Controler->Err = Controler->Err + 360;
+		if(Controler->Err > 180)  Controler->Err = Controler->Err - 360;
+		
+		if(Controler->Err_Limit_Flag == 1)//偏差限幅度标志位
+		{
+			if(Controler->Err >= Controler->Err_Max)   Controler->Err =  Controler->Err_Max;
+			if(Controler->Err <= -Controler->Err_Max)  Controler->Err = -Controler->Err_Max;
+		}
+		/*******积分计算*********************/
+		if(Controler->Integrate_Separation_Flag == 1)//积分分离标志位
+		{
+				if(abs(Controler->Err) <= Controler->Integrate_Separation_Err)
+				Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
+		}
+		else{
+				Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
+		}
+		
+		/*******积分限幅*********************/
+		if(Controler->Integrate_Limit_Flag==1)//积分限制幅度标志
+		{
+				if(Controler->Integrate >= Controler->Integrate_Max)
+						Controler->Integrate = Controler->Integrate_Max;
+				if(Controler->Integrate <= -Controler->Integrate_Max)
+						Controler->Integrate = -Controler->Integrate_Max ;
+		}
+		/*******总输出计算*********************/
+		Controler->Last_Control_OutPut = Controler->Control_OutPut;//输出值递推   
+		Controler->Control_OutPut = 
+																	Controler->Scale_Kp * Controler->Kp * Controler->Err//比例  位置式
+																+ Controler->Integrate														//积分
+																+ Controler->Kd * (Controler->Err - Controler->Last_Err);//微分
+		/*******总输出限幅*********************/
+		if(Controler->Control_OutPut >= Controler->Control_OutPut_Limit)
+				Controler->Control_OutPut = Controler->Control_OutPut_Limit;
+		if(Controler->Control_OutPut <= -Controler->Control_OutPut_Limit)
+				Controler->Control_OutPut = -Controler->Control_OutPut_Limit;
+		/*******返回总输出*********************/
+		return Controler->Control_OutPut;
+}
+
+
+float PID_Control_Div_LPF(PID_Controler *Controler)
+{
+		u8  i=0;
+		float tempa,tempb,tempc,max,min;//用于防跳变滤波
+		/*******偏差计算*********************/
+		Controler->Last_Err=Controler->Err;//保存上次偏差
+		Controler->Err=Controler->Expect-Controler->FeedBack;//期望减去反馈得到偏差
+		Controler->Dis_Err=Controler->Err-Controler->Last_Err;//原始微分
+		
+		/******************************************/
+		//均值滤波，保证得到数据不跳变，避免期望阶跃时，微分输出异常
+		tempa=Controler->Pre_Last_Dis_Err_LPF;
+		tempb=Controler->Last_Dis_Err_LPF;
+		tempc=Controler->Dis_Err;
+		max = tempa > tempb ? tempa:tempb;
+		max = max > tempc ? max:tempc;
+		min = tempa < tempb ? tempa:tempb;
+		min = min < tempc ? min:tempc;
+		if(tempa > min && tempa < max)    Controler->Dis_Err = tempa;
+		if(tempb > min  && tempb < max )  Controler->Dis_Err = tempb;
+		if(tempc > min  &&  tempc < max)  Controler->Dis_Err = tempc;
+		Controler->Pre_Last_Dis_Err_LPF = Controler->Last_Dis_Err_LPF;
+		Controler->Last_Dis_Err_LPF = Controler->Dis_Err;
+		/*****************************************/
+		
+		for(i=4;i>0;i--)//数字低通后微分项保存
+		{
+			Controler->Dis_Error_History[i]=Controler->Dis_Error_History[i-1];
+		}
+		Controler->Dis_Error_History[0]=Control_Device_LPF(Controler->Dis_Err,
+																											 &Controler->Control_Device_LPF_Buffer,
+																											 &Control_Device_Div_LPF_Parameter);//巴特沃斯低通后得到的微分项,20hz
+		
+		if(Controler->Err_Limit_Flag==1)//偏差限幅度标志位
+		{
+			if(Controler->Err>=Controler->Err_Max)   Controler->Err= Controler->Err_Max;
+			if(Controler->Err<=-Controler->Err_Max)  Controler->Err=-Controler->Err_Max;
+		}
+		/*******积分计算*********************/
+		if(Controler->Integrate_Separation_Flag==1)//积分分离标志位
+		{
+			if(abs(Controler->Err)<=Controler->Integrate_Separation_Err)
+				Controler->Integrate+=Controler->Scale_Ki*Controler->Ki*Controler->Err;
+		}
+		else
+		{
+				Controler->Integrate+=Controler->Scale_Ki*Controler->Ki*Controler->Err;
+		}
+		/*******积分限幅*********************/
+		if(Controler->Integrate_Limit_Flag==1)//积分限制幅度标志
+		{
+			if(Controler->Integrate>=Controler->Integrate_Max)
+				Controler->Integrate=Controler->Integrate_Max;
+			if(Controler->Integrate<=-Controler->Integrate_Max)
+				Controler->Integrate=-Controler->Integrate_Max ;
+		}
+		/*******总输出计算*********************/
+		Controler->Last_Control_OutPut=Controler->Control_OutPut;//输出值递推
+		Controler->Control_OutPut=Controler->Scale_Kp*Controler->Kp*Controler->Err//比例
+			+Controler->Integrate//积分
+				//+Controler->Kd*Controler->Dis_Err;//微分
+				+Controler->Kd*Controler->Dis_Error_History[0];//微分项来源于巴特沃斯低通滤波器
+		/*******总输出限幅*********************/
+		if(Controler->Control_OutPut>=Controler->Control_OutPut_Limit)
+			Controler->Control_OutPut=Controler->Control_OutPut_Limit;
+		if(Controler->Control_OutPut<=-Controler->Control_OutPut_Limit)
+			Controler->Control_OutPut=-Controler->Control_OutPut_Limit;
+		/*******返回总输出*********************/
+		return Controler->Control_OutPut;
 }
 
 
 
-
-
-
-
+float Control_Device_LPF(float curr_inputer,Butter_BufferData *Buffer,Butter_Parameter *Parameter)
+{
+		/* 加速度计Butterworth滤波 */
+		/* 获取最新x(n) */
+		Buffer->Input_Butter[2]=curr_inputer;
+		/* Butterworth滤波 */
+		Buffer->Output_Butter[2]=
+			Parameter->b[0] * Buffer->Input_Butter[2]
+				+Parameter->b[1] * Buffer->Input_Butter[1]
+		+Parameter->b[2] * Buffer->Input_Butter[0]
+						-Parameter->a[1] * Buffer->Output_Butter[1]
+							-Parameter->a[2] * Buffer->Output_Butter[0];
+		/* x(n) 序列保存 */
+		Buffer->Input_Butter[0]=Buffer->Input_Butter[1];
+		Buffer->Input_Butter[1]=Buffer->Input_Butter[2];
+		/* y(n) 序列保存 */
+		Buffer->Output_Butter[0]=Buffer->Output_Butter[1];
+		Buffer->Output_Butter[1]=Buffer->Output_Butter[2];
+		return (Buffer->Output_Butter[2]);
+}

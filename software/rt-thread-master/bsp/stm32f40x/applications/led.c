@@ -6,7 +6,7 @@
 #include <string.h>
 #include <rtdevice.h>
 #include <elog.h>
-#include "drv_MS5837.h"
+
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
 #define LED_Red 		68 
@@ -27,7 +27,7 @@ u8 Bling_Mode = 0;
 /*----------------------- Function Implement --------------------------------*/
 void led_thread_entry(void *parameter)
 {	
-		static char str[50] = {0};
+
 	  u8 i=0;/*颜色节拍表> 空   红   绿   蓝   青   粉   黄   白 */
 		u8 inputdata[8] = {0x00,0x04,0x02,0x01,0x03,0x05,0x06,0x07};
 		
@@ -38,30 +38,16 @@ void led_thread_entry(void *parameter)
 		LED_OFF(LED_Green);			
 		LED_OFF(LED_Blue);
 				
-		IIC_Init();	         //初始化IIC PC11 PC12口子
-		rt_thread_mdelay(100);
-		MS583703BA_RESET();	 // Reset Device  复位MS5837
-		rt_thread_mdelay(100);
-		rt_kprintf("MS5837_init:%d",MS5837_init());
+
     while (1)
     {			
 				/* FLASH保存 或者 复位PID参数 */
 				Save_Or_Reset_PID_Parameter();  
 				Bling_Working(Bling_Mode);
 				led_blink_task();
-				rt_thread_mdelay(100); //10
+				rt_thread_mdelay(10); //10ms
 			
-							/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-				rt_enter_critical();
 
-				MS583703BA_getTemperature();//获取温度
-				MS583703BA_getPressure();   //获取大气压
-			
-				/* 调度器解锁 */
-				rt_exit_critical();
-//				sprintf(str,"MS_Temp2:%f\n",MS_TEMP);
-//				rt_kprintf(str);
-//				rt_kprintf("MS_Pressure:%d\n",Pressure);
 
     }
 }
@@ -104,7 +90,7 @@ int led_thread_init(void)
     led_tid = rt_thread_create("led",//线程名称
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     25,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 

@@ -4,6 +4,9 @@
 #include <drivers/pin.h>
 #include "init.h"
 
+
+
+
 void Boot_Animation(void);//开机动画
 void menu_define(void); //菜单定义
 void OLED_StatusPage(void);
@@ -36,7 +39,7 @@ typedef enum
 }
 MENU_LIST_e; //菜单枚举
 
-
+extern char *VehicleModeName[2];
 
 
 #endif

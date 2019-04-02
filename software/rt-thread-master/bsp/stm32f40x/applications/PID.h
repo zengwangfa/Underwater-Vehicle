@@ -3,7 +3,7 @@
 
 
 #include "sys.h"
-
+#include "filter.h"
 
 typedef struct
 {
@@ -43,6 +43,7 @@ typedef struct
 		float Dis_Err_LPF;
 		float Last_Dis_Err_LPF;
 		float Pre_Last_Dis_Err_LPF;
+		 Butter_BufferData Control_Device_LPF_Buffer;//控制器低通输入输出缓冲
 		float Scale_Kp;
 		float Scale_Ki;
 		float Scale_Kd;
@@ -81,11 +82,21 @@ typedef enum
 }Controler_Label;
 
 
+typedef struct
+{
+  float Last_Time;
+  float Now_Time;
+  float Time_Delta;
+  u16 Time_Delta_INT;//单位ms
+}Testime;
+
 extern AllControler Total_Controller;
 
 
 void Total_PID_Init(void);
-
+float PID_Control_Yaw(PID_Controler *Controler);
+float PID_Control_Div_LPF(PID_Controler *Controler);
+float Control_Device_LPF(float curr_inputer,Butter_BufferData *Buffer,Butter_Parameter *Parameter);
 
 #endif
 

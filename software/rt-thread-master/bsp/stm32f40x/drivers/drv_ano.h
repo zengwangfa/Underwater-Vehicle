@@ -3,8 +3,7 @@
 
 #include "sys.h"
 #include "PID.h"
-
-#define PID_USE_NUM  	8
+#include "flash.h"
 
 extern Vector3f_pid PID_Parameter[PID_USE_NUM];
 

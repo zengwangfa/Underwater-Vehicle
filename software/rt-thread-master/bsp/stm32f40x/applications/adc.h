@@ -3,6 +3,8 @@
 
 #include "init.h"
 
+extern float  volatge;
+
 
 //≥ı ºªØADC															   
 void  adc_init(void);

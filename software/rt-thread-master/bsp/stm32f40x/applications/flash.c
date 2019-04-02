@@ -12,6 +12,7 @@
 #include "debug.h"
 #include "flash.h"
 #include "drv_ano.h"
+#include "servo.h"
 #include "propeller.h"
 #include "PropellerControl.h"
 
@@ -20,16 +21,8 @@
 
 #define IMP_FLASH_ADDRESS    (0x1000) 	//W25Q128 FLASH的 重要参数起始地址 【第二个扇区】
 
-extern PropellerParamter_Type PropellerParamter;
-extern ServoType RoboticArm,YunTai;
-extern u8 VehicleMode;
-extern u8 debug_tool;
-extern char *VehicleModeName[2];
 
-typedef struct
-{
-		u8 No_0xFF[PID_USE_NUM];
-}PID_Parameter_Flag;
+
 
 PID_Parameter_Flag  PID_Parameter_Read_Flag;
 
@@ -42,7 +35,6 @@ u32 Normal_Parameter[PARAMEMER_MAX_NUMBER_A]={0};
 * 返 回 值：none
 * 注    意：NORMAL_PARAMETER_TABLE 枚举表 中添加自身需要的的参数的 枚举值
 						NORMAL_PARAMETER_TABLE 枚举表 中添加自身需要的的参数
-
 
 ********************************************/
 int Normal_Parameter_Init_With_Flash(void)
@@ -60,26 +52,26 @@ INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash);
 
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash参数自检 若为 0 则为 非正常数据 
 {
-		Parameter_SelfCheck( (u32 *)&VehicleMode,Normal_Parameter[VEHICLE_MODE_A] );
-		Parameter_SelfCheck( (u32 *)&debug_tool,Normal_Parameter[DEBUG_TOOL_A] );
+		Parameter_SelfCheck( (u32 *)&VehicleMode,(u32 *)&Normal_Parameter[VEHICLE_MODE_A] );
+		Parameter_SelfCheck( (u32 *)&debug_tool,(u32 *)&Normal_Parameter[DEBUG_TOOL_A] );
 		
-		Parameter_SelfCheck( (u32 *)&RoboticArm.OpenValue,Normal_Parameter[ROBOTIC_ARM_OPEN_VALUE_A] );
-		Parameter_SelfCheck( (u32 *)&RoboticArm.CloseValue,Normal_Parameter[ROBOTIC_ARM_CLOSE_VALUE_A] );
-		Parameter_SelfCheck( (u32 *)&RoboticArm.CurrentValue,Normal_Parameter[ROBOTIC_ARM_CURRENT_VALUE_A] );
+		Parameter_SelfCheck( (u32 *)&RoboticArm.OpenValue,(u32 *)&Normal_Parameter[ROBOTIC_ARM_OPEN_VALUE_A] );
+		Parameter_SelfCheck( (u32 *)&RoboticArm.CloseValue,(u32 *)&Normal_Parameter[ROBOTIC_ARM_CLOSE_VALUE_A] );
+		Parameter_SelfCheck( (u32 *)&RoboticArm.CurrentValue,(u32 *)&Normal_Parameter[ROBOTIC_ARM_CURRENT_VALUE_A] );
 	
 	
-		Parameter_SelfCheck( (u32 *)&YunTai.OpenValue,Normal_Parameter[YUNTAI_OPEN_VALUE_A] );
-		Parameter_SelfCheck( (u32 *)&YunTai.CloseValue,Normal_Parameter[YUNTAI_CLOSE_VALUE_A] );	
-		Parameter_SelfCheck( (u32 *)&YunTai.CurrentValue,Normal_Parameter[YUNTAI_CURRENT_VALUE_A] );
+		Parameter_SelfCheck( (u32 *)&YunTai.OpenValue,(u32 *)&Normal_Parameter[YUNTAI_OPEN_VALUE_A] );
+		Parameter_SelfCheck( (u32 *)&YunTai.CloseValue,(u32 *)&Normal_Parameter[YUNTAI_CLOSE_VALUE_A] );	
+		Parameter_SelfCheck( (u32 *)&YunTai.CurrentValue,(u32 *)&Normal_Parameter[YUNTAI_CURRENT_VALUE_A] );
 	
-		Parameter_SelfCheck( (u32 *)&PropellerParamter.PowerMed,Normal_Parameter[PropellerParamter_MED_A] );
-		Parameter_SelfCheck( (u32 *)&PropellerParamter.PowerMax,Normal_Parameter[PropellerParamter_MAX_A] );
-		Parameter_SelfCheck( (u32 *)&PropellerParamter.PowerMin,Normal_Parameter[PropellerParamter_MIN_A] );
+		Parameter_SelfCheck( (u32 *)&PropellerParamter.PowerMed,(u32 *)&Normal_Parameter[PropellerParamter_MED_A] );
+		Parameter_SelfCheck( (u32 *)&PropellerParamter.PowerMax,(u32 *)&Normal_Parameter[PropellerParamter_MAX_A] );
+		Parameter_SelfCheck( (u32 *)&PropellerParamter.PowerMin,(u32 *)&Normal_Parameter[PropellerParamter_MIN_A] );
 }
-/* FLASH 更新 所有值*/
+/* FLASH 更新 普通参数 */
 void Flash_Update(void)
 {
-		ef_port_erase(Nor_FLASH_ADDRESS,4);	//【普通参数FLASH】先擦后写  擦除的为一个扇区4096 Byte RT_NULL
+		ef_port_erase(Nor_FLASH_ADDRESS,4);	//【普通参数FLASH】先擦后写  擦除的为一个扇区4096 Byte 
 //------------------------------------------------------------------------------------------//
 		ef_port_write(Nor_FLASH_ADDRESS+4*VEHICLE_MODE_A,(u32 *)(&VehicleMode),4);		
 		ef_port_write(Nor_FLASH_ADDRESS+4*DEBUG_TOOL_A,(u32 *)(&debug_tool),4);		  
@@ -193,11 +185,11 @@ int PID_Paramter_Init_With_Flash()//初始化读取PID参数
 INIT_APP_EXPORT(PID_Paramter_Init_With_Flash);
 
 
-void Parameter_SelfCheck(u32 *RealParameter,u32 TempParameter)
+void Parameter_SelfCheck(u32 *RealParameter,u32 *TempParameter)
 {
-		if( TempParameter != 0 || (int)TempParameter != -1)	//Flash内数据正常
+		if(*TempParameter != 0xFFFFFFFF)	//Flash内数据正常 （不等于0xFFFFFFFF 即不为无效数据）
 		{
-				*RealParameter = TempParameter; //Flash 数据正确则替换为真实变量
+				*RealParameter = *TempParameter; //Flash 数据正确则替换为真实变量
 		}
 }
 

@@ -2,8 +2,14 @@
 #define _FLASH_H_
 
 #define FLIGHT_PARAMETER_TABLE_NUM  60
+#define PID_USE_NUM  	8
 
 #include "sys.h"
+
+typedef struct
+{
+		u8 No_0xFF[PID_USE_NUM];
+}PID_Parameter_Flag;
 
 typedef enum
 {
@@ -57,7 +63,7 @@ typedef enum //FLASH 地址address枚举
 
 }IMPORTANT_PARAMETER_TABLE;
 
-void Parameter_SelfCheck(u32 *RealParameter,u32 TempParameter);
+void Parameter_SelfCheck(u32 *RealParameter,u32 *TempParameter);
 void Normal_Parameter_SelfCheck_With_Flash(void); //Flash参数自检 若为-1 或 0 则为 非正常数据 
 /* FLASH 更新 普通值 */
 void Flash_Update(void);

@@ -14,8 +14,6 @@
 
 
 
-void led_blink_task(void);
-void system_led_blink(u8 InputData);
 
 
 typedef struct
@@ -29,6 +27,12 @@ typedef struct
   u8 Endless_Flag;//无尽模式
 }Bling_Light;
 
+extern Bling_Light Light_1,Light_2,Light_3;
+
+
+
+void led_blink_task(void);
+void system_led_blink(u8 InputData);
 
 void Bling_Set(Bling_Light *Light,
                u32 Continue_time,//持续时间
@@ -38,6 +42,9 @@ void Bling_Set(Bling_Light *Light,
                u32 Port,
                u32 Pin,
 							 u8 Flag);
+							 
+							 
+							 
 void Bling_Process(Bling_Light *Light);
 void Bling_Working(u8 bling_mode);
 							 

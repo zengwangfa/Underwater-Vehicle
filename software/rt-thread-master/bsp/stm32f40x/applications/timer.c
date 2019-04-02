@@ -16,24 +16,17 @@
 
 /*----------------------- Variable Declarations -----------------------------*/
 
-extern struct JY901Type JY901; //JY901真实值结构体
+
 
 u8 ov_frame = 0;
 u8 ov_frame_flag = 0;
 
 /*----------------------- Function Implement --------------------------------*/
 
-static void time_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
+static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 {
 		static int count = 0;
-	  /* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-    rt_enter_critical();
-	
-		JY901_Convert(&JY901);
 
-		/* 调度器解锁 */
-    rt_exit_critical();
-	
 		count ++;
 
 		if(20 == count){	
@@ -57,7 +50,7 @@ int timer1_init(void)
 		static rt_timer_t timer1;
     /* 创建定时器1 */
     timer1 = rt_timer_create("timer1",  /* 定时器名字是 timer1 */
-                        time_out, 		  /* 超时时回调的处理函数 */
+                        timer1_out, 		  /* 超时时回调的处理函数 */
                         RT_NULL, 			  /* 超时函数的入口参数 */
                         5,      			  /* 定时长度，以OS Tick为单位，即5个OS Tick   --> 50MS*/  
                         RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER); /* 周期性定时器 */

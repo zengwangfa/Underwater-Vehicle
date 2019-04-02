@@ -14,7 +14,6 @@
 
 extern struct rt_event init_event;/* ALL_init ÊÂ¼ş¿ØÖÆ¿é */
 float  volatge = 0.0f;
-
 u32 adc_value[10] = {0};
 
 

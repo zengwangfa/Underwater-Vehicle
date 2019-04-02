@@ -4,13 +4,14 @@
 #include "sys.h"
 
 
-extern char *debug_tool_name[3];
-
-
 /* VCAN山外上位机调试 BEGIN */
 void Vcan_Send_Cmd(void *wareaddr, unsigned int waresize);
 void Vcan_Send_Data(void);
 
+
+extern char *debug_tool_name[3];
+
+extern u8 debug_tool ; //山外 / 匿名上位机 调试标志位
 
 #endif
 

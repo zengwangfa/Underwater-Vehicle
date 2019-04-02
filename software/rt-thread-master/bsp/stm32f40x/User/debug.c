@@ -38,14 +38,11 @@ volatile u32 debug_count = 0;
 
 void debug_send_thread_entry(void* parameter)
 {
-	
 		while(1)
 		{
-
 				rt_thread_mdelay(1);
-				if( 1 == debug_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
+				if(1 == debug_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
 				{
-							
 						switch(debug_tool)//选择上位机
 						{
 								case PC_VCAN: Vcan_Send_Data();break;
@@ -104,10 +101,10 @@ void Vcan_Send_Data(void)
 		list[0] = JY901.Euler.Roll; 	//横滚角 Roll 
 		list[1] = JY901.Euler.Pitch;  //俯仰角 Pitch
 		list[2] = JY901.Euler.Yaw; 	  //偏航角 Yaw
-		list[3] = temp;//-(Servo_Duty-Servo_Duty_Md);
-		list[4] = KalmanFilter(&temp);//corner_meet_rn;//edge_start[1];//
+		list[3] = temp;    //CPU温度
+		list[4] = KalmanFilter(&temp);//卡尔曼滤波后的温度
 		list[5] = MS_TEMP;//get_vol();
-		list[6] = Pressure;	//KalmanFilter(&vol)
+		list[6] = MS5837_Pressure;	//KalmanFilter(&vol)
 		list[7] = 0;	//camera_center;
 		
 		Vcan_Send_Cmd(list,sizeof(list));
