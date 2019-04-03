@@ -5,7 +5,7 @@
 
 
 
-
+void Angle_Control(void);
 
 
 

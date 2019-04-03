@@ -1,10 +1,6 @@
 #include "PID.h"
-#include "flash.h"
-#include "PID.h"
-#include "drv_ano.h"
-#include "filter.h"
 
-#define abs(x)  (((x)>0)?(x):-(x))
+
 AllControler Total_Controller; //总控制器PID
 Butter_Parameter Control_Device_Div_LPF_Parameter;
 
@@ -21,18 +17,18 @@ const float Control_Unit[18][20]=
   /*                                          Kp      Ki      Kd                     */
   /*1  2  3  4  5  6   7  8    9   10   11    12      13      14    15  16   17   18*/
    //好盈天行者20A刷固件F330
-  {1  ,1 ,0 ,0 ,0 ,0 , 0 ,500 ,0  ,0 , 200,  0.50   ,2.5000  ,1.80  ,0  ,0 , 500,  1 ,  1 ,  1 },//Roll_Gyro;横滚角速度
-  {1  ,1 ,0 ,0 ,0 ,0 , 0 ,500 ,0  ,0 , 200,  0.75   ,3.5000  ,1.80  ,0  ,0 , 500,  1 ,  1 ,  1 },//Pitch_Gyro;俯仰角速度
-  {1  ,1 ,0 ,0 ,0 ,0 , 0 ,250 ,0  ,0 , 100,  1.00   ,0.5000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Yaw_Gyro;偏航角速度
+  {0  ,1 ,0 ,0 ,0 ,0 , 0 ,500 ,0  ,0 , 200,  0.50   ,2.5000  ,1.80  ,0  ,0 , 500,  1 ,  1 ,  1 },//Roll_Gyro;横滚角速度
+  {0  ,1 ,0 ,0 ,0 ,0 , 0 ,500 ,0  ,0 , 200,  0.75   ,3.5000  ,1.80  ,0  ,0 , 500,  1 ,  1 ,  1 },//Pitch_Gyro;俯仰角速度
+  {0  ,1 ,0 ,0 ,0 ,0 , 0 ,250 ,0  ,0 , 100,  1.00   ,0.5000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Yaw_Gyro;偏航角速度
 		
-	{1  ,1 ,0 ,0 ,0 ,0 , 0 ,30  ,0  ,0 , 80,   4.00   ,0.0000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Pitch_Angle;俯仰角度
-  {1  ,1 ,0 ,0 ,0 ,0 , 0 ,45  ,0  ,0 , 150 , 5.00   ,0.0000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Yaw_Angle;偏航角		
-	{1  ,1 ,0 ,0 ,0 ,0 , 0 ,30  ,0  ,0 , 80,   4.00   ,0.0000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Roll_Angle;横滚角
+	{0  ,1 ,0 ,0 ,0 ,0 , 0 ,30  ,0  ,0 , 80,   4.00   ,0.0000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Pitch_Angle;俯仰角度
+  {0  ,1 ,0 ,0 ,0 ,0 , 0 ,45  ,0  ,0 , 150 , 5.00   ,0.0000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Yaw_Angle;偏航角		
+	{0  ,1 ,0 ,0 ,0 ,0 , 0 ,30  ,0  ,0 , 80,   4.00   ,0.0000  ,0.00  ,0  ,0 , 300,  1 ,  1 ,  1 },//Roll_Angle;横滚角
 		
   /*                                         Kp        Ki      Kd            */
   /*1  2  3  4  5  6   7  8   9   10   11    12        13      14  15  16  17    18*/
-  {1  ,1 ,0 ,0 ,0 ,0 , 0 ,400 ,0  ,0 ,500 ,  5.0     ,0.300   ,0.1  ,0  ,0 ,500,  1 ,  1 ,  1 },//High_Speed;海拔攀升速度
-  {1  ,1 ,0 ,0 ,0 ,0 , 0 ,200 ,0  ,0 ,100 ,  0.5     ,0.000   ,0    ,0  ,0 ,400,  1 ,  1 ,  1 },//High_Position;海拔高度位置
+  {0  ,1 ,0 ,0 ,0 ,0 , 0 ,400 ,0  ,0 ,500 ,  5.0     ,0.300   ,0.1  ,0  ,0 ,500,  1 ,  1 ,  1 },//High_Speed;海拔攀升速度
+  {0  ,1 ,0 ,0 ,0 ,0 , 0 ,200 ,0  ,0 ,100 ,  0.5     ,0.000   ,0    ,0  ,0 ,400,  1 ,  1 ,  1 },//High_Position;海拔高度位置
 
 
 
@@ -41,9 +37,9 @@ const float Control_Unit[18][20]=
 
 void PID_Init(PID_Controler *Controler,Controler_Label Label)
 {
-		Controler->Err_Limit_Flag=(u8)(Control_Unit[Label][0]);//1偏差限幅标志
-		Controler->Integrate_Limit_Flag=(u8)(Control_Unit[Label][1]);//2积分限幅标志
-		Controler->Integrate_Separation_Flag=(u8)(Control_Unit[Label][2]);//3积分分离标志
+		Controler->Err_Limit_Flag=(uint8)(Control_Unit[Label][0]);//1偏差限幅标志
+		Controler->Integrate_Limit_Flag=(uint8)(Control_Unit[Label][1]);//2积分限幅标志
+		Controler->Integrate_Separation_Flag=(uint8)(Control_Unit[Label][2]);//3积分分离标志
 		Controler->Expect=Control_Unit[Label][3];//4期望
 		Controler->FeedBack=Control_Unit[Label][4];//5反馈值
 		Controler->Err=Control_Unit[Label][5];//6偏差
@@ -90,7 +86,7 @@ float PID_Control(PID_Controler *Controler)
 		/*******积分计算*********************/
 		if(Controler->Integrate_Separation_Flag==1)//积分分离标志位
 		{
-			if(abs(Controler->Err) <= Controler->Integrate_Separation_Err)
+			if(my_abs(Controler->Err) <= Controler->Integrate_Separation_Err)
 					Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
 		}
 		else
@@ -117,6 +113,7 @@ float PID_Control(PID_Controler *Controler)
 		if(Controler->Control_OutPut <= -Controler->Control_OutPut_Limit)
 			Controler->Control_OutPut = -Controler->Control_OutPut_Limit;
 		/*******返回总输出*********************/
+		
 		return Controler->Control_OutPut;
 }
 
@@ -125,10 +122,10 @@ float PID_Control_Yaw(PID_Controler *Controler)
 
 		/*******偏差计算*********************/
 		Controler->Last_Err = Controler->Err;//保存上次偏差
-		Controler->Err = Controler->Expect - Controler->FeedBack;//期望减去反馈得到偏差
+		Controler->Err = Controler->Expect - Controler->FeedBack;//期望减去反馈得到偏差  FeedBack
 		/***********************偏航角偏差超过+-180处理*****************************/
-		if(Controler->Err < -180)  Controler->Err = Controler->Err + 360;
-		if(Controler->Err > 180)  Controler->Err = Controler->Err - 360;
+		//if(Controler->Err < -180)  Controler->Err = Controler->Err + 360;
+		//if(Controler->Err > 180)  Controler->Err = Controler->Err - 360;
 		
 		if(Controler->Err_Limit_Flag == 1)//偏差限幅度标志位
 		{
@@ -138,7 +135,7 @@ float PID_Control_Yaw(PID_Controler *Controler)
 		/*******积分计算*********************/
 		if(Controler->Integrate_Separation_Flag == 1)//积分分离标志位
 		{
-				if(abs(Controler->Err) <= Controler->Integrate_Separation_Err)
+				if(my_abs(Controler->Err) <= Controler->Integrate_Separation_Err)
 				Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
 		}
 		else{
@@ -171,7 +168,7 @@ float PID_Control_Yaw(PID_Controler *Controler)
 
 float PID_Control_Div_LPF(PID_Controler *Controler)
 {
-		u8  i=0;
+		uint8  i=0;
 		float tempa,tempb,tempc,max,min;//用于防跳变滤波
 		/*******偏差计算*********************/
 		Controler->Last_Err=Controler->Err;//保存上次偏差
@@ -210,7 +207,7 @@ float PID_Control_Div_LPF(PID_Controler *Controler)
 		/*******积分计算*********************/
 		if(Controler->Integrate_Separation_Flag==1)//积分分离标志位
 		{
-			if(abs(Controler->Err)<=Controler->Integrate_Separation_Err)
+			if(my_abs(Controler->Err)<=Controler->Integrate_Separation_Err)
 				Controler->Integrate+=Controler->Scale_Ki*Controler->Ki*Controler->Err;
 		}
 		else

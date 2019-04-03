@@ -1,9 +1,11 @@
-#include "init.h"
+
 #include "servo.h"
 #include "propeller.h"
 #include "flash.h"
-#include <rtdevice.h>
+#include <rtthread.h>
 #include <elog.h>
+#include <stdlib.h>
+#include "sys.h"
 
 #define RoboticArm_MedValue  1500
 #define YunTai_MedValue  		 1500

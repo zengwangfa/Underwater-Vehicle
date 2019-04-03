@@ -1,15 +1,15 @@
 #define LOG_TAG    "camera"
 
-#include "init.h"
 #include "led.h"
 #include "key.h"
 #include "drv_ov2640.h" 
 #include "drv_dcmi.h" 
-#include <rtdevice.h>
+#include <rtthread.h>
 #include <elog.h>
 #include <string.h>
-#include <rtdevice.h>
+#include <stdlib.h>
 #include <elog.h>
+
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define jpeg_buf_size 20 * 1024   //31*1024  定义JPEG数据缓存jpeg_buf的大小(*4字节)

@@ -1,23 +1,39 @@
 #include "Control.h"
 #include "PID.h"
 #include "gyroscope.h"
+#include <rtthread.h>
+#include <stdlib.h>
 
-short int Yaw_Control = 0;//Yaw——y轴偏航
+float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
+float Yaw = 0.0f;
+
+/* 原先
+ *  N—— 0°/-0°
+ *  W—— 90°
+ *  S—— 180°/-180
+ *  E—— -90°
+*/
+/** 规定   逆时针
+ *  N—— 0°
+ *  W—— 90°
+ *  S—— 180°
+ *  E—— 270°
+ */
+
 
 void Angle_Control(void)
 {
-		if(0 == Yaw_Control)
-		{
-				Total_Controller.Yaw_Angle_Control.FeedBack = JY901.Euler.Yaw;//偏航角反馈
-				PID_Control_Yaw(&Total_Controller.Yaw_Angle_Control);//偏航角度控制
-				//偏航角速度环期望，来源于偏航角度控制器输出
-				Total_Controller.Yaw_Gyro_Control.Expect = Total_Controller.Yaw_Angle_Control.Control_OutPut;
-		}
-	  else//波动偏航方向杆后，只进行内环角速度控制
-		{
-				Total_Controller.Yaw_Angle_Control.Expect = 0;//偏航角期望给0,不进行角度控制
-				Total_Controller.Yaw_Gyro_Control.Expect = Yaw_Control;//偏航角速度环期望，直接来源于遥控器打杆量
-		}
+	
+		if(JY901.Euler.Yaw < 0) Yaw = JY901.Euler.Yaw + 360;//角度补偿
+
+		Total_Controller.Yaw_Angle_Control.Expect = Yaw_Control;//偏航角速度环期望，直接来源于遥控器打杆量
+		Total_Controller.Yaw_Angle_Control.FeedBack = Yaw;//偏航角反馈
+		PID_Control_Yaw(&Total_Controller.Yaw_Angle_Control);//偏航角度控制
+	
+
+		//偏航角速度环期望，来源于偏航角度控制器输出
+		//Total_Controller.Yaw_Gyro_Control.Expect = Total_Controller.Yaw_Angle_Control.Control_OutPut;
+	
 }
 
 
@@ -41,4 +57,23 @@ void Gyro_Control()//角速度环
 //  
 
 }
+
+/*【机械臂】舵机 修改 【正向最大值】MSH方法 */
+static int yaw(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        rt_kprintf("Error! Proper Usage: RoboticArm_openvalue_set 1600");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+
+		Yaw_Control = atoi(argv[1]);
+
+		
+
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(yaw,ag: yaw 100);
 

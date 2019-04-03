@@ -1,11 +1,12 @@
 #define LOG_TAG    "led"
 
-#include "init.h"
+#include "led.h"
+#include "key.h"
 #include "flash.h"
 #include "drv_ano.h"
 #include <string.h>
-#include <rtdevice.h>
 #include <elog.h>
+#include <drivers/pin.h>
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
@@ -19,17 +20,17 @@
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
 extern struct rt_event init_event;
-extern rt_uint8_t VehicleStatus;
+extern uint8 VehicleStatus;
 
 Bling_Light Light_1,Light_2,Light_3;
 
-u8 Bling_Mode = 0;
+uint8 Bling_Mode = 0;
 /*----------------------- Function Implement --------------------------------*/
 void led_thread_entry(void *parameter)
 {	
 
-	  u8 i=0;/*颜色节拍表> 空   红   绿   蓝   青   粉   黄   白 */
-		u8 inputdata[8] = {0x00,0x04,0x02,0x01,0x03,0x05,0x06,0x07};
+	  uint8 i=0;/*颜色节拍表> 空   红   绿   蓝   青   粉   黄   白 */
+		uint8 inputdata[8] = {0x00,0x04,0x02,0x01,0x03,0x05,0x06,0x07};
 		
 		while(i <= 7){
 				system_led_blink(inputdata[i++]);}
@@ -66,7 +67,7 @@ void led_blink_task(void)
 	
 
 /* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白] */
-void system_led_blink(u8 InputData)
+void system_led_blink(uint8 InputData)
 {
     if(InputData & 0x04){	
 						LED_ON(LED_Red); }
@@ -125,13 +126,13 @@ uint16_t Pin
 备注:	程序初始化后、始终运行
 ****************************************************/
 void Bling_Set(Bling_Light *Light,
-               u32 Continue_time,//持续时间
-               u32 Period,//周期100ms~1000ms
+               uint32 Continue_time,//持续时间
+               uint32 Period,//周期100ms~1000ms
                float Percent,//0~100%
-               u32  Cnt,
-               u32 Port,
-               u32 Pin,
-               u8 Flag)
+               uint32  Cnt,
+               uint32 Port,
+               uint32 Pin,
+               uint8 Flag)
 {
 		Light->Bling_Contiune_Time=(Continue_time/5);//持续时间
 		Light->Bling_Period=Period;//周期
@@ -180,7 +181,7 @@ void Bling_Process(Bling_Light *Light)//闪烁运行线程
 出口:	无
 备注:	程序初始化后、始终运行
 ****************************************************/
-void Bling_Working(u8 bling_mode)
+void Bling_Working(uint8 bling_mode)
 {
 		if(0 == bling_mode)
 		{

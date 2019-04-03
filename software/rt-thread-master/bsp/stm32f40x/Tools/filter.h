@@ -1,5 +1,7 @@
-#ifndef _FILTER_H_
-#define _FILTER_H_
+#ifndef __FILTER_H_
+#define __FILTER_H_
+
+
 
 typedef struct
 {

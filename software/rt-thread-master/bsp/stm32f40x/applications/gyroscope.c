@@ -1,12 +1,12 @@
 #define LOG_TAG    "gyro"
 
-#include "init.h"
 #include <string.h>
-#include "board.h"
-#include <rthw.h>
-#include <rtdevice.h>
+#include <stdio.h>
+#include <rtthread.h>
 #include <elog.h>
+#include "gyroscope.h"
 #include "drv_MS5837.h"
+
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define PACKET_LENGTH      11    //数据包长度

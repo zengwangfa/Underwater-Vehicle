@@ -1,15 +1,14 @@
 #define LOG_TAG    "timer"
 
-#include "init.h"
+
 #include <string.h>
-#include "board.h"
+
 #include "timer.h"
-#include "debug.h"
 #include "flash.h"
-#include <rtdevice.h>
+#include <rtthread.h>
 #include <elog.h>
 #include "drv_MS5837.h"
-#include "drv_i2c.h"
+#include  "Control.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 
@@ -18,8 +17,8 @@
 
 
 
-u8 ov_frame = 0;
-u8 ov_frame_flag = 0;
+uint8 ov_frame = 0;
+uint8 ov_frame_flag = 0;
 
 /*----------------------- Function Implement --------------------------------*/
 
@@ -29,9 +28,11 @@ static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 
 		count ++;
 
-		if(20 == count){	
+	
+	
+		Angle_Control();
+		if(20 == count){	//1s
 				
-
 				if(1 == ov_frame_flag)
 				{
 						rt_kprintf("OV Frame:%d\n",ov_frame);

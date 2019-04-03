@@ -1,10 +1,7 @@
 #ifndef __MS5837_H_
 #define __MS5837_H_
 
-
-#include "sys.h"
-#include "drv_i2c.h"
-
+#include "DataType.h"
 
 
 #define MS583703BA_ADC_RD          0x00
@@ -31,12 +28,12 @@
 
 #define FILTER_num 20
 
-u8 MS5837_Get_PROM(void);
-u8 MS5837_Init(void);
-u32 MS583703BA_getPressure(void);
+uint8 MS5837_Get_PROM(void);
+uint8 MS5837_Init(void);
+uint32 MS583703BA_getPressure(void);
 void MS583703BA_getTemperature(void);
 void MS583703BA_RESET(void);
-unsigned long MS583703BA_getConversion(uint8_t command);
+uint64 MS583703BA_getConversion(uint8 command);
 
 
 float Get_High(void);
@@ -44,13 +41,11 @@ void Filter_Hight(unsigned int set_hight);
 double MS583703BA_GetDeep(void);
 
 
-
-
-extern int64_t dT;
-extern int64_t D2_Temp;
-extern float MS_TEMP;
-extern uint32_t MS5837_Pressure;
-extern uint32_t  Cal_C[7];
+extern int64  dT;
+extern int64  D2_Temp;
+extern float  MS_TEMP;
+extern uint32 MS5837_Pressure;
+extern uint32 Cal_C[7];
 
 #endif
 

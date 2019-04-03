@@ -6,22 +6,19 @@
  *      Notes:  更新固件 Update 方法
  */
 #define LOG_TAG    "cmd"
-
 #include "init.h"
-#include <rthw.h>
 #include <rtthread.h>
 #include <shell.h>
 #include <finsh.h>
 #include <elog.h>
 
 #include <easyflash.h>
-#include <time.h>
 #include <ymodem.h>
-#include <board.h>
 #include "flash.h"
 
 extern char *VehicleModeName[2];
 extern u8 VehicleMode;
+
 static size_t update_file_total_size, update_file_cur_size;
 static uint32_t crc32_checksum = 0;
 static enum rym_code ymodem_on_begin(struct rym_ctx *ctx, rt_uint8_t *buf, rt_size_t len) {

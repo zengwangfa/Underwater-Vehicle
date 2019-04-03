@@ -1,7 +1,8 @@
 #ifndef __DRV_OLED_H
 #define __DRV_OLED_H			  	 
-#include "sys.h"
-#include "stdlib.h"	    
+#include "stdlib.h"	  
+#include "DataType.h"
+
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //ALIENTEK STM32F407开发板
@@ -25,23 +26,23 @@
 #define OLED_CMD  	0		//写命令
 #define OLED_DATA 	1		//写数据
 //OLED控制用函数
-void OLED_WR_Byte(u8 dat,u8 cmd);	    
+void OLED_WR_Byte(uint8 dat,uint8 cmd);	    
 void OLED_Display_On(void);
 void OLED_Display_Off(void);
 void OLED_Refresh_Gram(void);		   
 							   		    
 void OLED_Init(void);
 void OLED_Clear(void);
-void OLED_ShowMyChar(u8 x,u8 y,u8 chr,u8 size,u8 mode);
+void OLED_ShowMyChar(uint8 x,uint8 y,uint8 chr,uint8 size,uint8 mode);
 
 void Half_OLED_Clear(void) ;
-void OLED_DrawPoint(u8 x,u8 y,u8 t);
-void OLED_Fill(u8 x1,u8 y1,u8 x2,u8 y2,u8 dot);
-void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode);
-void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size);
-void OLED_ShowString(u8 x,u8 y,const u8 *p,u8 size);	
+void OLED_DrawPoint(uint8 x,uint8 y,uint8 t);
+void OLED_Fill(uint8 x1,uint8 y1,uint8 x2,uint8 y2,uint8 dot);
+void OLED_ShowChar(uint8 x,uint8 y,uint8 chr,uint8 size,uint8 mode);
+void OLED_ShowNum(uint8 x,uint8 y,uint32 num,uint8 len,uint8 size);
+void OLED_ShowString(uint8 x,uint8 y,const uint8 *p,uint8 size);	
 
-void OLED_DrawBMP(u8 x,u8 y,u8 chr,u8 size,u8 mode);
+void OLED_DrawBMP(uint8 x,uint8 y,uint8 chr,uint8 size,uint8 mode);
 #endif  
 	 
 

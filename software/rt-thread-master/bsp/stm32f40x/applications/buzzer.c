@@ -1,8 +1,9 @@
 #define LOG_TAG    "buzzer"
 
-#include "init.h"
-#include <rtdevice.h>
+#include "buzzer.h"
+#include <rtthread.h>
 #include <elog.h>
+#include <drivers/pin.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define Buzzer_PIN 	59   //PE8
@@ -14,9 +15,9 @@ extern struct rt_event init_event;
 
 struct 
 {
-		rt_uint8_t time;
-		rt_uint8_t count;
-		rt_uint8_t number;	
+		uint8 time;
+		uint8 count;
+		uint8 number;	
 }buzzer;
 
 

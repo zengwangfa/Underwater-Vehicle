@@ -1,7 +1,9 @@
 #define LOG_TAG    "key"
 
-#include "init.h" 
-#include <rtdevice.h>
+#include "key.h"
+#include "buzzer.h"
+#include "oled.h"
+#include <drivers/pin.h>
 #include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
@@ -18,7 +20,7 @@
 extern struct rt_event init_event;
 extern OledType oled;
 
-u8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
+uint8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
 
 /*----------------------- Function Implement --------------------------------*/
 
@@ -39,9 +41,9 @@ void key_thread_entry(void* parameter)// --- KEY   BOMA ---
 
 
 /* get 2Î»²¦ÂëÖµ */
-u8 boma_value_get(void)
+uint8 boma_value_get(void)
 {
-    u8 val; //reserve(´æ´¢)
+    uint8 val; //reserve(´æ´¢)
     
 		val = boma1_read *2 + boma2_read *1 + 1; //µÃµ½ËÄÖÖ×´Ì¬
     return val;

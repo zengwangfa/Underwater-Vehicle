@@ -1,12 +1,13 @@
 #define LOG_TAG    "uart"
 
-#include "init.h"
-#include <rthw.h>
+
+#include "gyroscope.h"
+#include <elog.h>
 #include <string.h>
+#include <rtthread.h>
 #include "drv_ano.h"
 #include "wifi.h"
-#include <rtdevice.h>
-#include <elog.h>
+
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define GYRO_UART_NAME        "uart2"
@@ -36,13 +37,13 @@ struct rt_semaphore gyro_rx_sem;/* 用于接收消息的信号量 */
 struct rt_semaphore debug_rx_sem;/* 用于接收消息的信号量 */
 struct rt_semaphore wifi_rx_sem;/* 用于接收消息的信号量 */
 
-u8 gyroscope_save_array[5] 		={0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
-u8 gyroscope_package_array[5] ={0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据包【0x1F 0x00 为 <时间> <加速度> <角速度> <角度> <磁场>】
-u8 gyroscope_rate_array[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
-u8 gyroscope_led_array[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
-u8 gyroscope_baud_array[5] 		={0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
+uint8 gyroscope_save_array[5] 		={0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
+uint8 gyroscope_package_array[5] ={0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据包【0x1F 0x00 为 <时间> <加速度> <角速度> <角度> <磁场>】
+uint8 gyroscope_rate_array[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
+uint8 gyroscope_led_array[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
+uint8 gyroscope_baud_array[5] 		={0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
 
-u8 debug_startup_flag = 1; //debug串口 初始化完成标志位
+uint8 debug_startup_flag = 1; //debug串口 初始化完成标志位
 /*----------------------- Function Implement --------------------------------*/
 
 /* 接收数据回调函数 */
@@ -117,7 +118,7 @@ MSH_CMD_EXPORT(gyroscope_save,gyroscope_save);
 /* 设置 九轴模块 加速度校准 */
 void gyroscope_Acc_calibration_enter(void)
 {
-			u8 Acc_calibration_enter[5]={0xFF,0xAA,0x01,0x01,0x00};
+			uint8 Acc_calibration_enter[5]={0xFF,0xAA,0x01,0x01,0x00};
 			rt_device_write(gyro_uart_device, 0, Acc_calibration_enter, 5);   //ON LED
 			log_i("Acc_calibrationing... ");
 			rt_thread_mdelay(500);
@@ -128,7 +129,7 @@ MSH_CMD_EXPORT(gyroscope_Acc_calibration_enter,gyroscope_Acc_calibration_enter);
 /* 设置 九轴模块 磁场 校准 */
 void gyroscope_Mag_calibration_enter(void)
 {
-			u8 Mag_calibration_enter[5]={0xFF,0xAA,0x01,0x02,0x00};
+			uint8 Mag_calibration_enter[5]={0xFF,0xAA,0x01,0x02,0x00};
 			rt_device_write(gyro_uart_device, 0, Mag_calibration_enter, 5);   //进入磁场校准
 			log_i("Mag_calibrationing... ");
 			rt_thread_mdelay(2000);
@@ -142,7 +143,7 @@ MSH_CMD_EXPORT(gyroscope_Mag_calibration_enter,gyroscope_Mag_calibration_enter);
 /* 退出 九轴模块 磁场校准 */
 void gyroscope_Mag_calibration_exit(void)
 {
-			u8 Mag_calibration_exit[5]={0xFF,0xAA,0x01,0x00,0x00};       
+			uint8 Mag_calibration_exit[5]={0xFF,0xAA,0x01,0x00,0x00};       
 			rt_device_write(gyro_uart_device, 0, Mag_calibration_exit, 5);   //退出磁场校准
 			rt_thread_mdelay(100);
 			gyroscope_save();                                           //保配置

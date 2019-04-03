@@ -1,8 +1,8 @@
 #include "init.h"
 #include "drv_MS5837.h"
+#include "drv_i2c.h"
 #include <math.h>
-
- 
+#include <rtthread.h>
 /*
 C1 压力灵敏度 SENS|T1
 C2  压力补偿  OFF|T1
@@ -22,23 +22,19 @@ MS_TEMP 实际温度
 
 float MS5837_Pressure_Init = 0.0f;
 
-uint32_t  Cal_C[7];	        //用于存放PROM中的6组数据1-6
-int64_t dT;
-float MS_TEMP;
-int64_t D1_Pres,D2_Temp;	// 数字压力值,数字温度值
+uint32 Cal_C[7];	        //用于存放PROM中的6组数据1-6
+int64  dT;
+float  MS_TEMP;
+int64  D1_Pres,D2_Temp;	// 数字压力值,数字温度值
 
 
 /*
 OFF 实际温度补偿
 SENS 实际温度灵敏度
 */
-uint64_t OFf,SENS;
-uint32_t MS5837_Pressure,Pressure_old,qqp,Wdodo;				//大气压
-uint32_t TEMP2,T2,OFF2,SENS2,OFF3,SENS3;	//温度校验值
-uint32_t Pres_BUFFER[20];     //数据组
-uint32_t Temp_BUFFER[10];     //数据组
-uint32_t depth;
-
+uint64  OFf,SENS;
+uint32  MS5837_Pressure,Pressure_old,qqp,Wdodo;				//大气压
+uint32  TEMP2,T2,OFF2,SENS2,OFF3,SENS3;	//温度校验值
 
 
 
@@ -62,11 +58,11 @@ void MS583703BA_RESET(void)
   * @param  MS5837 PROM标定参数数组
   * @retval 返回CRC校验码
   */
-unsigned char MS5837_CRC4(unsigned int n_prom[]) // n_prom defined as 8x unsigned int (n_prom[8])
+uint8 MS5837_CRC4(uint32 n_prom[]) // n_prom defined as 8x unsigned int (n_prom[8])
 {
-		int cnt; // simple counter
-		unsigned int n_rem=0; // crc remainder
-		unsigned char n_bit;
+		int32  cnt; // simple counter
+		uint32 n_rem=0; // crc remainder
+		uint8  n_bit;
 		n_prom[0]=((n_prom[0]) & 0x0FFF); // CRC byte is replaced by 0
 		n_prom[7]=0; // Subsidiary value, set to 0
 		for (cnt = 0; cnt < 16; cnt++) // operation is performed on bytes
@@ -89,10 +85,10 @@ unsigned char MS5837_CRC4(unsigned int n_prom[]) // n_prom defined as 8x unsigne
   * @param  None
   * @retval 返回MS5837_Get_PROM(出厂标定参数)是否成功标志：1成功，0失败
   */
-u8 MS5837_Get_PROM(void)
+uint8 MS5837_Get_PROM(void)
 {	 
 		u8  inth,intl,i;
-		u8 CRC_Check = 0;
+		u8  CRC_Check = 0;
 		for (i=0;i<=6;i++) 
 		{
 				IIC_Start();
@@ -120,8 +116,7 @@ u8 MS5837_Get_PROM(void)
 		rt_kprintf("CRC:%d   CRC_Check:%d\r\n",MS5837_CRC4(Cal_C),CRC_Check);
 
 		if(CRC_Check == MS5837_CRC4(Cal_C)){
-				OFF_=(uint32_t)Cal_C[2]*65536+((uint32_t)Cal_C[4]*dT)/128;
-				SENS=(uint32_t)Cal_C[1]*32768+((uint32_t)Cal_C[3]*dT)/256;
+
 				return 1;
 		}
 		else {return 0;}
@@ -134,9 +129,10 @@ u8 MS5837_Get_PROM(void)
   * @param  None
   * @retval 初始化是否成功标志：1成功，0失败
   */
-u8 MS5837_Init(void){
+uint8 MS5837_Init(void){
 		
-		u8 MS5837_Init_Flag = 0;
+		uint8 MS5837_Init_Flag = 0;
+	
 		IIC_Init();	         //初始化IIC PD0 PD1
 		rt_thread_mdelay(100);
 		MS583703BA_RESET();	 // Reset Device  复位MS5837
@@ -148,6 +144,7 @@ u8 MS5837_Init(void){
 		}
 		else {
 				MS5837_Init_Flag = 0; //初始化失败
+				return 0;
 				//rt_kprintf("MS5837_Init Failed!\r\n");
 		}
 		rt_thread_mdelay(10);
@@ -162,10 +159,10 @@ u8 MS5837_Init(void){
   * @param  命令值(温度、气压)
   * @retval 返回MS5837初始化是否成功标志：1成功，0失败
   */
-unsigned long MS583703BA_getConversion(uint8_t command)
+uint64 MS583703BA_getConversion(uint8_t command)
 {
-		unsigned long conversion = 0;
-		u8 temp[3];
+		uint64 conversion = 0;
+		uint8 temp[3];
 
 		IIC_Start();
 		IIC_Send_Byte(MS583703BA_SlaveAddress); 		//写地址
@@ -205,8 +202,8 @@ void MS583703BA_getTemperature(void)
 {
 	D2_Temp = MS583703BA_getConversion(MS583703BA_D2_OSR_2048);//4096  出现周期性尖峰(300+)     
 	
-	dT=D2_Temp - (((uint32_t)Cal_C[5])*256);
-	MS_TEMP=2000+dT*((uint32_t)Cal_C[6])/8388608;  //问题在于此处没有出现负号
+	dT=D2_Temp - (((uint32)Cal_C[5])*256);
+	MS_TEMP=2000+dT*((uint32)Cal_C[6])/8388608;  //问题在于此处没有出现负号
 }
 
 /**
@@ -217,7 +214,8 @@ void MS583703BA_getTemperature(void)
 u32 MS583703BA_getPressure(void)
 {
 		D1_Pres= MS583703BA_getConversion(MS583703BA_D1_OSR_4096);//2048
-		
+		OFF_=(uint32_t)Cal_C[2]*65536+((uint32_t)Cal_C[4]*dT)/128;
+		SENS=(uint32_t)Cal_C[1]*32768+((uint32_t)Cal_C[3]*dT)/256;
 
 		if(MS_TEMP<2000)  // LOW Temperature
 		{

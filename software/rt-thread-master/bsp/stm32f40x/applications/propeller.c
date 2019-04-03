@@ -1,6 +1,8 @@
-#include "init.h"
+
 #include "propeller.h"
 #include <elog.h>
+#include <rtthread.h>
+#include "sys.h"
 
 #define PropellerPower_Med  1500
 #define PropellerPower_Min  1000

@@ -52,7 +52,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\build\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -527,6 +527,11 @@
               <FileType>1</FileType>
               <FilePath>.\User\PropellerControl.c</FilePath>
             </File>
+            <File>
+              <FileName>Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Control.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -611,6 +616,11 @@
               <FileName>propeller.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\propeller.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\sensor.c</FilePath>
             </File>
           </Files>
         </Group>

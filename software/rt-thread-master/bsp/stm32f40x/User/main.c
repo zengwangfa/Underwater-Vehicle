@@ -26,11 +26,9 @@
 ******************************************************************************/
 #define LOG_TAG    "main"
 
-#include <rthw.h>
+
 #include <rtthread.h>
-#include "init.h"
-#include "flash.h"
-#include "drv_ano.h"
+#include "gyroscope.h"
 
 /**
  * @addtogroup STM32

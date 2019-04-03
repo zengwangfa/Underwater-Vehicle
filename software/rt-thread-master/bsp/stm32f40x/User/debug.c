@@ -1,15 +1,14 @@
 #define LOG_TAG    "debug"
 
-#include "init.h"
+#include <rtthread.h>
 #include <string.h>
+#include <elog.h>
 #include "PID.h"
 #include "debug.h"
-#include "flash.h"
 #include "drv_ano.h"
 #include "filter.h"
 #include "drv_cpu_temp.h"
-#include <rtdevice.h>
-#include <elog.h>
+#include "gyroscope.h"
 #include "drv_MS5837.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
@@ -18,7 +17,7 @@
 /*----------------------- Variable Declarations. -----------------------------*/
 
 extern rt_device_t debug_uart_device;	
-extern u8 debug_startup_flag;
+extern uint8 debug_startup_flag;
 extern float  volatge;
 enum 
 {
@@ -31,8 +30,8 @@ enum
 
 char *debug_tool_name[3]={"NULL","VCAN","ANO"};
 
-u8 debug_tool = PC_ANO; //山外 / 匿名上位机 调试标志位
-volatile u32 debug_count = 0;
+uint8 debug_tool = PC_ANO; //山外 / 匿名上位机 调试标志位
+volatile uint32 debug_count = 0;
 
 /*-----------------------Debug Thread Begin-----------------------------*/
 
@@ -82,11 +81,11 @@ INIT_APP_EXPORT(Debug_thread_init);
 void Vcan_Send_Cmd(void *wareaddr, unsigned int waresize)
 {
 		#define CMD_WARE     3
-    u8 cmdf[2] = {CMD_WARE, ~CMD_WARE};    //串口调试 使用的前命令
-    u8 cmdr[2] = {~CMD_WARE, CMD_WARE};    //串口调试 使用的后命令
+    uint8 cmdf[2] = {CMD_WARE, ~CMD_WARE};    //串口调试 使用的前命令
+    uint8 cmdr[2] = {~CMD_WARE, CMD_WARE};    //串口调试 使用的后命令
 
     rt_device_write(debug_uart_device, 0,cmdf, 2);    //先发送前命令
-    rt_device_write(debug_uart_device, 0,(u8 *)wareaddr, waresize);    //发送数据
+    rt_device_write(debug_uart_device, 0,(uint8 *)wareaddr, waresize);    //发送数据
     rt_device_write(debug_uart_device, 0,cmdr, 2);    //发送后命令
 }
 

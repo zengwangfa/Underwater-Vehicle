@@ -2,6 +2,6 @@
 #define __TIMER_H_
 
  
- 
+#include "DataType.h"
  
 #endif

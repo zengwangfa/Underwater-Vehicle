@@ -1,15 +1,15 @@
 #ifndef __PROPELLER_H
 #define __PROPELLER_H
 
-#include "sys.h"
+#include "DataType.h"
 
 
 typedef struct //推进器中值、最大值、最小值
 {
-		u16 PowerMed;
-		u16 PowerMax;		
-		u16 PowerMin;	
-	  u16 PowerDeadband;	//死区值
+		uint16 PowerMed;
+		uint16 PowerMax;		
+		uint16 PowerMin;	
+	  uint16 PowerDeadband;	//死区值
 	
 }PropellerParamter_Type;//推进器参数结构体
 
@@ -28,14 +28,14 @@ typedef struct//调试时各个推进器的偏差量
 
 typedef struct//调试时各个推进器的偏差量 
 {
-	  u16 Power; //基础推力
+	  uint16 Power; //基础推力
 	
-		u16 leftUp;
-		u16 rightUp;
-		u16 leftDown;
-		u16 rightDown;
-		u16 leftMiddle;
-		u16 rightMiddle;
+		uint16 leftUp;
+		uint16 rightUp;
+		uint16 leftDown;
+		uint16 rightDown;
+		uint16 leftMiddle;
+		uint16 rightMiddle;
 
 }PropellerPower_Type;//推进器偏移值
 

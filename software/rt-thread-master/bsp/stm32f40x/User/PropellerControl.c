@@ -1,21 +1,12 @@
-#include "init.h"
+
 #include <math.h>
 #include "propeller.h"
 #include "PropellerControl.h"
 
-extern PropellerParamter_Type PropellerParamter;//初始化推进器参数值
 
-extern ActionTypeEnum         Posture_Flag; //机器人姿态标志位
-extern PropellerPower_Type    PropellerPower; //推进器推理控制器
-extern PropellerError_Type    PropellerError; //各个推进器偏差值
-extern u8 VehicleMode;
 
-u8 turnAngle = 45;    //转向角度
+uint8 turnAngle = 45;    //转向角度
 
-unsigned int myabs(int absValue)
-{
-		return absValue > 0 ? absValue : -absValue;
-}
 
 
 
@@ -42,7 +33,7 @@ double askResultant(double angle,double forceSize)
 * 注    意：最大值为Propeller.PowerMax 初始化为1800
 						最小值为Propeller.PowerMin 初始化为1300
 ********************************************/
-u16 Output_Limit(u16 PowerValue)
+uint16 Output_Limit(uint16 PowerValue)
 {
 		PowerValue = PowerValue > PropellerParamter.PowerMax ? PropellerParamter.PowerMax : PowerValue;//正向限幅
 		PowerValue = PowerValue < PropellerParamter.PowerMin ? PropellerParamter.PowerMin : PowerValue;//反向限幅
@@ -93,19 +84,19 @@ void Propeller_Output_Limit(int MoveValue)
 
 			MoveValue = PropellerParamter.PowerMed  + PropellerPower.rightDown;
 			MoveValue = Output_Limit(MoveValue);
-			TIM_SetCompare1(TIM1,MoveValue);			//右下00000000
+			//TIM_SetCompare1(TIM1,MoveValue);			//右下00000000
 			
 			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftUp;
 			MoveValue = Output_Limit(MoveValue);
-			TIM_SetCompare2(TIM1,MoveValue);		 //左上0000000000
+			//TIM_SetCompare2(TIM1,MoveValue);		 //左上0000000000
 			
 			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftDown;
 			MoveValue = Output_Limit(MoveValue);
-			TIM_SetCompare2(TIM12,MoveValue);	   //	左下 0000000
+			//TIM_SetCompare2(TIM12,MoveValue);	   //	左下 0000000
 			
 			MoveValue = PropellerParamter.PowerMed + PropellerPower.rightUp;
 			MoveValue = Output_Limit(MoveValue);
-			TIM_SetCompare4(TIM1,MoveValue);			//右上00000000
+			//TIM_SetCompare4(TIM1,MoveValue);			//右上00000000
 
 
 }

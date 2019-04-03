@@ -1,8 +1,10 @@
 #define LOG_TAG    "adc"
 
-#include "init.h"
-#include <rtdevice.h>
+#include "adc.h"
+#include <rtthread.h>
 #include <elog.h>
+#include "sys.h"
+#include <stdio.h>
 
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
@@ -14,7 +16,7 @@
 
 extern struct rt_event init_event;/* ALL_init 事件控制块 */
 float  volatge = 0.0f;
-u32 adc_value[10] = {0};
+uint32 adc_value[10] = {0};
 
 
 /*----------------------- Function Implement --------------------------------*/
@@ -36,8 +38,8 @@ void adc_thread_entry(void *parameter)
 /* 冒泡 get电压 */
 float get_vol(void)
 {
-		u8 i,j;
-		u32 res = 0;   //reserve
+		uint8 i,j;
+		uint32 res = 0;   //reserve
 		double vol_bubble = 0.0f;
 
 		for(i = 0;i < 20;i+=2){

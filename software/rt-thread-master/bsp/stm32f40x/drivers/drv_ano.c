@@ -7,7 +7,7 @@
  * Date         Author          Notes
  * 2019.3				zengwangfa      匿名地面站(ANO_TC)通信协议移植v1.0
  * 
- * Attention: 接收只需要调用 -> ANO_DT_Data_Receive_Prepare(u8 data);
+ * Attention: 接收只需要调用 -> ANO_DT_Data_Receive_Prepare(uint8 data);
  *【统一接口】发送只需要调用 -> ANO_SEND_StateMachine(void);
  *            保存参数需调用 -> void Save_Or_Reset_PID_Parameter(void);
  */
@@ -39,13 +39,13 @@
 extern rt_device_t debug_uart_device;	
 extern float  volatge;
 
-u8 data_to_send[50];//ANO地面站发送数据缓冲
-u8 ANO_Send_PID_Flag[6]={0};//PID发送标志位
+uint8 data_to_send[50];//ANO地面站发送数据缓冲
+uint8 ANO_Send_PID_Flag[6]={0};//PID发送标志位
 u16 Percontroller_Databuf[8]={0};//自定义遥控器数据缓存
 
 Vector3f_pid PID_Parameter[PID_USE_NUM]={0};
-u8 Sort_PID_Cnt=0;
-u8 Sort_PID_Flag=0; //PID状态标志位：1存FLASH  2复位原始数据
+uint8 Sort_PID_Cnt=0;
+uint8 Sort_PID_Flag=0; //PID状态标志位：1存FLASH  2复位原始数据
 
 
 //---------------这里是分隔符↓↓↓↓↓↓↓↓↓↓<以下为接收 函数>↓↓↓↓↓↓↓↓↓↓这里是分隔符------------------//
@@ -56,11 +56,11 @@ u8 Sort_PID_Flag=0; //PID状态标志位：1存FLASH  2复位原始数据
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void ANO_DT_Data_Receive_Prepare(u8 data)//ANO地面站数据解析
+void ANO_DT_Data_Receive_Prepare(uint8 data)//ANO地面站数据解析
 {
-		static u8 RxBuffer[50];
-		static u8 _data_len = 0,_data_cnt = 0;
-		static u8 state = 0;
+		static uint8 RxBuffer[50];
+		static uint8 _data_len = 0,_data_cnt = 0;
+		static uint8 state = 0;
 		if(state==0&&data==0xAA)//帧头1
 		{
 				state=1;
@@ -109,9 +109,9 @@ void ANO_DT_Data_Receive_Prepare(u8 data)//ANO地面站数据解析
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-static void ANO_DT_Send_Check(u8 head, u8 check_sum)
+static void ANO_DT_Send_Check(uint8 head, uint8 check_sum)
 {
-		u8 sum = 0,i=0;
+		uint8 sum = 0,i=0;
 		data_to_send[0]=0xAA;
 		data_to_send[1]=0xAA;
 		data_to_send[2]=0xEF;
@@ -134,9 +134,9 @@ static void ANO_DT_Send_Check(u8 head, u8 check_sum)
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void ANO_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
+void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 {
-		u8 sum = 0,i=0;
+		uint8 sum = 0,i=0;
 		for(i=0;i<(num-1);i++)  sum += *(data_buf+i);
 		if(!(sum==*(data_buf+num-1)))    return; //判断sum
 		if(!(*(data_buf)==0xAA && *(data_buf+1)==0xAF))     return;//判断帧头
@@ -242,11 +242,11 @@ void ANO_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
 ********************************************/
 void ANO_Data_Send_Version(void)//发送版本信息
 {
-		u8 _cnt=0;
+		uint8 _cnt=0;
 		vs16 _temp;
 		vs32 _temp2;
-		u8 sum = 0;
-		u8 i = 0;
+		uint8 sum = 0;
+		uint8 i = 0;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0x00;
@@ -289,11 +289,11 @@ void ANO_Data_Send_Version(void)//发送版本信息
 ********************************************/
 void ANO_Data_Send_Status(void)//发送基本信息（姿态、锁定状态）
 {
-		u8 _cnt=0;
+		uint8 _cnt=0;
 		vs16 _temp;
 		vs32 _temp2;
-		u8 sum = 0;
-		u8 i;
+		uint8 sum = 0;
+		uint8 i;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0x01;
@@ -336,10 +336,10 @@ void ANO_Data_Send_Status(void)//发送基本信息（姿态、锁定状态）
 ********************************************/
 void ANO_DT_Send_Senser(float a_x,float a_y,float a_z,float g_x,float g_y,float g_z,float m_x,float m_y,float m_z)
 {
-		u8 _cnt=0;
+		uint8 _cnt=0;
 		vs16 _temp;
-		u8 sum = 0;
-		u8 i = 0;
+		uint8 sum = 0;
+		uint8 i = 0;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0x02;
@@ -396,11 +396,11 @@ void ANO_DT_Send_Senser(float a_x,float a_y,float a_z,float g_x,float g_y,float 
 ********************************************/
 void ANO_DT_Send_High(int pressure_high,u16 ultrasonic_high)
 {
-		u8 _cnt=0;
+		uint8 _cnt=0;
 		int _temp;
 		u16 _temp2;
-		u8 sum = 0;
-		u8 i = 0;
+		uint8 sum = 0;
+		uint8 i = 0;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0x07;
@@ -435,10 +435,10 @@ void ANO_DT_Send_High(int pressure_high,u16 ultrasonic_high)
 * 注    意：第一组PID数据：group=1;
 						以此类推
 ********************************************/
-void ANO_DT_Send_PID(u8 group,float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d)
+void ANO_DT_Send_PID(uint8 group,float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d)
 {
-		u8 _cnt=0;
-		u8 sum = 0,i=0;
+		uint8 _cnt=0;
+		uint8 sum = 0,i=0;
 		int16_t _temp;
 		
 		data_to_send[_cnt++]=0xAA;
@@ -494,9 +494,9 @@ void ANO_DT_Send_PID(u8 group,float p1_p,float p1_i,float p1_d,float p2_p,float 
 ********************************************/
 void ANO_DT_Send_RCData(u16 thr,u16 yaw,u16 rol,u16 pit,u16 aux1,u16 aux2,u16 aux3,u16 aux4,u16 aux5,u16 aux6)//发送遥控器通道数据
 {
-		u8 _cnt=0;
-		u8 i=0;
-		u8 sum = 0;
+		uint8 _cnt=0;
+		uint8 i=0;
+		uint8 sum = 0;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0x03;
@@ -540,11 +540,11 @@ void ANO_DT_Send_RCData(u16 thr,u16 yaw,u16 rol,u16 pit,u16 aux1,u16 aux2,u16 au
 ********************************************/
 void ANO_Data_Send_Voltage_Current(void)
 {
-		u8 _cnt=0;
+		uint8 _cnt=0;
 		vs16 _temp;
 		vs32 _temp2;
-		u8 sum = 0;
-		u8 i = 0;
+		uint8 sum = 0;
+		uint8 i = 0;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0xAA;
 		data_to_send[_cnt++]=0x05;

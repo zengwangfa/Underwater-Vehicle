@@ -1,23 +1,14 @@
 #ifndef __PID_H_
 #define __PID_H_
 
-
-#include "sys.h"
+#include "DataType.h"
 #include "filter.h"
 
 typedef struct
 {
-		float p;
-		float i;
-		float d;
-}Vector3f_pid;
-
-
-typedef struct
-{
-		u8 Err_Limit_Flag :1;//偏差限幅标志   位定义
-		u8 Integrate_Limit_Flag :1;//积分限幅标志
-		u8 Integrate_Separation_Flag :1;//积分分离标志
+		uint8 Err_Limit_Flag :1;//偏差限幅标志   位定义
+		uint8 Integrate_Limit_Flag :1;//积分限幅标志
+		uint8 Integrate_Separation_Flag :1;//积分分离标志
 		float Expect;//期望
 		float FeedBack;//反馈值
 		float Err;//偏差
@@ -43,7 +34,7 @@ typedef struct
 		float Dis_Err_LPF;
 		float Last_Dis_Err_LPF;
 		float Pre_Last_Dis_Err_LPF;
-		 Butter_BufferData Control_Device_LPF_Buffer;//控制器低通输入输出缓冲
+		Butter_BufferData Control_Device_LPF_Buffer;//控制器低通输入输出缓冲
 		float Scale_Kp;
 		float Scale_Ki;
 		float Scale_Kd;
@@ -87,7 +78,7 @@ typedef struct
   float Last_Time;
   float Now_Time;
   float Time_Delta;
-  u16 Time_Delta_INT;//单位ms
+  uint16 Time_Delta_INT;//单位ms
 }Testime;
 
 extern AllControler Total_Controller;

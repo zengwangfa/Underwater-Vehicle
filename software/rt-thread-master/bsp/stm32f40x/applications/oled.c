@@ -1,12 +1,18 @@
 #define LOG_TAG    "oled"
 
-#include "init.h"
+
+#include "oled.h"
+#include <rtthread.h>
 #include <math.h>
-#include <rtdevice.h>
 #include <elog.h>
 #include "filter.h"
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
+#include "drv_oled.h"
+#include "stdio.h"
+#include "buzzer.h"
+#include "key.h"
+#include "adc.h"
 /* 自定义OLED 坐标系如下: 
 
 	127 ↑y
@@ -30,14 +36,14 @@ extern struct rt_event init_event;/* ALL_init 事件控制块 */
 extern struct SAngle 	stcAngle;
 
 extern struct JY901Type JY901;
-extern u8 VehicleMode;
+extern uint8 VehicleMode;
 
 float slope = 0.0; //东北天坐标系下 航向斜率 slope
 
 char *VehicleModeName[2] = {"AUV","ROV"};
 volatile MENU_LIST_e MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
 																				//volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接读值。
-u32 total_mem,used_mem,max_used_mem;
+uint32 total_mem,used_mem,max_used_mem;
 /* OLED 变量 初始化. */
 OledType oled = {	 
 								 .pagenum = StatusPage,		 //页码 pagenum
@@ -118,7 +124,7 @@ void OLED_StatusPage(void)
 {
 		char str[100];
 		float temp = 0.0f;  //暂存cpu温度初始采集值
-	  u8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
+	  uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
 	
 		temp = get_cpu_temp();
 
@@ -126,18 +132,18 @@ void OLED_StatusPage(void)
 		//OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
 	
 		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[VehicleMode],boma_value_get());
-		OLED_ShowString(0,0, (u8 *)str,12); 
+		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
 		sprintf(str,"Voltage:%.2f v  \r\n",get_vol());
-		OLED_ShowString(0,16,(u8 *)str,12); 
+		OLED_ShowString(0,16,(uint8 *)str,12); 
 	
     cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
 
 	  sprintf(str,"CPU Usage:%d.%d %% ",cpu_usage_major, cpu_usage_minor);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
-		OLED_ShowString(0,32,(u8 *)str,12); 
+		OLED_ShowString(0,32,(uint8 *)str,12); 
 		
 		sprintf(str,"Temperature:%.2f C \r\n",KalmanFilter(&temp));//显示卡尔曼滤波后的温度
-		OLED_ShowString(0,48,(u8 *)str,12);
+		OLED_ShowString(0,48,(uint8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }
 
@@ -153,16 +159,16 @@ void OLED_GyroscopePage(void)
 {
 		char str[100];
 		sprintf(str,"Acc:%.2f %.2f %.2f  ",JY901.Acc.x,JY901.Acc.y,JY901.Acc.z);
-		OLED_ShowString(0,0,(u8 *)str,12); 	
+		OLED_ShowString(0,0,(uint8 *)str,12); 	
 		
 		sprintf(str,"Gyro:%.1f %.1f %.1f ",JY901.Gyro.x,JY901.Gyro.y,JY901.Gyro.z);
-		OLED_ShowString(0,16,(u8 *)str,12); 	
+		OLED_ShowString(0,16,(uint8 *)str,12); 	
 		
 		sprintf(str,"Ang:%.1f %.1f %.1f  ",JY901.Euler.Roll,JY901.Euler.Pitch,JY901.Euler.Yaw);
-		OLED_ShowString(0,32,(u8 *)str,12); 	
+		OLED_ShowString(0,32,(uint8 *)str,12); 	
 		 
 		sprintf(str,"Mag:%d %d %d  ",JY901.Mag.x,JY901.Mag.y,JY901.Mag.z);
-		OLED_ShowString(0,48,(u8 *)str,12); 
+		OLED_ShowString(0,48,(uint8 *)str,12); 
 		
 	  OLED_Refresh_Gram();//更新显示到OLED
 }
@@ -177,7 +183,7 @@ void OLED_GyroscopePage(void)
 ********************************************/
 void OLED_PicturePage(void)
 {
-		static u8 y=0;
+		static uint8 y=0;
 		char str[100];
 		static int Angle_x = 0,Angle_y = 0;
 		
@@ -198,22 +204,22 @@ void OLED_PicturePage(void)
 		draw_line(31,31,slope,1);
 		
 		sprintf(str,"Rol:%3.1f  ",JY901.Euler.Roll); //横滚角Roll 
-		OLED_ShowString(65,0, (u8 *)str,12);
+		OLED_ShowString(65,0, (uint8 *)str,12);
 		
 		sprintf(str,"Pit:%3.1f  ",JY901.Euler.Pitch);//俯仰角Pitch
-		OLED_ShowString(65,16, (u8 *)str,12);
+		OLED_ShowString(65,16, (uint8 *)str,12);
 		
 		sprintf(str,"Yaw:%3.1f  ",JY901.Euler.Yaw); //偏航角Yaw
-		OLED_ShowString(65,32, (u8 *)str,12);
+		OLED_ShowString(65,32, (uint8 *)str,12);
 		
 		sprintf(str,"k:%.1f   ",slope);
-		OLED_ShowString(65,48,(u8 *)str,12); 
+		OLED_ShowString(65,48,(uint8 *)str,12); 
 		
 
-		OLED_ShowString(29,2 ,(u8 *)"N",12);
-		OLED_ShowString(29,51,(u8 *)"S",12);
-		OLED_ShowString(3	,28,(u8 *)"W",12);
-		OLED_ShowString(55,28,(u8 *)"E",12);
+		OLED_ShowString(29,2 ,(uint8 *)"N",12);
+		OLED_ShowString(29,51,(uint8 *)"S",12);
+		OLED_ShowString(3	,28,(uint8 *)"W",12);
+		OLED_ShowString(55,28,(uint8 *)"E",12);
 		
 		draw_circle(31,31,32);//画固定圆
 		draw_fill_circle(31+Angle_x,31+Angle_y,6,1); //画实心圆
@@ -233,7 +239,7 @@ void OLED_PicturePage(void)
 ********************************************/
 void Boot_Animation(void)
 {
-		static u8 x=0,y=0;
+		static uint8 x=0,y=0;
 
 		for(x = 63;x>=18;x--){
 				OLED_DrawPoint(108-0.7*x,x,1);//画斜线 x,y反置
@@ -252,7 +258,7 @@ void Boot_Animation(void)
 			  OLED_Refresh_Gram();//更新显示到OLED
 		}
 
-		OLED_ShowString(60,20,(u8 *)"E",16);
+		OLED_ShowString(60,20,(uint8 *)"E",16);
 	  OLED_Refresh_Gram();//更新显示到OLED
 		rt_thread_delay(100);
 		
@@ -268,9 +274,9 @@ void Boot_Animation(void)
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void draw_fill_circle(u8 x0,u8 y0,u8 r,u8 dot)//写画实心圆心(x0,y0),半径r
+void draw_fill_circle(uint8 x0,uint8 y0,uint8 r,uint8 dot)//写画实心圆心(x0,y0),半径r
 {	
-		u8 x = 0,y = 0,R = 0;
+		uint8 x = 0,y = 0,R = 0;
 		for(x = x0-r;x <= x0+r;x++){
 				for(y = y0-r; y <= y0+r ;y++ ){
 						R = sqrt(pow(r,2)-pow(x-x0,2))+y0; //圆方程  x,y反置		
@@ -288,9 +294,9 @@ void draw_fill_circle(u8 x0,u8 y0,u8 r,u8 dot)//写画实心圆心(x0,y0),半径r
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void draw_circle(u8 x0,u8 y0,u8 r) //圆心(x0,y0),半径r
+void draw_circle(uint8 x0,uint8 y0,uint8 r) //圆心(x0,y0),半径r
 {
-		u8 x,y;
+		uint8 x,y;
 
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(r,2)-pow(x-x0,2))+y0; //圆方程  x,y反置
@@ -309,9 +315,9 @@ void draw_circle(u8 x0,u8 y0,u8 r) //圆心(x0,y0),半径r
 * 注    意：使用不同坐标系 为了解决函数上 x映射y时只能多对一的关系
 						该线段长度为圆方程的半径，将线段长度限制在圆内
 ********************************************/
-void draw_line(u8 x0,u8 y0,float k,u8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;1,填充	  
+void draw_line(uint8 x0,uint8 y0,float k,uint8 dot) //过固定点(x0,y0),斜率k   dot:0,清空;1,填充	  
 {
-		u8 x,y;
+		uint8 x,y;
 /* 以下函数使用该坐标系: 
 	
 	                127 ↑y

@@ -1,7 +1,7 @@
 #ifndef __PROPELLERCONTROL_H
 #define __PROPELLERCONTROL_H
 
-#include "sys.h"
+#include "DataType.h"
 
 
 

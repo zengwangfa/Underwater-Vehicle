@@ -312,7 +312,7 @@ void OLED_Init(void)
 	OLED_RS=1;	 
 	
 	OLED_RST=0;
-	rt_thread_mdelay(100);
+	//rt_thread_mdelay(100);
 	OLED_RST=1; 
 	
 	OLED_WR_Byte(0xAE,OLED_CMD); //πÿ±’œ‘ æ

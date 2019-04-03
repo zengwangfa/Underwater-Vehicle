@@ -2,7 +2,7 @@
 
 #include "init.h"
 #include "self_check.h"
-#include <rtdevice.h>
+#include <rtthread.h>
 #include <elog.h>
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -21,7 +21,8 @@ void self_check_entry(void* parameter)
 		RCC_GetClocksFreq(&Get_RCC_Clocks); //获取系统时钟
 
 		 /* 接收事件，判断是否所有外设初始化完成 ，接收完后清除事件标志 */
-    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT | ADC_EVENT | PWM_EVENT | CAM_EVENT ),
+    if (rt_event_recv(&init_event, (LED_EVENT | KEY_EVENT | BUZZ_EVENT | OLED_EVENT | GYRO_EVENT 
+																	  | ADC_EVENT | PWM_EVENT | /*CAM_EVENT |*/ MS5837_EVENT  ),
                       RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR,
                       RT_WAITING_FOREVER, &e) == RT_EOK)
     {

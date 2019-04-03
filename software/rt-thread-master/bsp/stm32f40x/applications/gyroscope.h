@@ -1,5 +1,5 @@
-#ifndef __JY901_H
-#define __JY901_H
+#ifndef __JY901_H_
+#define __JY901_H_
 
 #define SAVE 			0x00
 #define CALSW 		0x01
@@ -76,6 +76,8 @@
 #define DIO_MODE_DOPWM 4
 #define DIO_MODE_GPS 5		
 
+#include "DataType.h"
+
 struct STime
 {
 	unsigned char ucYear;
@@ -136,37 +138,6 @@ struct SQ
 { short q[4];
 };
 
-typedef struct
-{
-  float x;
-  float y;
-  float z;
-}Vector3f; //3轴向量 float型
-
-typedef struct
-{
-  short x;  
-  short y;
-  short z;
-}Vector3s;//3轴向量 short型 16为短整型
-
-
-
-typedef struct
-{
-  float Roll;		 //x 
-  float Pitch;   //y
-  float Yaw;     //z
-}Euler3f;//欧拉角3轴向量 short型 16为短整型
-
-struct JY901Type
-{
-	Vector3f Acc; 		//加速度
-	Vector3f Gyro; 		//角速度
-	Vector3s Mag;     //磁场
-	Euler3f Euler;		//欧拉角
-	float Temperature;	//温度
-};
 
 
 
@@ -187,9 +158,7 @@ void JY901_Convert(struct JY901Type * pArr);
 
 void CopeSerial2Data(unsigned char Data);
  
- 
- 
- extern struct JY901Type JY901; //JY901真实值结构体
+extern struct JY901Type JY901; //JY901真实值结构体
  
  
 #endif

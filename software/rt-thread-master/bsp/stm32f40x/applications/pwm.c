@@ -1,7 +1,6 @@
 #define LOG_TAG    "pwm"
 
-#include "init.h"
-#include <rtdevice.h>
+#include "sys.h"
 #include <elog.h>
 #include "propeller.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
@@ -33,7 +32,7 @@
 //arr：自动重装值
 //psc：时钟预分频数
 
-void TIM1_PWM_Init(u32 arr,u32 psc)
+void TIM1_PWM_Init(uint32 arr,uint32 psc)
 {		 					 
 		//此部分需手动修改IO口设置
 		GPIO_InitTypeDef GPIO_InitStructure;
@@ -85,7 +84,7 @@ void TIM1_PWM_Init(u32 arr,u32 psc)
 //PWM输出初始化
 //arr：自动重装值
 //psc：时钟预分频数
-void TIM4_PWM_Init(u32 arr,u32 psc)
+void TIM4_PWM_Init(uint32 arr,uint32 psc)
 {		 					 
 		//此部分需手动修改IO口设置
 		

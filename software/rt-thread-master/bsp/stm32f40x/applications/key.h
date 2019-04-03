@@ -1,12 +1,10 @@
 #ifndef MY_KEY_H
 #define MY_KEY_H
 
-#include "init.h"
+#include "DataType.h"
 
 
-
-void key_down(void *args);
-u8 boma_value_get(void);
+uint8 boma_value_get(void);
 
 
 
