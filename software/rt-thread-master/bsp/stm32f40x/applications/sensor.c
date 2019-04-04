@@ -13,16 +13,11 @@ void sensor_thread_entry(void* parameter)
 	
 		while(1)
 		{
-					/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-				rt_enter_critical();
-				
-				JY901_Convert(&JY901); //JY901数据转换
-				/* 调度器解锁 */
-				rt_exit_critical();
+
 			
-				MS583703BA_getTemperature();//获取温度
-				rt_thread_mdelay(20);
-				MS583703BA_getPressure();   //获取大气压
+//				MS583703BA_getTemperature();//获取温度
+//				rt_thread_mdelay(20);
+//				MS583703BA_getPressure();   //获取大气压
 
 
 				rt_thread_mdelay(10);
@@ -58,7 +53,7 @@ int sensor_thread_init(void)
 		}
 		return 0;
 }
-INIT_APP_EXPORT(sensor_thread_init);
+//INIT_APP_EXPORT(sensor_thread_init);
 
 
 

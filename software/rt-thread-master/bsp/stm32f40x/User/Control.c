@@ -24,8 +24,8 @@ float Yaw = 0.0f;
 void Angle_Control(void)
 {
 	
-		if(JY901.Euler.Yaw < 0) Yaw = JY901.Euler.Yaw + 360;//角度补偿
-
+		if(JY901.Euler.Yaw < 0) Yaw = (180+JY901.Euler.Yaw) + 180;//角度补偿
+		if(JY901.Euler.Yaw > 0) Yaw = JY901.Euler.Yaw;            //角度补偿
 		Total_Controller.Yaw_Angle_Control.Expect = Yaw_Control;//偏航角速度环期望，直接来源于遥控器打杆量
 		Total_Controller.Yaw_Angle_Control.FeedBack = Yaw;//偏航角反馈
 		PID_Control_Yaw(&Total_Controller.Yaw_Angle_Control);//偏航角度控制

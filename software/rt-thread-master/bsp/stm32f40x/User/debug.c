@@ -10,6 +10,7 @@
 #include "drv_cpu_temp.h"
 #include "gyroscope.h"
 #include "drv_MS5837.h"
+#include "PID.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
@@ -19,6 +20,7 @@
 extern rt_device_t debug_uart_device;	
 extern uint8 debug_startup_flag;
 extern float  volatge;
+extern float  Yaw;
 enum 
 {
 		DEBUG_NULL,
@@ -95,12 +97,12 @@ void Vcan_Send_Data(void)
 		float temp = 0.0f;
 	
 		static float list[8]= {0};
-		temp =get_cpu_temp();
+		temp = get_cpu_temp();
 	
-		list[0] = JY901.Euler.Roll; 	//ºá¹ö½Ç Roll 
-		list[1] = JY901.Euler.Pitch;  //¸©Ñö½Ç Pitch
+		list[0] = Total_Controller.Yaw_Angle_Control.Err; 	//ºá¹ö½Ç Roll 
+		list[1] = Total_Controller.Yaw_Angle_Control.Control_OutPut;  //¸©Ñö½Ç Pitch
 		list[2] = JY901.Euler.Yaw; 	  //Æ«º½½Ç Yaw
-		list[3] = temp;    //CPUÎÂ¶È
+		list[3] = Yaw;    //CPUÎÂ¶È temp
 		list[4] = KalmanFilter(&temp);//¿¨¶ûÂüÂË²¨ºóµÄÎÂ¶È
 		list[5] = MS_TEMP;//get_vol();
 		list[6] = MS5837_Pressure;	//KalmanFilter(&vol)
