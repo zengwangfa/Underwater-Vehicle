@@ -1,4 +1,10 @@
-
+/*
+ * servo.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  推进器设备
+ */
 #include "propeller.h"
 #include <elog.h>
 #include <rtthread.h>

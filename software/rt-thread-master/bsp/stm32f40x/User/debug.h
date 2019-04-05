@@ -9,6 +9,7 @@ void Vcan_Send_Cmd(void *wareaddr, unsigned int waresize);
 void Vcan_Send_Data(void);
 
 
+
 extern char *debug_tool_name[3];
 
 extern uint8 debug_tool ; //山外 / 匿名上位机 调试标志位

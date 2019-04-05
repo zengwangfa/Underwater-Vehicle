@@ -1,4 +1,10 @@
-
+/*
+ * servo.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  舵机设备
+ */
 #include "servo.h"
 #include "propeller.h"
 #include "flash.h"

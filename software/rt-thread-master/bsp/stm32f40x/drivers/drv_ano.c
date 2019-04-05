@@ -1,6 +1,5 @@
 /*
  * File      : drv_ano.c
- * This file is part of RT-Thread RTOS
  * COPYRIGHT (C) 2019 JMU Electronic Technology Association Team 
  *
  * Change Logs:
@@ -20,6 +19,7 @@
 #include <rtdevice.h>
 #include <elog.h>
 #include "drv_MS5837.h"
+#include "RC_Data.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp) + 0) )
@@ -38,12 +38,12 @@
 
 extern rt_device_t debug_uart_device;	
 extern float  volatge;
-
-uint8 data_to_send[50];//ANO地面站发送数据缓冲
-uint8 ANO_Send_PID_Flag[6]={0};//PID发送标志位
-u16 Percontroller_Databuf[8]={0};//自定义遥控器数据缓存
+extern ReceiveDataType ReceiveData;
 
 Vector3f_pid PID_Parameter[PID_USE_NUM]={0};
+uint8 data_to_send[50];//ANO地面站发送数据缓冲
+uint8 ANO_Send_PID_Flag[6]={0};//PID发送标志位
+
 uint8 Sort_PID_Cnt=0;
 uint8 Sort_PID_Flag=0; //PID状态标志位：1存FLASH  2复位原始数据
 
@@ -601,10 +601,10 @@ void ANO_SEND_StateMachine(void)
 		else if(ANO_Cnt==3)
 		{
 
-				ANO_DT_Send_RCData(Percontroller_Databuf[2],Percontroller_Databuf[3],
-													 Percontroller_Databuf[0],Percontroller_Databuf[1],
-													 Percontroller_Databuf[4],Percontroller_Databuf[5],
-													 Percontroller_Databuf[6],Percontroller_Databuf[7],0,0);
+				ANO_DT_Send_RCData(ReceiveData.THR,ReceiveData.YAW,
+													 ReceiveData.ROL,ReceiveData.PIT,
+													 0,0,
+													 0,0,0,0);
 
 		}
 		else if(ANO_Cnt == 4){

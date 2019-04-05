@@ -2,7 +2,7 @@
 #define __MS5837_H_
 
 #include "DataType.h"
-
+#include "sys.h"
 
 #define MS583703BA_ADC_RD          0x00
 #define	MS583703BA_PROM_RD 	       0xA0
@@ -28,24 +28,22 @@
 
 #define FILTER_num 20
 
-uint8 MS5837_Get_PROM(void);
+
 uint8 MS5837_Init(void);
-uint32 MS583703BA_getPressure(void);
-void MS583703BA_getTemperature(void);
-void MS583703BA_RESET(void);
-uint64 MS583703BA_getConversion(uint8 command);
-
-
 float Get_High(void);
 void Filter_Hight(unsigned int set_hight);
-double MS583703BA_GetDeep(void);
+void MS583703BA_getPressure(void);
+void MS583703BA_getTemperature(void);
+void MS583703BA_RESET(void);
 
+uint64 MS583703BA_getConversion(uint8_t command);
+void MS583703BA_GetTemperature(void);
 
 extern int64  dT;
 extern int64  D2_Temp;
-extern float  MS_TEMP;
+extern float  MS5837_Temp;
 extern uint32 MS5837_Pressure;
-extern uint32 Cal_C[7];
+extern int32  Cal_C[7];
 
 #endif
 

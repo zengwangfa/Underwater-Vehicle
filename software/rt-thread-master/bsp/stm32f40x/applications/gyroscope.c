@@ -1,3 +1,10 @@
+/*
+ * gyroscope.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  九轴模块读取并转换数据
+ */
 #define LOG_TAG    "gyro"
 
 #include <string.h>
@@ -31,12 +38,12 @@ struct JY901Type JY901 = {0}; //JY901真实值结构体
 /*----------------------- Function Implement --------------------------------*/
 
 //CopeSerialData为串口2中断调用函数，串口每收到一个数据，调用一次这个函数。
-void CopeSerial2Data(unsigned char Data)
+void CopeSerial2Data(u8 Data)
 {
-		static unsigned char RxBuffer[50];  //数据包
-		static unsigned char RxCheck = 0;	  //尾校验字
-		static unsigned char RxCount = 0;	    //接收计数
-		static unsigned char i = 0;	   		  //接收计数
+		static u8 RxBuffer[50];  //数据包
+		static u8 RxCheck = 0;	  //尾校验字
+		static u8 RxCount = 0;	    //接收计数
+		static u8 i = 0;	   		  //接收计数
 	
 		RxBuffer[RxCount++] = Data;	//将收到的数据存入缓冲区中
 	
@@ -157,23 +164,6 @@ float get_temperature(void)
 MSH_CMD_EXPORT(get_temperature, get Temperature[T]);
 
 
-/* Get 温度  Temperature */
-void get_pressure(void)
-{
-		static char str[50] = {0};
-		/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-		rt_enter_critical();
-
-		MS583703BA_getTemperature();//获取温度
-		MS583703BA_getPressure();   //获取大气压
-	
-		/* 调度器解锁 */
-		rt_exit_critical();
-		sprintf(str,"MS_Temp2:%f\n",MS_TEMP);
-		rt_kprintf(str);
-		rt_kprintf("MS_Pressure:%d\n",MS5837_Pressure);
-}
-MSH_CMD_EXPORT(get_pressure, get pressure[pa]);
 
 
 

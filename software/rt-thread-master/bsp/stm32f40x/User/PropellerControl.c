@@ -1,4 +1,10 @@
-
+/*
+ * PropellerControl.c
+ *
+ *  Created on: 2019年3月20日
+ *      Author: zengwangfa
+ *      Notes:  推进器控制
+ */
 #include <math.h>
 #include "propeller.h"
 #include "PropellerControl.h"

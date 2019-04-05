@@ -10,8 +10,8 @@
 #define int32  int
 #define uint32 unsigned int
 
-#define int64  long
-#define uint64 unsigned long
+#define int64  long long
+#define uint64 unsigned long long
 	
 #define my_abs(x)  (((x)>0)?(x):-(x))
 
@@ -56,12 +56,6 @@ struct JY901Type
 };
 
 
-typedef enum
-{
-		AUV_Mode,//0
-		ROV_Mode //1
-	
-}VehicleMode_Enum;
 
 extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 
@@ -92,7 +86,8 @@ typedef enum {
 #define Deg2Rad(Deg) (Deg * PI / 180.0f)
 
 
-
+#define AUV_Mode  0//0
+#define ROV_Mode  1//1
 
 
 

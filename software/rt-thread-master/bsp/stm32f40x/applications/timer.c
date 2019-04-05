@@ -1,8 +1,13 @@
+/*
+ * time.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  定时器
+ */
 #define LOG_TAG    "timer"
 
-
 #include <string.h>
-
 #include "timer.h"
 #include "flash.h"
 #include <rtthread.h>
@@ -10,6 +15,7 @@
 #include "drv_MS5837.h"
 #include  "Control.h"
 #include "gyroscope.h"
+#include "debug.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 
@@ -20,7 +26,7 @@
 
 uint8 ov_frame = 0;
 uint8 ov_frame_flag = 0;
-
+extern uint8 debug_startup_flag;
 /*----------------------- Function Implement --------------------------------*/
 
 static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
@@ -33,10 +39,13 @@ static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 		rt_enter_critical();
 				
 		JY901_Convert(&JY901); //JY901数据转换
+
 		/* 调度器解锁 */
 		rt_exit_critical();
-	
+		
 		Angle_Control();
+	
+
 		if(20 == count){	//1s
 				
 				if(1 == ov_frame_flag)

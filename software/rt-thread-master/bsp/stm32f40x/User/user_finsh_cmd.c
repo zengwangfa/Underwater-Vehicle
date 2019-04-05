@@ -119,13 +119,13 @@ static int set_vehicle_mode(int argc,char **argv)
 		if( !strcmp(argv[1],"auv") ){ //设置为工作模式 strcmp 检验两边相等 返回0
 				VehicleMode = AUV_Mode;
 				Flash_Update();
-				rt_kprintf("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
+				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
 		}
 
 		else if( !strcmp(argv[1],"rov") ){ //设置为 ROV
 				VehicleMode = ROV_Mode;
 				Flash_Update();
-				rt_kprintf("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
+				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
 		}
 		else {
 				log_e("Proper Usage: set_vehicle_mode auv / rov");

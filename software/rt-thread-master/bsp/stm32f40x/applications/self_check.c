@@ -1,3 +1,10 @@
+/*
+ * self_check.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  系统自检
+ */
 #define LOG_TAG    "self_check"
 
 #include "init.h"

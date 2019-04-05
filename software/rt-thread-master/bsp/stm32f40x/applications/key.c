@@ -1,3 +1,10 @@
+/*
+ * key.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  按键、拨码任务
+ */
 #define LOG_TAG    "key"
 
 #include "key.h"

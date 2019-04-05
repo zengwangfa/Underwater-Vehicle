@@ -1,3 +1,10 @@
+/*
+ * led.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  LED指示
+ */
 #define LOG_TAG    "led"
 
 #include "led.h"

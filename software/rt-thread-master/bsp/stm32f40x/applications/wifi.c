@@ -1,3 +1,10 @@
+/*
+ * wifi.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  wifi设备
+ */
 #include "init.h"
 #include "wifi.h"
 #include <rtdevice.h>

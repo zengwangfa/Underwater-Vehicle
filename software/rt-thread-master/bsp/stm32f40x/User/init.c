@@ -149,7 +149,7 @@ int rt_system_init(void)
 																			 thread_entry_sys_monitor, 
 																			 NULL,
 																			 512,
-																			 30,
+																			 31,
 																			 10);
 							 
     sys_thread = rt_thread_create("sys_init",

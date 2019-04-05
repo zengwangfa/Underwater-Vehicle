@@ -1,5 +1,5 @@
 /******************************************************************************
-* Copyright 2019-2020 JMU Electronic Technology Association / 508293391@qq.com
+* Copyright 2019-2020 JMU Electronic Technology Association / zengwangfa@outlook.com
 *
 * ProjectName: Underwater Vehicle Control
 * Desc: 			 Peripherals control

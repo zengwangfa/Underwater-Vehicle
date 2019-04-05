@@ -1,3 +1,10 @@
+/*
+ * PID.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  PID控制器
+ */
 #include "PID.h"
 
 

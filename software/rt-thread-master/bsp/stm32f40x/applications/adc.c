@@ -1,3 +1,10 @@
+/*
+ * adc.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  ADC电压采集   电压有时采集转换后为5v，有时为70v【bug】
+ */
 #define LOG_TAG    "adc"
 
 #include "adc.h"
@@ -44,7 +51,7 @@ float get_vol(void)
 
 		for(i = 0;i < 20;i+=2){
 				adc_value[i/2] = get_adc(ADC_Channel_10);//取偶次
-				rt_thread_mdelay(10);
+
 		}
 		
 		for(j = 0;j < 10-1;j++){

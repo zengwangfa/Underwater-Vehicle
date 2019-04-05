@@ -1,3 +1,10 @@
+/*
+ * Control.c
+ *
+ *  Created on: 2019年3月20日
+ *      Author: zengwangfa
+ *      Notes:  方位角控制、深度控制
+ */
 #include "Control.h"
 #include "PID.h"
 #include "gyroscope.h"
@@ -58,7 +65,7 @@ void Gyro_Control()//角速度环
 
 }
 
-/*【机械臂】舵机 修改 【正向最大值】MSH方法 */
+/*【机械臂】舵机 期望yaw MSH方法 */
 static int yaw(int argc, char **argv)
 {
     int result = 0;
@@ -71,7 +78,6 @@ static int yaw(int argc, char **argv)
 		Yaw_Control = atoi(argv[1]);
 
 		
-
 _exit:
     return result;
 }

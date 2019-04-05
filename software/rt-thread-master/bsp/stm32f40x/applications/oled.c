@@ -1,5 +1,11 @@
+/*
+ * oled.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  OLED状态、参数指示
+ */
 #define LOG_TAG    "oled"
-
 
 #include "oled.h"
 #include <rtthread.h>

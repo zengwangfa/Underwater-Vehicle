@@ -1,3 +1,10 @@
+/*
+ * pwm.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  PWM设备
+ */
 #define LOG_TAG    "pwm"
 
 #include "sys.h"

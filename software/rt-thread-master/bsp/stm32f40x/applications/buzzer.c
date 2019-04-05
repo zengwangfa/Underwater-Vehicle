@@ -1,3 +1,10 @@
+/*
+ * buzzer.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  蜂鸣器指示
+ */
 #define LOG_TAG    "buzzer"
 
 #include "buzzer.h"

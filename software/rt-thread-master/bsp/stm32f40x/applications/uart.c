@@ -1,5 +1,11 @@
+/*
+ * uart.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  串口设备读写数据
+ */
 #define LOG_TAG    "uart"
-
 
 #include "gyroscope.h"
 #include <elog.h>

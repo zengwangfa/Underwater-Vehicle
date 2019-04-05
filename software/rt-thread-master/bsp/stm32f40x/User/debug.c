@@ -1,3 +1,10 @@
+/*
+ * debug.c
+ *
+ *  Created on: 2019年2月5日
+ *      Author: zengwangfa
+ *      Notes:  发送数据至上位机
+ */
 #define LOG_TAG    "debug"
 
 #include <rtthread.h>
@@ -83,8 +90,8 @@ INIT_APP_EXPORT(Debug_thread_init);
 void Vcan_Send_Cmd(void *wareaddr, unsigned int waresize)
 {
 		#define CMD_WARE     3
-    uint8 cmdf[2] = {CMD_WARE, ~CMD_WARE};    //串口调试 使用的前命令
-    uint8 cmdr[2] = {~CMD_WARE, CMD_WARE};    //串口调试 使用的后命令
+    static uint8 cmdf[2] = {CMD_WARE, ~CMD_WARE};    //串口调试 使用的前命令
+    static uint8 cmdr[2] = {~CMD_WARE, CMD_WARE};    //串口调试 使用的后命令
 
     rt_device_write(debug_uart_device, 0,cmdf, 2);    //先发送前命令
     rt_device_write(debug_uart_device, 0,(uint8 *)wareaddr, waresize);    //发送数据
@@ -94,19 +101,19 @@ void Vcan_Send_Cmd(void *wareaddr, unsigned int waresize)
 
 void Vcan_Send_Data(void)
 {   
-		float temp = 0.0f;
+		//float temp = 0.0f;
 	
 		static float list[8]= {0};
-		temp = get_cpu_temp();
+		//temp = get_cpu_temp();
 	
 		list[0] = Total_Controller.Yaw_Angle_Control.Err; 	//横滚角 Roll 
 		list[1] = Total_Controller.Yaw_Angle_Control.Control_OutPut;  //俯仰角 Pitch
 		list[2] = JY901.Euler.Yaw; 	  //偏航角 Yaw
 		list[3] = Yaw;    //CPU温度 temp
-		list[4] = KalmanFilter(&temp);//卡尔曼滤波后的温度
-		list[5] = MS_TEMP;//get_vol();
-		list[6] = MS5837_Pressure;	//KalmanFilter(&vol)
-		list[7] = 0;	//camera_center;
+		list[4] = 0;//KalmanFilter(&temp);//卡尔曼滤波后的温度
+		list[5] = 0;//MS_TEMP;//get_vol();
+		list[6] = MS5837_Temp;//MS5837_Pressure;	//KalmanFilter(&vol)
+		list[7] = MS5837_Pressure;	//camera_center;
 		
 		Vcan_Send_Cmd(list,sizeof(list));
 }

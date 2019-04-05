@@ -532,6 +532,11 @@
               <FileType>1</FileType>
               <FilePath>.\User\Control.c</FilePath>
             </File>
+            <File>
+              <FileName>RC_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\RC_Data.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

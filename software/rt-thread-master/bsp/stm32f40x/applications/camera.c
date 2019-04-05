@@ -1,3 +1,10 @@
+/*
+ * camera.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  camera设备
+ */
 #define LOG_TAG    "camera"
 
 #include "led.h"

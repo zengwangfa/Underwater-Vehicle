@@ -1,3 +1,10 @@
+/*
+ * flash.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  Flash读写
+ */
 #define LOG_TAG       "flash"
 
 
@@ -19,7 +26,7 @@
 
 #define IMP_FLASH_ADDRESS    (0x1000) 	//W25Q128 FLASH的 重要参数起始地址 【第二个扇区】
 
-extern char *VehicleModeName;
+extern char *VehicleModeName[2];
 
 
 PID_Parameter_Flag  PID_Parameter_Read_Flag;
@@ -82,7 +89,11 @@ void Flash_Update(void)
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_CLOSE_VALUE_A,&YunTai.CloseValue,4); // 地址
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_CURRENT_VALUE_A,&YunTai.CurrentValue,4); // 地址
 	
-}
+		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MED_A,(uint32 *)&PropellerParamter.PowerMed,4);		// 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MAX_A,(uint32 *)&PropellerParamter.PowerMax,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MIN_A,(uint32 *)&PropellerParamter.PowerMin,4); // 地址
+	
+}	
 
 
 /* list 相关重要参数 */
