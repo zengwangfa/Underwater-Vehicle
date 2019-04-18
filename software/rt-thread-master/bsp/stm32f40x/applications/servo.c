@@ -39,6 +39,7 @@ void servo_thread_entry(void *parameter)
 		Propeller_Init();
 		while(1)
 		{
+				
 				TIM_SetCompare1(TIM1,1500);  		//高电平1.5ms 总周期20ms  占空比7.5%
 				TIM_SetCompare2(TIM1,1500);  		
 				TIM_SetCompare3(TIM1,1500); 		
@@ -46,7 +47,8 @@ void servo_thread_entry(void *parameter)
 			
 				TIM_SetCompare1(TIM4,1500);  //垂推
 				TIM_SetCompare2(TIM4,1500);  //垂推
-				TIM_SetCompare3(TIM4,RoboticArm.CurrentValue);  //机械臂
+				TIM_SetCompare3(TIM4,2000);  //机械臂 RoboticArm.CurrentValue 
+				
 				TIM_SetCompare4(TIM4,1500);  //云台
 			
 				rt_thread_mdelay(1);

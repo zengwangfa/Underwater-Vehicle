@@ -134,7 +134,7 @@ void OLED_StatusPage(void)
 	
 		temp = get_cpu_temp();
 
-		OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
+		//OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
 		//OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
 	
 		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[VehicleMode],boma_value_get());

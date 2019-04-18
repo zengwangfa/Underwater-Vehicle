@@ -14,7 +14,9 @@ src += ['debug.c']
 src += ['user_finsh_cmd.c']
 src += ['Control.c']
 src += ['PropellerControl.c']
+src += ['RC_Data.c']
 src += ['notes.c']
+
 CPPPATH = [cwd]
 
 group = DefineGroup('User', src, depend = [''], CPPPATH = CPPPATH)

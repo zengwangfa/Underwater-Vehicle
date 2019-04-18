@@ -33,7 +33,7 @@ double askResultant(double angle,double forceSize)
 
 /*******************************************
 * 函 数 名：Output_Limit
-* 功    能：输出限制
+* 功    能：推进器输出限制
 * 输入参数：PowerValue
 * 返 回 值：限幅后的 PowerValue
 * 注    意：最大值为Propeller.PowerMax 初始化为1800
