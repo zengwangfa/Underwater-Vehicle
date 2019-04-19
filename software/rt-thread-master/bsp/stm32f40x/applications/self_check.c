@@ -55,7 +55,7 @@ int Self_Check_thread_init(void)
 
     if (self_check_tid != RT_NULL){
 				log_i("SelfCheck_Init()");
-				rt_thread_startup(self_check_tid);
+				//rt_thread_startup(self_check_tid);
 		}
 		return 0;
 }

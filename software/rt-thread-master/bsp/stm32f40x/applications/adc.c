@@ -142,7 +142,6 @@ int adc_thread_init(void)
     /* 初始化事件对象 */
     result = rt_event_init(&init_event, "event", RT_IPC_FLAG_FIFO);
 	
-		
     if (result != RT_EOK){
         log_e("init event failed.\n");
         return -1;
@@ -151,7 +150,7 @@ int adc_thread_init(void)
     adc_tid = rt_thread_create("adc",				 //线程名称
                     adc_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    512,										 //线程栈大小，单位是字节【byte】
+                    1024,										 //线程栈大小，单位是字节【byte】
                     15,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
@@ -159,7 +158,7 @@ int adc_thread_init(void)
 				adc_init();
 				log_i("adc_init()");
 
-				rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
+				//rt_event_send(&init_event, ADC_EVENT); //发送事件  表示初始化完成
 				rt_thread_startup(adc_tid);
 		}
 		return 0;

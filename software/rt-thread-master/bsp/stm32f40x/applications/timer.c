@@ -24,8 +24,6 @@
 
 
 
-uint8 ov_frame = 0;
-uint8 ov_frame_flag = 0;
 extern uint8 debug_startup_flag;
 /*----------------------- Function Implement --------------------------------*/
 
@@ -45,17 +43,6 @@ static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 		
 		Angle_Control();
 	
-
-		if(20 == count){	//1s
-				
-				if(1 == ov_frame_flag)
-				{
-						rt_kprintf("OV Frame:%d\n",ov_frame);
-						ov_frame_flag = 0; //清零
-				}
-				count = 0;
-				ov_frame = 0;
-		}
 }
 
 
@@ -82,12 +69,6 @@ int timer1_init(void)
 INIT_APP_EXPORT(timer1_init);
 
 
-/* Get Camera 帧率 */
-void get_ov_frame(void)
-{
-		ov_frame_flag = 1;//开启 打印帧率
-}
-MSH_CMD_EXPORT(get_ov_frame, get ov frame [fps]);
 
 
 

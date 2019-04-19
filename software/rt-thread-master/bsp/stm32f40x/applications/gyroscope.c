@@ -264,14 +264,14 @@ MSH_CMD_EXPORT(gyroscope_led, gyroscope_led on/off);
 //}
 //MSH_CMD_EXPORT(gyroscope_baud_9600,Modify JY901 baud rate);
 
-///* 设置 九轴模块 波特率为9600 */
-//void gyroscope_baud_115200(void)
-//{
-//		gyroscope_baud_array[3] = 0x06;
-//		rt_device_write(gyro_uart_device, 0, gyroscope_baud_array, 5);   //ON LED
-//		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
-//		log_i("JY901 baud:115200 ");
-//}
-//MSH_CMD_EXPORT(gyroscope_baud_115200,Modify JY901 baud rate);
+/* 设置 九轴模块 波特率为9600 */
+void gyroscope_baud_115200(void)
+{
+		gyroscope_baud_array[3] = 0x06;
+		rt_device_write(gyro_uart_device, 0, gyroscope_baud_array, 5);  //115200
+		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
+		log_i("JY901 baud:115200 ");
+}
+MSH_CMD_EXPORT(gyroscope_baud_115200,Modify JY901 baud rate);
 
 

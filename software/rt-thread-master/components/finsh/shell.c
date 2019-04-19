@@ -848,7 +848,7 @@ int finsh_system_init(void)
     finsh_set_prompt_mode(1);
 
     if (tid != RT_NULL && result == RT_EOK){
-				rt_kprintf("Shell Open\r\n");	
+				//rt_kprintf("Shell Open\r\n");	
         rt_thread_startup(tid);
 		}
 		else {

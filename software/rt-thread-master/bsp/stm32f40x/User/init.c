@@ -148,14 +148,14 @@ int rt_system_init(void)
 	  monitor_thread = rt_thread_create("monitor",
 																			 thread_entry_sys_monitor, 
 																			 NULL,
-																			 512,
+																			 1024,
 																			 31,
 																			 10);
 							 
     sys_thread = rt_thread_create("sys_init",
 																	 sys_init_thread, 
 																	 NULL,
-																	 512,
+																	 1024,
 																	 5,
 																	 10);
 	

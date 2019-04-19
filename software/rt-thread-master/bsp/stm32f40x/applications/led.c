@@ -109,7 +109,7 @@ int led_thread_init(void)
 			
 
 				log_i("LED_Init()");
-				rt_event_send(&init_event, LED_EVENT);
+				//rt_event_send(&init_event, LED_EVENT);
 				rt_thread_startup(led_tid);
 		}
 		return 0;

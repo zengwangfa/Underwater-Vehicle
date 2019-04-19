@@ -75,7 +75,7 @@ int servo_thread_init(void)
 				log_i("Servo_init()");
 			
 				rt_thread_startup(servo_tid);
-				rt_event_send(&init_event, PWM_EVENT); //发送事件  表示初始化完成
+				//rt_event_send(&init_event, PWM_EVENT); //发送事件  表示初始化完成
 		}
 
 		return 0;

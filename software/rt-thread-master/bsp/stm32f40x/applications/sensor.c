@@ -49,7 +49,7 @@ int sensor_thread_init(void)
 
 
 				if(MS5837_Init()){
-						rt_event_send(&init_event, MS5837_EVENT);
+						//rt_event_send(&init_event, MS5837_EVENT);
 						log_i("MS5837_Init()");
 				}
 				else {

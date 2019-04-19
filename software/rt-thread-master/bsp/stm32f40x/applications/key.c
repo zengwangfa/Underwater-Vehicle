@@ -88,7 +88,7 @@ int key_thread_init(void)
 				//log_i("Current: BOMA_Value = %d", boma_value);
 	
 				rt_thread_startup(key_tid);
-				rt_event_send(&init_event, KEY_EVENT);
+				//rt_event_send(&init_event, KEY_EVENT);
 		}
 		return 0;
 }
