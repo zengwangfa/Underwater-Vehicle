@@ -41,9 +41,14 @@ void MS583703BA_GetTemperature(void);
 
 extern int64  dT;
 extern int64  D2_Temp;
-extern float  MS5837_Temp;
+extern float  MS5837_Temperature;
 extern uint32 MS5837_Pressure;
 extern int32  Cal_C[7];
+
+float get_ms5837_temperature(void);
+
+uint32 get_ms5837_pressure(void);
+
 
 #endif
 

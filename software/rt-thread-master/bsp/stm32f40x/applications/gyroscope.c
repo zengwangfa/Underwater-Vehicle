@@ -32,12 +32,12 @@ struct SLonLat 	stcLonLat;
 struct SGPSV 		stcGPSV;
 struct SQ       stcQ;
 
-struct JY901Type JY901 = {0}; //JY901真实值结构体
+//JY901Type Sensor.JY901 = {0}; //Sensor.JY901真实值结构体
 
 uint8 gyroscope_save_array[5] 		={0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
-uint8 gyroscope_package_array[5] ={0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据包【0x1F 0x00 为 <时间> <加速度> <角速度> <角度> <磁场>】
+uint8 gyroscope_package_array[5]  ={0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据包【0x1F 0x00 为 <时间> <加速度> <角速度> <角度> <磁场>】
 uint8 gyroscope_rate_array[5] 		={0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
-uint8 gyroscope_led_array[5] 		={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
+uint8 gyroscope_led_array[5] 		  ={0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
 uint8 gyroscope_baud_array[5] 		={0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
 
 extern rt_device_t gyro_uart_device;	
@@ -90,8 +90,8 @@ void CopeSerial2Data(uint8 Data)
 
 }
 
-/* JY901 数据转换 */
-void JY901_Convert(struct JY901Type * pArr) 
+/* Sensor.JY901 数据转换 */
+void JY901_Convert(JY901Type * pArr) 
 {
 
 		pArr->Acc.x  = (float)stcAcc.a[0]/2048;   //32768*16
@@ -106,9 +106,9 @@ void JY901_Convert(struct JY901Type * pArr)
 		pArr->Euler.Pitch = (float)stcAngle.angle[1]/8192*45;
 		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45;
 	
-		pArr->Mag.x 	= stcMag.h[0];
-		pArr->Mag.y		= stcMag.h[1];
-		pArr->Mag.z 	= stcMag.h[2];
+		pArr->Mag.x  = stcMag.h[0];
+		pArr->Mag.y	 = stcMag.h[1];
+		pArr->Mag.z  = stcMag.h[2];
 	
 		pArr->Temperature = (float)stcAcc.T/100;
 }
@@ -129,27 +129,27 @@ MSH_CMD_EXPORT(get_time,get acceleration[a]);
 void get_gyroscope(void)
 {		
 		char str[50];
-		sprintf(str,"Acc:%.3f %.3f %.3f",  JY901.Acc.x,  JY901.Acc.y,  JY901.Acc.z);
+		sprintf(str,"Acc:%.3f %.3f %.3f",  Sensor.JY901.Acc.x,  Sensor.JY901.Acc.y,  Sensor.JY901.Acc.z);
 		log_i(str);
-		sprintf(str,"Gyro:%.3f %.3f %.3f", JY901.Gyro.x, JY901.Gyro.y, JY901.Gyro.z);
+		sprintf(str,"Gyro:%.3f %.3f %.3f", Sensor.JY901.Gyro.x, Sensor.JY901.Gyro.y, Sensor.JY901.Gyro.z);
 		log_i(str);
-		sprintf(str,"Angle:%.3f %.3f %.3f",JY901.Euler.Roll,JY901.Euler.Pitch,JY901.Euler.Yaw);
+		sprintf(str,"Angle:%.3f %.3f %.3f",Sensor.JY901.Euler.Roll,Sensor.JY901.Euler.Pitch,Sensor.JY901.Euler.Yaw);
 		log_i(str);
-		sprintf(str,"Mag:%d %d %d",				 JY901.Mag.x,  JY901.Mag.y,   JY901.Mag.z);
+		sprintf(str,"Mag:%d %d %d",				 Sensor.JY901.Mag.x,  Sensor.JY901.Mag.y,   Sensor.JY901.Mag.z);
 		log_i(str);	
 	
 		return;
 }
-MSH_CMD_EXPORT(get_gyroscope,get JY901[a]);
+MSH_CMD_EXPORT(get_gyroscope,get Sensor.JY901[a]);
 
 
 /* Get 温度  Temperature */
 float get_temperature(void)
 {
 		char str[50];
-		sprintf(str,"Temperature:%.2f C\r\n",JY901.Temperature);
+		sprintf(str,"Temperature:%.2f C\r\n",Sensor.JY901.Temperature);
 		log_i(str);	
-		return JY901.Temperature;
+		return Sensor.JY901.Temperature;
 }
 MSH_CMD_EXPORT(get_temperature, get Temperature[T]);
 
@@ -161,7 +161,7 @@ MSH_CMD_EXPORT(get_temperature, get Temperature[T]);
 void gyroscope_save(void)
 {
 			rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //进入加速度校准
-			log_i("JY901 Save successed!");
+			log_i("Sensor.JY901 Save successed!");
 }
 MSH_CMD_EXPORT(gyroscope_save,gyroscope_save);
 
@@ -172,7 +172,7 @@ MSH_CMD_EXPORT(gyroscope_save,gyroscope_save);
 //{
 //		gyroscope_save_array[3] = 0x01;
 //		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
-//		log_i("JY901 Reset!");
+//		log_i("Sensor.JY901 Reset!");
 //}
 //MSH_CMD_EXPORT(gyroscope_reset,gyroscope reset);
 
@@ -183,7 +183,7 @@ void gyroscope_package_open(void)
 		gyroscope_save_array[3] = 0x00;
 		rt_device_write(gyro_uart_device, 0, gyroscope_package_array, 5);   //ON package 开启回传数据包
 		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //SAVE
-		log_i("Open successed! JY901: 1.Time  2.Acc  3.Gyro  4.Angle  5.Mag OPEN!");
+		log_i("Open successed! Sensor.JY901: 1.Time  2.Acc  3.Gyro  4.Angle  5.Mag OPEN!");
 }
 MSH_CMD_EXPORT(gyroscope_package_open,gyroscope package open);
 
@@ -216,6 +216,27 @@ _exit:
     return result;
 }
 MSH_CMD_EXPORT(gyroscope_led, gyroscope_led on/off);
+
+///* 设置 九轴模块 波特率为9600 */
+//void gyroscope_baud_9600(void)
+//{
+//		gyroscope_baud_array[3] = 0x02;
+//		rt_device_write(gyro_uart_device, 0, gyroscope_baud_array, 5);   //ON LED
+//		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
+//		log_i("Sensor.JY901 baud:9600 ");
+//}
+//MSH_CMD_EXPORT(gyroscope_baud_9600,Modify Sensor.JY901 baud rate);
+
+/* 设置 九轴模块 波特率为9600 */
+void gyroscope_baud_115200(void)
+{
+		gyroscope_baud_array[3] = 0x06;
+		rt_device_write(gyro_uart_device, 0, gyroscope_baud_array, 5);  //115200
+		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
+		log_i("Sensor.JY901 baud:115200 ");
+}
+MSH_CMD_EXPORT(gyroscope_baud_115200,Modify Sensor.JY901 baud rate);
+
 ///* 设置 九轴模块 加速度校准 */
 //void gyroscope_Acc_calibration_enter(void)
 //{
@@ -254,24 +275,5 @@ MSH_CMD_EXPORT(gyroscope_led, gyroscope_led on/off);
 
 
 
-///* 设置 九轴模块 波特率为9600 */
-//void gyroscope_baud_9600(void)
-//{
-//		gyroscope_baud_array[3] = 0x02;
-//		rt_device_write(gyro_uart_device, 0, gyroscope_baud_array, 5);   //ON LED
-//		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
-//		log_i("JY901 baud:9600 ");
-//}
-//MSH_CMD_EXPORT(gyroscope_baud_9600,Modify JY901 baud rate);
-
-/* 设置 九轴模块 波特率为9600 */
-void gyroscope_baud_115200(void)
-{
-		gyroscope_baud_array[3] = 0x06;
-		rt_device_write(gyro_uart_device, 0, gyroscope_baud_array, 5);  //115200
-		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
-		log_i("JY901 baud:115200 ");
-}
-MSH_CMD_EXPORT(gyroscope_baud_115200,Modify JY901 baud rate);
 
 

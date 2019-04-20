@@ -154,11 +154,11 @@ float get_temperature(void);
 
 /*-----------------应用函数----------------*/
 
-void JY901_Convert(struct JY901Type * pArr);
+void JY901_Convert(JY901Type * pArr);
 
 void CopeSerial2Data(unsigned char Data);
  
-extern struct JY901Type JY901; //JY901真实值结构体
+extern JY901Type JY901; //JY901真实值结构体
  
  
 #endif

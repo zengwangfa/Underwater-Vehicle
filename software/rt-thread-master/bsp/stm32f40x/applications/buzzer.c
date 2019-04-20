@@ -49,7 +49,7 @@ int buzzer_thread_init(void)
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
                     15,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
+                    1);										 //线程的时间片大小【tick】= 100ms
 
     if (buzzer_tid != RT_NULL){
 				Buzzer_Init();

@@ -16,6 +16,7 @@
 #include  "Control.h"
 #include "gyroscope.h"
 #include "debug.h"
+#include "Return_Data.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 
@@ -24,23 +25,32 @@
 
 
 
-extern uint8 debug_startup_flag;
+
 /*----------------------- Function Implement --------------------------------*/
 
+
+/**
+  * @brief  timer1_out(定时器中断函数)
+  * @param  void* parameter
+  * @retval None
+  * @notice 定时器中不能存在延时或者释放线程的操作
+  */
 static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 {
 		static int count = 0;
-
+		uint8 begin_buff[3] = {0xAA,0x55,0x00};
 		count ++;
 
 		/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
 		rt_enter_critical();
 				
-		JY901_Convert(&JY901); //JY901数据转换
+		JY901_Convert(&Sensor.JY901); //JY901数据转换
 
 		/* 调度器解锁 */
 		rt_exit_critical();
-		
+		Convert_Return_Computer_Data();
+	
+		Send_Buffer_Agreement(begin_buff,Return_Data,18);
 		Angle_Control();
 	
 }

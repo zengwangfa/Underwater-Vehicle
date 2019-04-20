@@ -100,7 +100,7 @@ int led_thread_init(void)
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
                     25,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
+                    1);										 //线程的时间片大小【tick】= 100ms
 
     if (led_tid != RT_NULL){
 				rt_pin_mode(LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	

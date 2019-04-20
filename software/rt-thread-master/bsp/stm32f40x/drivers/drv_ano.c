@@ -299,13 +299,13 @@ void ANO_Data_Send_Status(void)//发送基本信息（姿态、锁定状态）
 		data_to_send[_cnt++]=0x01;
 		data_to_send[_cnt++]=0;
 		
-		_temp = (int)(JY901.Euler.Roll*100);
+		_temp = (int)(Sensor.JY901.Euler.Roll*100);
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
-		_temp = (int)(JY901.Euler.Pitch*100);
+		_temp = (int)(Sensor.JY901.Euler.Pitch*100);
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
-		_temp = (int)(-JY901.Euler.Yaw*100);
+		_temp = (int)(-Sensor.JY901.Euler.Yaw*100);
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
 		
@@ -593,9 +593,9 @@ void ANO_SEND_StateMachine(void)
 		}
 	
 		else if(ANO_Cnt == 2){
-				ANO_DT_Send_Senser(JY901.Acc.x,JY901.Acc.y,JY901.Acc.z,
-													 JY901.Gyro.x,JY901.Gyro.y,JY901.Gyro.z,
-													 JY901.Mag.x,JY901.Mag.y,JY901.Mag.z);
+				ANO_DT_Send_Senser(Sensor.JY901.Acc.x,Sensor.JY901.Acc.y,Sensor.JY901.Acc.z,
+													 Sensor.JY901.Gyro.x,Sensor.JY901.Gyro.y,Sensor.JY901.Gyro.z,
+													 Sensor.JY901.Mag.x,Sensor.JY901.Mag.y,Sensor.JY901.Mag.z);
 		}
 		
 		else if(ANO_Cnt==3)

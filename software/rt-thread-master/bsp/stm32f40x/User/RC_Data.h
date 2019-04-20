@@ -33,7 +33,7 @@ typedef struct{
 
 
 extern ReceiveDataType ReceiveData;
-
+void Remote_Control_Data_Analysis(uint8 Data); //控制数据解析
 
 
 #endif 

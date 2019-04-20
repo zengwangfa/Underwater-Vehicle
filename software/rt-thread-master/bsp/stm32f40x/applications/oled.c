@@ -19,6 +19,9 @@
 #include "buzzer.h"
 #include "key.h"
 #include "adc.h"
+#include "gyroscope.h"
+#include "sensor.h"
+
 /* 自定义OLED 坐标系如下: 
 
 	127 ↑y
@@ -41,7 +44,6 @@
 extern struct rt_event init_event;/* ALL_init 事件控制块 */
 extern struct SAngle 	stcAngle;
 
-extern struct JY901Type JY901;
 extern uint8 VehicleMode;
 
 float slope = 0.0; //东北天坐标系下 航向斜率 slope
@@ -53,8 +55,8 @@ uint32 total_mem,used_mem,max_used_mem;
 /* OLED 变量 初始化. */
 OledType oled = {	 
 								 .pagenum = StatusPage,		 //页码 pagenum
-								 .pagechange = StatusPage,	   //暂存页码 检测页码是否改变 pagechange
-								 .pagechange_flag = 0,              //页码改变标志位 pagechange flag
+								 .pagechange = StatusPage, //暂存页码 检测页码是否改变 pagechange
+								 .pagechange_flag = 0,     //页码改变标志位 pagechange flag
 								 .pagename = {	
 									"StatusPage",
 									"GyroscopePage",
@@ -129,18 +131,19 @@ void oled_thread_entry(void* parameter)
 void OLED_StatusPage(void)
 {
 		char str[100];
-		float temp = 0.0f;  //暂存cpu温度初始采集值
+
 	  uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
 	
-		temp = get_cpu_temp();
-
-		//OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
-		//OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
+		Sensor.CPU.Temperature = get_cpu_temp();
+		Sensor.Power_volatge = get_vol();
+	
+  	OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
+		OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
 	
 		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[VehicleMode],boma_value_get());
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
-		sprintf(str,"Voltage:%.2f v  \r\n",get_vol());
+		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.Power_volatge);
 		OLED_ShowString(0,16,(uint8 *)str,12); 
 	
     cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
@@ -148,7 +151,7 @@ void OLED_StatusPage(void)
 	  sprintf(str,"CPU Usage:%d.%d %% ",cpu_usage_major, cpu_usage_minor);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
 		OLED_ShowString(0,32,(uint8 *)str,12); 
 		
-		sprintf(str,"Temperature:%.2f C \r\n",KalmanFilter(&temp));//显示卡尔曼滤波后的温度
+		sprintf(str,"Temperature:%.2f C \r\n",KalmanFilter(&Sensor.CPU.Temperature));//显示卡尔曼滤波后的温度
 		OLED_ShowString(0,48,(uint8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }
@@ -164,16 +167,16 @@ void OLED_StatusPage(void)
 void OLED_GyroscopePage(void)
 {
 		char str[100];
-		sprintf(str,"Acc:%.2f %.2f %.2f  ",JY901.Acc.x,JY901.Acc.y,JY901.Acc.z);
+		sprintf(str,"Acc:%.2f %.2f %.2f  ",Sensor.JY901.Acc.x,Sensor.JY901.Acc.y,Sensor.JY901.Acc.z);
 		OLED_ShowString(0,0,(uint8 *)str,12); 	
 		
-		sprintf(str,"Gyro:%.1f %.1f %.1f ",JY901.Gyro.x,JY901.Gyro.y,JY901.Gyro.z);
+		sprintf(str,"Gyro:%.1f %.1f %.1f ",Sensor.JY901.Gyro.x,Sensor.JY901.Gyro.y,Sensor.JY901.Gyro.z);
 		OLED_ShowString(0,16,(uint8 *)str,12); 	
 		
-		sprintf(str,"Ang:%.1f %.1f %.1f  ",JY901.Euler.Roll,JY901.Euler.Pitch,JY901.Euler.Yaw);
+		sprintf(str,"Ang:%.1f %.1f %.1f  ",Sensor.JY901.Euler.Roll,Sensor.JY901.Euler.Pitch,Sensor.JY901.Euler.Yaw);
 		OLED_ShowString(0,32,(uint8 *)str,12); 	
 		 
-		sprintf(str,"Mag:%d %d %d  ",JY901.Mag.x,JY901.Mag.y,JY901.Mag.z);
+		sprintf(str,"Mag:%d %d %d  ",Sensor.JY901.Mag.x,Sensor.JY901.Mag.y,Sensor.JY901.Mag.z);
 		OLED_ShowString(0,48,(uint8 *)str,12); 
 		
 	  OLED_Refresh_Gram();//更新显示到OLED
@@ -198,9 +201,9 @@ void OLED_PicturePage(void)
 	
 		OLED_Refresh_Gram();//更新显示到OLED
 	
-		Angle_x = JY901.Euler.Roll/5;
-		Angle_y = JY901.Euler.Pitch/5;
-		slope = tan((float)Deg2Rad(JY901.Euler.Yaw));  //转化弧度制 解算东北天坐标系下 航向斜率slope
+		Angle_x = Sensor.JY901.Euler.Roll/5;
+		Angle_y = Sensor.JY901.Euler.Pitch/5;
+		slope = tan((float)Deg2Rad(Sensor.JY901.Euler.Yaw));  //转化弧度制 解算东北天坐标系下 航向斜率slope
 	
 		for(y = 28;y <= 36;y++){ //补圆顶、底部的缺失点
 				OLED_DrawPoint(y,0,1);
@@ -209,13 +212,13 @@ void OLED_PicturePage(void)
 
 		draw_line(31,31,slope,1);
 		
-		sprintf(str,"Rol:%3.1f  ",JY901.Euler.Roll); //横滚角Roll 
+		sprintf(str,"Rol:%3.1f  ",Sensor.JY901.Euler.Roll); //横滚角Roll 
 		OLED_ShowString(65,0, (uint8 *)str,12);
 		
-		sprintf(str,"Pit:%3.1f  ",JY901.Euler.Pitch);//俯仰角Pitch
+		sprintf(str,"Pit:%3.1f  ",Sensor.JY901.Euler.Pitch);//俯仰角Pitch
 		OLED_ShowString(65,16, (uint8 *)str,12);
 		
-		sprintf(str,"Yaw:%3.1f  ",JY901.Euler.Yaw); //偏航角Yaw
+		sprintf(str,"Yaw:%3.1f  ",Sensor.JY901.Euler.Yaw); //偏航角Yaw
 		OLED_ShowString(65,32, (uint8 *)str,12);
 		
 		sprintf(str,"k:%.1f   ",slope);
@@ -338,12 +341,12 @@ void draw_line(uint8 x0,uint8 y0,float k,uint8 dot) //过固定点(x0,y0),斜率k   do
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 			
-				if( (JY901.Euler.Yaw >-135 && JY901.Euler.Yaw <-90 ) ||(JY901.Euler.Yaw >90 && JY901.Euler.Yaw < 145 ) || 0 == dot ){ //上半圆
+				if( (Sensor.JY901.Euler.Yaw >-135 && Sensor.JY901.Euler.Yaw <-90 ) ||(Sensor.JY901.Euler.Yaw >90 && Sensor.JY901.Euler.Yaw < 145 ) || 0 == dot ){ //上半圆
 						if(  ((x-x0)/k+y0) >= 31 && ((x-x0)/k+y0) < y ) {  //点限制在 圆方程内
 								OLED_DrawPoint(x,((x-x0)/k+y0),dot);}
 				}
 				
-				if( (JY901.Euler.Yaw < -45 && JY901.Euler.Yaw > -90) || (JY901.Euler.Yaw < 90 && JY901.Euler.Yaw> 45) || 0 == dot  ){ //上半圆
+				if( (Sensor.JY901.Euler.Yaw < -45 && Sensor.JY901.Euler.Yaw > -90) || (Sensor.JY901.Euler.Yaw < 90 && Sensor.JY901.Euler.Yaw> 45) || 0 == dot  ){ //上半圆
 						if(  ((x-x0)/k+y0) <= 31 && ((x-x0)/k+y0)> 63-y ) {  //点限制在 圆方程内
 								OLED_DrawPoint(x,((x-x0)/k+y0),dot);}
 				}
@@ -364,12 +367,12 @@ void draw_line(uint8 x0,uint8 y0,float k,uint8 dot) //过固定点(x0,y0),斜率k   do
 		for(x = 0;x <= 63;x++){
 				y = sqrt(pow(20,2)-pow(x-31,2))+31+1; //圆方程  x,y反置
 		
-				if( (JY901.Euler.Yaw>=-45 && JY901.Euler.Yaw <= 0) || (JY901.Euler.Yaw >=-180 && JY901.Euler.Yaw <= -135)  || 0 == dot ){  // JY901.Angle[2] < 0
+				if( (Sensor.JY901.Euler.Yaw>=-45 && Sensor.JY901.Euler.Yaw <= 0) || (Sensor.JY901.Euler.Yaw >=-180 && Sensor.JY901.Euler.Yaw <= -135)  || 0 == dot ){  // Sensor.JY901.Angle[2] < 0
 						if( (k*(x-x0)+y0) >= 31 && (k*(x-x0)+y0) < y ) {  //点限制在 圆方程内   上半圆
 								OLED_DrawPoint((k*(x-x0)+y0),x,dot);}
 				}
 				
-				if( (JY901.Euler.Yaw > 0 && JY901.Euler.Yaw <= 45) || (JY901.Euler.Yaw >=135 && JY901.Euler.Yaw <= 180)  || 0 == dot ){  // JY901.Angle[2] < 0
+				if( (Sensor.JY901.Euler.Yaw > 0 && Sensor.JY901.Euler.Yaw <= 45) || (Sensor.JY901.Euler.Yaw >=135 && Sensor.JY901.Euler.Yaw <= 180)  || 0 == dot ){  // Sensor.JY901.Angle[2] < 0
 						if(((k*(x-x0)+y0)< 31 && (k*(x-x0)+y0) > 63-y)) {  //点限制在 圆方程内  下半圆
 								OLED_DrawPoint((k*(x-x0)+y0),x,dot);} 
 				}
@@ -386,7 +389,7 @@ int oled_thread_init(void)
                     RT_NULL,				    //线程入口函数参数【parameter】
                     1024,							  //线程栈大小，单位是字节【byte】
                     15,								  //线程优先级【priority】
-                    10);							  //线程的时间片大小【tick】= 100ms
+                    1);							  //线程的时间片大小【tick】= 100ms
 
     if (oled_tid != RT_NULL){
 				OLED_Init();

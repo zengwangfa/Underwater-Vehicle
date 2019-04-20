@@ -28,6 +28,7 @@ extern rt_device_t debug_uart_device;
 extern uint8 debug_startup_flag;
 extern float  volatge;
 extern float  Yaw;
+
 enum 
 {
 		DEBUG_NULL,
@@ -71,8 +72,8 @@ int Debug_thread_init(void)
                     debug_send_thread_entry,									 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
-                    30,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
+                    10,										 	 //线程优先级【priority】
+                    1);										 //线程的时间片大小【tick】= 100ms
 
     if (debug_send_tid != RT_NULL){
 				rt_thread_startup(debug_send_tid);
@@ -108,11 +109,11 @@ void Vcan_Send_Data(void)
 	
 		list[0] = Total_Controller.Yaw_Angle_Control.Err; 	//横滚角 Roll 
 		list[1] = Total_Controller.Yaw_Angle_Control.Control_OutPut;  //俯仰角 Pitch
-		list[2] = JY901.Euler.Yaw; 	  //偏航角 Yaw
+		list[2] = Sensor.JY901.Euler.Yaw; 	  //偏航角 Yaw
 		list[3] = Yaw;    //CPU温度 temp
 		list[4] = 0;//KalmanFilter(&temp);//卡尔曼滤波后的温度
 		list[5] = 0;//MS_TEMP;//get_vol();
-		list[6] = MS5837_Temp;//MS5837_Pressure;	//KalmanFilter(&vol)
+		list[6] = MS5837_Temperature;//MS5837_Pressure;	//KalmanFilter(&vol)
 		list[7] = MS5837_Pressure;	//camera_center;
 		
 		Vcan_Send_Cmd(list,sizeof(list));

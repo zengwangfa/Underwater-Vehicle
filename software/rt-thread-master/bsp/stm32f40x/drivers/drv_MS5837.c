@@ -36,7 +36,7 @@ MS_TEMP 实际温度
 
 int32 Cal_C[7];	        //用于存放PROM中的6组数据1-6
 int64 dT;
-float MS_TEMP,MS5837_Temp;
+float MS_TEMP,MS5837_Temperature;
 int64 D1_Pres,D2_Temp;	// 数字压力值,数字温度值
 
 
@@ -238,7 +238,20 @@ void MS583703BA_getPressure(void)
 				SENS = SENS - SENS2;			 
 		}
 		MS5837_Pressure= ((D1_Pres*SENS/2097152-OFF_)/4096)/10;
-		MS5837_Temp=(MS_TEMP-T2)/100;
+		MS5837_Temperature=(MS_TEMP-T2)/100;
 }
+
+
+
+float get_ms5837_temperature(void)
+{
+		return MS5837_Temperature;
+}
+
+uint32 get_ms5837_pressure(void)
+{
+		return MS5837_Pressure;
+}
+
 
 

@@ -19,7 +19,12 @@ rt_thread_t self_check_tid;
 
 /*----------------------- Function Implement --------------------------------*/
 
-
+/**
+  * @brief  self_check_entry(系统自检函数)
+  * @param  void* parameter
+  * @retval None
+  * @notice 当所有设备发送初始化完成事件后，判断为系统自检完成
+  */
 void self_check_entry(void* parameter)
 {
 	  rt_uint32_t e;
@@ -37,7 +42,7 @@ void self_check_entry(void* parameter)
 				log_v("Clock: %d Hz.",Get_RCC_Clocks.SYSCLK_Frequency); //打印系统时钟
 		}
 		else {
-				log_w("some devices initialization failed.");
+				log_e("some devices initialization failed.");
 		}
 }
 
@@ -51,7 +56,7 @@ int Self_Check_thread_init(void)
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
                     8,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
+                    1);										 //线程的时间片大小【tick】= 100ms
 
     if (self_check_tid != RT_NULL){
 				log_i("SelfCheck_Init()");

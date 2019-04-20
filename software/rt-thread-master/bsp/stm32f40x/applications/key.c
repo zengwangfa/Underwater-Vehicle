@@ -72,7 +72,7 @@ int key_thread_init(void)
                     RT_NULL,
                     512,
                     25,
-                    10);
+                    1);
 
     if (key_tid != RT_NULL){			
 				rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);    //功能按键  上拉输入

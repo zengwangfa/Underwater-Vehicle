@@ -1,7 +1,7 @@
 /*
  * servo.c
  *
- *  Created on: 2019年2月30日
+ *  Created on: 2019年3月30日
  *      Author: zengwangfa
  *      Notes:  舵机设备
  */
@@ -30,7 +30,12 @@ ServoType YunTai ={  //云台
 }; 
 
 
-
+/**
+  * @brief  servo_thread_entry(舵机任务函数)
+  * @param  void* parameter
+  * @retval None
+  * @notice 
+  */
 void servo_thread_entry(void *parameter)
 {
 		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
@@ -65,9 +70,9 @@ int servo_thread_init(void)
     servo_tid = rt_thread_create("pwm",//线程名称
                     servo_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    512,										 //线程栈大小，单位是字节【byte】
+                    1024,										 //线程栈大小，单位是字节【byte】
                     10,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
+                    1);										 //线程的时间片大小【tick】= 100ms
 
     if (servo_tid != RT_NULL){
 				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  

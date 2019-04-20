@@ -41,7 +41,12 @@ const float Control_Unit[18][20]=
 
 };
 
-
+/**
+  * @brief  PID_Init(PID参数初始化函数)
+  * @param  PID_Controler PID控制器、Controler_Label PID参数表
+  * @retval None
+  * @notice 
+  */
 void PID_Init(PID_Controler *Controler,Controler_Label Label)
 {
 		Controler->Err_Limit_Flag=(uint8)(Control_Unit[Label][0]);//1偏差限幅标志

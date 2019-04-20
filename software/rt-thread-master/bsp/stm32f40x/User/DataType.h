@@ -46,18 +46,38 @@ typedef struct
 		float Yaw;     //z
 }Euler3f;//欧拉角3轴向量 short型 16为短整型
 
-struct JY901Type
+typedef struct 
 {
 		Vector3f Acc; 		//加速度
 		Vector3f Gyro; 		//角速度
+		Vector3f Speed;   //速度
 		Vector3s Mag;     //磁场
 		Euler3f Euler;		//欧拉角
 		float Temperature;	//温度
-};
+}JY901Type;
+
+typedef struct 
+{
+		float Temperature; 		//加速度
+		float Usage; 		//角速度
+}CPUType;
+
+typedef struct 
+{
+		float Temperature; 		//加速度
+		uint32 Depth; 		//角速度
+}MS5837Type;
 
 
+typedef struct{
+	
+		float Power_volatge;   //电源电压
+		CPUType CPU;           //CPU【温度】【使用率】
+		JY901Type JY901;       //【欧拉角】【速度】
+		MS5837Type MS5837;     //水【温度】【深度】
 
-extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
+}SensorType;
+
 
 typedef enum {
 		System_NORMAL_STATUS = 1,//正常模式
@@ -65,8 +85,8 @@ typedef enum {
 		System_ERROR_STATUS,
 }VehicleStatus_Enum;  //枚举系统状态
 
-
-
+extern SensorType Sensor;
+extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 
 /************重要定义***************/
 
