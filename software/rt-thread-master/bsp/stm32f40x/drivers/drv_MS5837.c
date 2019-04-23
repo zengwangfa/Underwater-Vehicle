@@ -142,12 +142,12 @@ uint8 MS5837_Init(void){
 		MS583703BA_RESET();	     
 		rt_thread_mdelay(100);  
 	
-		if(1 == MS5837_Get_PROM())
-		{
+		if(1 == MS5837_Get_PROM()){
 				return 1;
 		}
-		else 
+		else {
 				return 0;
+		}
 		
 }
 

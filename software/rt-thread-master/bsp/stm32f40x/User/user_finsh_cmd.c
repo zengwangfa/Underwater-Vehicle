@@ -6,18 +6,21 @@
  *      Notes:  更新固件 Update 方法
  */
 #define LOG_TAG    "cmd"
+
 #include "init.h"
+#include <rthw.h>
 #include <rtthread.h>
 #include <shell.h>
 #include <finsh.h>
 #include <elog.h>
 
 #include <easyflash.h>
+#include <time.h>
 #include <ymodem.h>
+#include <board.h>
 #include "flash.h"
 
-extern char *VehicleModeName[2];
-extern u8 VehicleMode;
+
 
 static size_t update_file_total_size, update_file_cur_size;
 static uint32_t crc32_checksum = 0;
@@ -98,42 +101,5 @@ __exit:
 }
 MSH_CMD_EXPORT(update, Update user application firmware);
 
-void get_memory_situation(void)
-{
-		 static rt_uint32_t total_mem, used_mem, max_used_mem;
-	   rt_memory_info(&total_mem, &used_mem, &max_used_mem);
-     rt_kprintf("Total_Mem:%ld  Used_Mem:%ld  Max_Used_Mem:%ld\n",total_mem,used_mem,max_used_mem);
-}
-MSH_CMD_EXPORT(get_memory_situation,get memory situation);
-
-
-/*  设置机器工作模式 */
-static int set_vehicle_mode(int argc,char **argv)
-{
-		int result = 0;
-    if (argc != 2){
-				log_e("Proper Usage: set_vehicle_mode auv / rov");//用法:设置工作模式
-				result = -RT_ERROR;
-        goto _exit;
-    }
-		if( !strcmp(argv[1],"auv") ){ //设置为工作模式 strcmp 检验两边相等 返回0
-				VehicleMode = AUV_Mode;
-				Flash_Update();
-				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
-		}
-
-		else if( !strcmp(argv[1],"rov") ){ //设置为 ROV
-				VehicleMode = ROV_Mode;
-				Flash_Update();
-				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
-		}
-		else {
-				log_e("Proper Usage: set_vehicle_mode auv / rov");
-				goto _exit;
-		}
-_exit:
-    return result;
-}
-MSH_CMD_EXPORT(set_vehicle_mode,set_vehicle_mode auv / rov);
 
 

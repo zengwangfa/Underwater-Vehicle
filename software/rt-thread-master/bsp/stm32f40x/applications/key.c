@@ -14,14 +14,20 @@
 #include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
-#define KEY_PIN  		79 	 //PD10
+#define KEY_PIN  						88 	 //PDG3   
 
-#define BOMA1_PIN	  14	 //PF4
-#define BOMA2_PIN 	15	 //PF5
+#define WIFI_CONNECT_IO  		80 	 //PD11   WIFI连接IO检测
+
+#define BOMA3_PIN 					13	 //PF3
+#define BOMA2_PIN	  				14	 //PF4
+#define BOMA1_PIN 					15	 //PF5
+
 
 #define boma1_read 					rt_pin_read(BOMA1_PIN)
 #define boma2_read 					rt_pin_read(BOMA2_PIN)
+#define boma3_read 					rt_pin_read(BOMA3_PIN)
 
+#define wifi_read 					rt_pin_read(WIFI_CONNECT_IO)
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
 extern struct rt_event init_event;
@@ -56,6 +62,17 @@ uint8 boma_value_get(void)
     return val;
 }
 
+/**
+	* @brief  wifi_connect_get(wifi连接)
+  * @param  None
+  * @retval 1 连接上   0无连接
+  * @notice 
+  */
+uint8 wifi_connect_get(void)
+{
+		return !wifi_read; 
+}
+
 /* 按键按下产生的任务 */
 void key_down(void *args)  
 {
@@ -72,15 +89,17 @@ int key_thread_init(void)
                     RT_NULL,
                     512,
                     25,
-                    1);
+                    10);
 
     if (key_tid != RT_NULL){			
 				rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);    //功能按键  上拉输入
 				rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
 				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
-				
-				rt_pin_mode(KEY_PIN, PIN_MODE_INPUT_PULLUP);	/* 按键引脚为输入模式 */
-				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为beep_on */
+				rt_pin_mode(BOMA3_PIN, PIN_MODE_INPUT_PULLUP);  
+			
+				rt_pin_mode(WIFI_CONNECT_IO, PIN_MODE_INPUT_PULLUP);  
+
+				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为key_down */
 				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
 			
 				log_i("KEY_Init()");

@@ -65,6 +65,6 @@ void Propeller_Init(void)
 		TIM_SetCompare4(TIM4, PropellerPower_Med);  		//最高转速信号    水平推进器4号
 		rt_thread_mdelay(1000);  
 		
-		log_v("Propeller_Init()\r\n");
+		log_i("Propeller_Init()\r\n");
 }
 

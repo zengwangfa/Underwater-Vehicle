@@ -129,7 +129,6 @@ static rt_err_t exception_hook(void *context) {
 /* …Ë÷√RTT∂œ—‘π≥◊” */
 static void rtt_user_assert_hook(const char* ex, const char* func, rt_size_t line) {
 	
-
     rt_enter_critical();
 
 #ifdef ELOG_ASYNC_OUTPUT_ENABLE
@@ -149,7 +148,7 @@ int rt_system_init(void)
 																			 thread_entry_sys_monitor, 
 																			 NULL,
 																			 1024,
-																			 31,
+																			 30,
 																			 10);
 							 
     sys_thread = rt_thread_create("sys_init",

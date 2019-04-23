@@ -27,17 +27,17 @@ void sensor_thread_entry(void* parameter)
 	
 		while(1)
 		{
-				
+
 				MS583703BA_getTemperature();//获取温度
 				MS583703BA_getPressure();   //获取大气压
 
 				Sensor.MS5837.Temperature = get_ms5837_temperature();
-			  Sensor.MS5837.Depth = get_ms5837_pressure();
+				Sensor.MS5837.Depth = get_ms5837_pressure();
+		
 			
-				rt_thread_mdelay(1);
+				rt_thread_mdelay(10);
 		}
 }
-
 
 
 
@@ -49,7 +49,7 @@ int sensor_thread_init(void)
     sensor_tid = rt_thread_create("sensor",//线程名称
                     sensor_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    512,										 //线程栈大小，单位是字节【byte】
                     20,										 	 //线程优先级【priority】
                     1);										 //线程的时间片大小【tick】= 100ms
 
@@ -59,6 +59,7 @@ int sensor_thread_init(void)
 						//rt_event_send(&init_event, MS5837_EVENT);
 						log_i("MS5837_Init()");
 						rt_thread_startup(sensor_tid);
+
 				}
 				else {
 						log_e("MS5837_Init_Failed!");

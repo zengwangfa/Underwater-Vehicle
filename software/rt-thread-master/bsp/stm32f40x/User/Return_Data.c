@@ -14,14 +14,49 @@ SensorType Sensor;//传感器参数
 uint8 Return_Data[18] = {0};
 uint8 hint;		//提示字符
 
+extern uint8 uart_startup_flag;
+
+void return_computer_thread_entry(void* parameter)
+{
+		static uint8 begin_buff[3] = {0xAA,0x55,0x00};
+		while(uart_startup_flag){ //当debug_uart初始化完毕后 才进行上位机通信
+			
+				Convert_Return_Computer_Data(); //转换返回上位机的数据
+
+				Send_Buffer_Agreement(begin_buff,Return_Data,18); //发送数据包协议
+		}
+}
+
+int return_computer_thread_init(void)
+{
+    rt_thread_t return_computer_tid;
+		/*创建动态线程*/
+    return_computer_tid = rt_thread_create("led",//线程名称
+													return_computer_thread_entry,				 //线程入口函数【entry】
+													RT_NULL,							   //线程入口函数参数【parameter】
+													512,										 //线程栈大小，单位是字节【byte】
+													20,										 	 //线程优先级【priority】
+													10);										 //线程的时间片大小【tick】= 100ms
+
+    if (return_computer_tid != RT_NULL){
+
+				rt_thread_startup(return_computer_tid);
+		}
+		return 0;
+}
+INIT_APP_EXPORT(return_computer_thread_init);
+
+
+
+
 /**
   * @brief  get_decimal(得到浮点型数据头两位小数的100倍)
   * @param  浮点型数据 data
   * @retval 头两位小数的100倍
   * @notice 
   */
-uint8 get_decimal(float data) //得到浮点型 的2位小数位
-{
+uint8 get_decimal(float data){ //得到浮点型 的2位小数位
+
 		return (data - (int)data)*100;
 }
 
@@ -36,11 +71,11 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 		Return_Data[0] = (int)Sensor.Power_volatge; //整数倍
 		Return_Data[1] = get_decimal(Sensor.Power_volatge);//小数的100倍
 	
-		Return_Data[2] = (int)Sensor.MS5837.Temperature; //整数倍
-		Return_Data[3] = get_decimal(Sensor.MS5837.Temperature);//小数的100倍	
-		
-		Return_Data[4] = (int)Sensor.CPU.Temperature; //整数倍
-		Return_Data[5] = get_decimal(Sensor.CPU.Temperature) ;//小数的100倍
+		Return_Data[2] = (int)Sensor.CPU.Temperature; //整数倍
+		Return_Data[3] = get_decimal(Sensor.CPU.Temperature) ;//小数的100倍
+	
+		Return_Data[4] = (int)Sensor.MS5837.Temperature; //整数倍
+		Return_Data[5] = get_decimal(Sensor.MS5837.Temperature);//小数的100倍	
 	
 		Return_Data[6] = Sensor.MS5837.Depth; //低8位
 		Return_Data[7] = Sensor.MS5837.Depth << 8 ;//中8位
@@ -57,7 +92,6 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 		
 		Return_Data[15] = Sensor.JY901.Speed.x; 
 		Return_Data[16] = hint;//小数的100倍
-
 }
 
 /**

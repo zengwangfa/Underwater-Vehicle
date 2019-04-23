@@ -17,7 +17,7 @@
 
 #define REFER_VOLTAGE       3.3         // 参考电压 3.3V,数据精度乘以100保留2位小数
 #define CONVERT_BITS        (1 << 12)   // 转换位数为12位 
-#define Voltge_Parameter    1.67				// 23.4 电压分压系数 1.67
+#define Voltge_Parameter    10				// 23.4 电压分压系数 1.67
 
 /*----------------------- Variable Declarations -----------------------------*/
 

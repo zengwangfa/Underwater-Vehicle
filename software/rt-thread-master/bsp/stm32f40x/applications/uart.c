@@ -17,11 +17,12 @@
 #include "RC_Data.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
-#define CONTROL_UART_NAME     "uart1"
-#define GYRO_UART_NAME        "uart2"
 
-#define DEBUG_UART_NAME       "uart3"   //可更改为uart3 WIFI 、 uart4 蓝牙
-#define FOCUS_UART_NAME       "uart5"   //可更改为uart3 WIFI 、 uart4 蓝牙
+char GYRO_UART_NAME[]    = "uart2";
+
+char DEBUG_UART_NAME[]  =  "uart3" ; //
+char CONTROL_UART_NAME[] = "uart4";
+char FOCUS_UART_NAME[]  =  "uart5";  //可更改为uart3 WIFI 、 uart4 蓝牙
 
 #define Query_JY901_data 0     /* "1"为调试查询  "0"为正常读取 */
 
@@ -46,7 +47,7 @@ struct rt_semaphore gyro_rx_sem;/* 用于接收消息的信号量 */
 struct rt_semaphore debug_rx_sem;/* 用于接收消息的信号量 */
 struct rt_semaphore focus_rx_sem;/* 用于接收消息的信号量 */
 
-uint8 debug_startup_flag = 0; //debug串口 初始化完成标志位
+uint8 uart_startup_flag = 0; //debug串口 初始化完成标志位
 /*------------------------------------------ Control Uart ------------------------------------------------*/
 /* 接收数据回调函数 */
 static rt_err_t control_uart_input(rt_device_t dev, rt_size_t size)
@@ -95,12 +96,10 @@ static void gyroscope_thread_entry(void *parameter)
 				  /* 阻塞等待接收信号量，等到信号量后再次读取数据 */
 						rt_sem_take(&gyro_rx_sem, RT_WAITING_FOREVER);
 				}
-#if Query_JY901_data //在线调试 查询模式
-				
+#if Query_JY901_data //在线调试 查询模式	
 				recv_buffer[recv_data_p] = ch;
 				recv_data_p++;
 				if(recv_data_p>127)recv_data_p = 0;
-		
 #else 
 				CopeSerial2Data(ch); //正常传输模式 筛选数据包
 #endif
@@ -158,8 +157,6 @@ static void focus_thread_entry(void *parameter)
 						/* 阻塞等待接收信号量，等到信号量后再次读取数据 */
 						rt_sem_take(&focus_rx_sem, RT_WAITING_FOREVER);
 				}
-
-
 		}
 }
 
@@ -181,11 +178,7 @@ int device_uart_init(void)
 		debug_uart_device = rt_device_find(DEBUG_UART_NAME);
 	  focus_uart_device = rt_device_find(FOCUS_UART_NAME);
 
-		log_v("control serial: %s", control_uart_device);	
-		log_v("gyroscope serial: %s", gyro_uart_device);
-		log_v("debug serial: %s", debug_uart_device);
-		log_v("console serial: %s", RT_CONSOLE_DEVICE_NAME);	
-		log_v("focus serial: %s", focus_uart_device);
+		list_serial_devices();
 	
     if (control_uart_device != RT_NULL){		
 			
@@ -238,30 +231,30 @@ int device_uart_init(void)
 																		RT_NULL, 
 																		512, 
 																		12,
-																		1);
+																		10);
     /* 创建 九轴 serial 线程 */
 		gyroscope_tid = rt_thread_create("gyro_uart",
 																			gyroscope_thread_entry,
 																			RT_NULL, 
 																			512, 
-																			12,
-																			1);
+																			13,
+																			10);
 		
 		/* 创建 调试 serial 线程 */
 		debug_tid = rt_thread_create("debug_uart",
 																	debug_thread_entry,
 																	RT_NULL, 
 																	512, 
-																	13,
-																	1);
+																	14,
+																	10);
 																			
 		/* 创建 变焦 serial 线程 */
 		focus_tid = rt_thread_create("focus_uart",
 																	focus_thread_entry,
 																	RT_NULL, 
 																	512, 
-																	14,
-																	1);
+																	15,
+																	10);
 		/* 创建成功则启动线程 */
     if (control_tid != RT_NULL){
 				rt_thread_startup(control_tid);
@@ -277,7 +270,6 @@ int device_uart_init(void)
 		/* 创建成功则启动线程 */
     if (debug_tid != RT_NULL){
 				rt_thread_startup(debug_tid);
-				debug_startup_flag = 1;
 				uart_init_flag <<= 1;
     }
 		
@@ -287,7 +279,8 @@ int device_uart_init(void)
 				uart_init_flag <<= 1;
     }
 		
-		if(0x10 == uart_init_flag){
+		if(0x10 == uart_init_flag){ //等待所有串口设备都初始化完毕 打开uart_startup_flag
+				uart_startup_flag = 1;
 				log_i("Uart_Init()");
 		}
 		else {
@@ -298,6 +291,16 @@ int device_uart_init(void)
 INIT_APP_EXPORT(device_uart_init);
 
 
-
-
-
+int list_serial_devices(void)
+{
+		log_v("name             serial number");
+    log_v("---------------  -------------");
+		log_v("control serial:      %s", control_uart_device);	
+		log_v("gyroscope serial:    %s", gyro_uart_device);
+		log_v("debug serial:        %s", debug_uart_device);
+		log_v("console serial:      %s", RT_CONSOLE_DEVICE_NAME);	
+		log_v("focus serial:        %s", focus_uart_device);
+		rt_kprintf("\r\n");
+		return 0;
+}
+MSH_CMD_EXPORT(list_serial_devices,list serial devices to used );

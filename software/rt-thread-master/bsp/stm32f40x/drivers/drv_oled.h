@@ -43,6 +43,8 @@ void OLED_ShowNum(uint8 x,uint8 y,uint32 num,uint8 len,uint8 size);
 void OLED_ShowString(uint8 x,uint8 y,const uint8 *p,uint8 size);	
 
 void OLED_DrawBMP(uint8 x,uint8 y,uint8 chr,uint8 size,uint8 mode);
+
+
 #endif  
 	 
 

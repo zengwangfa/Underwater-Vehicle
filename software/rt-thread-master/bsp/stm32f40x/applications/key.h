@@ -5,7 +5,7 @@
 
 
 uint8 boma_value_get(void);
-
+uint8 wifi_connect_get(void);
 
 
 

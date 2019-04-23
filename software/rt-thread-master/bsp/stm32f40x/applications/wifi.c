@@ -10,7 +10,7 @@
 #include <rtdevice.h>
 #include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
-#define WIFI_UART_NAME        "uart3"   // uart3 WIFI 
+//#define WIFI_UART_NAME        "uart3"   // uart3 WIFI 
 
 /*----------------------- Variable Declarations -----------------------------*/
 //extern rt_device_t wifi_uart_device;	

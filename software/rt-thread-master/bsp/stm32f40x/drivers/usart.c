@@ -35,12 +35,12 @@
 #define UART2_GPIO_RCC      RCC_AHB1Periph_GPIOA
 #define RCC_APBPeriph_UART2 RCC_APB1Periph_USART2
 
-#define UART3_GPIO_TX       GPIO_Pin_8
-#define UART3_TX_PIN_SOURCE GPIO_PinSource8
-#define UART3_GPIO_RX       GPIO_Pin_9
-#define UART3_RX_PIN_SOURCE GPIO_PinSource9
-#define UART3_GPIO          GPIOD
-#define UART3_GPIO_RCC      RCC_AHB1Periph_GPIOD
+#define UART3_GPIO_TX       GPIO_Pin_10
+#define UART3_TX_PIN_SOURCE GPIO_PinSource10
+#define UART3_GPIO_RX       GPIO_Pin_11
+#define UART3_RX_PIN_SOURCE GPIO_PinSource11
+#define UART3_GPIO          GPIOB
+#define UART3_GPIO_RCC      RCC_AHB1Periph_GPIOB
 #define RCC_APBPeriph_UART3 RCC_APB1Periph_USART3
 
 #define UART4_GPIO_TX       GPIO_Pin_0

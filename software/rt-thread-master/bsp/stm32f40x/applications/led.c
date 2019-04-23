@@ -17,12 +17,12 @@
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
-#define LED_Red 		68 
-#define LED_Green 	69
-#define LED_Blue 		70
+#define LED_Red 		77 // PD8
+#define LED_Green 	78 // PD9
+#define LED_Blue 		79 // PD10
 
 //OV Camera 闪光灯
-#define LED_Camera 	141  //高电平点亮
+#define LED_Camera 	141  // PE0 高电平点亮
 
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
@@ -100,7 +100,7 @@ int led_thread_init(void)
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
                     25,										 	 //线程优先级【priority】
-                    1);										 //线程的时间片大小【tick】= 100ms
+                    10);										 //线程的时间片大小【tick】= 100ms
 
     if (led_tid != RT_NULL){
 				rt_pin_mode(LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	
@@ -220,7 +220,7 @@ static int led_on(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        log_e("Error! Proper Usage: led_on r\n Species:r \\ g \\ b \\ c");
+        log_e("Error! Proper Usage: led_on r\n Species:r / g / b / c");
 				result = -RT_ERROR;
 				return result;
     }
@@ -230,7 +230,7 @@ static int led_on(int argc, char **argv)
 				case 'g':LED_ON(LED_Green);break;
 				case 'b':LED_ON(LED_Blue);break;
 				case 'c':LED_OFF(LED_Camera);break;
-				default:log_e("Error! Proper Usage: led_on R\n Species:r \\ g \\ b \\ c");break;
+				default:log_e("Error! Proper Usage: led_on R\n Species:r / g / b / c");break;
 		}
 
 		return result;

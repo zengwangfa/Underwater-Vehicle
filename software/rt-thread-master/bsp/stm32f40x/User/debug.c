@@ -25,10 +25,11 @@
 /*----------------------- Variable Declarations. -----------------------------*/
 
 extern rt_device_t debug_uart_device;	
-extern uint8 debug_startup_flag;
+extern uint8 uart_startup_flag;
 extern float  volatge;
 extern float  Yaw;
-
+extern char *VehicleModeName[2];
+extern u8 VehicleMode;
 enum 
 {
 		DEBUG_NULL,
@@ -47,18 +48,17 @@ volatile uint32 debug_count = 0;
 
 void debug_send_thread_entry(void* parameter)
 {
-		while(1)
-		{
+		while(uart_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
+		{		
 				rt_thread_mdelay(1);
-				if(1 == debug_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
+
+				switch(debug_tool)//选择上位机
 				{
-						switch(debug_tool)//选择上位机
-						{
-								case PC_VCAN: Vcan_Send_Data();break;
-								case PC_ANO :	ANO_SEND_StateMachine();break;
-								default :break;
-						}
-				}		
+						case PC_VCAN: Vcan_Send_Data();break;
+						case PC_ANO :	ANO_SEND_StateMachine();break;
+						default :break;
+				}
+				
 		}
 }
 
@@ -73,7 +73,7 @@ int Debug_thread_init(void)
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
                     10,										 	 //线程优先级【priority】
-                    1);										 //线程的时间片大小【tick】= 100ms
+                    10);										 //线程的时间片大小【tick】= 100ms
 
     if (debug_send_tid != RT_NULL){
 				rt_thread_startup(debug_send_tid);
@@ -134,11 +134,11 @@ static int debug(int argc, char **argv)
 				goto _exit;  
     }
 		if( !strcmp(argv[1],"on") ){ //设置为 山外上位机 strcmp 检验两边相等 返回0
-				debug_startup_flag = 1;
+				uart_startup_flag = 1;
 				log_v("debug open\r\n");
 		}
 		else if( !strcmp(argv[1],"off") ){ //设置为 山外上位机 strcmp 检验两边相等 返回0
-				debug_startup_flag = 0;
+				uart_startup_flag = 0;
 				log_v("debug off\r\n");
 		}
 		else {
@@ -184,4 +184,45 @@ _exit:
     return result;
 }
 MSH_CMD_EXPORT(set_debug_tool,debug_by vcan / ano / null);
+
+
+
+void get_memory_situation(void)
+{
+		 static rt_uint32_t total_mem, used_mem, max_used_mem;
+	   rt_memory_info(&total_mem, &used_mem, &max_used_mem);
+     rt_kprintf("Total_Mem:%ld  Used_Mem:%ld  Max_Used_Mem:%ld\n",total_mem,used_mem,max_used_mem);
+}
+MSH_CMD_EXPORT(get_memory_situation,get memory situation);
+
+
+/*  设置机器工作模式 */
+static int set_vehicle_mode(int argc,char **argv)
+{
+		int result = 0;
+    if (argc != 2){
+				log_e("Proper Usage: set_vehicle_mode auv / rov");//用法:设置工作模式
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		if( !strcmp(argv[1],"auv") ){ //设置为工作模式 strcmp 检验两边相等 返回0
+				VehicleMode = AUV_Mode;
+				Flash_Update();
+				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
+		}
+
+		else if( !strcmp(argv[1],"rov") ){ //设置为 ROV
+				VehicleMode = ROV_Mode;
+				Flash_Update();
+				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
+		}
+		else {
+				log_e("Proper Usage: set_vehicle_mode auv / rov");
+				goto _exit;
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(set_vehicle_mode,set_vehicle_mode auv / rov);
+
 

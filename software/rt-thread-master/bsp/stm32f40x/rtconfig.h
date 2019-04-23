@@ -38,7 +38,7 @@
 #define RT_USING_DEVICE
 #define RT_USING_CONSOLE
 #define RT_CONSOLEBUF_SIZE 128
-#define RT_CONSOLE_DEVICE_NAME "uart4"
+#define RT_CONSOLE_DEVICE_NAME "uart1"
 #define RT_VER_NUM 0x40001
 #define ARCH_ARM
 #define ARCH_ARM_CORTEX_M
@@ -71,6 +71,12 @@
 
 /* Device virtual file system */
 
+#define RT_USING_DFS
+#define DFS_USING_WORKDIR
+#define DFS_FILESYSTEMS_MAX 2
+#define DFS_FILESYSTEM_TYPES_MAX 2
+#define DFS_FD_MAX 16
+#define RT_USING_DFS_DEVFS
 
 /* Device Drivers */
 
@@ -95,6 +101,7 @@
 /* POSIX layer and C standard library */
 
 #define RT_USING_LIBC
+#define RT_USING_POSIX
 
 /* Network */
 

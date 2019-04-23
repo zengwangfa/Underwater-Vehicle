@@ -4,15 +4,15 @@
 #include "init.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/			   
-#define OLED_CS 	PGout(8)  //未接入
-#define OLED_RST  PGout(10)	
-#define OLED_RS 	PGout(9)
+#define OLED_CS 	PGout(9)  //未接入
+#define OLED_RST  PGout(11)	
+#define OLED_RS 	PGout(10)
 //#define OLED_WR 	PAout(4)	 	  
 //#define OLED_RD 	PDout(7)
  
 //使用4线串行接口时使用 
-#define OLED_SCLK 	PGout(12)    //D0
-#define OLED_SDIN 	PGout(11) 	 //D1
+#define OLED_SCLK 	PGout(13)    //D0
+#define OLED_SDIN 	PGout(12) 	 //D1
 		     
 //OLED的显存
 //存放格式如下.
@@ -119,6 +119,8 @@ void Half_OLED_Clear(void)
 					OLED_GRAM[n][i]=0X00;  
 	OLED_Refresh_Gram();//更新显示
 }
+
+
 //画点 
 //x:0~127
 //y:0~63
@@ -177,7 +179,6 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
 		}  	 
     }          
 }
-
 
 
 void OLED_ShowMyChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
@@ -297,7 +298,7 @@ void OLED_Init(void)
 	OLED_RD=1; 
 #else					//使用4线SPI 串口模式
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 ;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz

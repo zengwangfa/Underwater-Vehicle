@@ -94,7 +94,7 @@ void menu_define(void) //菜单定义
 				MENU = GyroscopePage;OLED_GyroscopePage();break;
 			}
 			case 3:{
-				MENU = FlashPage;		 											break;
+				MENU = FlashPage;		OLED_FlashPage(); 	break;
 			}
 			case 4:{
 				MENU = PicturePage;	 OLED_PicturePage();		  break;
@@ -111,14 +111,12 @@ void menu_define(void) //菜单定义
 ********************************************/
 void oled_thread_entry(void* parameter)
 {
-	Boot_Animation();	//开机动画
-	OLED_Clear();
-	while(1)
-	{	
-			menu_define();//菜单定义选择
-			rt_thread_mdelay(1000/pow(MENU+2,2)); //菜单号越大 刷新速率越大
-	}
-	
+		Boot_Animation();	//开机动画
+		OLED_Clear();
+		while(1){	
+				menu_define();//菜单定义选择
+				rt_thread_mdelay(1000/pow(MENU+2,2)); //菜单号越大 刷新速率越大
+		}
 }
 
 /*******************************************
@@ -137,10 +135,12 @@ void OLED_StatusPage(void)
 		Sensor.CPU.Temperature = get_cpu_temp();
 		Sensor.Power_volatge = get_vol();
 	
-  	OLED_ShowMyChar(119,0,0,16,1); //3G数据图标2
-		OLED_ShowMyChar(0,32,1,16,1); //Wifi图标
+		OLED_ShowMyChar(100,0,0,16,1); //3G数据图标2
+		if(wifi_connect_get()){
+				OLED_ShowMyChar(119,0,1,16,1);} //Wifi图标
+		else {OLED_ShowMyChar(119,0,2,16,1);} //Wifi图标
 	
-		sprintf(str,"Mode: [ %s 00%d ] ",VehicleModeName[VehicleMode],boma_value_get());
+		sprintf(str,"Mode:[%s NO.%d]",VehicleModeName[VehicleMode],boma_value_get());
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
 		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.Power_volatge);
@@ -181,7 +181,18 @@ void OLED_GyroscopePage(void)
 		
 	  OLED_Refresh_Gram();//更新显示到OLED
 }
+/*******************************************
+* 函 数 名：OLED_GyroscopePage
+* 功    能：显示九轴模块参数【加速度、角速度、欧拉角、磁场】
+* 输入参数：none
+* 返 回 值：none
+* 注    意：OLED第二页 【九轴参数页】
+********************************************/
+void OLED_FlashPage(void)
+{
 
+	  OLED_Refresh_Gram();//更新显示到OLED
+}
 
 /*******************************************
 * 函 数 名：OLED_PicturePage
@@ -387,9 +398,9 @@ int oled_thread_init(void)
     oled_tid = rt_thread_create("oled", //线程名称
                     oled_thread_entry,	//线程入口函数【entry】
                     RT_NULL,				    //线程入口函数参数【parameter】
-                    1024,							  //线程栈大小，单位是字节【byte】
-                    15,								  //线程优先级【priority】
-                    1);							  //线程的时间片大小【tick】= 100ms
+                    2048,							  //线程栈大小，单位是字节【byte】
+                    25,								  //线程优先级【priority】
+                    10);							  //线程的时间片大小【tick】= 100ms
 
     if (oled_tid != RT_NULL){
 				OLED_Init();

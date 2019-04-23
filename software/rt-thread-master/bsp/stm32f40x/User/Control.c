@@ -46,21 +46,21 @@ void Angle_Control(void)
 void Gyro_Control()//½ÇËÙ¶È»·
 {
 
-  //Æ«º½½ÇÇ°À¡¿ØÖÆ
-  //Total_Controller.Yaw_Gyro_Control.FeedBack=Yaw_Gyro;
+//  	Æ«º½½ÇÇ°À¡¿ØÖÆ
+//  	Total_Controller.Yaw_Gyro_Control.FeedBack=Yaw_Gyro;
 
 
-//  PID_Control_Div_LPF(&Total_Controller.Yaw_Gyro_Control);
-//  Yaw_Gyro_Control_Expect_Delta=1000*(Total_Controller.Yaw_Gyro_Control.Expect-Last_Yaw_Gyro_Control_Expect)
-//    /Total_Controller.Yaw_Gyro_Control.PID_Controller_Dt.Time_Delta;
-//  //**************************Æ«º½½ÇÇ°À¡¿ØÖÆ**********************************
-//  Total_Controller.Yaw_Gyro_Control.Control_OutPut+=Yaw_Feedforward_Kp*Total_Controller.Yaw_Gyro_Control.Expect
-//    +Yaw_Feedforward_Kd*Yaw_Gyro_Control_Expect_Delta;//Æ«º½½ÇÇ°À¡¿ØÖÆ
-//  Total_Controller.Yaw_Gyro_Control.Control_OutPut=constrain_float(Total_Controller.Yaw_Gyro_Control.Control_OutPut,
-//                                                                   -Total_Controller.Yaw_Gyro_Control.Control_OutPut_Limit,
-//                                                                   Total_Controller.Yaw_Gyro_Control.Control_OutPut_Limit);
-//  Last_Yaw_Gyro_Control_Expect=Total_Controller.Yaw_Gyro_Control.Expect;
-//  
+//		PID_Control_Div_LPF(&Total_Controller.Yaw_Gyro_Control);
+//		Yaw_Gyro_Control_Expect_Delta=1000*(Total_Controller.Yaw_Gyro_Control.Expect-Last_Yaw_Gyro_Control_Expect)
+//			/Total_Controller.Yaw_Gyro_Control.PID_Controller_Dt.Time_Delta;
+//		//**************************Æ«º½½ÇÇ°À¡¿ØÖÆ**********************************
+//		Total_Controller.Yaw_Gyro_Control.Control_OutPut+=Yaw_Feedforward_Kp*Total_Controller.Yaw_Gyro_Control.Expect
+//			+Yaw_Feedforward_Kd*Yaw_Gyro_Control_Expect_Delta;//Æ«º½½ÇÇ°À¡¿ØÖÆ
+//		Total_Controller.Yaw_Gyro_Control.Control_OutPut=constrain_float(Total_Controller.Yaw_Gyro_Control.Control_OutPut,
+//																																		 -Total_Controller.Yaw_Gyro_Control.Control_OutPut_Limit,
+//																																		 Total_Controller.Yaw_Gyro_Control.Control_OutPut_Limit);
+//		Last_Yaw_Gyro_Control_Expect=Total_Controller.Yaw_Gyro_Control.Expect;
+//		
 
 }
 

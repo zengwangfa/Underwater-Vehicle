@@ -18,7 +18,7 @@
           <Vendor>STMicroelectronics</Vendor>
           <PackID>Keil.STM32F4xx_DFP.1.0.8</PackID>
           <PackURL>http://www.keil.com/pack</PackURL>
-          <Cpu>IROM(0x08000000,0x100000) IRAM(0x20000000,0x20000) IRAM2(0x10000000,0x10000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x20000) IRAM2(0x10000000,0x10000) IROM(0x08000000,0x100000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32F407ZG$Flash\STM32F4xx_1024.FLM))</FlashDriverDll>
@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\build\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -192,7 +192,7 @@
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
-            <RwSelD>3</RwSelD>
+            <RwSelD>4</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -209,7 +209,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>0</Im2Chk>
+            <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -328,8 +328,8 @@
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
             <v6LangP>0</v6LangP>
-            <vShortEn>1</vShortEn>
-            <vShortWch>1</vShortWch>
+            <vShortEn>0</vShortEn>
+            <vShortWch>0</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
@@ -337,7 +337,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>RT_USING_ARM_LIBC, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;Tools;..\..\components\utilities\ymodem;User;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\spi;..\..\components\drivers\include;..\..\components\drivers\spi\sfud\inc;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\utilities\elog\inc;..\..\components\utilities\elog\plugins\flash;..\..\components\utilities\flash\inc</IncludePath>
+              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;Tools;..\..\components\utilities\ymodem;User;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\dfs\include;..\..\components\dfs\filesystems\devfs;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\spi;..\..\components\drivers\include;..\..\components\drivers\spi\sfud\inc;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\utilities\elog\inc;..\..\components\utilities\elog\plugins\flash;..\..\components\utilities\flash\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -497,14 +497,14 @@
               <FilePath>User\PropellerControl.c</FilePath>
             </File>
             <File>
+              <FileName>RC_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\RC_Data.c</FilePath>
+            </File>
+            <File>
               <FileName>notes.c</FileName>
               <FileType>1</FileType>
               <FilePath>User\notes.c</FilePath>
-            </File>
-            <File>
-              <FileName>RC_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\RC_Data.c</FilePath>
             </File>
             <File>
               <FileName>Return_Data.c</FileName>
@@ -517,14 +517,34 @@
           <GroupName>Applications</GroupName>
           <Files>
             <File>
-              <FileName>uart.c</FileName>
+              <FileName>PID.c</FileName>
               <FileType>1</FileType>
-              <FilePath>applications\uart.c</FilePath>
+              <FilePath>applications\PID.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\adc.c</FilePath>
             </File>
             <File>
               <FileName>buzzer.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>focus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\focus.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyroscope.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\gyroscope.c</FilePath>
             </File>
             <File>
               <FileName>key.c</FileName>
@@ -542,29 +562,9 @@
               <FilePath>applications\oled.c</FilePath>
             </File>
             <File>
-              <FileName>gyroscope.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\gyroscope.c</FilePath>
-            </File>
-            <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\adc.c</FilePath>
-            </File>
-            <File>
               <FileName>propeller.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\propeller.c</FilePath>
-            </File>
-            <File>
-              <FileName>flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>PID.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\PID.c</FilePath>
             </File>
             <File>
               <FileName>pwm.c</FileName>
@@ -592,9 +592,9 @@
               <FilePath>applications\timer.c</FilePath>
             </File>
             <File>
-              <FileName>focus.c</FileName>
+              <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\focus.c</FilePath>
+              <FilePath>applications\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -644,17 +644,17 @@
             <File>
               <FileName>drv_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\drivers\drv_i2c.c</FilePath>
+              <FilePath>drivers\drv_i2c.c</FilePath>
             </File>
             <File>
               <FileName>drv_MS5837.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\drivers\drv_MS5837.c</FilePath>
+              <FilePath>drivers\drv_MS5837.c</FilePath>
             </File>
             <File>
               <FileName>drv_ano.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\drivers\drv_ano.c</FilePath>
+              <FilePath>drivers\drv_ano.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -874,6 +874,46 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Filesystem</GroupName>
+          <Files>
+            <File>
+              <FileName>dfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\dfs\src\dfs.c</FilePath>
+            </File>
+            <File>
+              <FileName>dfs_file.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\dfs\src\dfs_file.c</FilePath>
+            </File>
+            <File>
+              <FileName>dfs_fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\dfs\src\dfs_fs.c</FilePath>
+            </File>
+            <File>
+              <FileName>dfs_posix.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\dfs\src\dfs_posix.c</FilePath>
+            </File>
+            <File>
+              <FileName>poll.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\dfs\src\poll.c</FilePath>
+            </File>
+            <File>
+              <FileName>select.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\dfs\src\select.c</FilePath>
+            </File>
+            <File>
+              <FileName>devfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\dfs\filesystems\devfs\devfs.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>DeviceDrivers</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -904,7 +944,7 @@
                 <PlainCh>2</PlainCh>
                 <Ropi>2</Ropi>
                 <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
+                <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
                 <uC99>2</uC99>
@@ -1124,6 +1164,11 @@
               <FileName>mem_std.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\components\libc\compilers\armlibc\mem_std.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\libc\compilers\armlibc\stdio.c</FilePath>
             </File>
             <File>
               <FileName>stubs.c</FileName>
