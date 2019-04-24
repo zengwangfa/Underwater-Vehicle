@@ -19,11 +19,15 @@ extern uint8 uart_startup_flag;
 void return_computer_thread_entry(void* parameter)
 {
 		static uint8 begin_buff[3] = {0xAA,0x55,0x00};
+		
+		rt_thread_mdelay(1000);//等待 串口设备初始化完成
+		
 		while(uart_startup_flag){ //当debug_uart初始化完毕后 才进行上位机通信
 			
 				Convert_Return_Computer_Data(); //转换返回上位机的数据
 
 				Send_Buffer_Agreement(begin_buff,Return_Data,18); //发送数据包协议
+				rt_thread_mdelay(10);
 		}
 }
 
@@ -31,10 +35,10 @@ int return_computer_thread_init(void)
 {
     rt_thread_t return_computer_tid;
 		/*创建动态线程*/
-    return_computer_tid = rt_thread_create("led",//线程名称
+    return_computer_tid = rt_thread_create("return_data",//线程名称
 													return_computer_thread_entry,				 //线程入口函数【entry】
 													RT_NULL,							   //线程入口函数参数【parameter】
-													512,										 //线程栈大小，单位是字节【byte】
+													2048,										 //线程栈大小，单位是字节【byte】
 													20,										 	 //线程优先级【priority】
 													10);										 //线程的时间片大小【tick】= 100ms
 

@@ -30,6 +30,7 @@ extern float  volatge;
 extern float  Yaw;
 extern char *VehicleModeName[2];
 extern u8 VehicleMode;
+
 enum 
 {
 		DEBUG_NULL,
@@ -42,16 +43,17 @@ enum
 char *debug_tool_name[3]={"NULL","VCAN","ANO"};
 
 uint8 debug_tool = PC_ANO; //山外 / 匿名上位机 调试标志位
-volatile uint32 debug_count = 0;
+
 
 /*-----------------------Debug Thread Begin-----------------------------*/
 
 void debug_send_thread_entry(void* parameter)
 {
+		rt_thread_mdelay(1000);//等待 串口设备初始化完成
+	
 		while(uart_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
 		{		
 				rt_thread_mdelay(1);
-
 				switch(debug_tool)//选择上位机
 				{
 						case PC_VCAN: Vcan_Send_Data();break;
@@ -69,13 +71,14 @@ int Debug_thread_init(void)
 	  rt_thread_t debug_send_tid;
 		/*创建动态线程*/
     debug_send_tid = rt_thread_create("debug",			 //线程名称
-                    debug_send_thread_entry,									 //线程入口函数【entry】
+                    debug_send_thread_entry, //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
+                    2048,										 //线程栈大小，单位是字节【byte】
+                    5,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (debug_send_tid != RT_NULL){
+				log_i("Debug_Init()");
 				rt_thread_startup(debug_send_tid);
 		}
 		return 0;
@@ -90,7 +93,7 @@ INIT_APP_EXPORT(Debug_thread_init);
 /* VCAN山外上位机调试 BEGIN */
 void Vcan_Send_Cmd(void *wareaddr, unsigned int waresize)
 {
-		#define CMD_WARE     3
+		#define CMD_WARE    3
     static uint8 cmdf[2] = {CMD_WARE, ~CMD_WARE};    //串口调试 使用的前命令
     static uint8 cmdr[2] = {~CMD_WARE, CMD_WARE};    //串口调试 使用的后命令
 
@@ -107,14 +110,14 @@ void Vcan_Send_Data(void)
 		static float list[8]= {0};
 		//temp = get_cpu_temp();
 	
-		list[0] = Total_Controller.Yaw_Angle_Control.Err; 	//横滚角 Roll 
-		list[1] = Total_Controller.Yaw_Angle_Control.Control_OutPut;  //俯仰角 Pitch
-		list[2] = Sensor.JY901.Euler.Yaw; 	  //偏航角 Yaw
-		list[3] = Yaw;    //CPU温度 temp
-		list[4] = 0;//KalmanFilter(&temp);//卡尔曼滤波后的温度
-		list[5] = 0;//MS_TEMP;//get_vol();
-		list[6] = MS5837_Temperature;//MS5837_Pressure;	//KalmanFilter(&vol)
-		list[7] = MS5837_Pressure;	//camera_center;
+		list[0] = (float)Total_Controller.Yaw_Angle_Control.Err; 	//横滚角 Roll 
+		list[1] = (float)Total_Controller.Yaw_Angle_Control.Control_OutPut;  //俯仰角 Pitch
+		list[2] = (float)Sensor.JY901.Euler.Yaw; 	  //偏航角 Yaw
+		list[3] = (float)Yaw;    //CPU温度 temp
+		list[4] = (float)0;//KalmanFilter(&temp);//卡尔曼滤波后的温度
+		list[5] = (float)0;//MS_TEMP;//get_vol();
+		list[6] = (float)MS5837_Temperature;//MS5837_Pressure;	//KalmanFilter(&vol)
+		list[7] = (float)MS5837_Pressure;	//camera_center;
 		
 		Vcan_Send_Cmd(list,sizeof(list));
 }

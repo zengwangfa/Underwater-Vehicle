@@ -181,7 +181,7 @@ MSH_CMD_EXPORT(yuntai_openvalue_set,ag: yuntai_openvalue_set 160);
 
 
 /*【云台】舵机 修改 【反向最大值】 MSH方法 */
-static int yuntai_arm_closevalue_set(int argc, char **argv)
+static int yuntai_closevalue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
@@ -201,7 +201,7 @@ static int yuntai_arm_closevalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(yuntai_arm_closevalue_set,ag: yuntai_arm_closevalue_set 115);
+MSH_CMD_EXPORT(yuntai_closevalue_set,ag: yuntai_arm_closevalue_set 115);
 
 
 

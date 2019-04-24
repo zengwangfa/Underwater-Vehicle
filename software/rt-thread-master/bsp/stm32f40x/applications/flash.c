@@ -62,12 +62,12 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.OpenValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_OPEN_VALUE_A] );
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.CloseValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_CLOSE_VALUE_A] );
-		Parameter_SelfCheck( (uint32 *)&RoboticArm.CurrentValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_CURRENT_VALUE_A] );
+//Parameter_SelfCheck( (uint32 *)&RoboticArm.CurrentValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_CURRENT_VALUE_A] );
 	
 	
 		Parameter_SelfCheck( (uint32 *)&YunTai.OpenValue,(uint32 *)&Normal_Parameter[YUNTAI_OPEN_VALUE_A] );
 		Parameter_SelfCheck( (uint32 *)&YunTai.CloseValue,(uint32 *)&Normal_Parameter[YUNTAI_CLOSE_VALUE_A] );	
-		Parameter_SelfCheck( (uint32 *)&YunTai.CurrentValue,(uint32 *)&Normal_Parameter[YUNTAI_CURRENT_VALUE_A] );
+//Parameter_SelfCheck( (uint32 *)&YunTai.CurrentValue,(uint32 *)&Normal_Parameter[YUNTAI_CURRENT_VALUE_A] );
 	
 		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMed,(uint32 *)&Normal_Parameter[PropellerParamter_MED_A] );
 		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMax,(uint32 *)&Normal_Parameter[PropellerParamter_MAX_A] );

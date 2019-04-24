@@ -140,7 +140,7 @@ void OLED_StatusPage(void)
 				OLED_ShowMyChar(119,0,1,16,1);} //WifiÍ¼±ê
 		else {OLED_ShowMyChar(119,0,2,16,1);} //WifiÍ¼±ê
 	
-		sprintf(str,"Mode:[%s NO.%d]",VehicleModeName[VehicleMode],boma_value_get());
+		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get());
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
 		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.Power_volatge);
