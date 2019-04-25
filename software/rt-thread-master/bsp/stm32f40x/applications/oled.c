@@ -128,7 +128,7 @@ void oled_thread_entry(void* parameter)
 ********************************************/
 void OLED_StatusPage(void)
 {
-		char str[100];
+		static char str[50];
 
 	  uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
 	
