@@ -112,8 +112,10 @@ Program Size: Code=157602 RO-data=27178 RW-data=1684 ZI-data=105348    ¡¾2019.3.
     Total RW  Size (RW Data + ZI Data)             26200 (  25.59kB)
     Total ROM Size (Code + RO Data + RW Data)     169888 ( 165.91kB)
 		
-		
-		
+¡¾2019.05.05¡¿	
+		Total RO  Size (Code + RO Data)               188180 ( 183.77kB)
+    Total RW  Size (RW Data + ZI Data)             27120 (  26.48kB)
+    Total ROM Size (Code + RO Data + RW Data)     188648 ( 184.23kB)
 		
 */
 

@@ -53,7 +53,7 @@ int Normal_Parameter_Init_With_Flash(void)
 		log_i("Flash_Read()");
 		return 0;
 }
-//INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash);
+INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash);
 
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕý³£Êý¾Ý 
 {
@@ -69,9 +69,9 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		Parameter_SelfCheck( (uint32 *)&YunTai.MinValue,(uint32 *)&Normal_Parameter[YUNTAI_MIN_VALUE_A] );	
     Parameter_SelfCheck( (uint32 *)&YunTai.MedValue,(uint32 *)&Normal_Parameter[YUNTAI_MED_VALUE_A] );  //ÔÆÌ¨ÖÐÖµ
 	
-		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMed,(uint32 *)&Normal_Parameter[PropellerParamter_MED_A] );
-		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMax,(uint32 *)&Normal_Parameter[PropellerParamter_MAX_A] );
-		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMin,(uint32 *)&Normal_Parameter[PropellerParamter_MIN_A] );
+		Parameter_SelfCheck( (uint32 *)&PropellerParameter.PowerMed,(uint32 *)&Normal_Parameter[PropellerParamter_MED_A] );
+		Parameter_SelfCheck( (uint32 *)&PropellerParameter.PowerMax,(uint32 *)&Normal_Parameter[PropellerParamter_MAX_A] );
+		Parameter_SelfCheck( (uint32 *)&PropellerParameter.PowerMin,(uint32 *)&Normal_Parameter[PropellerParamter_MIN_A] );
 	
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.Speed,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_SPEED_A] );
 		Parameter_SelfCheck( (uint32 *)&YunTai.Speed,(uint32 *)&Normal_Parameter[YUNTAI_SPEED_A] );	
@@ -93,9 +93,9 @@ void Flash_Update(void)
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MIN_VALUE_A,(uint32 *)&YunTai.MinValue,4); // µØÖ·
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MED_VALUE_A,(uint32 *)&YunTai.MedValue,4); 		// µØÖ·  ÔÆÌ¨ÖÐÖµ
 	
-		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MED_A,(uint32 *)&PropellerParamter.PowerMed,4);		// µØÖ·
-		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MAX_A,(uint32 *)&PropellerParamter.PowerMax,4); // µØÖ·
-		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MIN_A,(uint32 *)&PropellerParamter.PowerMin,4); // µØÖ·
+		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MED_A,(uint32 *)&PropellerParameter.PowerMed,4);		// µØÖ·
+		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MAX_A,(uint32 *)&PropellerParameter.PowerMax,4); // µØÖ·
+		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MIN_A,(uint32 *)&PropellerParameter.PowerMin,4); // µØÖ·
 	
 		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_SPEED_A,(uint32 *)&RoboticArm.Speed,4); // µØÖ·
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_SPEED_A,(uint32 *)&YunTai.Speed,4); // µØÖ·
@@ -112,20 +112,21 @@ void list_value(void)
     log_i("----------------------   ---------");
 		log_i("VehicleMode               %s",VehicleModeName[VehicleMode]);
 		log_i("debug_tool                %s",debug_tool_name[debug_tool]);
-	
+	  log_i("----------------------   ---------");
 	  log_i("RoboticArm_MaxValue       %d",RoboticArm.MaxValue);
 	  log_i("RoboticArm_MinValue       %d",RoboticArm.MinValue);
 		log_i("RoboticArm_CurrentValue   %d",RoboticArm.CurrentValue);
 		log_i("RoboticArm_Speed          %d",RoboticArm.Speed);
-	
+	  log_i("----------------------   ---------");
 	  log_i("YunTai_MaxValue           %d",YunTai.MaxValue);
 	  log_i("YunTai_MinValue           %d",YunTai.MinValue);
 		log_i("YunTai_MedValue           %d",YunTai.MedValue);
+		log_i("YunTai_CurrentValue       %d",YunTai.CurrentValue);
 		log_i("YunTai_Speed              %d",YunTai.Speed);
-	
-	  log_i("Propeller_max             %d",PropellerParamter.PowerMax);
-	  log_i("Propeller_min             %d",PropellerParamter.PowerMin);
-		log_i("Propeller_med             %d",PropellerParamter.PowerMed);
+	  log_i("----------------------   ---------");
+	  log_i("Propeller_max             %d",PropellerParameter.PowerMax);
+	  log_i("Propeller_min             %d",PropellerParameter.PowerMin);
+		log_i("Propeller_med             %d",PropellerParameter.PowerMed);
 
     rt_kprintf("                         \n");
 }

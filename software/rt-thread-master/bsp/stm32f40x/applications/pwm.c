@@ -6,10 +6,11 @@
  *      Notes:  PWM设备
  */
 #define LOG_TAG    "pwm"
-
+#include "pwm.h"
 #include "sys.h"
 #include <elog.h>
 #include "propeller.h"
+#include "PropellerControl.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
@@ -22,7 +23,16 @@
 /*----------------------- Function Implement --------------------------------*/
 
 
-
+void PWM_Update(void)
+{
+		TIM_SetCompare1(TIM1,PropellerPower.rightUp);     //右上	 E9	
+		TIM_SetCompare2(TIM1,PropellerPower.leftDown);    //左下	 E11
+		TIM_SetCompare3(TIM1,PropellerPower.leftUp); 	    //左上   E13
+		TIM_SetCompare4(TIM1,PropellerPower.rightDown);   //右下   E14
+	
+		TIM_SetCompare1(TIM4,PropellerPower.leftMiddle);  //左中   D12
+		TIM_SetCompare2(TIM4,PropellerPower.rightMiddle); //右中   D13
+}
 
 /*
 （1）当APB1和APB2分频数为1的时候，TIM1、TIM8~TIM11的时钟为APB2的时钟，TIM2~TIM7、TIM12~TIM14的时钟为APB1的时钟；

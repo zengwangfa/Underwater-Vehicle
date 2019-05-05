@@ -24,6 +24,9 @@ extern struct rt_event init_event; /* ALL_init ÊÂ¼ş¿ØÖÆ¿é */
   */
 void sensor_thread_entry(void* parameter)
 {
+		rt_thread_mdelay(1000);
+		Sensor.MS5837.Init_Depth = get_ms5837_pressure();
+		rt_thread_mdelay(1000);
 		Sensor.MS5837.Init_Depth = get_ms5837_pressure();
 		while(1)
 		{

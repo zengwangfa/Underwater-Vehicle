@@ -7,16 +7,22 @@
  */
 #include "RC_Data.h"
 #include "led.h"
+
+#define MAX_DATA_LENS 16  //有效数据包长度【不包含 包头、长度位、校验位】
+
 ReceiveDataType ReceiveData = {
 		.THR = 1500,
 		.YAW = 1500,
 		.ROL = 1500,
 	  .PIT = 1500
 };
-#define MAX_DATA_LENS 16  //有效数据包长度【不包含 包头、长度位、校验位】
+
+ControlDataType Control = {
+										.Power = 70
+};
+
 uint8 Control_Data[30] = {0};
 uint8 Receive_Data_OK = 0;
-ControlDataType Control;
 uint8 Control_RxCheck = 0;	  //尾校验字
 uint8 Control_RxCount = 0;	  //接收计数
 /**
@@ -61,10 +67,10 @@ void Remote_Control_Data_Analysis(uint8 Data) //控制数据解析
 			
 				Control.Depth_Lock     = Control_Data[3]; //姿态控制
 				Control.Direction_Lock = Control_Data[4];
-				Control.Move					 = Control_Data[5];
-				Control.Translation		 = Control_Data[6];
-				Control.Vertical 			 = Control_Data[7];
-				Control.Rotate 				 = Control_Data[8];
+				Control.Move					 = Control_Data[5]; //前后
+				Control.Translation		 = Control_Data[6]; //左右平移
+				Control.Vertical 			 = Control_Data[7]; //垂直
+				Control.Rotate 				 = Control_Data[8]; //旋转
 				
 				Control.Power 				 = Control_Data[9];  //动力控制 两倍[0~500]
 				Control.Light 				 = Control_Data[10]; //灯光控制

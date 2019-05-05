@@ -286,6 +286,7 @@ int device_uart_init(void)
 				log_i("Uart_Init()");
 		}
 		else {
+				uart_startup_flag = 0;
 			  log_e("Uart_Init have some errors.");
 		}
 		return 0;

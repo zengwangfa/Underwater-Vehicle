@@ -6,6 +6,7 @@
 
 
 
+void PWM_Update(void);
 
 void TIM1_PWM_Init(uint32 arr,uint32 psc);
 void TIM4_PWM_Init(uint32 arr,uint32 psc);

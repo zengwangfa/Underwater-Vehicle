@@ -11,7 +11,7 @@ void Send_Buffer_Agreement(uint8 *begin_buff,int8 *buff,uint8 len);
 
 extern int8 Return_Data[18];
 
-extern uint8 device_hint;		//设备提示字符
+extern uint8 device_hint_flag;		//设备提示字符
 
 
 

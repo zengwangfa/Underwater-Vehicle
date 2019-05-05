@@ -52,13 +52,13 @@ void control_thread_entry(void *parameter)
 void Devices_Control(void)
 {
 	
-		Light_Control(&Control.Light);
-		Focus_Zoom_Camera(&Control.Focus);
+		Light_Control(&Control.Light);  //探照灯控制
+		Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
 
-		YunTai_Control(&Control.Yuntai);
-		RoboticArm_Control(&Control.Arm);
-	
+		YunTai_Control(&Control.Yuntai); //云台控制
+		RoboticArm_Control(&Control.Arm);//机械臂控制
 
+		Propeller_Control();
 			/*
 				Control.Depth_Lock     = Control_Data[3]; //深度锁定
 				Control.Direction_Lock = Control_Data[4]; //方向锁定
@@ -87,11 +87,10 @@ int control_thread_init(void)
                     control_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
-                    8,										 	 //线程优先级【priority】
+                    15,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (control_tid != RT_NULL){
-
 				rt_thread_startup(control_tid);
 		}
 		return 0;

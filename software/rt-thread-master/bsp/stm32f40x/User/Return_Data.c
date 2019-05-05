@@ -13,7 +13,7 @@
 #include "gyroscope.h"
 SensorType Sensor;//传感器参数
 int8 Return_Data[18] = {0};
-uint8 device_hint;		//设备提示字符
+uint8 device_hint_flag;		//设备提示字符
 
 extern uint8 uart_startup_flag;
 extern struct SAngle 	stcAngle;
@@ -98,7 +98,7 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 		Return_Data[14] = stcAngle.angle[2]; //低8位
 		
 		Return_Data[15] = (uint8)Sensor.JY901.Speed.x; 
-		Return_Data[16] = device_hint;
+		Return_Data[16] = device_hint_flag;
 }
 
 /**

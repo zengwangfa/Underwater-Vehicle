@@ -135,6 +135,9 @@ void OLED_StatusPage(void)
 		Sensor.CPU.Temperature = get_cpu_temp();
 		Sensor.Power_volatge = get_vol();
 	
+	  cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
+		Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
+	
 		OLED_ShowMyChar(100,0,0,16,1); //3G数据图标2
 		if(wifi_connect_get()){
 				OLED_ShowMyChar(119,0,1,16,1);} //Wifi图标
@@ -146,9 +149,9 @@ void OLED_StatusPage(void)
 		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.Power_volatge);
 		OLED_ShowString(0,16,(uint8 *)str,12); 
 	
-    cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
 
-	  sprintf(str,"CPU Usage:%d.%d %% ",cpu_usage_major, cpu_usage_minor);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
+
+	  sprintf(str,"CPU Usage:%.2f %% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
 		OLED_ShowString(0,32,(uint8 *)str,12); 
 		
 		sprintf(str,"Temperature:%.2f C \r\n",KalmanFilter(&Sensor.CPU.Temperature));//显示卡尔曼滤波后的温度

@@ -464,56 +464,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>User</GroupName>
-          <Files>
-            <File>
-              <FileName>init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\init.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\debug.c</FilePath>
-            </File>
-            <File>
-              <FileName>user_finsh_cmd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\user_finsh_cmd.c</FilePath>
-            </File>
-            <File>
-              <FileName>Control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\Control.c</FilePath>
-            </File>
-            <File>
-              <FileName>PropellerControl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\PropellerControl.c</FilePath>
-            </File>
-            <File>
-              <FileName>RC_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\RC_Data.c</FilePath>
-            </File>
-            <File>
-              <FileName>notes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\notes.c</FilePath>
-            </File>
-            <File>
-              <FileName>Return_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\Return_Data.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Applications</GroupName>
           <Files>
             <File>
@@ -595,6 +545,56 @@
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\uart.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User</GroupName>
+          <Files>
+            <File>
+              <FileName>init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\init.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_finsh_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\user_finsh_cmd.c</FilePath>
+            </File>
+            <File>
+              <FileName>Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\Control.c</FilePath>
+            </File>
+            <File>
+              <FileName>PropellerControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\PropellerControl.c</FilePath>
+            </File>
+            <File>
+              <FileName>RC_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\RC_Data.c</FilePath>
+            </File>
+            <File>
+              <FileName>notes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\notes.c</FilePath>
+            </File>
+            <File>
+              <FileName>Return_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Return_Data.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -9,7 +9,7 @@
 #include "propeller.h"
 #include "PropellerControl.h"
 #include "RC_Data.h"
-
+#include "pwm.h"
 
 
 uint8 turnAngle = 45;    //转向角度
@@ -39,13 +39,15 @@ double askResultant(double angle,double forceSize)
 * 返 回 值：限幅后的 PowerValue
 * 注    意：最大值为Propeller.PowerMax 初始化为1800
 						最小值为Propeller.PowerMin 初始化为1300
+
+
 ********************************************/
-uint16 Output_Limit(uint16 PowerValue)
+uint16 Output_Limit(uint16 *PowerValue)
 {
-		PowerValue = PowerValue > PropellerParamter.PowerMax ? PropellerParamter.PowerMax : PowerValue;//正向限幅
-		PowerValue = PowerValue < PropellerParamter.PowerMin ? PropellerParamter.PowerMin : PowerValue;//反向限幅
+		*PowerValue = (*PowerValue  + PropellerParameter.PowerMed) > PropellerParameter.PowerMax ? PropellerParameter.PowerMax : *PowerValue ;//正向限幅
+		*PowerValue = (*PowerValue  + PropellerParameter.PowerMed) < PropellerParameter.PowerMin ? PropellerParameter.PowerMin : *PowerValue ;//反向限幅
 	
-		return PowerValue;
+		return *PowerValue ;
 }
 
 
@@ -60,45 +62,69 @@ uint16 Output_Limit(uint16 PowerValue)
 ********************************************/
 void Propeller_Control(void)
 {
-		int MoveValue = 0;
-		
-		switch(Posture_Flag)
-		{
-				case  Forward  :  ;break;  //前进
-				case  BackAway :  ;break;	 //后退
-				case  TurnLeft :  ;break;  //左转
-				case  TurnRight:  ;break;  //右转
-				case  MoveLeft :	;break;  //左移
-				case  MoveRight:  ;break;  //右移
-				case  Stop     :	;break;  //停止
-				
+		robotForward();
+		switch(Control.Move){
+				case  Forward :  break;  //前进
+				case  BackAway: robotBackAway();break;	 //后退
 				default:break;
 		}
-		Propeller_Output_Limit(MoveValue);  //推进器输出限幅
+		
+
+		switch(Control.Translation){
+				case  MoveLeft : moveLeft()	;break;  //左移
+				case  MoveRight: moveRight();break;  //右移		
+				default:break;
+		}
+		
+		
+		switch(Control.Vertical){//有控制数据不定深度
+				case  RiseUp:  ;break;  //上升
+				case  Dive:    ;break;  //下潜
+				
+				default:break/*定深度PID*/;
+		}
+	
+		switch(Control.Rotate){
+				case  TurnLeft : turnLeft(); break;  //左转
+				case  TurnRight: turnRight();break;  //右转			
+				default:break;
+		}
+		Propeller_Output();  //推进器输出限幅
 }
 
 /*******************************************
-* 函 数 名：Propeller_Output_Limit
+* 函 数 名：Propeller_Output
 * 功    能：推进器输出限制
 * 输入参数：运动值：MoveValue
 * 返 回 值：none
-* 注    意：最大值为Propeller.PowerMax 初始化为1800
-						最小值为Propeller.PowerMin 初始化为1300
+* 注    意：最大值为Propeller.PowerMax 初始化为2000
+						最小值为Propeller.PowerMin 初始化为1000
 ********************************************/
-void Propeller_Output_Limit(int MoveValue)
+void Propeller_Output(void)
 {
+		static uint16 delay_count = 0;
+		static uint8 start_flag = 0;
+		PropellerPower.rightUp = Output_Limit(&PropellerPower.rightUp);
+	
+		PropellerPower.leftUp = Output_Limit(&PropellerPower.leftUp);
+	
+		PropellerPower.rightDown = Output_Limit(&PropellerPower.rightDown);
+	
+		PropellerPower.leftDown = Output_Limit(&PropellerPower.leftDown);
+	
+		PropellerPower.leftMiddle = Output_Limit(&PropellerPower.leftMiddle);
+	
+		PropellerPower.rightMiddle = Output_Limit(&PropellerPower.rightMiddle);
 		
-		PropellerPower.rightUp = PropellerParamter.PowerMed + PropellerPower.rightUp;
-		PropellerPower.rightUp = Output_Limit(PropellerPower.rightUp);
-	
-		PropellerPower.leftUp = PropellerParamter.PowerMed  + PropellerPower.leftUp;
-		PropellerPower.leftUp = Output_Limit(PropellerPower.leftUp);
-	
-		PropellerPower.rightDown = PropellerParamter.PowerMed  + PropellerPower.rightDown;
-		PropellerPower.rightDown = Output_Limit(PropellerPower.rightDown);
-	
-		PropellerPower.leftDown = PropellerParamter.PowerMed  + PropellerPower.leftDown;
-		PropellerPower.leftDown = Output_Limit(PropellerPower.leftDown);
+		if(start_flag == 0){
+				delay_count++;
+				if(delay_count >=300)
+						start_flag = 1;
+		}
+
+		if(start_flag == 1){
+				PWM_Update();//PWM上传
+		}
 }
 
 
@@ -112,24 +138,24 @@ void Propeller_Output_Limit(int MoveValue)
 ********************************************/
 void robotForward(void)  //前进
 {
-		PropellerPower.Power = Control.Power * 2; //油门大小
+		Control.Power = Control.Power * 2; //油门大小
 	
-		PropellerPower.leftUp =   - PropellerPower.Power - 32;
-		PropellerPower.rightUp =    PropellerPower.Power + 5;
-		PropellerPower.leftDown = - PropellerPower.Power - 32;
-		PropellerPower.rightDown =  PropellerPower.Power + 5;
-
+		PropellerPower.leftUp =   - Control.Power - 32;
+		PropellerPower.rightUp =    Control.Power + 5;
+		PropellerPower.leftDown = - Control.Power - 32;
+		PropellerPower.rightDown =  Control.Power + 5;
 }
+
 
 void robotBackAway(void)  //后退
 {
 
 		PropellerPower.Power = Control.Power * 2;
 	
-		PropellerPower.leftUp = PropellerPower.Power+2+PropellerError.leftUpError;
-		PropellerPower.rightUp = -PropellerPower.Power-30-PropellerError.rightUpError;
-		PropellerPower.leftDown = PropellerPower.Power+2+PropellerError.leftDownError;
-		PropellerPower.rightDown = -PropellerPower.Power-30-PropellerError.rightDownError;
+		PropellerPower.leftUp =Control.Power+2+PropellerError.leftUpError;
+		PropellerPower.rightUp = -Control.Power-30-PropellerError.rightUpError;
+		PropellerPower.leftDown = Control.Power+2+PropellerError.leftDownError;
+		PropellerPower.rightDown = -Control.Power-30-PropellerError.rightDownError;
 
 }
 
@@ -203,8 +229,8 @@ void Propeller_upDown(int depth)
 		depth_RightDuty = PropellerPower_Med - depth;//正反桨
 		depth_LeftDuty  = PropellerPower_Med + depth;
 	
-	  depth_RightDuty = Output_Limit(depth_RightDuty);
-		depth_LeftDuty  = Output_Limit(depth_LeftDuty );
+	  depth_RightDuty = Output_Limit(&depth_RightDuty);
+		depth_LeftDuty  = Output_Limit(&depth_LeftDuty );
 
 }
 

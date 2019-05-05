@@ -93,16 +93,16 @@ void Camera_Focus_Data_Analysis(uint8 Data) //控制数据解析
 		if(focus_data_ok){
 			
 				if(focus_data[3] == 0xFF ){
-						device_hint |= 0x04;
+						device_hint_flag |= 0x04;
 				}
 				else {
-						device_hint &= 0xFB;
+						device_hint_flag &= 0xFB;
 				}
 				if(focus_data[4] == 0xFF ){
-						device_hint |= 0x08;
+						device_hint_flag |= 0x08;
 				}
 				else {
-						device_hint &= 0xF7;
+						device_hint_flag &= 0xF7;
 				}
 		}
 

@@ -38,7 +38,7 @@ uint8 boma_value = 0;	//ÔÝ´æ²¦Âë×´Ì¬ ÅÐ¶Ï²¦Âë×´Ì¬ÊÇ·ñ¸Ä±ä
 void key_thread_entry(void* parameter)// --- KEY   BOMA ---
 {
 		if(System_NORMAL_STATUS == boma_value_get())
-				buzzer_bibi(3,1);
+				//buzzer_bibi(3,1);
     while (1)
     {
 				if(boma_value != boma_value_get()){
