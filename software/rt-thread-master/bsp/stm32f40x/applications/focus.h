@@ -5,14 +5,8 @@
 
 
 
-
-
-
-
-
-
-
-
+void Focus_Zoom_Camera(uint8 *action);
+void Camera_Focus_Data_Analysis(uint8 Data); //控制数据解析
 
 
 

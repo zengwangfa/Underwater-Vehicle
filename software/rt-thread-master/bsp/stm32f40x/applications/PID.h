@@ -85,6 +85,7 @@ extern AllControler Total_Controller;
 
 
 void Total_PID_Init(void);
+float	PID_Control(PID_Controler *Controler);//海拔高度位置控制器
 float PID_Control_Yaw(PID_Controler *Controler);
 float PID_Control_Div_LPF(PID_Controler *Controler);
 float Control_Device_LPF(float curr_inputer,Butter_BufferData *Buffer,Butter_Parameter *Parameter);

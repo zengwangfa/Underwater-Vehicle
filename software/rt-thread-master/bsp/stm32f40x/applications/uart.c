@@ -15,14 +15,14 @@
 #include "drv_ano.h"
 #include "uart.h"
 #include "RC_Data.h"
-
+#include "focus.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 char GYRO_UART_NAME[]    = "uart2";
 
 char DEBUG_UART_NAME[]  =  "uart3" ; //
 char CONTROL_UART_NAME[] = "uart4";
-char FOCUS_UART_NAME[]  =  "uart5";  //可更改为uart3 WIFI 、 uart4 蓝牙
+char FOCUS_UART_NAME[]  =  "uart5";  //可更改为uart3 WIFI 、 uart1 蓝牙
 
 #define Query_JY901_data 0     /* "1"为调试查询  "0"为正常读取 */
 
@@ -157,6 +157,8 @@ static void focus_thread_entry(void *parameter)
 						/* 阻塞等待接收信号量，等到信号量后再次读取数据 */
 						rt_sem_take(&focus_rx_sem, RT_WAITING_FOREVER);
 				}
+				Camera_Focus_Data_Analysis(ch);
+				
 		}
 }
 

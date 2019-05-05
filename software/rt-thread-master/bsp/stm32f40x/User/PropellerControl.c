@@ -2,12 +2,13 @@
  * PropellerControl.c
  *
  *  Created on: 2019年3月20日
- *      Author: zengwangfa
+ *      Author: 219
  *      Notes:  推进器控制
  */
 #include <math.h>
 #include "propeller.h"
 #include "PropellerControl.h"
+#include "RC_Data.h"
 
 
 
@@ -87,24 +88,17 @@ void Propeller_Control(void)
 void Propeller_Output_Limit(int MoveValue)
 {
 		
-
-			MoveValue = PropellerParamter.PowerMed  + PropellerPower.rightDown;
-			MoveValue = Output_Limit(MoveValue);
-			//TIM_SetCompare1(TIM1,MoveValue);			//右下00000000
-			
-			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftUp;
-			MoveValue = Output_Limit(MoveValue);
-			//TIM_SetCompare2(TIM1,MoveValue);		 //左上0000000000
-			
-			MoveValue = PropellerParamter.PowerMed  + PropellerPower.leftDown;
-			MoveValue = Output_Limit(MoveValue);
-			//TIM_SetCompare2(TIM12,MoveValue);	   //	左下 0000000
-			
-			MoveValue = PropellerParamter.PowerMed + PropellerPower.rightUp;
-			MoveValue = Output_Limit(MoveValue);
-			//TIM_SetCompare4(TIM1,MoveValue);			//右上00000000
-
-
+		PropellerPower.rightUp = PropellerParamter.PowerMed + PropellerPower.rightUp;
+		PropellerPower.rightUp = Output_Limit(PropellerPower.rightUp);
+	
+		PropellerPower.leftUp = PropellerParamter.PowerMed  + PropellerPower.leftUp;
+		PropellerPower.leftUp = Output_Limit(PropellerPower.leftUp);
+	
+		PropellerPower.rightDown = PropellerParamter.PowerMed  + PropellerPower.rightDown;
+		PropellerPower.rightDown = Output_Limit(PropellerPower.rightDown);
+	
+		PropellerPower.leftDown = PropellerParamter.PowerMed  + PropellerPower.leftDown;
+		PropellerPower.leftDown = Output_Limit(PropellerPower.leftDown);
 }
 
 
@@ -118,22 +112,24 @@ void Propeller_Output_Limit(int MoveValue)
 ********************************************/
 void robotForward(void)  //前进
 {
-			PropellerPower.Power = PropellerPower.Power * 5;
-			PropellerPower.leftUp = -PropellerPower.Power-32;
-			PropellerPower.rightUp = PropellerPower.Power+5;
-			PropellerPower.leftDown = -PropellerPower.Power-32;
-			PropellerPower.rightDown = PropellerPower.Power+5;
+		PropellerPower.Power = Control.Power * 2; //油门大小
+	
+		PropellerPower.leftUp =   - PropellerPower.Power - 32;
+		PropellerPower.rightUp =    PropellerPower.Power + 5;
+		PropellerPower.leftDown = - PropellerPower.Power - 32;
+		PropellerPower.rightDown =  PropellerPower.Power + 5;
 
 }
 
 void robotBackAway(void)  //后退
 {
 
-			PropellerPower.Power = PropellerPower.Power * 5;
-			PropellerPower.leftUp = PropellerPower.Power+2+PropellerError.leftUpError;
-			PropellerPower.rightUp = -PropellerPower.Power-30-PropellerError.rightUpError;
-			PropellerPower.leftDown = PropellerPower.Power+2+PropellerError.leftDownError;
-			PropellerPower.rightDown = -PropellerPower.Power-30-PropellerError.rightDownError;
+		PropellerPower.Power = Control.Power * 2;
+	
+		PropellerPower.leftUp = PropellerPower.Power+2+PropellerError.leftUpError;
+		PropellerPower.rightUp = -PropellerPower.Power-30-PropellerError.rightUpError;
+		PropellerPower.leftDown = PropellerPower.Power+2+PropellerError.leftDownError;
+		PropellerPower.rightDown = -PropellerPower.Power-30-PropellerError.rightDownError;
 
 }
 
@@ -141,22 +137,24 @@ void robotBackAway(void)  //后退
 void turnRight(void)  //右转
 {
 
-			PropellerPower.Power = PropellerPower.Power * 3;
-			PropellerPower.leftUp = -PropellerPower.Power-30-PropellerError.leftUpError;
-			PropellerPower.rightUp = -PropellerPower.Power-30-PropellerError.rightUpError;
-			PropellerPower.leftDown = -PropellerPower.Power-30-PropellerError.leftDownError;
-			PropellerPower.rightDown = -PropellerPower.Power-30-PropellerError.rightDownError;
+		PropellerPower.Power = Control.Power * 2;
+	
+		PropellerPower.leftUp = -PropellerPower.Power-30-PropellerError.leftUpError;
+		PropellerPower.rightUp = -PropellerPower.Power-30-PropellerError.rightUpError;
+		PropellerPower.leftDown = -PropellerPower.Power-30-PropellerError.leftDownError;
+		PropellerPower.rightDown = -PropellerPower.Power-30-PropellerError.rightDownError;
 
 }
 
 void turnLeft(void)  //左转
 {
 
-			PropellerPower.Power = PropellerPower.Power * 3;
-			PropellerPower.leftUp = PropellerPower.Power+0+PropellerError.leftUpError;
-			PropellerPower.rightUp = PropellerPower.Power+0+PropellerError.rightUpError;
-			PropellerPower.leftDown = PropellerPower.Power+0+PropellerError.leftDownError;
-			PropellerPower.rightDown = PropellerPower.Power+0+PropellerError.rightDownError;
+		PropellerPower.Power = Control.Power * 2;
+	
+		PropellerPower.leftUp = PropellerPower.Power+0+PropellerError.leftUpError;
+		PropellerPower.rightUp = PropellerPower.Power+0+PropellerError.rightUpError;
+		PropellerPower.leftDown = PropellerPower.Power+0+PropellerError.leftDownError;
+		PropellerPower.rightDown = PropellerPower.Power+0+PropellerError.rightDownError;
 
 }
 
@@ -186,4 +184,27 @@ void moveRight(void)  //右移
 
 }
 
+
+
+/*******************************************
+* 函 数 名：Propeller_upDown
+* 功    能：推进器上升或下降
+* 输入参数：depth期望深度
+* 返 回 值：none
+* 注    意：none
+********************************************/
+void Propeller_upDown(int depth)  
+{
+		static uint16 depth_RightDuty = 0;
+		static uint16 depth_LeftDuty = 0;
+		if(depth < -500) depth = (-500);
+		if(depth >  500) depth =   500;
+
+		depth_RightDuty = PropellerPower_Med - depth;//正反桨
+		depth_LeftDuty  = PropellerPower_Med + depth;
+	
+	  depth_RightDuty = Output_Limit(depth_RightDuty);
+		depth_LeftDuty  = Output_Limit(depth_LeftDuty );
+
+}
 

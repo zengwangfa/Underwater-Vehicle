@@ -13,21 +13,19 @@
 #include <drivers/pin.h>
 #include <elog.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
-
 #define KEY_PIN  						88 	 //PDG3   
 
-#define WIFI_CONNECT_IO  		80 	 //PD11   WIFI连接IO检测
+#define WIFI_CONNECT_PIN    80 	 //PD11   WIFI连接IO检测
 
 #define BOMA3_PIN 					13	 //PF3
 #define BOMA2_PIN	  				14	 //PF4
 #define BOMA1_PIN 					15	 //PF5
 
-
 #define boma1_read 					rt_pin_read(BOMA1_PIN)
 #define boma2_read 					rt_pin_read(BOMA2_PIN)
 #define boma3_read 					rt_pin_read(BOMA3_PIN)
 
-#define wifi_read 					rt_pin_read(WIFI_CONNECT_IO)
+#define wifi_read 					rt_pin_read(WIFI_CONNECT_PIN)
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
 extern struct rt_event init_event;
@@ -97,7 +95,9 @@ int key_thread_init(void)
 				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
 				rt_pin_mode(BOMA3_PIN, PIN_MODE_INPUT_PULLUP);  
 			
-				rt_pin_mode(WIFI_CONNECT_IO, PIN_MODE_INPUT_PULLUP);  
+
+			
+				rt_pin_mode(WIFI_CONNECT_PIN, PIN_MODE_INPUT_PULLUP);  //WIFI 连接IO检测
 
 				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为key_down */
 				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
@@ -112,7 +112,6 @@ int key_thread_init(void)
 		return 0;
 }
 INIT_APP_EXPORT(key_thread_init);
-
 
 
 

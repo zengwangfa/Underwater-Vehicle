@@ -53,25 +53,29 @@ int Normal_Parameter_Init_With_Flash(void)
 		log_i("Flash_Read()");
 		return 0;
 }
-INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash);
+//INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash);
 
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash参数自检 若为 0 则为 非正常数据 
 {
 		Parameter_SelfCheck( (uint32 *)&VehicleMode,(uint32 *)&Normal_Parameter[VEHICLE_MODE_A] );
 		Parameter_SelfCheck( (uint32 *)&debug_tool,(uint32 *)&Normal_Parameter[DEBUG_TOOL_A] );
 		
-		Parameter_SelfCheck( (uint32 *)&RoboticArm.OpenValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_OPEN_VALUE_A] );
-		Parameter_SelfCheck( (uint32 *)&RoboticArm.CloseValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_CLOSE_VALUE_A] );
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.MaxValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MAX_VALUE_A] );
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.MinValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MIN_VALUE_A] );
 //    Parameter_SelfCheck( (uint32 *)&RoboticArm.CurrentValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_CURRENT_VALUE_A] );
 	
 	
-		Parameter_SelfCheck( (uint32 *)&YunTai.OpenValue,(uint32 *)&Normal_Parameter[YUNTAI_OPEN_VALUE_A] );
-		Parameter_SelfCheck( (uint32 *)&YunTai.CloseValue,(uint32 *)&Normal_Parameter[YUNTAI_CLOSE_VALUE_A] );	
-//    Parameter_SelfCheck( (uint32 *)&YunTai.CurrentValue,(uint32 *)&Normal_Parameter[YUNTAI_CURRENT_VALUE_A] );
+		Parameter_SelfCheck( (uint32 *)&YunTai.MaxValue,(uint32 *)&Normal_Parameter[YUNTAI_MAX_VALUE_A] );
+		Parameter_SelfCheck( (uint32 *)&YunTai.MinValue,(uint32 *)&Normal_Parameter[YUNTAI_MIN_VALUE_A] );	
+    Parameter_SelfCheck( (uint32 *)&YunTai.MedValue,(uint32 *)&Normal_Parameter[YUNTAI_MED_VALUE_A] );  //云台中值
 	
 		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMed,(uint32 *)&Normal_Parameter[PropellerParamter_MED_A] );
 		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMax,(uint32 *)&Normal_Parameter[PropellerParamter_MAX_A] );
 		Parameter_SelfCheck( (uint32 *)&PropellerParamter.PowerMin,(uint32 *)&Normal_Parameter[PropellerParamter_MIN_A] );
+	
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.Speed,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_SPEED_A] );
+		Parameter_SelfCheck( (uint32 *)&YunTai.Speed,(uint32 *)&Normal_Parameter[YUNTAI_SPEED_A] );	
+
 }
 /* FLASH 更新 普通参数 */
 void Flash_Update(void)
@@ -80,21 +84,24 @@ void Flash_Update(void)
 //------------------------------------------------------------------------------------------//
 		ef_port_write(Nor_FLASH_ADDRESS+4*VEHICLE_MODE_A,(uint32 *)(&VehicleMode),4);		
 		ef_port_write(Nor_FLASH_ADDRESS+4*DEBUG_TOOL_A,(uint32 *)(&debug_tool),4);		  
+
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MAX_VALUE_A,(uint32 *)&RoboticArm.MaxValue,4);		// 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MIN_VALUE_A,(uint32 *)&RoboticArm.MinValue,4); // 地址
+		//ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_CURRENT_VALUE_A,(uint32 *)&RoboticArm.CurrentValue,4); // 地址
 	
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_OPEN_VALUE_A,&RoboticArm.OpenValue,4);		// 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_CLOSE_VALUE_A,&RoboticArm.CloseValue,4); // 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_CURRENT_VALUE_A,&RoboticArm.CurrentValue,4); // 地址
-	
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_OPEN_VALUE_A,&YunTai.OpenValue,4);		// 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_CLOSE_VALUE_A,&YunTai.CloseValue,4); // 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_CURRENT_VALUE_A,&YunTai.CurrentValue,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MAX_VALUE_A,(uint32 *)&YunTai.MaxValue,4);		// 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MIN_VALUE_A,(uint32 *)&YunTai.MinValue,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MED_VALUE_A,(uint32 *)&YunTai.MedValue,4); 		// 地址  云台中值
 	
 		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MED_A,(uint32 *)&PropellerParamter.PowerMed,4);		// 地址
 		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MAX_A,(uint32 *)&PropellerParamter.PowerMax,4); // 地址
 		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MIN_A,(uint32 *)&PropellerParamter.PowerMin,4); // 地址
 	
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_SPEED_A,(uint32 *)&RoboticArm.Speed,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_SPEED_A,(uint32 *)&YunTai.Speed,4); // 地址
+	
 }	
-
+MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
 /* list 相关重要参数 */
 void list_value(void)
@@ -104,13 +111,22 @@ void list_value(void)
 		log_i	("variable  name          value");
     log_i("----------------------   ---------");
 		log_i("VehicleMode               %s",VehicleModeName[VehicleMode]);
-	  log_i("RoboticArm_OpenValue      %d",RoboticArm.OpenValue);
-	  log_i("RoboticArm_CloseValue     %d",RoboticArm.CloseValue);
-		log_i("RoboticArm_CurrentValue   %d",RoboticArm.CurrentValue);
-	  log_i("YunTai_OpenValue          %d",YunTai.OpenValue);
-	  log_i("YunTai_CloseValue         %d",YunTai.CloseValue);
-		log_i("YunTai_CurrentValue       %d",YunTai.CurrentValue);
 		log_i("debug_tool                %s",debug_tool_name[debug_tool]);
+	
+	  log_i("RoboticArm_MaxValue       %d",RoboticArm.MaxValue);
+	  log_i("RoboticArm_MinValue       %d",RoboticArm.MinValue);
+		log_i("RoboticArm_CurrentValue   %d",RoboticArm.CurrentValue);
+		log_i("RoboticArm_Speed          %d",RoboticArm.Speed);
+	
+	  log_i("YunTai_MaxValue           %d",YunTai.MaxValue);
+	  log_i("YunTai_MinValue           %d",YunTai.MinValue);
+		log_i("YunTai_MedValue           %d",YunTai.MedValue);
+		log_i("YunTai_Speed              %d",YunTai.Speed);
+	
+	  log_i("Propeller_max             %d",PropellerParamter.PowerMax);
+	  log_i("Propeller_min             %d",PropellerParamter.PowerMin);
+		log_i("Propeller_med             %d",PropellerParamter.PowerMed);
+
     rt_kprintf("                         \n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);

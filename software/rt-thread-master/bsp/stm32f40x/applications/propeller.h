@@ -16,17 +16,17 @@ typedef struct //推进器中值、最大值、最小值
 
 typedef struct//调试时各个推进器的偏差量 
 {
-		int leftUpError;
+		int leftUpError;  //左上
 		int rightUpError;
-		int leftDownError;
+		int leftDownError; //左下
 		int rightDownError;
-		int leftMiddleError;
-		int RightMiddleError;
+		int leftMiddleError; //左中
+		int rightMiddleError;
 
 }PropellerError_Type;//推进器偏移值
 
 
-typedef struct//调试时各个推进器的偏差量 
+typedef struct
 {
 	  uint16 Power; //基础推力
 	
@@ -37,7 +37,7 @@ typedef struct//调试时各个推进器的偏差量
 		uint16 leftMiddle;
 		uint16 rightMiddle;
 
-}PropellerPower_Type;//推进器偏移值
+}PropellerPower_Type;//各个推进器推力
 
 typedef enum
 {

@@ -9,6 +9,11 @@
 #include "PID.h"
 #include <rtthread.h>
 #include <stdlib.h>
+#include "RC_Data.h"
+#include "focus.h"
+#include "led.h"
+#include "servo.h"
+#include "PropellerControl.h"
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
@@ -26,6 +31,73 @@ float Yaw = 0.0f;
  *  E—— 270°
  */
 
+void control_thread_entry(void *parameter)
+{
+		rt_thread_mdelay(1500);//等待串口设备初始化成功
+		while(1)
+		{
+				Devices_Control();
+				rt_thread_mdelay(10);
+		}
+}
+
+
+
+/**
+  * @brief  Devices_Control(设备控制)
+  * @param  None
+  * @retval None
+  * @notice 
+  */
+void Devices_Control(void)
+{
+	
+		Light_Control(&Control.Light);
+		Focus_Zoom_Camera(&Control.Focus);
+
+		YunTai_Control(&Control.Yuntai);
+		RoboticArm_Control(&Control.Arm);
+	
+
+			/*
+				Control.Depth_Lock     = Control_Data[3]; //深度锁定
+				Control.Direction_Lock = Control_Data[4]; //方向锁定
+				Control.Move					 = Control_Data[5]; //前后运动
+				Control.Translation		 = Control_Data[6]; //左右云顶
+				Control.Vertical 			 = Control_Data[7]; //垂直运动
+				Control.Rotate 				 = Control_Data[8]; //旋转运动
+				
+				Control.Power 				 = Control_Data[9];  //动力控制
+				Control.Light 				 = Control_Data[10]; //灯光控制
+				
+				Control.Focus 				 = Control_Data[11]; //变焦摄像头控制
+	
+				Control.Yuntai 				 = Control_Data[12]; //云台控制
+				Control.Arm						 = Control_Data[13]; //机械臂控制*/
+	
+}
+
+
+
+int control_thread_init(void)
+{
+    rt_thread_t control_tid;
+		/*创建动态线程*/
+    control_tid = rt_thread_create("control",//线程名称
+                    control_thread_entry,				 //线程入口函数【entry】
+                    RT_NULL,							   //线程入口函数参数【parameter】
+                    2048,										 //线程栈大小，单位是字节【byte】
+                    8,										 	 //线程优先级【priority】
+                    10);										 //线程的时间片大小【tick】= 100ms
+
+    if (control_tid != RT_NULL){
+
+				rt_thread_startup(control_tid);
+		}
+		return 0;
+}
+INIT_APP_EXPORT(control_thread_init);
+
 
 void Angle_Control(void)
 {
@@ -39,11 +111,17 @@ void Angle_Control(void)
 
 		//偏航角速度环期望，来源于偏航角度控制器输出
 		//Total_Controller.Yaw_Gyro_Control.Expect = Total_Controller.Yaw_Angle_Control.Control_OutPut;
-	
 }
 
 
-void Gyro_Control()//角速度环
+
+void Depth_Control(void)
+{
+	
+		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
+		Propeller_upDown(Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制
+}
+void Gyro_Control(void)//角速度环
 {
 
 //  	偏航角前馈控制
@@ -63,7 +141,6 @@ void Gyro_Control()//角速度环
 //		
 
 }
-
 /*【机械臂】舵机 期望yaw MSH方法 */
 static int yaw(int argc, char **argv)
 {

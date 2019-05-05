@@ -12,7 +12,7 @@
 #include <rtthread.h>
 #include <elog.h>
 #include "gyroscope.h"
-
+#include <math.h>
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
@@ -39,6 +39,7 @@ uint8 gyroscope_package_array[5] = {0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据
 uint8 gyroscope_rate_array[5] 	 = {0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
 uint8 gyroscope_led_array[5] 	   = {0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
 uint8 gyroscope_baud_array[5] 	 = {0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
+uint8 RxBuffer[20] = {0};  //数据包
 
 extern rt_device_t gyro_uart_device;	
 /*----------------------- Function Implement --------------------------------*/
@@ -46,7 +47,7 @@ extern rt_device_t gyro_uart_device;
 //CopeSerialData为串口2中断调用函数，串口每收到一个数据，调用一次这个函数。
 void CopeSerial2Data(uint8 Data)
 {
-		static uint8 RxBuffer[50];  //数据包
+
 		static uint8 RxCheck = 0;	  //尾校验字
 		static uint8 RxCount = 0;	    //接收计数
 		static uint8 i = 0;	   		  //接收计数
@@ -104,8 +105,9 @@ void JY901_Convert(JY901Type * pArr)
 	
 		pArr->Euler.Roll = (float)stcAngle.angle[0]/8192*45;   //32768*180; 
 		pArr->Euler.Pitch = (float)stcAngle.angle[1]/8192*45;
-		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45;
-	
+		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45 - 20;//磁场漂移 补偿-20 deg
+		if(pArr->Euler.Yaw < -180)pArr->Euler.Yaw = 360+pArr->Euler.Yaw;//磁场漂移 补偿-20 deg
+		
 		pArr->Mag.x  = stcMag.h[0];
 		pArr->Mag.y	 = stcMag.h[1];
 		pArr->Mag.z  = stcMag.h[2];
@@ -113,6 +115,33 @@ void JY901_Convert(JY901Type * pArr)
 		pArr->Temperature = (float)stcAcc.T/100;
 }
 
+/* 粗略 获取轴速度 */
+void get_speed(float *acc,float *speed)
+{
+		static uint8 time_count = 0;
+		static float res = 0;
+		time_count ++;
+		res += fabs(*acc);
+		if(time_count >= 5){
+				*speed = res;
+				time_count = 0;
+				res = 0;
+		}
+}
+
+/* 粗略 获取x轴速度 */
+void get_zspeed(void)
+{
+		static uint8 time_count = 0;
+		static float res = 0;
+		time_count ++;
+		res += (Sensor.JY901.Acc.z-1);
+		if(time_count >= 5){
+				Sensor.JY901.Speed.z = res;
+				time_count = 0;
+				res = 0;
+		}
+}
 
 /* Get时间  time */
 void get_time(void)
@@ -193,7 +222,7 @@ static int gyroscope_led(int argc, char **argv)
 {
 	  int result = 0;
     if (argc != 2){
-        log_i("Proper Usage: gyroscope_led on/off\n");
+        log_e("Proper Usage: gyroscope_led on/off\n");
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -210,6 +239,7 @@ static int gyroscope_led(int argc, char **argv)
 				log_e("Error! Proper Usage: gyroscope_led on/off\n");goto _exit;
 		}
 		rt_device_write(gyro_uart_device, 0, gyroscope_led_array, 5);   //ON LED
+		rt_thread_mdelay(100);
 		rt_device_write(gyro_uart_device, 0, gyroscope_save_array, 5);  //保存
 		
 _exit:

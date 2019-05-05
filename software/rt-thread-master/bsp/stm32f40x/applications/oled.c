@@ -138,7 +138,7 @@ void OLED_StatusPage(void)
 		OLED_ShowMyChar(100,0,0,16,1); //3G数据图标2
 		if(wifi_connect_get()){
 				OLED_ShowMyChar(119,0,1,16,1);} //Wifi图标
-		else {OLED_ShowMyChar(119,0,2,16,1);} //Wifi图标
+		else {OLED_ShowMyChar(119,0,2,16,1);} //清空图标
 	
 		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get());
 		OLED_ShowString(0,0, (uint8 *)str,12); 
@@ -214,7 +214,8 @@ void OLED_PicturePage(void)
 	
 		Angle_x = Sensor.JY901.Euler.Roll/5;
 		Angle_y = Sensor.JY901.Euler.Pitch/5;
-		slope = tan((float)Deg2Rad(Sensor.JY901.Euler.Yaw));  //转化弧度制 解算东北天坐标系下 航向斜率slope
+		if(fabs(Sensor.JY901.Euler.Yaw) != 90) //90 deg无效
+				slope = tan((float)Deg2Rad(Sensor.JY901.Euler.Yaw));  //转化弧度制 解算东北天坐标系下 航向斜率slope
 	
 		for(y = 28;y <= 36;y++){ //补圆顶、底部的缺失点
 				OLED_DrawPoint(y,0,1);

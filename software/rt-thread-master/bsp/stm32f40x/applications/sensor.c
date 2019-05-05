@@ -24,7 +24,7 @@ extern struct rt_event init_event; /* ALL_init 事件控制块 */
   */
 void sensor_thread_entry(void* parameter)
 {
-	
+		Sensor.MS5837.Init_Depth = get_ms5837_pressure();
 		while(1)
 		{
 
@@ -51,7 +51,7 @@ int sensor_thread_init(void)
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
                     20,										 	 //线程优先级【priority】
-                    1);										 //线程的时间片大小【tick】= 100ms
+                    10);										 //线程的时间片大小【tick】= 100ms
 
     if (sensor_tid != RT_NULL){
 

@@ -6,7 +6,7 @@
  *      Notes:  PID控制器
  */
 #include "PID.h"
-
+#include <math.h>
 
 AllControler Total_Controller; //总控制器PID
 Butter_Parameter Control_Device_Div_LPF_Parameter;
@@ -98,7 +98,7 @@ float PID_Control(PID_Controler *Controler)
 		/*******积分计算*********************/
 		if(Controler->Integrate_Separation_Flag==1)//积分分离标志位
 		{
-			if(my_abs(Controler->Err) <= Controler->Integrate_Separation_Err)
+			if(fabs(Controler->Err) <= Controler->Integrate_Separation_Err)
 					Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
 		}
 		else
@@ -147,7 +147,7 @@ float PID_Control_Yaw(PID_Controler *Controler)
 		/*******积分计算*********************/
 		if(Controler->Integrate_Separation_Flag == 1)//积分分离标志位
 		{
-				if(my_abs(Controler->Err) <= Controler->Integrate_Separation_Err)
+				if(fabs(Controler->Err) <= Controler->Integrate_Separation_Err)
 				Controler->Integrate += Controler->Scale_Ki * Controler->Ki * Controler->Err;
 		}
 		else{

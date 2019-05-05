@@ -24,6 +24,9 @@
 //OV Camera 闪光灯
 #define LED_Camera 	141  // PE0 高电平点亮
 
+//探照灯
+#define Light_PIN  	114  //PD0 
+
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
 extern struct rt_event init_event;
@@ -105,9 +108,11 @@ int led_thread_init(void)
     if (led_tid != RT_NULL){
 				rt_pin_mode(LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	
 				rt_pin_mode(LED_Green, PIN_MODE_OUTPUT);	
-				rt_pin_mode(LED_Blue, 	PIN_MODE_OUTPUT);	
+				rt_pin_mode(LED_Blue, 	PIN_MODE_OUTPUT);
+				rt_pin_mode(LED_Camera, 	PIN_MODE_OUTPUT); //OV2640 LED
 			
-
+				rt_pin_mode(Light_PIN, 	PIN_MODE_OUTPUT);	  //探照灯
+				//rt_pin_write(Light_PIN ,PIN_HIGH);
 				log_i("LED_Init()");
 				//rt_event_send(&init_event, LED_EVENT);
 				rt_thread_startup(led_tid);
@@ -115,6 +120,19 @@ int led_thread_init(void)
 		return 0;
 }
 INIT_APP_EXPORT(led_thread_init);
+
+
+void Light_Control(uint8 *action)
+{
+		switch(*action)
+		{
+				case 0x01:rt_pin_write(Light_PIN ,PIN_HIGH);break;
+				case 0x02:rt_pin_write(Light_PIN ,PIN_LOW);break;
+				default:break;
+		}
+		*action = 0x00;
+}
+
 
 
 
@@ -220,7 +238,7 @@ static int led_on(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        log_e("Error! Proper Usage: led_on r\n Species:r / g / b / c");
+        log_e("Error! Proper Usage: led_on r\n Species:r/g/b/c/l");
 				result = -RT_ERROR;
 				return result;
     }
@@ -230,7 +248,8 @@ static int led_on(int argc, char **argv)
 				case 'g':LED_ON(LED_Green);break;
 				case 'b':LED_ON(LED_Blue);break;
 				case 'c':LED_OFF(LED_Camera);break;
-				default:log_e("Error! Proper Usage: led_on R\n Species:r / g / b / c");break;
+				case 'l':LED_OFF(Light_PIN);break;
+				default:log_e("Error! Proper Usage: led_on R\n Species:r/g/b/c/l");break;
 		}
 
 		return result;
@@ -244,7 +263,7 @@ static int led_off(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-        log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c");
+        log_e("Error! Proper Usage: led_off r\n Species:r/g/b/c/l");
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -255,7 +274,8 @@ static int led_off(int argc, char **argv)
 				case 'g':LED_OFF(LED_Green);break;
 				case 'b':LED_OFF(LED_Blue);break;
 				case 'c':LED_ON(LED_Camera);break;
-				default:log_e("Error! Proper Usage: led_off r\n Species:r /g /b /c");break;
+				case 'l':LED_ON(Light_PIN);break;
+				default:log_e("Error! Proper Usage: led_off r\n Species:r/g/b/c/l");break;
 		}
 _exit:
     return result;

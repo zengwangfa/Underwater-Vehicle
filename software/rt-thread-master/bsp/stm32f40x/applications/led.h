@@ -51,6 +51,8 @@ void Bling_Working(uint8 bling_mode);
 							 
 void Bling_Init(void);
 void Quad_Start_Bling(void);
+							 
+void Light_Control(uint8 *action);							 
 extern Bling_Light Light_1,Light_2,Light_3,Light_4;
 extern uint8 Bling_Mode;
 							 

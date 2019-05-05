@@ -43,9 +43,9 @@ static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 		rt_enter_critical();
 				
 		JY901_Convert(&Sensor.JY901); //JY901数据转换
-		
-
-		
+	
+		get_speed(&Sensor.JY901.Acc.x,&Sensor.JY901.Speed.x);//得到x速度
+		get_zspeed();
 		Angle_Control(); //角度控制
 		
 		/* 调度器解锁 */

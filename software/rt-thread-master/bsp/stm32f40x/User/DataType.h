@@ -64,8 +64,9 @@ typedef struct
 
 typedef struct 
 {
-		float Temperature; 		//加速度
-		uint32 Depth; 		//角速度
+		float Temperature; //水温
+		uint32 Depth; 		 //深度
+		uint32 Init_Depth; //初始化采集到得深度
 }MS5837Type;
 
 
@@ -111,7 +112,9 @@ extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 
 
 
-
+#define PropellerPower_Med  1500
+#define PropellerPower_Min  1000
+#define PropellerPower_Max  2000
 
 
 #endif

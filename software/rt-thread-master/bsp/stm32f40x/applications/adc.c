@@ -17,7 +17,7 @@
 
 #define REFER_VOLTAGE       3.3         // 参考电压 3.3V,数据精度乘以100保留2位小数
 #define CONVERT_BITS        (1 << 12)   // 转换位数为12位 
-#define Voltge_Parameter    10				// 23.4 电压分压系数 1.67
+#define Voltge_Parameter    11				// 23.4 电压分压系数 1.67
 
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -25,11 +25,7 @@ extern struct rt_event init_event;/* ALL_init 事件控制块 */
 float  volatge = 0.0f;
 uint32 adc_value[10] = {0};
 
-
 /*----------------------- Function Implement --------------------------------*/
-
-
-
 
 void adc_thread_entry(void *parameter)
 {
@@ -152,7 +148,7 @@ int adc_thread_init(void)
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
                     15,										 	 //线程优先级【priority】
-                    1);										 //线程的时间片大小【tick】= 100ms
+                    10);										 //线程的时间片大小【tick】= 100ms
 
     if (adc_tid != RT_NULL){
 				adc_init();

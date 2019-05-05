@@ -6,7 +6,7 @@
 
 
 void Propeller_Output_Limit(int MoveValue);
-
+void Propeller_upDown(int depth);
 #endif
 
 

@@ -157,7 +157,10 @@ float get_temperature(void);
 void JY901_Convert(JY901Type * pArr);
 
 void CopeSerial2Data(unsigned char Data);
- 
+
+void get_speed(float *acc,float *speed);/* 粗略 获取轴速度 */
+void get_zspeed(void);
+
 extern JY901Type JY901; //JY901真实值结构体
  
  
