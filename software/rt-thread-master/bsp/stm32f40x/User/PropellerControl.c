@@ -62,9 +62,9 @@ uint16 Output_Limit(uint16 *PowerValue)
 ********************************************/
 void Propeller_Control(void)
 {
-		robotForward();
+
 		switch(Control.Move){
-				case  Forward :  break;  //前进
+				case  Forward : robotForward();break;  //前进
 				case  BackAway: robotBackAway();break;	 //后退
 				default:break;
 		}
@@ -102,8 +102,7 @@ void Propeller_Control(void)
 ********************************************/
 void Propeller_Output(void)
 {
-		static uint16 delay_count = 0;
-		static uint8 start_flag = 0;
+
 		PropellerPower.rightUp = Output_Limit(&PropellerPower.rightUp);
 	
 		PropellerPower.leftUp = Output_Limit(&PropellerPower.leftUp);
@@ -116,15 +115,8 @@ void Propeller_Output(void)
 	
 		PropellerPower.rightMiddle = Output_Limit(&PropellerPower.rightMiddle);
 		
-		if(start_flag == 0){
-				delay_count++;
-				if(delay_count >=300)
-						start_flag = 1;
-		}
-
-		if(start_flag == 1){
-				PWM_Update();//PWM上传
-		}
+		PWM_Update();//PWM上传
+		
 }
 
 
@@ -141,9 +133,9 @@ void robotForward(void)  //前进
 		Control.Power = Control.Power * 2; //油门大小
 	
 		PropellerPower.leftUp =   - Control.Power - 32;
-		PropellerPower.rightUp =    Control.Power + 5;
+		PropellerPower.rightUp =    Control.Power + 32;
 		PropellerPower.leftDown = - Control.Power - 32;
-		PropellerPower.rightDown =  Control.Power + 5;
+		PropellerPower.rightDown =  Control.Power + 32;
 }
 
 

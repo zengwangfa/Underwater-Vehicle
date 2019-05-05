@@ -110,14 +110,10 @@ void YunTai_Control(uint8 *action)
 void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
 {
 
-	
-		
+
 		while(1)
 		{
 				
-
-
-			
 				rt_thread_mdelay(10);
 
 		}

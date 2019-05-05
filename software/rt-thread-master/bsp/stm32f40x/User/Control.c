@@ -14,6 +14,8 @@
 #include "led.h"
 #include "servo.h"
 #include "PropellerControl.h"
+#include "propeller.h"
+
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
@@ -33,6 +35,7 @@ float Yaw = 0.0f;
 
 void control_thread_entry(void *parameter)
 {
+
 		rt_thread_mdelay(1500);//等待串口设备初始化成功
 		while(1)
 		{
@@ -81,7 +84,7 @@ void Devices_Control(void)
 
 int control_thread_init(void)
 {
-    rt_thread_t control_tid;
+		rt_thread_t control_tid;
 		/*创建动态线程*/
     control_tid = rt_thread_create("control",//线程名称
                     control_thread_entry,				 //线程入口函数【entry】

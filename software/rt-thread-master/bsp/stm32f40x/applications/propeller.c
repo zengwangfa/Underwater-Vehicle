@@ -12,7 +12,7 @@
 #include "sys.h"
 #include "flash.h"
 
-
+uint8 Propeller_Init_Flag = 0;
 PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 		 .PowerMax = 1700,//正向最大值
 		 .PowerMed = 1500,//中值
@@ -71,6 +71,7 @@ void Propeller_Init(void)
 		rt_thread_mdelay(500);  //0.5s
 		
 		log_i("Propeller_Init()");
+		Propeller_Init_Flag = 1;
 }
 
 /*【推进器】 修改 【正向最大值】MSH方法 */
@@ -96,6 +97,29 @@ _exit:
 }
 MSH_CMD_EXPORT(propeller_maxvalue_set,ag: propeller set 1600);
 
+
+/*【推进器】 修改 【正向最大值】MSH方法 */
+static int propeller_medvalue_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        log_e("Error! Proper Usage: propeller_medvalue_set 1500");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		if(atoi(argv[1]) <= 1500){
+				PropellerParameter.PowerMax = atoi(argv[1]);
+				Flash_Update();
+				log_d("Current propeller med_value_set:  %d",PropellerParameter.PowerMax);
+		}
+		
+		else {
+				log_e("Error! The value is out of range!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(propeller_medvalue_set,ag: propeller set 1600);
 /*【推进器】 修改 【正向最大值】MSH方法 */
 static int propeller_minvalue_set(int argc, char **argv)
 {
