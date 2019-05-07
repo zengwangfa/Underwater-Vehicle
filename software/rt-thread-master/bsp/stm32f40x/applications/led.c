@@ -101,8 +101,8 @@ int led_thread_init(void)
     led_tid = rt_thread_create("led",//线程名称
                     led_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    512,										 //线程栈大小，单位是字节【byte】
-                    25,										 	 //线程优先级【priority】
+                    1024,										 //线程栈大小，单位是字节【byte】
+                    15,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (led_tid != RT_NULL){
@@ -122,7 +122,7 @@ int led_thread_init(void)
 INIT_APP_EXPORT(led_thread_init);
 
 
-void Light_Control(uint8 *action)
+void Light_Control(uint8 *action)//探照灯
 {
 		switch(*action)
 		{

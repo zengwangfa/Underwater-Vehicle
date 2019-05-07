@@ -41,7 +41,7 @@ int return_computer_thread_init(void)
 													return_computer_thread_entry,				 //线程入口函数【entry】
 													RT_NULL,							   //线程入口函数参数【parameter】
 													2048,										 //线程栈大小，单位是字节【byte】
-													20,										 	 //线程优先级【priority】
+													15,										 	 //线程优先级【priority】
 													10);										 //线程的时间片大小【tick】= 100ms
 
     if (return_computer_tid != RT_NULL){
@@ -83,9 +83,9 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 		Return_Data[4] = (int)Sensor.MS5837.Temperature; //整数倍
 		Return_Data[5] = get_decimal(Sensor.MS5837.Temperature);//小数的100倍	
 	
-		Return_Data[6] = Sensor.MS5837.Depth >> 16; //高8位
-		Return_Data[7] = Sensor.MS5837.Depth >> 8 ;//中8位
-		Return_Data[8] = Sensor.MS5837.Depth ; //低8位
+		Return_Data[6] = Sensor.Depth >> 16; //高8位
+		Return_Data[7] = Sensor.Depth >> 8 ;//中8位
+		Return_Data[8] = Sensor.Depth ; //低8位
 	
 	
 		Return_Data[9]  = stcAngle.angle[0] >> 8 ; // Roll 高8位

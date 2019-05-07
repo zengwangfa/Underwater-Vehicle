@@ -46,7 +46,7 @@ extern struct rt_event init_event;/* ALL_init 事件控制块. */
 * 返 回 值：限幅后的 Value
 * 注    意：
 ********************************************/
-uint16 Servo_Output_Limit(volatile uint16* Value,uint16 max,uint16 min)
+uint16 Servo_Output_Limit(uint16* Value,uint16 max,uint16 min)
 {
 		*Value = *Value > max ? max: *Value;//正向限幅
 		*Value = *Value < min ? min: *Value;//反向限幅
@@ -110,7 +110,9 @@ void YunTai_Control(uint8 *action)
 void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
 {
 
-
+		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
+		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
+		Propeller_Init();
 		while(1)
 		{
 				
@@ -135,9 +137,7 @@ int servo_thread_init(void)
     if (servo_tid != RT_NULL){
 				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
 				TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
-				TIM_Cmd(TIM1, ENABLE);  //使能TIM1
-				TIM_Cmd(TIM4, ENABLE);  //使能TIM4
-				Propeller_Init();
+
 				log_i("Servo_init()");
 			
 				rt_thread_startup(servo_tid);

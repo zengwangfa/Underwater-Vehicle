@@ -115,9 +115,9 @@ void Vcan_Send_Data(void)
 		list[2] = (float)Sensor.JY901.Euler.Yaw; 	  //Æ«º½½Ç Yaw
 		list[3] = (float)Yaw;    //CPUÎÂ¶È temp
 		list[4] = (float)0;//KalmanFilter(&temp);//¿¨¶ûÂüÂË²¨ºóµÄÎÂ¶È
-		list[5] = (float)0;//MS_TEMP;//get_vol();
-		list[6] = (float)MS5837_Temperature;//MS5837_Pressure;	//KalmanFilter(&vol)
-		list[7] = (float)MS5837_Pressure;	//camera_center;
+		list[5] = (float)Total_Controller.High_Position_Control.Err;//MS_TEMP;//get_vol();
+		list[6] = (float)Total_Controller.High_Position_Control.Control_OutPut;//MS5837_Pressure;	//KalmanFilter(&vol)
+		list[7] = (float)Total_Controller.High_Position_Control.Expect;	//camera_center;
 		
 		Vcan_Send_Cmd(list,sizeof(list));
 }

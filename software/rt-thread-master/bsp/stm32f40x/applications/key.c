@@ -16,6 +16,7 @@
 #define KEY_PIN  						88 	 //PDG3   
 
 #define WIFI_CONNECT_PIN    80 	 //PD11   WIFI连接IO检测
+#define WIFI_RELOAD_PIN     68 	 //PE15   WIFI复位
 
 #define BOMA3_PIN 					13	 //PF3
 #define BOMA2_PIN	  				14	 //PF4
@@ -94,11 +95,10 @@ int key_thread_init(void)
 				rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
 				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
 				rt_pin_mode(BOMA3_PIN, PIN_MODE_INPUT_PULLUP);  
+	
+				rt_pin_mode(WIFI_RELOAD_PIN, PIN_MODE_OUTPUT);  //WIFI 连接IO检测
+				rt_pin_write(WIFI_RELOAD_PIN ,PIN_HIGH);
 			
-
-			
-				rt_pin_mode(WIFI_CONNECT_PIN, PIN_MODE_INPUT_PULLUP);  //WIFI 连接IO检测
-
 				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为key_down */
 				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
 			
@@ -114,4 +114,16 @@ int key_thread_init(void)
 INIT_APP_EXPORT(key_thread_init);
 
 
+/*【WIFI】重启 */
+int wifi_reload(void)
+{
+		rt_pin_write(WIFI_RELOAD_PIN ,PIN_LOW);
+		rt_thread_mdelay(4000);
+		rt_pin_write(WIFI_RELOAD_PIN ,PIN_HIGH);
+		rt_thread_mdelay(1000);
+		log_d("WIFI Reload!\r\n");
+		return 0;
+
+}
+MSH_CMD_EXPORT(wifi_reload,wifi reload);
 

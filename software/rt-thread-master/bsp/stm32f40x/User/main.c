@@ -34,7 +34,6 @@
 
 
 #include <rtthread.h>
-#include "gyroscope.h"
 
 /**
  * @addtogroup STM32

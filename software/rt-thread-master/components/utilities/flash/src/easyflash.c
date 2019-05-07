@@ -87,11 +87,11 @@ EfErrCode easyflash_init(void) {
     }
 #endif
 
-//#ifdef EF_USING_LOG
-//    if (result == EF_NO_ERR) {
-//        result = ef_log_init();
-//    }
-//#endif
+#ifdef EF_USING_LOG
+    if (result == EF_NO_ERR) {
+        result = ef_log_init();
+    }
+#endif
 
     if (result == EF_NO_ERR) {
         EF_INFO("EasyFlash V%s is initialize success.\n", EF_SW_VERSION);

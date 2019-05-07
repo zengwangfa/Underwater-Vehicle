@@ -8,7 +8,7 @@
 
 void Angle_Control(void);
 void Devices_Control(void);
-
+void Depth_Control(void);
 
 
 

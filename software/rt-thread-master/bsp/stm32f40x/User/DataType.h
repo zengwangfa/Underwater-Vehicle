@@ -65,14 +65,15 @@ typedef struct
 typedef struct 
 {
 		float Temperature; //水温
-		uint32 Depth; 		 //深度
-		uint32 Init_Depth; //初始化采集到得深度
+		uint32 Value; 		 //深度
+		uint32 Init_Value; //初始化采集到得深度
 }MS5837Type;
 
 
 typedef struct{
 	
 		float Power_volatge;   //电源电压
+		int32 Depth;   				 //深度
 		CPUType CPU;           //CPU【温度】【使用率】
 		JY901Type JY901;       //【欧拉角】【速度】
 		MS5837Type MS5837;     //水【温度】【深度】
@@ -102,7 +103,7 @@ extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 #define CAM_EVENT 			(1 << 7)  //Camera事件标志位
 #define MS5837_EVENT 	  (1 << 8)  //Sensor事件标志位
 
-#define PI 3.1415926f //float型
+#define PI 3.1415926f
 #define Rad2Deg(Rad) (Rad * 180.0f / PI)
 #define Deg2Rad(Deg) (Deg * PI / 180.0f)
 

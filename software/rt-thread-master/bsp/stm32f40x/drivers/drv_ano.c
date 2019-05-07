@@ -20,6 +20,7 @@
 #include <elog.h>
 #include "drv_MS5837.h"
 #include "RC_Data.h"
+#include "PropellerControl.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp) + 0) )
@@ -600,11 +601,14 @@ void ANO_SEND_StateMachine(void)
 		
 		else if(ANO_Cnt==3)
 		{
-
-				ANO_DT_Send_RCData(ReceiveData.THR,ReceiveData.YAW,
-													 ReceiveData.ROL,ReceiveData.PIT,
+				ANO_DT_Send_RCData(PropellerPower.leftUp,PropellerPower.rightUp,
+													 PropellerPower.leftDown,PropellerPower.rightDown,
 													 0,0,
 													 0,0,0,0);
+//				ANO_DT_Send_RCData(ReceiveData.THR,ReceiveData.YAW,
+//													 ReceiveData.ROL,ReceiveData.PIT,
+//													 0,0,
+//													 0,0,0,0);
 
 		}
 		else if(ANO_Cnt == 4){

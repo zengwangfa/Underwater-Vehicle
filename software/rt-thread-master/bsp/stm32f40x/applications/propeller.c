@@ -23,7 +23,7 @@ PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 
 ActionTypeEnum       Posture_Flag; //机器人姿态标志位
 
-PropellerPower_Type  PropellerPower = {1500,0,0,0,0,0,0}; //推进器推理控制器
+PropellerPower_Type  PropellerPower = {0,0,0,0,0,0,0}; //推进器推理控制器
 PropellerError_Type  PropellerError = {1,1,1,1,1,1}; //推进器偏差值
 
 
@@ -108,9 +108,9 @@ static int propeller_medvalue_set(int argc, char **argv)
         goto _exit;
     }
 		if(atoi(argv[1]) <= 1500){
-				PropellerParameter.PowerMax = atoi(argv[1]);
+				PropellerParameter.PowerMed = atoi(argv[1]);
 				Flash_Update();
-				log_d("Current propeller med_value_set:  %d",PropellerParameter.PowerMax);
+				log_d("Current propeller med_value_set:  %d",PropellerParameter.PowerMed);
 		}
 		
 		else {
@@ -119,7 +119,8 @@ static int propeller_medvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(propeller_medvalue_set,ag: propeller set 1600);
+MSH_CMD_EXPORT(propeller_medvalue_set,ag: propeller set 1500);
+
 /*【推进器】 修改 【正向最大值】MSH方法 */
 static int propeller_minvalue_set(int argc, char **argv)
 {
@@ -130,7 +131,7 @@ static int propeller_minvalue_set(int argc, char **argv)
         goto _exit;
     }
 		if(atoi(argv[1]) <= 1500){
-				PropellerParameter.PowerMax = atoi(argv[1]);
+				PropellerParameter.PowerMin = atoi(argv[1]);
 				Flash_Update();
 				log_d("Current propeller min_value_set:  %d",PropellerParameter.PowerMin);
 		}
@@ -141,5 +142,5 @@ static int propeller_minvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(propeller_minvalue_set,ag: propeller set 1600);
+MSH_CMD_EXPORT(propeller_minvalue_set,ag: propeller set 1200);
 

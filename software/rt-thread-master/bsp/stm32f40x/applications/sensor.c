@@ -25,18 +25,34 @@ extern struct rt_event init_event; /* ALL_init 事件控制块 */
 void sensor_thread_entry(void* parameter)
 {
 		rt_thread_mdelay(1000);
-		Sensor.MS5837.Init_Depth = get_ms5837_pressure();
-		rt_thread_mdelay(1000);
-		Sensor.MS5837.Init_Depth = get_ms5837_pressure();
+	
+		for(int i = 0;i < 10;i++){
+				MS583703BA_getTemperature();//获取外部温度
+				MS583703BA_getPressure();   //获取水压
+				Sensor.MS5837.Value = get_ms5837_pressure();//获取初值
+		}
+			
+		for(int i = 0;i < 10;i++){
+				MS583703BA_getTemperature();//获取外部温度
+				MS583703BA_getPressure();   //获取水压
+			
+				rt_thread_mdelay(10);
+				Sensor.MS5837.Value = get_ms5837_pressure();
+				if(Sensor.MS5837.Init_Value > Sensor.MS5837.Value || Sensor.MS5837.Init_Value == 0 ){
+						Sensor.MS5837.Init_Value = Sensor.MS5837.Value;
+				}
+		}
 		while(1)
 		{
 
-				MS583703BA_getTemperature();//获取温度
-				MS583703BA_getPressure();   //获取大气压
+				MS583703BA_getTemperature();//获取外部温度
+				MS583703BA_getPressure();   //获取水压
 
 				Sensor.MS5837.Temperature = get_ms5837_temperature();
-				Sensor.MS5837.Depth = get_ms5837_pressure();
-		
+				Sensor.MS5837.Value = get_ms5837_pressure();
+				Sensor.Depth = (int)((int)(Sensor.MS5837.Value - Sensor.MS5837.Init_Value)/10);
+			
+
 			
 				rt_thread_mdelay(10);
 		}

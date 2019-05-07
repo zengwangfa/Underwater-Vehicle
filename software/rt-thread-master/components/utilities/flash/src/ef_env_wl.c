@@ -117,7 +117,7 @@ static bool env_crc_is_ok(void);
  *
  * @return result
  */
-EfErrCode ef_env_init(ef_env const *default_env, size_t default_env_size) {
+ EfErrCode ef_env_init(ef_env const *default_env, size_t default_env_size) {
     EfErrCode result = EF_NO_ERR;
 
     EF_ASSERT(ENV_AREA_SIZE);

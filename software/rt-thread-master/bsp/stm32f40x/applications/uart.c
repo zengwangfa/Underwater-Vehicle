@@ -20,8 +20,8 @@
 
 char GYRO_UART_NAME[]    = "uart2";
 
-char DEBUG_UART_NAME[]  =  "uart3" ; //
-char CONTROL_UART_NAME[] = "uart4";
+char DEBUG_UART_NAME[]  =  "uart3" ; //uart4 CP2102
+char CONTROL_UART_NAME[] = "uart4";  //
 char FOCUS_UART_NAME[]  =  "uart5";  //可更改为uart3 WIFI 、 uart1 蓝牙
 
 #define Query_JY901_data 0     /* "1"为调试查询  "0"为正常读取 */
@@ -168,10 +168,10 @@ int device_uart_init(void)
 {
 		uint8 uart_init_flag = 1;
 		/* 串口 线程句柄 */
-		rt_thread_t control_tid;
-		rt_thread_t gyroscope_tid;
-		rt_thread_t debug_tid;
-		rt_thread_t focus_tid;
+		rt_thread_t control_uart_tid;
+		rt_thread_t gyroscope_uart_tid;
+		rt_thread_t debug_uart_tid;
+		rt_thread_t focus_uart_tid;
 	
 	  /* 查找系统中的串口设备 */
 
@@ -228,14 +228,14 @@ int device_uart_init(void)
 				rt_device_set_rx_indicate(focus_uart_device, focus_uart_input);
 		}
     /* 创建 控制 serial 线程 */
-		control_tid = rt_thread_create("control_uart",
+		control_uart_tid = rt_thread_create("control_uart",
 																		control_thread_entry,
 																		RT_NULL, 
 																		512, 
 																		12,
 																		10);
     /* 创建 九轴 serial 线程 */
-		gyroscope_tid = rt_thread_create("gyro_uart",
+		gyroscope_uart_tid = rt_thread_create("gyro_uart",
 																			gyroscope_thread_entry,
 																			RT_NULL, 
 																			512, 
@@ -243,7 +243,7 @@ int device_uart_init(void)
 																			10);
 		
 		/* 创建 调试 serial 线程 */
-		debug_tid = rt_thread_create("debug_uart",
+		debug_uart_tid = rt_thread_create("debug_uart",
 																	debug_thread_entry,
 																	RT_NULL, 
 																	512, 
@@ -251,33 +251,33 @@ int device_uart_init(void)
 																	10);
 																			
 		/* 创建 变焦 serial 线程 */
-		focus_tid = rt_thread_create("focus_uart",
+		focus_uart_tid = rt_thread_create("focus_uart",
 																	focus_thread_entry,
 																	RT_NULL, 
 																	512, 
 																	15,
 																	10);
 		/* 创建成功则启动线程 */
-    if (control_tid != RT_NULL){
-				rt_thread_startup(control_tid);
+    if (control_uart_tid != RT_NULL){
+				rt_thread_startup(control_uart_tid);
 				uart_init_flag <<= 1;
 				//rt_event_send(&init_event, GYRO_EVENT); //发送事件  表示初始化完成
     }
     /* 创建成功则启动线程 */
-    if (gyroscope_tid != RT_NULL){
-				rt_thread_startup(gyroscope_tid);
+    if (gyroscope_uart_tid != RT_NULL){
+				rt_thread_startup(gyroscope_uart_tid);
 				uart_init_flag <<= 1;
     }
 		
 		/* 创建成功则启动线程 */
-    if (debug_tid != RT_NULL){
-				rt_thread_startup(debug_tid);
+    if (debug_uart_tid != RT_NULL){
+				rt_thread_startup(debug_uart_tid);
 				uart_init_flag <<= 1;
     }
 		
 				/* 创建成功则启动线程 */
-    if (focus_tid != RT_NULL){
-				rt_thread_startup(focus_tid);
+    if (focus_uart_tid != RT_NULL){
+				rt_thread_startup(focus_uart_tid);
 				uart_init_flag <<= 1;
     }
 		

@@ -28,14 +28,14 @@ typedef struct//调试时各个推进器的偏差量
 
 typedef struct
 {
-	  uint16 Power; //基础推力
+	  int16 Power; //基础推力
 	
-		uint16 leftUp;
-		uint16 rightUp;
-		uint16 leftDown;
-		uint16 rightDown;
-		uint16 leftMiddle;
-		uint16 rightMiddle;
+		int16 leftUp;
+		int16 rightUp;
+		int16 leftDown;
+		int16 rightDown;
+		int16 leftMiddle;
+		int16 rightMiddle;
 
 }PropellerPower_Type;//各个推进器推力
 

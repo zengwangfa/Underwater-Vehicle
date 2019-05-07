@@ -15,7 +15,7 @@
 #include "servo.h"
 #include "PropellerControl.h"
 #include "propeller.h"
-
+#include <elog.h>
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
@@ -36,11 +36,11 @@ float Yaw = 0.0f;
 void control_thread_entry(void *parameter)
 {
 
-		rt_thread_mdelay(1500);//等待串口设备初始化成功
+		rt_thread_mdelay(1200);//等待串口设备初始化成功
 		while(1)
 		{
 				Devices_Control();
-				rt_thread_mdelay(10);
+				rt_thread_mdelay(1);
 		}
 }
 
@@ -62,6 +62,7 @@ void Devices_Control(void)
 		RoboticArm_Control(&Control.Arm);//机械臂控制
 
 		Propeller_Control();
+		Depth_Control();
 			/*
 				Control.Depth_Lock     = Control_Data[3]; //深度锁定
 				Control.Direction_Lock = Control_Data[4]; //方向锁定
@@ -90,7 +91,7 @@ int control_thread_init(void)
                     control_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
-                    15,										 	 //线程优先级【priority】
+                    8,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (control_tid != RT_NULL){
@@ -105,9 +106,10 @@ void Angle_Control(void)
 {
 	
 		if(Sensor.JY901.Euler.Yaw < 0) Yaw = (180+Sensor.JY901.Euler.Yaw) + 180;//角度补偿
-		if(Sensor.JY901.Euler.Yaw > 0) Yaw = Sensor.JY901.Euler.Yaw;            //角度补偿
-		Total_Controller.Yaw_Angle_Control.Expect = Yaw_Control;//偏航角速度环期望，直接来源于遥控器打杆量
-		Total_Controller.Yaw_Angle_Control.FeedBack = Yaw;//偏航角反馈
+		if(Sensor.JY901.Euler.Yaw > 0) Yaw = (float)Sensor.JY901.Euler.Yaw;            //角度补偿
+		Total_Controller.Yaw_Angle_Control.Expect = (float)Yaw_Control;//偏航角速度环期望，直接来源于遥控器打杆量
+		Total_Controller.Yaw_Angle_Control.FeedBack = (float)Yaw;//偏航角反馈
+	
 		PID_Control_Yaw(&Total_Controller.Yaw_Angle_Control);//偏航角度控制
 	
 
@@ -119,10 +121,15 @@ void Angle_Control(void)
 
 void Depth_Control(void)
 {
-	
+		Total_Controller.High_Position_Control.Expect = (float)Expect_Depth*10; //期望深度由遥控器给定
+		Total_Controller.High_Position_Control.FeedBack = (float)Sensor.Depth;//偏航角反馈
 		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
-		Propeller_upDown(Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制
+	
+		robot_upDown(Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制
 }
+
+
+
 void Gyro_Control(void)//角速度环
 {
 
@@ -143,6 +150,31 @@ void Gyro_Control(void)//角速度环
 //		
 
 }
+
+/*【深度 】期望yaw MSH方法 */
+static int depth(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        rt_kprintf("Error! Proper Usage: RoboticArm_openvalue_set 1600");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		if(atoi(argv[1])<100){
+				Expect_Depth = atoi(argv[1]);
+		}
+		else {
+				log_e("Error! The  value is out of range!");
+		}
+
+		
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(depth,ag: depth 10);
+
+
+
 /*【机械臂】舵机 期望yaw MSH方法 */
 static int yaw(int argc, char **argv)
 {
