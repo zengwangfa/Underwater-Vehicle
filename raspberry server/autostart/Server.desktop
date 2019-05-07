@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Server
+Comment=Data Forwarding  Center
+Exec=python3 /home/pi/server.py
+Icon=/home/pi/python_games/4row_black.png
+Terminal=false
+MultipleArgs=false
+Type=Application
+Categories=Application;Development;
+StartupNotify=true
