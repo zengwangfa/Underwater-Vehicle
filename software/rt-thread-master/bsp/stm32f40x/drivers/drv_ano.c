@@ -601,9 +601,9 @@ void ANO_SEND_StateMachine(void)
 		
 		else if(ANO_Cnt==3)
 		{
-				ANO_DT_Send_RCData(PropellerPower.leftUp,PropellerPower.rightUp,
-													 PropellerPower.leftDown,PropellerPower.rightDown,
-													 0,0,
+				ANO_DT_Send_RCData(PropellerPower.leftUp+1500,PropellerPower.rightUp+1500,
+													 PropellerPower.leftDown+1500,PropellerPower.rightDown+1500,
+													 PropellerPower.leftMiddle+1500,PropellerPower.rightMiddle+1500,
 													 0,0,0,0);
 //				ANO_DT_Send_RCData(ReceiveData.THR,ReceiveData.YAW,
 //													 ReceiveData.ROL,ReceiveData.PIT,

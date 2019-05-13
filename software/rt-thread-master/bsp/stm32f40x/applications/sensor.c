@@ -44,14 +44,18 @@ void sensor_thread_entry(void* parameter)
 		}
 		while(1)
 		{
-
+				/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
+				rt_enter_critical();
+						
 				MS583703BA_getTemperature();//获取外部温度
 				MS583703BA_getPressure();   //获取水压
 
 				Sensor.MS5837.Temperature = get_ms5837_temperature();
 				Sensor.MS5837.Value = get_ms5837_pressure();
 				Sensor.Depth = (int)((int)(Sensor.MS5837.Value - Sensor.MS5837.Init_Value)/10);
-			
+					
+				/* 调度器解锁 */
+				rt_exit_critical();
 
 			
 				rt_thread_mdelay(10);
@@ -68,7 +72,7 @@ int sensor_thread_init(void)
     sensor_tid = rt_thread_create("sensor",//线程名称
                     sensor_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    512,										 //线程栈大小，单位是字节【byte】
+                    1024,										 //线程栈大小，单位是字节【byte】
                     20,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 

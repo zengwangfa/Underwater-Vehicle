@@ -54,10 +54,11 @@ void led_thread_entry(void *parameter)
     {			
 				/* FLASH保存 或者 复位PID参数 */
 				Save_Or_Reset_PID_Parameter();  
-				Bling_Working(Bling_Mode);
+				Bling_Working(0);
 				led_blink_task();
 				rt_thread_mdelay(10); //10ms
 			
+
 
 
     }
@@ -124,10 +125,23 @@ INIT_APP_EXPORT(led_thread_init);
 
 void Light_Control(uint8 *action)//探照灯
 {
+		static uint8 Light_Mode_Count = 0;//探照灯模式计数
+		// 探照灯连续开关会产生三种模式 【高亮】【普通】【快闪】
 		switch(*action)
 		{
-				case 0x01:rt_pin_write(Light_PIN ,PIN_HIGH);break;
-				case 0x02:rt_pin_write(Light_PIN ,PIN_LOW);break;
+				case 0x01:
+						Light_Mode_Count ++;
+						if(Light_Mode_Count <= 3){// 探照灯前三次开启
+								rt_pin_write(Light_PIN ,PIN_LOW);//关闭继电器
+								rt_thread_mdelay(500);//0.5s
+								rt_pin_write(Light_PIN ,PIN_HIGH);//打开继电器
+						}
+						else {
+								Light_Mode_Count = 0;//探照灯模式计数 清零
+								rt_pin_write(Light_PIN ,PIN_LOW);// 探照灯第四次关闭
+						}
+						break;
+
 				default:break;
 		}
 		*action = 0x00;

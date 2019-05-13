@@ -15,7 +15,8 @@
 uint8 turnAngle = 45;    //转向角度
 
 int16 Expect_Depth = 0;
-
+uint16 clear_count = 0;
+extern uint8 Frame_EndFlag;
 /*******************************************
 * 函 数 名：askResultant
 * 功    能：求出合力大小及方向
@@ -69,15 +70,14 @@ void Propeller_Control(void)
 				case  BackAway: robotBackAway();break;	 //后退
 				default:break;
 		}
-		Control.Move = 0x00;
-		
+
 
 		switch(Control.Translation){
 				case  MoveLeft : moveLeft()	;break;  //左移
 				case  MoveRight: moveRight();break;  //右移		
 				default:break;
 		}
-		Control.Translation = 0x00;
+
 		
 		switch(Control.Vertical){//有控制数据不定深度
 			
@@ -86,16 +86,20 @@ void Propeller_Control(void)
 				
 				default:break/*定深度PID*/;
 		}
-  	Control.Vertical = 0x00;
+		Control.Vertical = 0x00;
 		
 		switch(Control.Rotate){
 				case  TurnLeft : turnLeft(); break;  //左转
 				case  TurnRight: turnRight();break;  //右转			
 				default:break;
 		}
+		
+		Propeller_Output();  //推进器限幅输出
+		
+		Control.Move = 0x00;
+		Control.Translation = 0x00;
 		Control.Rotate = 0x00;
-		Propeller_Output();  //推进器输出限幅
-	
+
 }
 
 /*******************************************
@@ -109,7 +113,7 @@ void Propeller_Control(void)
 void Propeller_Output(void)
 {
 		
-		PropellerPower.rightUp = Output_Limit(&PropellerPower.rightUp);
+		PropellerPower.rightUp = Output_Limit(&PropellerPower.rightUp); //PWM限幅
 	
 		PropellerPower.leftUp = Output_Limit(&PropellerPower.leftUp);
 	
@@ -122,8 +126,37 @@ void Propeller_Output(void)
 		PropellerPower.rightMiddle = Output_Limit(&PropellerPower.rightMiddle);
 		
 		PWM_Update();//PWM上传
+	
+		if(Frame_EndFlag == 1 && \
+			 Control.Move ==0x00 && Control.Translation == 0x00 && Control.Rotate == 0x00){//接收到一帧 并且 无控制字 
+					Horizontal_Propeller_Power_Clear();//10次更新PWM后清空
+		}
+		
+//		if(Frame_EndFlag == 1 && Control.Move !=0x00 && Control.Translation != 0x00 && Control.Rotate != 0x00 &&(PropellerPower.rightUp != 0 || PropellerPower.leftUp != 0|| PropellerPower.rightDown != 0|| PropellerPower.leftDown != 0)){
+//				Horizontal_Propeller_Power_Clear();//10次更新PWM后清空
+//		}
 		
 }
+
+void Horizontal_Propeller_Power_Clear(void)//水平方向推力清零 10次后清空
+{
+		clear_count ++;
+		if(Control.Move ==0x00 && Control.Translation == 0x00 && Control.Rotate == 0x00){
+				if(clear_count >= 10 ){ //10次都无控制字清除 推进器动力
+						PropellerPower.rightUp = 0;
+						PropellerPower.leftDown = 0;
+						PropellerPower.leftUp = 0;
+						PropellerPower.rightDown= 0;
+					  
+						clear_count = 0;
+						Frame_EndFlag = 0;
+				}
+		}
+		else {
+			clear_count = 0;
+		}
+}
+
 
 
 
@@ -164,10 +197,10 @@ void turnRight(void)  //右转
 
 		PropellerPower.Power = Control.Power * 2;
 	
-		PropellerPower.leftUp =     PropellerPower.Power +100 +PropellerError.leftUpError;
+		PropellerPower.leftUp =     PropellerPower.Power  +PropellerError.leftUpError;
 		PropellerPower.rightUp =    0 +PropellerError.rightUpError;
 		PropellerPower.leftDown =   0 +PropellerError.leftDownError;
-		PropellerPower.rightDown =  -PropellerPower.Power +50 +PropellerError.rightDownError;
+		PropellerPower.rightDown =  -PropellerPower.Power +PropellerError.rightDownError;
 }
 MSH_CMD_EXPORT(turnRight,ag: turnRight);
 
@@ -177,8 +210,8 @@ void turnLeft(void)  //左转
 		PropellerPower.Power = Control.Power * 2;
 	
 		PropellerPower.leftUp =     0 +PropellerError.leftUpError;
-		PropellerPower.rightUp =   -PropellerPower.Power -100 -PropellerError.rightUpError;
-		PropellerPower.leftDown =  -PropellerPower.Power +50 +PropellerError.leftDownError;
+		PropellerPower.rightUp =   -PropellerPower.Power +PropellerError.rightUpError;
+		PropellerPower.leftDown =  -PropellerPower.Power +PropellerError.leftDownError;
 		PropellerPower.rightDown =  0 +PropellerError.rightDownError;
 }
 MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
@@ -215,14 +248,17 @@ MSH_CMD_EXPORT(moveRight,ag: moveRight);
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void robot_upDown(float depth)  
+void robot_upDown(float depth_output)  
 {
+		if(depth_output < -500) {
+				depth_output = (-500);
+		}
+		if(depth_output >  500) {
+				depth_output =   500;
+		}
 
-		if(depth < -500) depth = (-500);
-		if(depth >  500) depth =   500;
 
-		PropellerPower.leftMiddle   = - depth;//正反桨
-		PropellerPower.rightMiddle  =  depth;
-
+		PropellerPower.leftMiddle   = - depth_output;//正反桨
+		PropellerPower.rightMiddle  =  depth_output;
 }
 

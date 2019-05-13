@@ -40,7 +40,7 @@ void control_thread_entry(void *parameter)
 		while(1)
 		{
 				Devices_Control();
-				rt_thread_mdelay(1);
+				rt_thread_mdelay(30);
 		}
 }
 
@@ -58,26 +58,25 @@ void Devices_Control(void)
 		Light_Control(&Control.Light);  //探照灯控制
 		Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
 
-		YunTai_Control(&Control.Yuntai); //云台控制
-		RoboticArm_Control(&Control.Arm);//机械臂控制
 
-		Propeller_Control();
 		Depth_Control();
+		Propeller_Control();
+
 			/*
-				Control.Depth_Lock     = Control_Data[3]; //深度锁定
-				Control.Direction_Lock = Control_Data[4]; //方向锁定
-				Control.Move					 = Control_Data[5]; //前后运动
-				Control.Translation		 = Control_Data[6]; //左右云顶
-				Control.Vertical 			 = Control_Data[7]; //垂直运动
-				Control.Rotate 				 = Control_Data[8]; //旋转运动
+				Control.Depth_Lock     = RC_Control_Data[3]; //深度锁定
+				Control.Direction_Lock = RC_Control_Data[4]; //方向锁定
+				Control.Move					 = RC_Control_Data[5]; //前后运动
+				Control.Translation		 = RC_Control_Data[6]; //左右云顶
+				Control.Vertical 			 = RC_Control_Data[7]; //垂直运动
+				Control.Rotate 				 = RC_Control_Data[8]; //旋转运动
 				
-				Control.Power 				 = Control_Data[9];  //动力控制
-				Control.Light 				 = Control_Data[10]; //灯光控制
+				Control.Power 				 = RC_Control_Data[9];  //动力控制
+				Control.Light 				 = RC_Control_Data[10]; //灯光控制
 				
-				Control.Focus 				 = Control_Data[11]; //变焦摄像头控制
+				Control.Focus 				 = RC_Control_Data[11]; //变焦摄像头控制
 	
-				Control.Yuntai 				 = Control_Data[12]; //云台控制
-				Control.Arm						 = Control_Data[13]; //机械臂控制*/
+				Control.Yuntai 				 = RC_Control_Data[12]; //云台控制
+				Control.Arm						 = RC_Control_Data[13]; //机械臂控制*/
 	
 }
 
@@ -121,8 +120,9 @@ void Angle_Control(void)
 
 void Depth_Control(void)
 {
+		
 		Total_Controller.High_Position_Control.Expect = (float)Expect_Depth*10; //期望深度由遥控器给定
-		Total_Controller.High_Position_Control.FeedBack = (float)Sensor.Depth;//偏航角反馈
+		Total_Controller.High_Position_Control.FeedBack = (float)Sensor.Depth;  //当前深度反馈
 		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
 	
 		robot_upDown(Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制

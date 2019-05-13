@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "sys.h"
 #include "Return_Data.h"
+#include "RC_Data.h"
 
 #define RoboticArm_MedValue  1500
 #define YunTai_MedValue  		 2000
@@ -42,16 +43,16 @@ extern struct rt_event init_event;/* ALL_init 事件控制块. */
 /*******************************************
 * 函 数 名：Servo_Output_Limit
 * 功    能：舵机输出限制
-* 输入参数：输入值：Value   最大限幅：max  反向最大限幅:min
-* 返 回 值：限幅后的 Value
+* 输入参数：输入值：舵机结构体地址 
+* 返 回 值：限幅后的 舵机当前值 Servo->CurrentValue
 * 注    意：
 ********************************************/
-uint16 Servo_Output_Limit(uint16* Value,uint16 max,uint16 min)
+uint16 Servo_Output_Limit(ServoType *Servo)
 {
-		*Value = *Value > max ? max: *Value;//正向限幅
-		*Value = *Value < min ? min: *Value;//反向限幅
+		Servo->CurrentValue = Servo->CurrentValue  > Servo->MaxValue ? Servo->MaxValue : Servo->CurrentValue ;//正向限幅
+		Servo->CurrentValue = Servo->CurrentValue  < Servo->MinValue ? Servo->MinValue : Servo->CurrentValue ;//反向限幅
 	
-		return *Value;
+		return Servo->CurrentValue ;
 }
 
 
@@ -63,12 +64,12 @@ void RoboticArm_Control(uint8 *action)
 				case 0x01:RoboticArm.CurrentValue += RoboticArm.Speed;
 									if(RoboticArm.CurrentValue >= RoboticArm.MaxValue){device_hint_flag |= 0x01;}//机械臂到头标志
 									else {device_hint_flag &= 0xFE;}; //清除机械臂到头标志
-									RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm.CurrentValue,RoboticArm.MaxValue,RoboticArm.MinValue);
+									RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm);
 									break;
 				case 0x02:RoboticArm.CurrentValue -= RoboticArm.Speed;
 									if(RoboticArm.CurrentValue <= RoboticArm.MinValue){device_hint_flag |= 0x01;}//机械臂到头标志
 									else {device_hint_flag &= 0xFE;}; //清除机械臂到头标志
-									RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm.CurrentValue,RoboticArm.MaxValue,RoboticArm.MinValue);
+									RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm);
 									break;
 				default:break;
 		}
@@ -80,16 +81,16 @@ void YunTai_Control(uint8 *action)
 {
 		switch(*action)
 		{
-				case 0x01:YunTai.CurrentValue -= YunTai.Speed;  //向上
-						if(YunTai.CurrentValue <= YunTai.MinValue){device_hint_flag |= 0x02;}//云台到头标志
+				case 0x01:YunTai.CurrentValue += YunTai.Speed;  //向上
+						if(YunTai.CurrentValue <= YunTai.MaxValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-						YunTai.CurrentValue = Servo_Output_Limit(&YunTai.CurrentValue,YunTai.MaxValue,YunTai.MinValue);
+						YunTai.CurrentValue = Servo_Output_Limit(&YunTai);
 						break;  
 						
-				case 0x02:YunTai.CurrentValue += YunTai.Speed; //向下
-						if(YunTai.CurrentValue >= YunTai.MaxValue){device_hint_flag |= 0x02;}//云台到头标志
+				case 0x02:YunTai.CurrentValue -= YunTai.Speed; //向下
+						if(YunTai.CurrentValue >= YunTai.MinValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-						YunTai.CurrentValue = Servo_Output_Limit(&YunTai.CurrentValue,YunTai.MaxValue,YunTai.MinValue);
+						YunTai.CurrentValue = Servo_Output_Limit(&YunTai);
 						break;  
 
 				case 0x03:YunTai.CurrentValue = YunTai.MedValue;break;   //归中
@@ -115,8 +116,9 @@ void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% vol
 		Propeller_Init();
 		while(1)
 		{
-				
-				rt_thread_mdelay(10);
+				YunTai_Control(&Control.Yuntai); //云台控制
+				RoboticArm_Control(&Control.Arm);//机械臂控制
+				rt_thread_mdelay(50);
 
 		}
 	
@@ -167,7 +169,7 @@ static int robotic_arm_speed_set(int argc, char **argv)
 				result = -RT_ERROR;
         goto _exit;
     }
-		if(atoi(argv[1]) <= 255){
+		if(atoi(argv[1]) <= 255 && atoi(argv[1]) > 0){
 				RoboticArm.Speed = atoi(argv[1]);
 				Flash_Update();
 				log_d("Write_Successed! Current RoboticArm_Speed:  %d",RoboticArm.Speed);
@@ -191,7 +193,7 @@ static int robotic_arm_maxvalue_set(int argc, char **argv)
 				result = -RT_ERROR;
         goto _exit;
     }
-		if(atoi(argv[1]) <= 5000){
+		if(atoi(argv[1]) <= 5000 && atoi(argv[1]) >= 1500){
 				RoboticArm.MaxValue = atoi(argv[1]);
 				Flash_Update();
 				log_d("Write_Successed! Current RoboticArm_MaxValue:  %d",RoboticArm.MaxValue);
@@ -217,7 +219,7 @@ static int robotic_arm_minvalue_set(int argc, char **argv)
 				result = -RT_ERROR;
         goto _exit;
     }
-		if(atoi(argv[1]) <= 3000){
+		if(atoi(argv[1]) <= 3000 &&  atoi(argv[1]) >= 500){
 				RoboticArm.MinValue = atoi(argv[1]);
 				Flash_Update();
 				log_d("Write_Successed! Current RoboticArm_minValue:  %d",RoboticArm.MinValue);
@@ -243,7 +245,7 @@ static int yuntai_speed_set(int argc, char **argv)
 				result = -RT_ERROR;
         goto _exit;
     }
-		if(atoi(argv[1]) <= 255){
+		if(atoi(argv[1]) <= 255 && atoi(argv[1]) > 0){
 				YunTai.Speed = atoi(argv[1]);
 				Flash_Update();
 				log_d("Write_Successed! Current Yuntai_Speed:  %d",YunTai.Speed);

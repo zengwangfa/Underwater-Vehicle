@@ -185,8 +185,14 @@ int device_uart_init(void)
     if (control_uart_device != RT_NULL){		
 			
 					/* 以读写以及中断接打开串口设备 */
-				rt_device_open(control_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
-
+				rt_device_open(control_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX );
+				config.baud_rate = BAUD_RATE_115200;
+				config.data_bits = DATA_BITS_8;
+				config.stop_bits = STOP_BITS_1;
+				config.parity = PARITY_NONE;
+			
+				/* 打开设备后才可修改串口配置参数 */
+				rt_device_control(debug_uart_device, RT_DEVICE_CTRL_CONFIG, &config);
 				rt_sem_init(&control_rx_sem, "control_sem", 0, RT_IPC_FLAG_FIFO);
 				/* 设置接收回调函数 */
 				rt_device_set_rx_indicate(control_uart_device, control_uart_input);
@@ -203,7 +209,7 @@ int device_uart_init(void)
 		}
 		
 		if(debug_uart_device != RT_NULL){
-				rt_device_open(debug_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
+				rt_device_open(debug_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX); 
 				config.baud_rate = BAUD_RATE_115200;
 				config.data_bits = DATA_BITS_8;
 				config.stop_bits = STOP_BITS_1;
@@ -232,14 +238,14 @@ int device_uart_init(void)
 																		control_thread_entry,
 																		RT_NULL, 
 																		512, 
-																		12,
+																		8,
 																		10);
     /* 创建 九轴 serial 线程 */
 		gyroscope_uart_tid = rt_thread_create("gyro_uart",
 																			gyroscope_thread_entry,
 																			RT_NULL, 
 																			512, 
-																			13,
+																			15,
 																			10);
 		
 		/* 创建 调试 serial 线程 */
@@ -247,7 +253,7 @@ int device_uart_init(void)
 																	debug_thread_entry,
 																	RT_NULL, 
 																	512, 
-																	14,
+																	20,
 																	10);
 																			
 		/* 创建 变焦 serial 线程 */

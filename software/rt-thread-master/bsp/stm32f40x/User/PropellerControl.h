@@ -7,6 +7,8 @@
 void Propeller_Control(void);
 void Propeller_Output(void);
 void robot_upDown(float depth); 
+void Horizontal_Propeller_Power_Clear(void);//水平方向推力清零
+
 
 void robotForward(void);  //前进
 void robotBackAway(void); //后退

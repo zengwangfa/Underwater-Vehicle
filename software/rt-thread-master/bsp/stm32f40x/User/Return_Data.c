@@ -12,7 +12,7 @@
 #include "uart.h"
 #include "gyroscope.h"
 SensorType Sensor;//传感器参数
-int8 Return_Data[18] = {0};
+uint8 Return_Data[18] = {0};
 uint8 device_hint_flag;		//设备提示字符
 
 extern uint8 uart_startup_flag;
@@ -29,7 +29,7 @@ void return_computer_thread_entry(void* parameter)
 				Convert_Return_Computer_Data(); //转换返回上位机的数据
 
 				Send_Buffer_Agreement(begin_buff,Return_Data,17); //发送数据包协议
-				rt_thread_mdelay(10);
+				rt_thread_mdelay(1000);
 		}
 }
 
@@ -107,7 +107,7 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
   * @retval None
   * @notice 
   */
-uint8 Calculate_Check_Byte(uint8 *begin_buff,int8 *buff,uint8 len)
+uint8 Calculate_Check_Byte(uint8 *begin_buff,uint8 *buff,uint8 len)
 {
 		uint8 Check_Byte = 0;
 		uint8 i = 0;
@@ -126,7 +126,7 @@ uint8 Calculate_Check_Byte(uint8 *begin_buff,int8 *buff,uint8 len)
   * @retval None
   * @notice 
   */
-void Send_Buffer_Agreement(uint8 *begin_buff,int8 *buff,uint8 len)
+void Send_Buffer_Agreement(uint8 *begin_buff,uint8 *buff,uint8 len)
 {
 		uint8 Check_Byte = Calculate_Check_Byte(begin_buff ,buff ,len);
 		

@@ -23,8 +23,8 @@ PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 
 ActionTypeEnum       Posture_Flag; //机器人姿态标志位
 
-PropellerPower_Type  PropellerPower = {0,0,0,0,0,0,0}; //推进器推理控制器
-PropellerError_Type  PropellerError = {1,1,1,1,1,1}; //推进器偏差值
+PropellerPower_Type  PropellerPower = {0,0,0,0,0,0,0}; //推进器推力控制器
+PropellerError_Type  PropellerError = {0,0,0,0,0,0}; //推进器偏差值
 
 
 
@@ -52,7 +52,7 @@ void Propeller_Init(void)
 		TIM_SetCompare2(TIM4, PropellerPower_Min);	  //最高转速信号  	垂直推进器2号
 
 		TIM_SetCompare3(TIM4, PropellerPower_Med);		//中值
-		TIM_SetCompare4(TIM4, 1500);		//向上	
+		TIM_SetCompare4(TIM4, 2500);		//向上	
 
 
 		rt_thread_mdelay(500);  //0.5s
@@ -66,7 +66,7 @@ void Propeller_Init(void)
 		TIM_SetCompare2(TIM4, PropellerPower_Med);		//停转信号
 
 		TIM_SetCompare3(TIM4, PropellerPower_Med);		//中值
-		TIM_SetCompare4(TIM4, 2500);		//向下
+		TIM_SetCompare4(TIM4, 1500);		//向下
 		
 		rt_thread_mdelay(500);  //0.5s
 		
