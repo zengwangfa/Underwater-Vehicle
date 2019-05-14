@@ -14,7 +14,7 @@
 #include "sys.h"
 #include "Return_Data.h"
 #include "RC_Data.h"
-
+#include "focus.h"
 #define RoboticArm_MedValue  1500
 #define YunTai_MedValue  		 2000
 
@@ -118,7 +118,8 @@ void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% vol
 		{
 				YunTai_Control(&Control.Yuntai); //云台控制
 				RoboticArm_Control(&Control.Arm);//机械臂控制
-				rt_thread_mdelay(50);
+					Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
+				rt_thread_mdelay(10);
 
 		}
 	

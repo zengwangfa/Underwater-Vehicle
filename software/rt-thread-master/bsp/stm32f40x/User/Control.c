@@ -55,8 +55,8 @@ void control_thread_entry(void *parameter)
 void Devices_Control(void)
 {
 	
-		Light_Control(&Control.Light);  //ÃΩ’’µ∆øÿ÷∆
-		Focus_Zoom_Camera(&Control.Focus);//±‰Ωπæ€Ωπ…„œÒÕ∑øÿ÷∆
+		//Light_Control(&Control.Light);  //ÃΩ’’µ∆øÿ÷∆
+
 
 
 		Depth_Control();

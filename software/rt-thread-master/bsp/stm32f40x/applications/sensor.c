@@ -24,7 +24,7 @@ extern struct rt_event init_event; /* ALL_init 事件控制块 */
   */
 void sensor_thread_entry(void* parameter)
 {
-		rt_thread_mdelay(1000);
+		rt_thread_mdelay(1500);
 	
 		for(int i = 0;i < 10;i++){
 				MS583703BA_getTemperature();//获取外部温度
@@ -44,9 +44,7 @@ void sensor_thread_entry(void* parameter)
 		}
 		while(1)
 		{
-				/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-				rt_enter_critical();
-						
+				
 				MS583703BA_getTemperature();//获取外部温度
 				MS583703BA_getPressure();   //获取水压
 
@@ -54,10 +52,6 @@ void sensor_thread_entry(void* parameter)
 				Sensor.MS5837.Value = get_ms5837_pressure();
 				Sensor.Depth = (int)((int)(Sensor.MS5837.Value - Sensor.MS5837.Init_Value)/10);
 					
-				/* 调度器解锁 */
-				rt_exit_critical();
-
-			
 				rt_thread_mdelay(10);
 		}
 }
