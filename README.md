@@ -22,11 +22,11 @@
 |--------+ hardware:【相关电路设计】      
 |            └──README.md
 |            ├──.SchDoc
-			 ├──.PcbDoc
+|  			 ├──.PcbDoc
 |            └──.pdf
 |--------+ software:【相关软件设计】
 |            └──README.md
-			 ├──rt-thread-master
+|			 ├──rt-thread-master
 |               └──bsp
 |                   └──stm32f40x
 |--------+ README.md
@@ -48,7 +48,7 @@
 +——Underwater_vehicle
 |--------+──DC 24V/48V 【Power management】 
 |--------+──STM32F407ZGT6 【Control-Center】                  
-|        |       └──【Normal Peripherals】
+|        │       └──【Normal Peripherals】
 |        │       ├── RGB [GPIO]   
 |        │       ├── KEY [GPIO] 
 |        │       ├── BUZZER [GPIO]      
@@ -59,11 +59,11 @@
 |        │       ├── W25Q128 FLASH [SPI]
 |        │       ├── USB to serial port CP2102 UART Bridge [UART]
 |        │       └──......  
-|        |       └── 【Important Peripherals】
-|        |       ├── Nine axis gyroscope [UART]
-|        |       ├── USR-C216 Wifi [UART]   
-|        |       ├── OV2640 Camera [DCMI-DMA]
-|        |       └──...... 
+|        │       └── 【Important Peripherals】
+|        │       ├── Nine axis gyroscope [UART]
+|        │       ├── USR-C216 Wifi [UART]   
+|        │       ├── OV2640 Camera [DCMI-DMA]
+|        │       └──...... 
 |        +──Vehicle Devices
 |        └── Searchlights [GPIO]
 |        ├── Propellers [PWM]
@@ -78,17 +78,35 @@
 
 
 ## 5、Underwater Vehicle 的进展
-
-- [X] 基础功能
+- [X] 电路设计
+	- [X] Underwater_Vehicle核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
+	- [X] Underwater_Vehicle底板 by [@zengwangfa](https://github.com/zengwangfa)	
+	- [X] 变焦摄像头驱动控制板 by [@张静]	
+	
+- [X] 控制程序
     - [X] 普通外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
         - [X] Add LED/KEY/BUZZER by [@zengwangfa](https://github.com/zengwangfa) 
         - [X] Add OLED/Gyroscope/ADC/PWM/FLASH by [@zengwangfa](https://github.com/zengwangfa) 
     - [X] 内置MSH方法 by [@zengwangfa](https://github.com/zengwangfa)
-    - [X] PID调试方法 by [@zengwangfa](https://github.com/zengwangfa)
+    - [X] debug上位机、PID调试方法 by [@zengwangfa](https://github.com/zengwangfa)
+	- [X] PID定深控制 by [@zengwangfa](https://github.com/zengwangfa)
+	- [X] 通信控制 by [@zengwangfa](https://github.com/zengwangfa)
+
+- [X] 上位机
+	- [X] C#上位机界面 by [@陈信任]
+	- [X] 遥控器通信控制 by [@陈信任]	
+	
+- [X] 机械结构
+	- [X] 框架式结构CAD设计 by [@林麟亮]
+	- [X] 电子仓、电源仓设计 by [@林麟亮]
+	- [X] 云台3D打印模型 by [@洪华霖]
+	
+- [X] 其它
+	- [X] 电路连接 by [@李浩辰]
+	- [X] 打下手 by [@李昕凯]
 
 
-	
-	
+
 #### 使用说明
 
 - 暂无添加
