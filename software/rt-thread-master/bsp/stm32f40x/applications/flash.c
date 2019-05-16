@@ -62,21 +62,17 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash≤Œ ˝◊‘ºÏ »ÙŒ™ 0 ‘ÚŒ™ ∑«’
 		
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.MaxValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MAX_VALUE_A] );
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.MinValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MIN_VALUE_A] );
-//    Parameter_SelfCheck( (uint32 *)&RoboticArm.CurrentValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_CURRENT_VALUE_A] );
-	
+    Parameter_SelfCheck( (uint32 *)&RoboticArm.MedValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MED_VALUE_A] );
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.Speed   ,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_SPEED_A] );	
 	
 		Parameter_SelfCheck( (uint32 *)&YunTai.MaxValue,(uint32 *)&Normal_Parameter[YUNTAI_MAX_VALUE_A] );
 		Parameter_SelfCheck( (uint32 *)&YunTai.MinValue,(uint32 *)&Normal_Parameter[YUNTAI_MIN_VALUE_A] );	
     Parameter_SelfCheck( (uint32 *)&YunTai.MedValue,(uint32 *)&Normal_Parameter[YUNTAI_MED_VALUE_A] );  //‘∆Ã®÷–÷µ
-	
-		Parameter_SelfCheck( (uint32 *)&PropellerParameter.PowerMed,(uint32 *)&Normal_Parameter[PropellerParamter_MED_A] );
-		Parameter_SelfCheck( (uint32 *)&PropellerParameter.PowerMax,(uint32 *)&Normal_Parameter[PropellerParamter_MAX_A] );
-		Parameter_SelfCheck( (uint32 *)&PropellerParameter.PowerMin,(uint32 *)&Normal_Parameter[PropellerParamter_MIN_A] );
-	
-		Parameter_SelfCheck( (uint32 *)&RoboticArm.Speed,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_SPEED_A] );
-		Parameter_SelfCheck( (uint32 *)&YunTai.Speed,(uint32 *)&Normal_Parameter[YUNTAI_SPEED_A] );	
-
+		//Parameter_SelfCheck( (uint32 *)&YunTai.Speed   ,(uint32 *)&Normal_Parameter[YUNTAI_SPEED_A] );		
 }
+
+
+
 /* FLASH ∏¸–¬ ∆’Õ®≤Œ ˝ */
 void Flash_Update(void)
 {
@@ -87,18 +83,18 @@ void Flash_Update(void)
 
 		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MAX_VALUE_A,(uint32 *)&RoboticArm.MaxValue,4);		// µÿ÷∑
 		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MIN_VALUE_A,(uint32 *)&RoboticArm.MinValue,4); // µÿ÷∑
-		//ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_CURRENT_VALUE_A,(uint32 *)&RoboticArm.CurrentValue,4); // µÿ÷∑
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MED_VALUE_A,(uint32 *)&RoboticArm.MedValue,4); // µÿ÷∑
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_SPEED_A,(uint32 *)&RoboticArm.Speed,4); // µÿ÷∑
+	
 	
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MAX_VALUE_A,(uint32 *)&YunTai.MaxValue,4);		// µÿ÷∑
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MIN_VALUE_A,(uint32 *)&YunTai.MinValue,4); // µÿ÷∑
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MED_VALUE_A,(uint32 *)&YunTai.MedValue,4); 		// µÿ÷∑  ‘∆Ã®÷–÷µ
-	
-		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MED_A,(uint32 *)&PropellerParameter.PowerMed,4);		// µÿ÷∑
-		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MAX_A,(uint32 *)&PropellerParameter.PowerMax,4); // µÿ÷∑
-		ef_port_write(Nor_FLASH_ADDRESS+4*PropellerParamter_MIN_A,(uint32 *)&PropellerParameter.PowerMin,4); // µÿ÷∑
-	
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_SPEED_A,(uint32 *)&RoboticArm.Speed,4); // µÿ÷∑
 		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_SPEED_A,(uint32 *)&YunTai.Speed,4); // µÿ÷∑
+
+	
+
+
 	
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
@@ -107,7 +103,6 @@ MSH_CMD_EXPORT(Flash_Update,Flash Update);
 void list_value(void)
 {
 
-		Normal_Parameter_Init_With_Flash();
 		log_i	("variable  name          value");
     log_i("----------------------   ---------");
 		log_i("VehicleMode               %s",VehicleModeName[VehicleMode]);
@@ -124,9 +119,9 @@ void list_value(void)
 		log_i("YunTai_CurrentValue       %d",YunTai.CurrentValue);
 		log_i("YunTai_Speed              %d",YunTai.Speed);
 	  log_i("----------------------   ---------");
-	  log_i("Propeller_max             %d",PropellerParameter.PowerMax);
-	  log_i("Propeller_min             %d",PropellerParameter.PowerMin);
-		log_i("Propeller_med             %d",PropellerParameter.PowerMed);
+	  log_i("Propeller_Max             %d",PropellerParameter.PowerMax);
+	  log_i("Propeller_Min             %d",PropellerParameter.PowerMin);
+		log_i("Propeller_Med             %d",PropellerParameter.PowerMed);
 
     rt_kprintf("                         \n");
 }

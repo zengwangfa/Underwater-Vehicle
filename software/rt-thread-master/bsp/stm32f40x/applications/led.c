@@ -144,7 +144,7 @@ void Light_Control(uint8 *action)//Ì½ÕÕµÆ
 
 				default:break;
 		}
-		*action = 0x00;
+		*action = 0x00;//Çå³ý¿ØÖÆ×Ö
 }
 
 

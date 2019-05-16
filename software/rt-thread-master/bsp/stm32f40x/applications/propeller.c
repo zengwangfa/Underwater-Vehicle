@@ -52,7 +52,7 @@ void Propeller_Init(void)
 		TIM_SetCompare2(TIM4, PropellerPower_Min);	  //最高转速信号  	垂直推进器2号
 
 		TIM_SetCompare3(TIM4, PropellerPower_Med);		//中值
-		TIM_SetCompare4(TIM4, 2500);		//向上	
+		TIM_SetCompare4(TIM4, 1700);		//向上	
 
 
 		rt_thread_mdelay(500);  //0.5s
@@ -66,7 +66,7 @@ void Propeller_Init(void)
 		TIM_SetCompare2(TIM4, PropellerPower_Med);		//停转信号
 
 		TIM_SetCompare3(TIM4, PropellerPower_Med);		//中值
-		TIM_SetCompare4(TIM4, 1500);		//向下
+		//TIM_SetCompare4(TIM4, 1000);		//向下
 		
 		rt_thread_mdelay(500);  //0.5s
 		

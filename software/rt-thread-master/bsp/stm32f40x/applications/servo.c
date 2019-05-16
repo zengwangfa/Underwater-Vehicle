@@ -29,11 +29,11 @@ ServoType RoboticArm = {
 	   .Speed  = 5//机械臂当前值
 };  //机械臂
 ServoType  YunTai = {
-		 .MaxValue = 2500, 		//机械臂 正向最大值
-		 .MinValue = 1500,	  //机械臂 反向
-		 .MedValue = 2000,
-		 .CurrentValue = 2000, //机械臂当前值
-	   .Speed  = 10//机械臂当前值
+		 .MaxValue = 1700, 		//机械臂 正向最大值
+		 .MinValue = 1000,	  //机械臂 反向
+		 .MedValue = 1300,
+		 .CurrentValue = 1300, //机械臂当前值
+	   .Speed  = 10//云台转动速度
 };      //云台
 
 
@@ -118,7 +118,7 @@ void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% vol
 		{
 				YunTai_Control(&Control.Yuntai); //云台控制
 				RoboticArm_Control(&Control.Arm);//机械臂控制
-					Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
+
 				rt_thread_mdelay(10);
 
 		}
@@ -173,7 +173,7 @@ static int robotic_arm_speed_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 255 && atoi(argv[1]) > 0){
 				RoboticArm.Speed = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current RoboticArm_Speed:  %d",RoboticArm.Speed);
+				log_i("Write_Successed! RoboticArm.Speed:  %d",RoboticArm.Speed);
 		}
 		
 		else {
@@ -186,7 +186,7 @@ MSH_CMD_EXPORT(robotic_arm_speed_set,ag: robotic_arm_speed_set 10);
 
 
 /*【机械臂】舵机 修改 【正向最大值】MSH方法 */
-static int robotic_arm_maxvalue_set(int argc, char **argv)
+static int robotic_arm_maxValue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
@@ -197,7 +197,7 @@ static int robotic_arm_maxvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 5000 && atoi(argv[1]) >= 1500){
 				RoboticArm.MaxValue = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current RoboticArm_MaxValue:  %d",RoboticArm.MaxValue);
+				log_i("Write_Successed!  RoboticArm.MaxValue:  %d",RoboticArm.MaxValue);
 		}
 		
 		else {
@@ -206,13 +206,13 @@ static int robotic_arm_maxvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(robotic_arm_maxvalue_set,ag: robotic_arm_openvalue_set 2000);
+MSH_CMD_EXPORT(robotic_arm_maxValue_set,ag: robotic_arm_openvalue_set 2000);
 
 
 
 
 /*【机械臂】舵机 修改 【反向最大值】 MSH方法 */
-static int robotic_arm_minvalue_set(int argc, char **argv)
+static int robotic_arm_minValue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
@@ -223,7 +223,7 @@ static int robotic_arm_minvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 3000 &&  atoi(argv[1]) >= 500){
 				RoboticArm.MinValue = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current RoboticArm_minValue:  %d",RoboticArm.MinValue);
+				log_i("Write_Successed!  RoboticArm.MinValue:  %d",RoboticArm.MinValue);
 		}
 		else {
 				log_e("Error! The value is out of range!");
@@ -234,7 +234,7 @@ static int robotic_arm_minvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(robotic_arm_minvalue_set,ag: robotic_arm_closevalue_set 1500);
+MSH_CMD_EXPORT(robotic_arm_minValue_set,ag: robotic_arm_closevalue_set 1500);
 
 
 /*【机械臂】舵机 修改 速度值 */
@@ -249,7 +249,7 @@ static int yuntai_speed_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 255 && atoi(argv[1]) > 0){
 				YunTai.Speed = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current Yuntai_Speed:  %d",YunTai.Speed);
+				log_i("Write_Successed! YunTai.Speed:  %d",YunTai.Speed);
 		}
 		else {
 				log_e("Error! The value is out of range!");
@@ -260,7 +260,7 @@ _exit:
 MSH_CMD_EXPORT(yuntai_speed_set,ag: yuntai_speed_set 5);
 
 /*【云台】舵机 修改 【正向最大值】MSH方法 */
-static int yuntai_maxvalue_set(int argc, char **argv)
+static int yuntai_maxValue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
@@ -271,7 +271,7 @@ static int yuntai_maxvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 5000){
 				YunTai.MaxValue = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current YunTai_MaxValue:  %d",YunTai.MaxValue);
+				log_i("Write_Successed! YunTai.MaxValue:  %d",YunTai.MaxValue);
 		}
 		
 		else {
@@ -280,13 +280,13 @@ static int yuntai_maxvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(yuntai_maxvalue_set,ag: yuntai_maxvalue_set 2500);
+MSH_CMD_EXPORT(yuntai_maxValue_set,ag: yuntai_maxvalue_set 2500);
 
 
 
 
 /*【云台】舵机 修改 【反向最大值】 MSH方法 */
-static int yuntai_minvalue_set(int argc, char **argv)
+static int yuntai_minValue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
@@ -297,7 +297,7 @@ static int yuntai_minvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 3000){
 				YunTai.MinValue = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current YunTai_minValue:  %d",YunTai.MinValue);
+				log_i("Write_Successed! YunTai.MinValue:  %d",YunTai.MinValue);
 		}
 		else {
 				log_e("Error! The value is out of range!");
@@ -306,10 +306,10 @@ static int yuntai_minvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(yuntai_minvalue_set,ag: yuntai_arm_closevalue_set 1500);
+MSH_CMD_EXPORT(yuntai_minValue_set,ag: yuntai_arm_closevalue_set 1500);
 
 /*【云台】舵机 修改 【反向最大值】 MSH方法 */
-static int yuntai_medvalue_set(int argc, char **argv)
+static int yuntai_medValue_set(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
@@ -320,7 +320,7 @@ static int yuntai_medvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 3000){
 				YunTai.MedValue = atoi(argv[1]);
 				Flash_Update();
-				log_d("Write_Successed! Current YunTai_MedValue:  %d",YunTai.MedValue);
+				log_i("Write_Successed! YunTai.MedValue):  %d",YunTai.MedValue);
 		}
 		else {
 				log_e("Error! The value is out of range!");
@@ -329,9 +329,31 @@ static int yuntai_medvalue_set(int argc, char **argv)
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(yuntai_medvalue_set,ag: yuntai_arm_medvalue_set 2000);
+MSH_CMD_EXPORT(yuntai_medValue_set,ag: yuntai_arm_medvalue_set 2000);
 
 
+
+/*【云台】舵机 修改 【当前】 MSH方法 */
+static int yuntai_currentValue_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        log_e("Error! Proper Usage: YunTai_medvalue_set 2000");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		if(atoi(argv[1]) <= 3000 && atoi(argv[1]) >= 500){
+				YunTai.CurrentValue = atoi(argv[1]);
+				log_i("Write_Successed! Current YunTai.CurrentValue:  %d",YunTai.CurrentValue);
+		}
+		else {
+				log_e("Error! The value is out of range!");
+		}
+
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(yuntai_currentValue_set,ag: yuntai_currentValue_set 1500);
 
 
 

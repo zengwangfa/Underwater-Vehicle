@@ -32,19 +32,6 @@ void PWM_Update(void)
 	
 		TIM_SetCompare1(TIM4,PropellerParameter.PowerMed + PropellerPower.leftMiddle);  //左中   D12
 		TIM_SetCompare2(TIM4,PropellerParameter.PowerMed + PropellerPower.rightMiddle); //右中   D13
-
-//		PropellerPower.rightUp = 0;
-//		PropellerPower.leftDown = 0;
-//		PropellerPower.leftUp = 0;
-//		PropellerPower.rightDown= 0;
-
-//		TIM_SetCompare1(TIM1,1500);     //右上	 E9	
-//		TIM_SetCompare2(TIM1,1500);    //左下	 E11
-//		TIM_SetCompare3(TIM1,1500); 	    //左上   E13
-//		TIM_SetCompare4(TIM1,1500);   //右下   E14
-//	
-//		TIM_SetCompare1(TIM4,1500);  //左中   D12
-//		TIM_SetCompare2(TIM4,1500); //右中   D13
 }
 
 /*

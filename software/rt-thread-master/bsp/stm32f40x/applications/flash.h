@@ -17,19 +17,18 @@ typedef enum
 		DEBUG_TOOL_A,                //Debug工具
 		
 		ROBOTIC_ARM_MAX_VALUE_A,    //机械臂开启最大值  
-		ROBOTIC_ARM_MIN_VALUE_A,   //机械臂关闭值
-		ROBOTIC_ARM_CURRENT_VALUE_A, //机械臂当前值
-		
+		ROBOTIC_ARM_MIN_VALUE_A,   	//机械臂关闭值
+		ROBOTIC_ARM_MED_VALUE_A, 		//机械臂当前值
+		ROBOTIC_ARM_SPEED_A,   			//机械臂转动速度
+	
 		YUNTAI_MAX_VALUE_A,    	 //云台向上最大当前值
 		YUNTAI_MIN_VALUE_A,	 		 //云台向下当前值	
-		YUNTAI_MED_VALUE_A,   		 //云台中值
-	
-		PropellerParamter_MED_A,   //推进器中值
-		PropellerParamter_MAX_A,   //推进器正转最大值
-		PropellerParamter_MIN_A,   //推进器反转最大值
+		YUNTAI_MED_VALUE_A,   	 //云台中值
+		YUNTAI_SPEED_A,  				 //云台转动速度
+
 		
-		ROBOTIC_ARM_SPEED_A,   //推进器正转最大值
-		YUNTAI_SPEED_A,   //推进器反转最大值
+
+
 	
 		PARAMEMER_MAX_NUMBER_A,    //最大参数值
 	

@@ -14,7 +14,7 @@
 
 uint8 turnAngle = 45;    //×ªÏò½Ç¶È
 
-int16 Expect_Depth = 0;
+int32 Expect_Depth = 0;
 uint16 clear_count = 0;
 extern uint8 Frame_EndFlag;
 /*******************************************

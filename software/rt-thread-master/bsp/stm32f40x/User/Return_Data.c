@@ -132,7 +132,7 @@ void Send_Buffer_Agreement(uint8 *begin_buff,uint8 *buff,uint8 len)
 		
 		begin_buff[2] = len; //长度位
 		rt_device_write(control_uart_device,0,begin_buff, 3);    //发送包头
-		rt_device_write(control_uart_device,0,buff, len);    		 //发送数据长度
+		rt_device_write(control_uart_device,0,buff, len);    		 //发送数据包
 		rt_device_write(control_uart_device,0,&Check_Byte, 1);   //发送校验位
 }
 

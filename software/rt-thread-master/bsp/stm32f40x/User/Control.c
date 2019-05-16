@@ -55,11 +55,12 @@ void control_thread_entry(void *parameter)
 void Devices_Control(void)
 {
 	
-		//Light_Control(&Control.Light);  //探照灯控制
+		Light_Control(&Control.Light);  //探照灯控制
 
-
-
-		Depth_Control();
+		Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
+	
+		Depth_Control(); //深度控制
+	
 		Propeller_Control();
 
 			/*
@@ -76,7 +77,8 @@ void Devices_Control(void)
 				Control.Focus 				 = RC_Control_Data[11]; //变焦摄像头控制
 	
 				Control.Yuntai 				 = RC_Control_Data[12]; //云台控制
-				Control.Arm						 = RC_Control_Data[13]; //机械臂控制*/
+				Control.Arm						 = RC_Control_Data[13]; //机械臂控制
+			*/
 	
 }
 
