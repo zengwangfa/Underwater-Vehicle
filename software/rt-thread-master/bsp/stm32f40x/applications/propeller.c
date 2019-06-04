@@ -40,7 +40,7 @@ PropellerError_Type  PropellerError = {0,0,0,0,0,0}; //推进器偏差值
 *           3,给电调1.5ms停转信号,哔一声
 *           4,初始化完成，可以开始控制
 ********************************************/
-void Propeller_Init(void)
+void Propeller_Init(void)//这边都需要经过限幅在给定
 {
 
 		TIM_SetCompare1(TIM1, PropellerPower_Min);  		//最高转速信号   	水平推进器1号

@@ -98,11 +98,11 @@ void IIC_Send_Byte(u8 txd)
     {              
         IIC_SDA=(txd&0x80)>>7;
         txd<<=1; 	  
-		rt_hw_us_delay(2);   //对TEA5767这三个延时都是必须的
-		IIC_SCL=1;
-		rt_hw_us_delay(2); 
-		IIC_SCL=0;	
-		rt_hw_us_delay(2);
+				rt_hw_us_delay(2);   //对TEA5767这三个延时都是必须的
+				IIC_SCL=1;
+				rt_hw_us_delay(2); 
+				IIC_SCL=0;	
+				rt_hw_us_delay(2);
     }	 
 } 	    
 //读1个字节，ack=1时，发送ACK，ack=0，发送nACK   
@@ -110,14 +110,14 @@ u8 IIC_Read_Byte(unsigned char ack)
 {
 	unsigned char i,receive=0;
 	SDA_IN();//SDA设置为输入
-    for(i=0;i<8;i++ )
+   for(i=0;i<8;i++ )
 	{
         IIC_SCL=0; 
         rt_hw_us_delay(2);
-		IIC_SCL=1;
+				IIC_SCL=1;
         receive<<=1;
         if(READ_SDA)receive++;   
-		rt_hw_us_delay(1); 
+				rt_hw_us_delay(1); 
     }					 
     if (!ack)
         IIC_NAck();//发送nACK

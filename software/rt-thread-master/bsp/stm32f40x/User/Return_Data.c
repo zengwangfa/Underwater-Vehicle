@@ -12,7 +12,7 @@
 #include "uart.h"
 #include "gyroscope.h"
 SensorType Sensor;//传感器参数
-uint8 Return_Data[18] = {0};
+uint8 Return_Data[22] = {0};
 uint8 device_hint_flag;		//设备提示字符
 
 extern uint8 uart_startup_flag;
@@ -28,7 +28,7 @@ void return_computer_thread_entry(void* parameter)
 			
 				Convert_Return_Computer_Data(); //转换返回上位机的数据
 
-				Send_Buffer_Agreement(begin_buff,Return_Data,17); //发送数据包协议
+				Send_Buffer_Agreement(begin_buff,Return_Data,22); //发送数据包协议
 				rt_thread_mdelay(1000);
 		}
 }
@@ -97,8 +97,8 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 		Return_Data[13] = stcAngle.angle[2] >> 8; // Yaw 高8位
 		Return_Data[14] = stcAngle.angle[2]; //低8位
 		
-		Return_Data[15] = (uint8)Sensor.JY901.Speed.x; 
-		Return_Data[16] = device_hint_flag;
+		Return_Data[15] = 0x01;//(uint8)Sensor.JY901.Speed.x;//   x轴航速
+		Return_Data[16] = 0x02;//device_hint_flag;  //设备提示字符
 }
 
 /**

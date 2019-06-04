@@ -34,6 +34,8 @@ void STEP_Init()
      GPIO_Init(FOCUS_STEP_PORT, (GPIO_Pin_TypeDef)FOCUS_B1, GPIO_MODE_OUT_PP_LOW_FAST);
      GPIO_Init(FOCUS_STEP_PORT, (GPIO_Pin_TypeDef)FOCUS_B0, GPIO_MODE_OUT_PP_LOW_FAST);
      
+     GPIO_Init(GPIOD, (GPIO_Pin_TypeDef)GPIO_PIN_4, GPIO_MODE_OUT_PP_LOW_FAST); //LED
+     
      GPIO_WriteLow(GPIOD,ZOOM_A1);   //Êä³öµÍ
      GPIO_WriteLow(GPIOD,ZOOM_A0);
      GPIO_WriteLow(GPIOA,ZOOM_B1);
@@ -44,6 +46,22 @@ void STEP_Init()
      GPIO_WriteLow(FOCUS_STEP_PORT,FOCUS_B1);
      GPIO_WriteLow(FOCUS_STEP_PORT,FOCUS_B0);
      
+     GPIO_WriteLow(GPIOD,GPIO_PIN_4);
+     
+}
+
+
+void STEP_Stop(void)
+{
+     GPIO_WriteLow(GPIOD,ZOOM_A1);   //Êä³öµÍ
+     GPIO_WriteLow(GPIOD,ZOOM_A0);
+     GPIO_WriteLow(GPIOA,ZOOM_B1);
+     GPIO_WriteLow(GPIOC,ZOOM_B0);
+     
+     GPIO_WriteLow(FOCUS_STEP_PORT,FOCUS_A1);
+     GPIO_WriteLow(FOCUS_STEP_PORT,FOCUS_A0);
+     GPIO_WriteLow(FOCUS_STEP_PORT,FOCUS_B1);
+     GPIO_WriteLow(FOCUS_STEP_PORT,FOCUS_B0);
 }
 
 /******************************************************************************

@@ -1,22 +1,22 @@
-"C:\Users\zengwangfa\Desktop\摄像头stm8新\Bsp\bsp_uart.c"
+"D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\Bsp\bsp_uart.c"
 -std=c99
 -ferror-limit=0
 -I
-C:\Users\zengwangfa\Desktop\摄像头stm8新\App
+D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\App
 -I
-C:\Users\zengwangfa\Desktop\摄像头stm8新\Bsp
+D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\Bsp
 -I
-C:\Users\zengwangfa\Desktop\摄像头stm8新\Libraries\STM8S_StdPeriph_Driver\inc
+D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\Libraries\STM8S_StdPeriph_Driver\inc
 -I
 Z:\Software\IAR for STM8\stm8\inc
 -I
 Z:\Software\IAR for STM8\stm8\inc\c
 -I
-C:\Users\zengwangfa\Desktop\摄像头stm8新\App
+D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\App
 -I
-C:\Users\zengwangfa\Desktop\摄像头stm8新\Bsp
+D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\Bsp
 -I
-C:\Users\zengwangfa\Desktop\摄像头stm8新\Libraries\STM8S_StdPeriph_Driver\inc
+D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\Libraries\STM8S_StdPeriph_Driver\inc
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

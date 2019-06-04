@@ -84,11 +84,11 @@ void Devices_Control(void)
 
 
 
-int control_thread_init(void)
+int control_lowSpeed_thread_init(void)
 {
 		rt_thread_t control_tid;
 		/*创建动态线程*/
-    control_tid = rt_thread_create("control",//线程名称
+    control_tid = rt_thread_create("control_low",//线程名称
                     control_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
@@ -100,8 +100,27 @@ int control_thread_init(void)
 		}
 		return 0;
 }
-INIT_APP_EXPORT(control_thread_init);
+INIT_APP_EXPORT(control_lowSpeed_thread_init);
 
+
+
+int control_highSpeed_thread_init(void)
+{
+		rt_thread_t control_tid;
+		/*创建动态线程*/
+    control_tid = rt_thread_create("control_high",//线程名称
+                    control_thread_entry,				 //线程入口函数【entry】
+                    RT_NULL,							   //线程入口函数参数【parameter】
+                    2048,										 //线程栈大小，单位是字节【byte】
+                    8,										 	 //线程优先级【priority】
+                    10);										 //线程的时间片大小【tick】= 100ms
+
+    if (control_tid != RT_NULL){
+				rt_thread_startup(control_tid);
+		}
+		return 0;
+}
+INIT_APP_EXPORT(control_highSpeed_thread_init);
 
 void Angle_Control(void)
 {

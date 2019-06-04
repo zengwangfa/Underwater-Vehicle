@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"Z:\Software\IAR for STM8\common\bin\cspybat" -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.general.xcl" --backend -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.driver.xcl" 
+"Z:\Software\IAR for STM8\common\bin\cspybat" -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.general.xcl" --backend -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"Z:\Software\IAR for STM8\common\bin\cspybat" -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.driver.xcl" 
+"Z:\Software\IAR for STM8\common\bin\cspybat" -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.driver.xcl" 
 
 @echo off 
 :end

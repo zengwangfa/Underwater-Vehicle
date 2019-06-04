@@ -23,9 +23,9 @@ param([String]$debugfile = "");
 
 if ($debugfile -eq "")
 {
-& "Z:\Software\IAR for STM8\common\bin\cspybat" -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.general.xcl" --backend -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.driver.xcl" 
+& "Z:\Software\IAR for STM8\common\bin\cspybat" -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.general.xcl" --backend -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.driver.xcl" 
 }
 else
 {
-& "Z:\Software\IAR for STM8\common\bin\cspybat" -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\zengwangfa\Desktop\摄像头stm8新\settings\Demo.Debug.driver.xcl" 
+& "Z:\Software\IAR for STM8\common\bin\cspybat" -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\My\Github\Underwater_Vehicle\software\zoom_focus_camera\settings\Demo.Debug.driver.xcl" 
 }

@@ -71,7 +71,7 @@ void UART1_SendNByte(uint8_t *pData, uint16_t Length)
 *************************************************/
 void UART1_Printf(uint8_t *String)
 {
-  while((*String) != '\0')
+  while((*String) !=  '\0 ')
   {
     UART1_SendByte(*String);
     String++;

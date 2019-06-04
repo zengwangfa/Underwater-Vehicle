@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>4171124734</Checksum>
+        <Checksum>2633553987</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>0</FillEnabled>
@@ -17,6 +17,9 @@
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
+    <Disassembly>
+        <MixedMode>1</MixedMode>
+    </Disassembly>
     <DataSample>
         <LogEnabled>0</LogEnabled>
         <GraphEnabled>0</GraphEnabled>
@@ -35,8 +38,11 @@
         <Count>0</Count>
     </Breakpoints>
     <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
+        <A0>_ "C:\Users\zengwangfa\Desktop\摄像头stm8新\App\main.c" ""</A0>
+        <A1>_ "C:\Users\zengwangfa\Desktop\摄像头stm8新\Bsp\bsp_uart.c" ""</A1>
+        <A2>_ "C:\Users\zengwangfa\Desktop\摄像头stm8新\Libraries\STM8S_StdPeriph_Driver\src\stm8s_tim4.c" ""</A2>
+        <Count>3</Count>
+        <SuppressDialog>1</SuppressDialog>
     </Aliases>
     <DebuggerSettings>
         <DisableInterruptsWhenStepping>0</DisableInterruptsWhenStepping>

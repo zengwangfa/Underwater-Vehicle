@@ -19,7 +19,7 @@
 #define FOCUS_B1 GPIO_PIN_5	// FOCUS  B+   PC5
 #define FOCUS_B0 GPIO_PIN_6	// FOCUS  B-   PC6
 
-
+void STEP_Stop(void);
 void STEP_Init(void);                      //步进电机引脚初始化
 
 void SetMotor(unsigned char Motor_ID,unsigned char InputData);    //根据传送的数据Inputdata设置脉冲引脚输出

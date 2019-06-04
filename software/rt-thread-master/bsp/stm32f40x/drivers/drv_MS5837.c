@@ -101,7 +101,6 @@ uint8 MS5837_Get_PROM(void)
 		uint8  CRC_Check = 0;
 		for (i=0;i<=6;i++) 
 		{
-	 
 				IIC_Start();
 				IIC_Send_Byte(MS583703BA_SlaveAddress);
 				IIC_Wait_Ack();
@@ -115,7 +114,7 @@ uint8 MS5837_Get_PROM(void)
 
 				rt_thread_mdelay(1);
 				IIC_Wait_Ack();
-				inth = IIC_Read_Byte(1);  		//带ACK的读数据
+				inth = IIC_Read_Byte(1);  		//带ACK的读数据 ，带ACK就表示还需要读取
 				
 				rt_thread_mdelay(1);
 				intl = IIC_Read_Byte(0); 			//最后一个字节NACK

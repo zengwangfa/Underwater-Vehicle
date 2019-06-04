@@ -9,7 +9,7 @@
 extern uint8_t motor_data[6];//接收数据包
 extern bool recvl_data_ok;//数据接收成功
 
-uint8_t WriteBuf[6]={'1','1','1','1','1','1'};
+uint8_t WriteBuf[6]={ 1 , 1 , 1 , 1 , 1 , 1 };
 //uint8_t Camera_Limit_Zoom_Data[6]={0xAA,0x55,0x02,0xFF,0x00,0x00};
 //uint8_t Camera_Limit_Focus_Data[6]={0xAA,0x55,0x02,0x00,0xFF,0x00};
 bool rotate_Zoom=FALSE; 
@@ -46,38 +46,38 @@ void data_handle(void)
          default: break;
       }
       
-      if(WriteBuf[0]=='0')
+      if(WriteBuf[0]== 0 )
       {
-        if(WriteBuf[1]=='1'&&WriteBuf[2]=='1')
+        if(WriteBuf[1]== 1 &&WriteBuf[2]== 1 )
         {
-          WriteBuf[0]='1';
+          WriteBuf[0]= 1 ;
         }
         else
        {
-         WriteBuf[0]='8';
+         WriteBuf[0]= 8 ;
          WriteBuf[1]-=1;
-         if(WriteBuf[1]=='0')
+         if(WriteBuf[1]== 0 )
          {
-           WriteBuf[1]='8';
+           WriteBuf[1]= 8 ;
            WriteBuf[2]-=1;          
          }
          scope_ok=TRUE;       
        }
       }
-      else if(WriteBuf[0]=='9')
+      else if(WriteBuf[0]== 9 )
       {
 
-        if(WriteBuf[1]=='8'&&WriteBuf[2]=='8')
+        if(WriteBuf[1]== 8 &&WriteBuf[2]== 8 )
         {
-          WriteBuf[0]='8';      
+          WriteBuf[0]= 8 ;      
         }
         else
         {
-          WriteBuf[0]='1';
+          WriteBuf[0]= 1 ;
           WriteBuf[1]+=1;
-          if(WriteBuf[1]=='9')
+          if(WriteBuf[1]== 9 )
          {
-           WriteBuf[1]='1';
+           WriteBuf[1]= 1 ;
            WriteBuf[2]+=1;          
          }
          scope_ok=TRUE;          
@@ -95,9 +95,9 @@ void data_handle(void)
     else if(motor_data[3]==0x88)
     {
      MotorNCircle(ZOOM_MOTOR,1,TRUE);
-     WriteBuf[0]='8';
-     WriteBuf[1]='8';
-     WriteBuf[2]='8';
+     WriteBuf[0]= 8 ;
+     WriteBuf[1]= 8 ;
+     WriteBuf[2]= 8 ;
      UART1_SendNByte(WriteBuf,6);
      motor_data[3]=0x00;
     }
@@ -112,37 +112,37 @@ void data_handle(void)
          default: break;
       }
       
-      if(WriteBuf[3]=='0')
+      if(WriteBuf[3]== 0 )
       {
-        if(WriteBuf[4]=='1'&&WriteBuf[5]=='1')
+        if(WriteBuf[4]== 1 &&WriteBuf[5]== 1 )
         {
-          WriteBuf[3]='1';
+          WriteBuf[3]= 1 ;
         }
         else
        {
-         WriteBuf[3]='8';
+         WriteBuf[3]= 8 ;
          WriteBuf[4]-=1;
-         if(WriteBuf[4]=='0')
+         if(WriteBuf[4]== 0 )
          {
-           WriteBuf[4]='8';
+           WriteBuf[4]= 8 ;
            WriteBuf[5]-=1;          
          }
          scope_ok=TRUE;       
        }
       }
-      else if(WriteBuf[3]=='9')
+      else if(WriteBuf[3]== 9 )
       {
-        if(WriteBuf[4]=='8'&&WriteBuf[5]=='8')
+        if(WriteBuf[4]== 8 &&WriteBuf[5]== 8 )
         {
-          WriteBuf[3]='8';    
+          WriteBuf[3]= 8 ;    
         }
         else
         {
-          WriteBuf[3]='1';
+          WriteBuf[3]= 1 ;
           WriteBuf[4]+=1;
-          if(WriteBuf[4]=='9')
+          if(WriteBuf[4]== 9 )
          {
-           WriteBuf[4]='1';
+           WriteBuf[4]= 1 ;
            WriteBuf[5]+=1;          
          }
          scope_ok=TRUE;          
@@ -160,13 +160,17 @@ void data_handle(void)
     else if(motor_data[4]==0x88)
     {
      MotorNCircle(FOCUS_MOTOR,1,TRUE);
-     WriteBuf[3]='8';
-     WriteBuf[4]='8';
-     WriteBuf[5]='8';
+     WriteBuf[3]= 8 ;
+     WriteBuf[4]= 8 ;
+     WriteBuf[5]= 8 ;
      UART1_SendNByte(WriteBuf,6);
      motor_data[4]=0x00;
     }
    }
+ else {
+ 
+    STEP_Stop();
+ }
 }
 
 

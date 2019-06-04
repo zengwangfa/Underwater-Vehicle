@@ -250,14 +250,11 @@ MSH_CMD_EXPORT(moveRight,ag: moveRight);
 ********************************************/
 void robot_upDown(float depth_output)  
 {
-		if(depth_output < -500) {
-				depth_output = (-500);
-		}
-		if(depth_output >  500) {
-				depth_output =   500;
-		}
-
-
+		//ÏÞ·ù
+		depth_output = depth_output < -500 ?-500:depth_output;
+		depth_output = depth_output >  500 ? 500:depth_output;
+		
+		
 		PropellerPower.leftMiddle   = - depth_output;//Õý·´½°
 		PropellerPower.rightMiddle  =  depth_output;
 }

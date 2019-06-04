@@ -157,122 +157,107 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>stcAngle,0x10</ItemText>
+          <ItemText>YunTai,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RxBuffer</ItemText>
+          <ItemText>RoboticArm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>YunTai,0x0A</ItemText>
+          <ItemText>Control,0x10</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RoboticArm,0x0A</ItemText>
+          <ItemText>YunTai,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Control,0x10</ItemText>
+          <ItemText>RoboticArm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>YunTai,0x0A</ItemText>
+          <ItemText>focus_data</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RoboticArm,0x0A</ItemText>
+          <ItemText>PropellerError,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>focus_data</ItemText>
+          <ItemText>PropellerPower,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PropellerError,0x0A</ItemText>
+          <ItemText>PropellerParameter,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PropellerPower,0x0A</ItemText>
+          <ItemText>Total_Controller</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PropellerParameter,0x0A</ItemText>
+          <ItemText>Expect_Depth,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Total_Controller</ItemText>
+          <ItemText>Return_Data,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Expect_Depth,0x0A</ItemText>
+          <ItemText>RC_Control_Data,0x10</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Return_Data</ItemText>
+          <ItemText>Frame_EndFlag,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RC_Control_Data</ItemText>
+          <ItemText>clear_count,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Frame_EndFlag,0x0A</ItemText>
+          <ItemText>Frame_Conut,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>clear_count,0x0A</ItemText>
+          <ItemText>Receive_Data_OK,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Frame_Conut,0x0A</ItemText>
+          <ItemText>PropellerParameter.PowerMax - PropellerParameter.PowerMed,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Receive_Data_OK,0x0A</ItemText>
+          <ItemText>MS5837_Temperature</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PropellerParameter.PowerMax - PropellerParameter.PowerMed,0x0A</ItemText>
+          <ItemText>focus_data</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\rtthread_stm32f4xx\applications/gyroscope.c\RxBuffer</ItemText>
-        </Ww>
-        <Ww>
-          <count>22</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>Cal_C,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>23</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>MS5837_Temperature</ItemText>
-        </Ww>
-        <Ww>
-          <count>24</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>focus_data</ItemText>
+          <ItemText>device_hint_flag</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
