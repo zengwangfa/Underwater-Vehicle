@@ -55,17 +55,18 @@ typedef enum
 
 		Stop      = 0
 		
-}ActionTypeEnum; //动作指令枚举
+}ActionType_Enum; //动作指令枚举
 
 
 extern PropellerParameter_Type PropellerParameter; 
-extern ActionTypeEnum       Posture_Flag; //机器人姿态标志位
+extern ActionType_Enum       Posture_Flag; //机器人姿态标志位
 extern PropellerPower_Type  PropellerPower; //推进器推理控制器
 extern PropellerError_Type  PropellerError; //推进器偏差值
 
 
 void Propeller_Init(void);
 
+void PWM_Update(PropellerPower_Type* power);//推进器PWM 更新
 
 
 

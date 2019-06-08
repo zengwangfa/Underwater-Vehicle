@@ -43,7 +43,7 @@ static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 		/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
 		rt_enter_critical();
 				
-		JY901_Convert(&Sensor.JY901); //JY901数据转换
+
 	
 		get_speed(&Sensor.JY901.Acc.x,&Sensor.JY901.Speed.x);//得到x速度
 		get_zspeed();

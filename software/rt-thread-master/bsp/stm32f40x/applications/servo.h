@@ -1,7 +1,7 @@
 #ifndef __SERVO_H
 #define __SERVO_H
 
-#include "pwm.h"
+#include "drv_pwm.h"
 
 typedef struct  /*  */
 {

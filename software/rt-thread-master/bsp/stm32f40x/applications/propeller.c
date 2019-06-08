@@ -21,11 +21,22 @@ PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 	   .PowerDeadband = 10	//死区值
 }; 
 
-ActionTypeEnum       Posture_Flag; //机器人姿态标志位
+ActionType_Enum      Posture_Flag; //机器人姿态标志位
 
 PropellerPower_Type  PropellerPower = {0,0,0,0,0,0,0}; //推进器推力控制器
 PropellerError_Type  PropellerError = {0,0,0,0,0,0}; //推进器偏差值
 
+
+void PWM_Update(PropellerPower_Type* power)
+{
+		TIM_SetCompare1(TIM1,PropellerParameter.PowerMed + power->rightUp);     //右上	 E9	
+		TIM_SetCompare2(TIM1,PropellerParameter.PowerMed + power->leftDown);    //左下	 E11
+		TIM_SetCompare3(TIM1,PropellerParameter.PowerMed + power->leftUp); 	    //左上   E13
+		TIM_SetCompare4(TIM1,PropellerParameter.PowerMed + power->rightDown);   //右下   E14
+	
+		TIM_SetCompare1(TIM4,PropellerParameter.PowerMed + power->leftMiddle);  //左中   D12
+		TIM_SetCompare2(TIM4,PropellerParameter.PowerMed + power->rightMiddle); //右中   D13
+}
 
 
 
@@ -70,7 +81,7 @@ void Propeller_Init(void)//这边都需要经过限幅在给定
 		
 		rt_thread_mdelay(500);  //0.5s
 		
-		log_i("Propeller_Init()");
+	  log_i("Propeller_Init()");
 		Propeller_Init_Flag = 1;
 }
 

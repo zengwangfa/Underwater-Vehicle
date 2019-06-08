@@ -20,18 +20,18 @@
 #include "servo.h"
 #include "propeller.h"
 #include "PropellerControl.h"
-
+#include "gyroscope.h"
 //FLASH起始地址   W25Q128 16M 的容量分为 256 个块（Block）
-#define Nor_FLASH_ADDRESS    (0x0000) 	//W25Q128 FLASH的 普通起始地址   【第一个扇区】
+#define Nor_FLASH_ADDRESS    (0x0000) 	//W25Q128 FLASH的 普通起始地址   【第个扇区】
 
-#define IMP_FLASH_ADDRESS    (0x1000) 	//W25Q128 FLASH的 重要参数起始地址 【第二个扇区】
+#define IMP_FLASH_ADDRESS    (0x1000) 	//W25Q128 FLASH的 重要参数起始地址 【第个扇区】
 
 extern char *VehicleModeName[2];
 
 
 PID_Parameter_Flag  PID_Parameter_Read_Flag;
 
-uint32 Normal_Parameter[PARAMEMER_MAX_NUMBER_A]={0};
+uint32 Normal_Parameter[PARAMEMER_MAX_NUMBER_e]={0};
 
 /*******************************************
 * 函 数 名：Normal_Parameter_Init_With_Flash
@@ -44,31 +44,35 @@ uint32 Normal_Parameter[PARAMEMER_MAX_NUMBER_A]={0};
 ********************************************/
 int Normal_Parameter_Init_With_Flash(void)
 {
-		char i = 0;
-		for(i = 0;i < PARAMEMER_MAX_NUMBER_A;i++ ){
-				ef_port_read(Nor_FLASH_ADDRESS+4*i,(uint32 *)(&Normal_Parameter[i]),4);		
+		uint8 i = 0;
+		for(i = 0;i < PARAMEMER_MAX_NUMBER_e;i++ ){
+				ef_port_read(Nor_FLASH_ADDRESS+4*i,(Normal_Parameter+i),4);		 //ef_set_env
 		}
 		Normal_Parameter_SelfCheck_With_Flash();//Flash参数自检 若为 0 则为 非正常数据，则不传递给真实数据 
 
 		log_i("Flash_Read()");
 		return 0;
 }
-INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash);
+INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash); //先将此句注释，msh />输入“Flash_Update”，再打开此句 再下载
+
 
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash参数自检 若为 0 则为 非正常数据 
 {
-		Parameter_SelfCheck( (uint32 *)&VehicleMode,(uint32 *)&Normal_Parameter[VEHICLE_MODE_A] );
-		Parameter_SelfCheck( (uint32 *)&debug_tool,(uint32 *)&Normal_Parameter[DEBUG_TOOL_A] );
+		Parameter_SelfCheck( (uint32 *)&VehicleMode,&Normal_Parameter[VEHICLE_MODE_e] );//航行器模式  rov/auv
+		Parameter_SelfCheck( (uint32 *)&debug_tool, &Normal_Parameter[DEBUG_TOOL_e] );   //debug工具   vcan/ano
 		
-		Parameter_SelfCheck( (uint32 *)&RoboticArm.MaxValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MAX_VALUE_A] );
-		Parameter_SelfCheck( (uint32 *)&RoboticArm.MinValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MIN_VALUE_A] );
-    Parameter_SelfCheck( (uint32 *)&RoboticArm.MedValue,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_MED_VALUE_A] );
-		Parameter_SelfCheck( (uint32 *)&RoboticArm.Speed   ,(uint32 *)&Normal_Parameter[ROBOTIC_ARM_SPEED_A] );	
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.MaxValue,&Normal_Parameter[ROBOTIC_ARM_MAX_VALUE_e] );//机械臂参数
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.MinValue,&Normal_Parameter[ROBOTIC_ARM_MIN_VALUE_e] );
+    Parameter_SelfCheck( (uint32 *)&RoboticArm.MedValue,&Normal_Parameter[ROBOTIC_ARM_MED_VALUE_e] );
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.Speed   ,&Normal_Parameter[ROBOTIC_ARM_SPEED_e] );	
 	
-		Parameter_SelfCheck( (uint32 *)&YunTai.MaxValue,(uint32 *)&Normal_Parameter[YUNTAI_MAX_VALUE_A] );
-		Parameter_SelfCheck( (uint32 *)&YunTai.MinValue,(uint32 *)&Normal_Parameter[YUNTAI_MIN_VALUE_A] );	
-    Parameter_SelfCheck( (uint32 *)&YunTai.MedValue,(uint32 *)&Normal_Parameter[YUNTAI_MED_VALUE_A] );  //云台中值
-		//Parameter_SelfCheck( (uint32 *)&YunTai.Speed   ,(uint32 *)&Normal_Parameter[YUNTAI_SPEED_A] );		
+		Parameter_SelfCheck( (uint32 *)&YunTai.MaxValue,&Normal_Parameter[YUNTAI_MAX_VALUE_e] );//云台参数
+		Parameter_SelfCheck( (uint32 *)&YunTai.MinValue,&Normal_Parameter[YUNTAI_MIN_VALUE_e] );	
+    Parameter_SelfCheck( (uint32 *)&YunTai.MedValue,&Normal_Parameter[YUNTAI_MED_VALUE_e] );  
+		Parameter_SelfCheck( (uint32 *)&YunTai.Speed   ,&Normal_Parameter[YUNTAI_SPEED_e] );	
+	
+		Parameter_SelfCheck( (uint32 *)&Compass_Offset_Angle,&Normal_Parameter[COMPASS_OFFSET_ANGLE_e] );//指南针补偿角度
+
 }
 
 
@@ -78,24 +82,22 @@ void Flash_Update(void)
 {
 		ef_port_erase(Nor_FLASH_ADDRESS,4);	//【普通参数FLASH】先擦后写  擦除的为一个扇区4096 Byte 
 //------------------------------------------------------------------------------------------//
-		ef_port_write(Nor_FLASH_ADDRESS+4*VEHICLE_MODE_A,(uint32 *)(&VehicleMode),4);		
-		ef_port_write(Nor_FLASH_ADDRESS+4*DEBUG_TOOL_A,(uint32 *)(&debug_tool),4);		  
+		ef_port_write(Nor_FLASH_ADDRESS+4*VEHICLE_MODE_e,(uint32 *)(&VehicleMode),4);		
+		ef_port_write(Nor_FLASH_ADDRESS+4*DEBUG_TOOL_e,(uint32 *)(&debug_tool),4);		  
 
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MAX_VALUE_A,(uint32 *)&RoboticArm.MaxValue,4);		// 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MIN_VALUE_A,(uint32 *)&RoboticArm.MinValue,4); // 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MED_VALUE_A,(uint32 *)&RoboticArm.MedValue,4); // 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_SPEED_A,(uint32 *)&RoboticArm.Speed,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MAX_VALUE_e,(uint32 *)&RoboticArm.MaxValue,4);		// 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MIN_VALUE_e,(uint32 *)&RoboticArm.MinValue,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_MED_VALUE_e,(uint32 *)&RoboticArm.MedValue,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_SPEED_e,(uint32 *)&RoboticArm.Speed,4); // 地址
 	
 	
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MAX_VALUE_A,(uint32 *)&YunTai.MaxValue,4);		// 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MIN_VALUE_A,(uint32 *)&YunTai.MinValue,4); // 地址
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MED_VALUE_A,(uint32 *)&YunTai.MedValue,4); 		// 地址  云台中值
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_SPEED_A,(uint32 *)&YunTai.Speed,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MAX_VALUE_e,(uint32 *)&YunTai.MaxValue,4);		// 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MIN_VALUE_e,(uint32 *)&YunTai.MinValue,4); // 地址
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MED_VALUE_e,(uint32 *)&YunTai.MedValue,4); 		// 地址  云台中值
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_SPEED_e,(uint32 *)&YunTai.Speed,4); // 地址
 
-	
+		ef_port_write(Nor_FLASH_ADDRESS+4*COMPASS_OFFSET_ANGLE_e,(uint32 *)&Compass_Offset_Angle,4); // 地址
 
-
-	
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
@@ -122,8 +124,9 @@ void list_value(void)
 	  log_i("Propeller_Max             %d",PropellerParameter.PowerMax);
 	  log_i("Propeller_Min             %d",PropellerParameter.PowerMin);
 		log_i("Propeller_Med             %d",PropellerParameter.PowerMed);
-
-    rt_kprintf("                         \n");
+		log_i("----------------------   ---------");
+		log_i("Compass_Offset_Angle      %d",Compass_Offset_Angle);
+    rt_kprintf("\n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);
 

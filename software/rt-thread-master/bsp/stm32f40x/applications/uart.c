@@ -267,7 +267,6 @@ int device_uart_init(void)
     if (control_uart_tid != RT_NULL){
 				rt_thread_startup(control_uart_tid);
 				uart_init_flag <<= 1;
-				//rt_event_send(&init_event, GYRO_EVENT); //发送事件  表示初始化完成
     }
     /* 创建成功则启动线程 */
     if (gyroscope_uart_tid != RT_NULL){
@@ -290,6 +289,7 @@ int device_uart_init(void)
 		if(0x10 == uart_init_flag){ //等待所有串口设备都初始化完毕 打开uart_startup_flag
 				uart_startup_flag = 1;
 				log_i("Uart_Init()");
+			  //rt_event_send(&init_event, GYRO_EVENT); //发送事件  表示初始化完成
 		}
 		else {
 				uart_startup_flag = 0;

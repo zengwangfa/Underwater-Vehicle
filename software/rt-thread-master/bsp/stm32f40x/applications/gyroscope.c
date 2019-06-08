@@ -8,19 +8,20 @@
 #define LOG_TAG    "gyro"
 
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <rtthread.h>
 #include <elog.h>
-#include "gyroscope.h"
 #include <math.h>
+
+#include "gyroscope.h"
+#include "flash.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
-#define PACKET_LENGTH      11    //数据包长度
+#define JY901_PACKET_LENGTH      11    //数据包长度
 
 /*----------------------- Variable Declarations -----------------------------*/
-short res[10] = {0};
-
 struct STime		stcTime;
 struct SAcc 		stcAcc;
 struct SGyro 		stcGyro;
@@ -32,14 +33,12 @@ struct SLonLat 	stcLonLat;
 struct SGPSV 		stcGPSV;
 struct SQ       stcQ;
 
-//JY901Type Sensor.JY901 = {0}; //Sensor.JY901真实值结构体
-
 uint8 gyroscope_save_array[5] 	 = {0xFF,0xAA,0x00,0x00,0x00};	 //0x00-设置保存  0x01-恢复出厂设置并保存
 uint8 gyroscope_package_array[5] = {0xFF,0xAA,0x02,0x1F,0x00};	 //设置回传的数据包【0x1F 0x00 为 <时间> <加速度> <角速度> <角度> <磁场>】
 uint8 gyroscope_rate_array[5] 	 = {0xFF,0xAA,0x03,0x06,0x00};	 //传输速率 0x05-5Hz  0x06-10Hz(默认)  0x07-20Hz
 uint8 gyroscope_led_array[5] 	   = {0xFF,0xAA,0x1B,0x00,0x00}; 	 //倒数第二位 0x00-开启LED  0x01-关闭LED   
 uint8 gyroscope_baud_array[5] 	 = {0xFF,0xAA,0x04,0x02,0x00}; 	 //0x06 - 115200
-uint8 RxBuffer[20] = {0};  //数据包
+short Compass_Offset_Angle = 0;  //指南针补偿角度   由于受到板子磁场干扰，需要加一个补偿角度  -360 ~ +360
 
 extern rt_device_t gyro_uart_device;	
 /*----------------------- Function Implement --------------------------------*/
@@ -47,7 +46,7 @@ extern rt_device_t gyro_uart_device;
 //CopeSerialData为串口2中断调用函数，串口每收到一个数据，调用一次这个函数。
 void CopeSerial2Data(uint8 Data)
 {
-
+		static uint8 RxBuffer[20] = {0};  //数据包
 		static uint8 RxCheck = 0;	  //尾校验字
 		static uint8 RxCount = 0;	    //接收计数
 		static uint8 i = 0;	   		  //接收计数
@@ -58,14 +57,14 @@ void CopeSerial2Data(uint8 Data)
 				RxCount=0;					  //清空缓存区
 				return;
 		}
-		if (RxCount < PACKET_LENGTH) {return;}//数据不满11个，则返回
+		if (RxCount < JY901_PACKET_LENGTH) {return;}//数据不满11个，则返回
 		
 		/*********** 只有接收满11个字节数据 才会进入以下程序 ************/
 		for(i = 0;i < 10;i++){
 				RxCheck += RxBuffer[i]; //校验位累加
 		}
 		
-		if(	RxCheck == RxBuffer[PACKET_LENGTH-1]){//判断数据包校验 是否正确
+		if(	RxCheck == RxBuffer[JY901_PACKET_LENGTH-1]){//判断数据包校验 是否正确
 	
 				switch(RxBuffer[1]){		//判断数据是哪种数据，然后将其拷贝到对应的结构体中，有些数据包需要通过上位机打开对应的输出后，才能接收到这个数据包的数据
 						case 0x50:	memcpy(&stcTime,&RxBuffer[2],8);	 break;//memcpy为编译器自带的内存拷贝函数，需引用"string.h"，将接收缓冲区的字符拷贝到数据结构体里面，从而实现数据的解析。
@@ -92,7 +91,7 @@ void CopeSerial2Data(uint8 Data)
 }
 
 /* Sensor.JY901 数据转换 */
-void JY901_Convert(JY901Type * pArr) 
+void JY901_Convert(JY901_Type * pArr) 
 {
 
 		pArr->Acc.x  = (float)stcAcc.a[0]/2048;   //32768*16
@@ -106,7 +105,7 @@ void JY901_Convert(JY901Type * pArr)
 		pArr->Euler.Roll = (float)stcAngle.angle[0]/8192*45;   //32768*180; 
 		pArr->Euler.Pitch = (float)stcAngle.angle[1]/8192*45;
 		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45 -90;//磁场漂移 补偿-20 deg
-		if(pArr->Euler.Yaw < -180)pArr->Euler.Yaw = 360+pArr->Euler.Yaw;//磁场漂移 补偿-20 deg
+		if(pArr->Euler.Yaw < -180)pArr->Euler.Yaw = Compass_Offset_Angle + pArr->Euler.Yaw;//磁场漂移 补偿-20 deg
 		
 		pArr->Mag.x  = stcMag.h[0];
 		pArr->Mag.y	 = stcMag.h[1];
@@ -143,19 +142,48 @@ void get_zspeed(void)
 		}
 }
 
+/*【机械臂】舵机 修改 速度值 */
+static int set_compass_offset_angle(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        log_e("Error! Proper Usage: RoboticArm_Speed 10");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		if(atoi(argv[1]) <= 360 && atoi(argv[1]) >= -360){
+				Compass_Offset_Angle = atoi(argv[1]);
+				Flash_Update();
+				log_i("Write_Successed! Compass_Offset_Angle:  %d",Compass_Offset_Angle);
+		}
+		else {
+				log_e("Error! The value is out of range!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(set_compass_offset_angle,ag: set_compass_offset_angle 360);
+
+
+
+
+
+
+
+
 /* Get时间  time */
-void get_time(void)
+void print_time(void)
 {
 		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出.
 		char str[50];
 		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
 		log_i(str);
 }
-MSH_CMD_EXPORT(get_time,get acceleration[a]);
+MSH_CMD_EXPORT(print_time,print time[a]);
 
 
 /* Get加速度  acceleration */
-void get_gyroscope(void)
+void print_gyroscope(void)
 {		
 		char str[50];
 		sprintf(str,"Acc:%.3f %.3f %.3f",  Sensor.JY901.Acc.x,  Sensor.JY901.Acc.y,  Sensor.JY901.Acc.z);
@@ -169,18 +197,18 @@ void get_gyroscope(void)
 	
 		return;
 }
-MSH_CMD_EXPORT(get_gyroscope,get Sensor.JY901[a]);
+MSH_CMD_EXPORT(print_gyroscope,print Sensor.JY901[a]);
 
 
 /* Get 温度  Temperature */
-float get_temperature(void)
+float print_temperature(void)
 {
 		char str[50];
 		sprintf(str,"Temperature:%.2f C\r\n",Sensor.JY901.Temperature);
 		log_i(str);	
 		return Sensor.JY901.Temperature;
 }
-MSH_CMD_EXPORT(get_temperature, get Temperature[T]);
+MSH_CMD_EXPORT(print_temperature, print Temperature[T]);
 
 
 

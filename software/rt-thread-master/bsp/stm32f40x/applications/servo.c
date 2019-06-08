@@ -130,11 +130,11 @@ int servo_thread_init(void)
 {
     rt_thread_t servo_tid;
 		/*创建动态线程*/
-    servo_tid = rt_thread_create("pwm",//线程名称
+    servo_tid = rt_thread_create("servo",//线程名称
                     servo_thread_entry,			 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    512,										 //线程栈大小，单位是字节【byte】
-                    5,										 	 //线程优先级【priority】
+                    1024,										 //线程栈大小，单位是字节【byte】
+                    10,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (servo_tid != RT_NULL){

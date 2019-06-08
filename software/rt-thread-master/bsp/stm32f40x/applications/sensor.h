@@ -5,7 +5,7 @@
 
 
 
-
+void MS5837_Convert(void);
 
 
 

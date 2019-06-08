@@ -11,26 +11,27 @@ typedef struct
 		uint8 No_0xFF[PID_USE_NUM];
 }PID_Parameter_Flag;
 
-typedef enum
+typedef enum  // _e 表示枚举
 {
-		VEHICLE_MODE_A,              //工作模式
-		DEBUG_TOOL_A,                //Debug工具
+		VEHICLE_MODE_e,              //工作模式
+		DEBUG_TOOL_e,                //Debug工具
 		
-		ROBOTIC_ARM_MAX_VALUE_A,    //机械臂开启最大值  
-		ROBOTIC_ARM_MIN_VALUE_A,   	//机械臂关闭值
-		ROBOTIC_ARM_MED_VALUE_A, 		//机械臂当前值
-		ROBOTIC_ARM_SPEED_A,   			//机械臂转动速度
+		ROBOTIC_ARM_MAX_VALUE_e,    //机械臂开启最大值  
+		ROBOTIC_ARM_MIN_VALUE_e,   	//机械臂关闭值
+		ROBOTIC_ARM_MED_VALUE_e, 		//机械臂当前值
+		ROBOTIC_ARM_SPEED_e,   			//机械臂转动速度
 	
-		YUNTAI_MAX_VALUE_A,    	 //云台向上最大当前值
-		YUNTAI_MIN_VALUE_A,	 		 //云台向下当前值	
-		YUNTAI_MED_VALUE_A,   	 //云台中值
-		YUNTAI_SPEED_A,  				 //云台转动速度
+		YUNTAI_MAX_VALUE_e,    	 //云台向上最大当前值
+		YUNTAI_MIN_VALUE_e,	 		 //云台向下当前值	
+		YUNTAI_MED_VALUE_e,   	 //云台中值
+		YUNTAI_SPEED_e,  				 //云台转动速度
 
-		
+		COMPASS_OFFSET_ANGLE_e,    //指南针补偿角度
+	
 
 
 	
-		PARAMEMER_MAX_NUMBER_A,    //最大参数值
+		PARAMEMER_MAX_NUMBER_e,    //最大参数值
 	
 }NORMAL_PARAMETER_TABLE;
 

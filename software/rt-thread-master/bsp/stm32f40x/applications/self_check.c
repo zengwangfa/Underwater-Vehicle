@@ -55,12 +55,12 @@ int Self_Check_thread_init(void)
                     self_check_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     512,										 //线程栈大小，单位是字节【byte】
-                    8,										 	 //线程优先级【priority】
+                    30,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (self_check_tid != RT_NULL){
 				log_i("SelfCheck_Init()");
-				//rt_thread_startup(self_check_tid);
+				rt_thread_startup(self_check_tid);
 		}
 		return 0;
 }

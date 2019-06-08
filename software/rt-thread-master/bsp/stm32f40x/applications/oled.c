@@ -11,17 +11,18 @@
 #include <rtthread.h>
 #include <math.h>
 #include <elog.h>
-#include "filter.h"
+#include <stdio.h>
+
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
 #include "drv_oled.h"
-#include "stdio.h"
-#include "buzzer.h"
-#include "key.h"
-#include "adc.h"
+#include "drv_adc.h"
+
+#include "ioDevices.h"
+
 #include "gyroscope.h"
 #include "sensor.h"
-
+#include "filter.h"
 /* 自定义OLED 坐标系如下: 
 
 	127 ↑y
@@ -49,20 +50,20 @@ extern uint8 VehicleMode;
 float slope = 0.0; //东北天坐标系下 航向斜率 slope
 
 char *VehicleModeName[2] = {"AUV","ROV"};
-volatile MENU_LIST_e MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
+volatile MENU_LIST_Enum MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
 																				//volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接读值。
 uint32 total_mem,used_mem,max_used_mem;
 /* OLED 变量 初始化. */
-OledType oled = {	 
-								 .pagenum = StatusPage,		 //页码 pagenum
-								 .pagechange = StatusPage, //暂存页码 检测页码是否改变 pagechange
-								 .pagechange_flag = 0,     //页码改变标志位 pagechange flag
-								 .pagename = {	
-									"StatusPage",
-									"GyroscopePage",
-									"FlashPage",
-									"PicturePage"} //页名 pagename
-								
+Oled_Type oled = {	 
+									 .pagenum = StatusPage,		 //页码 pagenum
+									 .pagechange = StatusPage, //暂存页码 检测页码是否改变 pagechange
+									 .pagechange_flag = 0,     //页码改变标志位 pagechange flag
+									 .pagename = //页名定义 pagename
+										{	
+												"StatusPage",
+												"GyroscopePage",
+												"FlashPage",
+												"PicturePage"} 							
 };
 /*----------------------- Function Implement --------------------------------*/
 
@@ -78,7 +79,7 @@ void menu_define(void) //菜单定义
 
 	if(oled.pagenum >= OLED_Page_MAX || oled.pagenum < StatusPage) oled.pagenum = StatusPage; //超出页面范围 则为第一页
 	if(oled.pagechange != oled.pagenum){
-			buzzer_bibi(1,1);
+			Buzzer_Set(&Beep,1,1);
 			rt_kprintf("Current Menu_Page: %s \n",oled.pagename[oled.pagenum-1]);
 			OLED_Clear();
 			oled.pagechange_flag = 1;
@@ -88,16 +89,16 @@ void menu_define(void) //菜单定义
 
 	switch(oled.pagenum){
 			case 1:{
-				MENU = StatusPage;	 OLED_StatusPage();			break;
+					MENU = StatusPage;	 OLED_StatusPage();		break;
 			}
 			case 2:{
-				MENU = GyroscopePage;OLED_GyroscopePage();break;
+					MENU = GyroscopePage;OLED_GyroscopePage();break;
 			}
 			case 3:{
-				MENU = FlashPage;		OLED_FlashPage(); 	break;
+					MENU = FlashPage;		OLED_FlashPage(); 	  break;
 			}
 			case 4:{
-				MENU = PicturePage;	 OLED_PicturePage();		  break;
+					MENU = PicturePage;	 OLED_PicturePage(); break;
 			}	
 	}
 }
@@ -130,13 +131,7 @@ void OLED_StatusPage(void)
 {
 		static char str[50];
 
-	  uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
-	
-		Sensor.CPU.Temperature = get_cpu_temp();
-		Sensor.Power_volatge = get_vol();
-	
-	  cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
-		Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
+
 	
 		OLED_ShowMyChar(100,0,0,16,1); //3G数据图标2
 		if(wifi_connect_get()){
@@ -146,11 +141,9 @@ void OLED_StatusPage(void)
 		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get());
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
-		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.Power_volatge);
+		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.PowerSource.Voltage);
 		OLED_ShowString(0,16,(uint8 *)str,12); 
 	
-
-
 	  sprintf(str,"CPU Usage:%.2f %% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
 		OLED_ShowString(0,32,(uint8 *)str,12); 
 		

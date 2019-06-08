@@ -8,13 +8,13 @@
 #define LOG_TAG    "led"
 
 #include "led.h"
-#include "key.h"
 #include "flash.h"
 #include "drv_ano.h"
+#include "ioDevices.h"
 #include <string.h>
 #include <elog.h>
 #include <drivers/pin.h>
-
+#include <easyflash.h>
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGB灯引脚号
 #define LED_Red 		77 // PD8
@@ -49,12 +49,11 @@ void led_thread_entry(void *parameter)
 		LED_OFF(LED_Green);			
 		LED_OFF(LED_Blue);
 				
-
     while (1)
     {			
 				/* FLASH保存 或者 复位PID参数 */
 				Save_Or_Reset_PID_Parameter();  
-				Bling_Working(0);
+				//Bling_Working(0);
 				led_blink_task();
 				rt_thread_mdelay(10); //10ms
 			
@@ -113,7 +112,7 @@ int led_thread_init(void)
 				rt_pin_mode(LED_Camera, 	PIN_MODE_OUTPUT); //OV2640 LED
 			
 				rt_pin_mode(Light_PIN, 	PIN_MODE_OUTPUT);	  //探照灯
-				//rt_pin_write(Light_PIN ,PIN_HIGH);
+				rt_pin_write(Light_PIN ,PIN_LOW);
 				log_i("LED_Init()");
 				//rt_event_send(&init_event, LED_EVENT);
 				rt_thread_startup(led_tid);
@@ -150,99 +149,99 @@ void Light_Control(uint8 *action)//探照灯
 
 
 
-/***************************************************
-函数名: void Bling_Set(Bling_Light *Light,
-uint32_t Continue_time,//持续时间
-uint16_t Period,//周期100ms~1000ms
-float Percent,//0~100%
-uint16_t  Cnt,
-GPIO_TypeDef* Port,
-uint16_t Pin
-,uint8_t Flag)
-说明:	状态指示灯设置函数
-入口:	时间、周期、占空比、端口等
-出口:	无
-备注:	程序初始化后、始终运行
-****************************************************/
-void Bling_Set(Bling_Light *Light,
-               uint32 Continue_time,//持续时间
-               uint32 Period,//周期100ms~1000ms
-               float Percent,//0~100%
-               uint32  Cnt,
-               uint32 Port,
-               uint32 Pin,
-               uint8 Flag)
-{
-		Light->Bling_Contiune_Time=(Continue_time/5);//持续时间
-		Light->Bling_Period=Period;//周期
-		Light->Bling_Percent=Percent;//占空比
-		Light->Port=Port;//端口
-		Light->Pin=Pin;//引脚
-		Light->Endless_Flag=Flag;//无尽模式
-}
+///***************************************************
+//函数名: void Bling_Set(Bling_Light *Light,
+//uint32_t Continue_time,//持续时间
+//uint16_t Period,//周期100ms~1000ms
+//float Percent,//0~100%
+//uint16_t  Cnt,
+//GPIO_TypeDef* Port,
+//uint16_t Pin
+//,uint8_t Flag)
+//说明:	状态指示灯设置函数
+//入口:	时间、周期、占空比、端口等
+//出口:	无
+//备注:	程序初始化后、始终运行
+//****************************************************/
+//void Bling_Set(Bling_Light *Light,
+//               uint32 Continue_time,//持续时间
+//               uint32 Period,//周期100ms~1000ms
+//               float Percent,//0~100%
+//               uint32  Cnt,
+//               uint32 Port,
+//               uint32 Pin,
+//               uint8 Flag)
+//{
+//		Light->Bling_Contiune_Time=(Continue_time/5);//持续时间
+//		Light->Bling_Period=Period;//周期
+//		Light->Bling_Percent=Percent;//占空比
+//		Light->Port=Port;//端口
+//		Light->Pin=Pin;//引脚
+//		Light->Endless_Flag=Flag;//无尽模式
+//}
 
-/***************************************************
-函数名: void Bling_Process(Bling_Light *Light)//闪烁运行线程
-说明:	状态指示灯实现
-入口:	状态灯结构体     
-出口:	无
-备注:	程序初始化后、始终运行
-****************************************************/
-void Bling_Process(Bling_Light *Light)//闪烁运行线程
-{
-  if(Light->Bling_Contiune_Time>=1) {
-			Light->Bling_Contiune_Time--;
-	}
-  else {rt_pin_write(Light->Pin ,0);}//亮
-  if(Light->Bling_Contiune_Time != 0//总时间未清0
-			||Light->Endless_Flag==1)//判断无尽模式是否开启
-  {
-			Light->Bling_Cnt++;
-			if(5*Light->Bling_Cnt>=Light->Bling_Period){
-					Light->Bling_Cnt=0;//计满清零
-			}
-			if(5*Light->Bling_Cnt <= Light->Bling_Period * Light->Bling_Percent){	
-					rt_pin_write(Light->Pin ,0);   //亮
-			}
-			else {rt_pin_write(Light->Pin ,1);}//灭
-  }
-	else {	
-			rt_pin_write(Light->Pin ,1);		//高电平 【熄灭】		
-	}
-}
+///***************************************************
+//函数名: void Bling_Process(Bling_Light *Light)//闪烁运行线程
+//说明:	状态指示灯实现
+//入口:	状态灯结构体     
+//出口:	无
+//备注:	程序初始化后、始终运行
+//****************************************************/
+//void Bling_Process(Bling_Light *Light)//闪烁运行线程
+//{
+//  if(Light->Bling_Contiune_Time>=1) {
+//			Light->Bling_Contiune_Time--;
+//	}
+//  else {rt_pin_write(Light->Pin ,0);}//亮
+//  if(Light->Bling_Contiune_Time != 0//总时间未清0
+//			||Light->Endless_Flag==1)//判断无尽模式是否开启
+//  {
+//			Light->Bling_Cnt++;
+//			if(5*Light->Bling_Cnt>=Light->Bling_Period){
+//					Light->Bling_Cnt=0;//计满清零
+//			}
+//			if(5*Light->Bling_Cnt <= Light->Bling_Period * Light->Bling_Percent){	
+//					rt_pin_write(Light->Pin ,0);   //亮
+//			}
+//			else {rt_pin_write(Light->Pin ,1);}//灭
+//  }
+//	else {	
+//			rt_pin_write(Light->Pin ,1);		//高电平 【熄灭】		
+//	}
+//}
 
 
 
-/***************************************************
-函数名: Bling_Working(uint16 bling_mode)
-说明:	状态指示灯状态机
-入口:	当前模式
-出口:	无
-备注:	程序初始化后、始终运行
-****************************************************/
-void Bling_Working(uint8 bling_mode)
-{
-		if(0 == bling_mode)
-		{
-				Bling_Process(&Light_1);
-				Bling_Process(&Light_2);
-				Bling_Process(&Light_3);
-		}
-		else if(1 == bling_mode)//加速度计6面校准模式
-		{
-				Bling_Process(&Light_1);
+///***************************************************
+//函数名: Bling_Working(uint16 bling_mode)
+//说明:	状态指示灯状态机
+//入口:	当前模式
+//出口:	无
+//备注:	程序初始化后、始终运行
+//****************************************************/
+//void Bling_Working(uint8 bling_mode)
+//{
+//		if(0 == bling_mode)
+//		{
+//				Bling_Process(&Light_1);
+//				Bling_Process(&Light_2);
+//				Bling_Process(&Light_3);
+//		}
+//		else if(1 == bling_mode)//加速度计6面校准模式
+//		{
+//				Bling_Process(&Light_1);
 
-		}
-		else if(2 == bling_mode)//磁力计校准模式
-		{
-				Bling_Process(&Light_2);
-		}
-		else if(3 == bling_mode)//全灭
-		{
-				Bling_Process(&Light_3);
-		}
-		 
-}
+//		}
+//		else if(2 == bling_mode)//磁力计校准模式
+//		{
+//				Bling_Process(&Light_2);
+//		}
+//		else if(3 == bling_mode)//全灭
+//		{
+//				Bling_Process(&Light_3);
+//		}
+//		 
+//}
 
 
 
