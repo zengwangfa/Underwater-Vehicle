@@ -6,7 +6,7 @@
 | -- | -- |
 |芯片型号| STM32F407ZGT6 |
 |CPU| Cortex-M4 |
-|主频| 84MHz-168MHz |
+|主频| 168MHz |
 |FLASH| 1MB |
 |SRAM| 192KB |
 |单元| FPU、DSP |
@@ -24,27 +24,29 @@
 +——Underwater_vehicle
 |--------+ docs: 【设计参考文档】
 |--------+ hardware:【相关电路设计】      
-|            └──README.md
+|            ├──README.md
 |            ├──.SchDoc
-|  			 ├──.PcbDoc
+|            ├──.PcbDoc
 |            └──.pdf
 |--------+ software:【相关软件设计】
-|            └──README.md
-|			 ├──rt-thread-master
+|            ├──README.md
+|			 └──rt-thread-master
 |               └──bsp
-|                   └──stm32f40x
+|                   └──stm32f40x 【主要系统控制程序】
 |--------+ README.md
 ```
 
 ## 3、软件结构
 ```
 +——RT-Thread
-|    └──Kernel 【RT-Thread内核初始化】                  
+|    ├── Kernel 【RT-Thread内核初始化】                  
 |    ├── Normal Peripherals Init 【普通外设初始化】
-|    ├── System self-check 【系统自检:检测是否所有外设初始化完成】 
-|           └── Read Gyroscope data 【读取JY901 九轴数据】 
+|    └── System self-check 【系统自检:检测是否所有外设初始化完成】 
+|           ├── Read Gyroscope data 【读取JY901 九轴数据】 
 |           ├── Detection input devices 【检测输入设备】 
-|    └──...... 
+|           ├── ....
+|           └── ....
+|    └──  Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
 ```
 
 ## 4、硬件结构
@@ -86,6 +88,7 @@
 	- [X] Underwater_Vehicle核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] Underwater_Vehicle底板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] 变焦摄像头驱动控制板 by [@张静]	
+	- [X] 电源主板设计 by [@李浩辰]	
 	
 - [X] 控制程序
     - [X] 普通外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
@@ -106,8 +109,8 @@
 	- [X] 云台3D打印模型 by [@洪华霖]
 	
 - [X] 其它
-	- [X] 电路连接 by [@李浩辰]
-	- [X] 打下手 by [@李昕凯]
+
+
 
 
 
