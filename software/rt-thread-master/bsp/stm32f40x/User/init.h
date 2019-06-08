@@ -6,13 +6,11 @@
 #include "sys.h" 
 
 #include "led.h"
-#include "key.h"
-#include "buzzer.h"
 #include "drv_oled.h"
 #include "oled.h"
 #include "gyroscope.h"
-#include "adc.h"
-#include "pwm.h"
+#include "drv_adc.h"
+#include "drv_pwm.h"
 
 #include "DataType.h"
 

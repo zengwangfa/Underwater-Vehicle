@@ -3,25 +3,28 @@
 #include "filter.h"
 
 
-/* 冒泡  */
-short bubble(short *adc_value)
+/* 冒泡 中值滤波  */
+short Bubble_Filter(short *value)
 {
-		u8 i,j;
-		short res = 0;   //reserve
-		short value = 0;
+		u8 i,j,swapFlag; //交换标志位
+		short res = 0;   //reserve 暂存
+		short med = 0;   //中值
 
 		for(j = 0;j < 10-1;j++){
+			  swapFlag = 0; //每一个大循环检验
 				for(i = 0;i < 9-j;i++){
-						if( adc_value[i] > adc_value[i+1] ){ //>升序   <降序
-								res = adc_value[i];
-								adc_value[i] = adc_value[i+1];
-								adc_value[i+1] = res;
+						if( value[i] > value[i+1] ){ //>升序   <降序
+								res = value[i];
+								value[i] = value[i+1];
+								value[i+1] = res;
+							
+								swapFlag = 1; //若交换置1
 						}
-					
 				}
+				if(0 == swapFlag) break;//未发生交换，则提前结束
 		}
-		value = (*(adc_value+4)+ *(adc_value+5)+ *(adc_value+6))/3;		
-		return (short)value;
+		med = (*(value+4)+ *(value+5)+ *(value+6))/3;	//中间平均值	
+		return (short)med;
 } 
 
 /*

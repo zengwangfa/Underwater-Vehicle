@@ -32,14 +32,14 @@
 #include <easyflash.h>
 #include <elog_flash.h>
 #include <spi_flash_sfud.h>
-
+#include <partition.h>
 /*----------------------- Variable Declarations -----------------------------*/
 
 u8 VehicleMode = ROV_Mode;   //ROV_Mode or AUV_Mode
 
 rt_spi_flash_device_t nor_flash;
 struct rt_thread thread_sys_monitor;
-
+extern struct rt_event init_event;/* ALL_init 事件控制块 */
 /*----------------------- Function Implement --------------------------------*/
 
 static rt_err_t exception_hook(void *context);
@@ -65,48 +65,27 @@ void thread_entry_sys_monitor(void* parameter)
  */
 void sys_init_thread(void* parameter){
 	
-	  /* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-    rt_enter_critical();
-	
-    /* 初始化 nor_flash Flash 设备 */
-    if ((nor_flash = rt_sfud_flash_probe("nor_flash", "spi20")) == NULL) {
-				rt_kprintf("Error! No find nor_flash!");
+
+		rt_err_t result;
+
+    if ((nor_flash = rt_sfud_flash_probe("W25Q128", "spi20")) == NULL) { /* 初始化 nor_flash Flash 设备 */ 
+				rt_kprintf("Error! No find W25Q128!");  //16MB Flash
         return;
     }
-    /* 初始化 EasyFlash 模块 */
-    easyflash_init();
 
-    /* 初始化日志系统 */
-    elog_init();
+    easyflash_init();		/* 初始化 EasyFlash 模块 */
+		elog_init_start();  /* 初始化日志系统 */
 		
-		/* 设置日志格式 */
-    elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
-    elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
-    elog_set_fmt(ELOG_LVL_WARN, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
-    elog_set_fmt(ELOG_LVL_INFO, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
-    elog_set_fmt(ELOG_LVL_DEBUG,ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
-    elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+    rt_hw_exception_install(exception_hook);	/* 设置硬件异常钩子 */
+    rt_assert_set_hook(rtt_user_assert_hook); /* 设置RTT断言钩子 */
+		
+    result = rt_event_init(&init_event, "event", RT_IPC_FLAG_FIFO);  /* 初始化事件对象 */
+    if (result != RT_EOK){
+        log_e("init event failed.\n");
+		}
 
-    elog_set_filter_lvl(ELOG_LVL_TOTAL_NUM);
-		
-#ifdef 	ELOG_COLOR_ENABLE  
-		/* 使能日志颜色 */
-    elog_set_text_color_enabled(true);
-#endif
-    /* 初始化EasyLogger的Flash插件 */
-    elog_flash_init();
-		
-    /* 启动EasyLogger */
-    elog_start();
-		
-		/* 设置硬件异常钩子 */
-    rt_hw_exception_install(exception_hook);
-		
-    /* 设置RTT断言钩子 */
-    rt_assert_set_hook(rtt_user_assert_hook);
-		
-		/* 调度器解锁 */
-    rt_exit_critical();
+
+
 }
 
 

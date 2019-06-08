@@ -3,23 +3,16 @@
  *
  *  Created on: 2013年12月7日
  *      Author: Armink
- *      Notes:  更新固件 Update 方法
  */
-#define LOG_TAG    "cmd"
-
-#include "init.h"
 #include <rthw.h>
 #include <rtthread.h>
 #include <shell.h>
 #include <finsh.h>
 #include <elog.h>
-
 #include <easyflash.h>
 #include <time.h>
 #include <ymodem.h>
 #include <board.h>
-#include "flash.h"
-
 
 
 static size_t update_file_total_size, update_file_cur_size;
@@ -29,10 +22,10 @@ static enum rym_code ymodem_on_begin(struct rym_ctx *ctx, rt_uint8_t *buf, rt_si
 
     /* calculate and store file size */
     file_name = (char *) &buf[0];
-		file_size = (char *) &buf[rt_strlen(file_name) + 1];
-    update_file_total_size = atol(file_size);
+    file_size = (char *) &buf[rt_strlen(file_name) + 1];
+		update_file_total_size = atol(file_size); rt_kprintf("update_file_total_size:%d\n",update_file_total_size);
     /* 4 bytes align */
-    update_file_total_size = (update_file_total_size + 3) / 4 * 4;
+    update_file_total_size = (update_file_total_size + 3) / 4 * 4;rt_kprintf("update_file_total_size:%d\n",update_file_total_size);
     update_file_cur_size = 0;
     crc32_checksum = 0;
 
@@ -54,7 +47,9 @@ static enum rym_code ymodem_on_data(struct rym_ctx *ctx, rt_uint8_t *buf, rt_siz
     /* write data of application to backup section  */
     if (ef_write_data_to_bak(buf, len, &update_file_cur_size, update_file_total_size)) {
         /* if write fail then end session */
+				rt_kprintf("Error write\n");
         return RYM_CODE_CAN;
+
     }
     return RYM_CODE_ACK;
 }
@@ -100,6 +95,3 @@ __exit:
     elog_set_output_enabled(true);
 }
 MSH_CMD_EXPORT(update, Update user application firmware);
-
-
-

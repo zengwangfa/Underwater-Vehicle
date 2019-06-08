@@ -80,7 +80,6 @@ EfErrCode easyflash_init(void) {
 //    }
 //#endif
 
-
 #ifdef EF_USING_IAP
     if (result == EF_NO_ERR) {
         result = ef_iap_init();

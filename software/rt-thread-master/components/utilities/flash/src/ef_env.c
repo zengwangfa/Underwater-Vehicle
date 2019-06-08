@@ -25,7 +25,7 @@
  * Function: Environment variables operating interface. (normal mode)
  * Created on: 2014-10-06
  */
-
+#include <rtthread.h>
 #include <easyflash.h>
 #include <string.h>
 #include <stdlib.h>
@@ -708,6 +708,7 @@ EfErrCode ef_save_env(void) {
 
     /* erase ENV */
     result = ef_port_erase(write_addr, write_size);
+
     switch (result) {
     case EF_NO_ERR: {
         EF_INFO("Erased ENV OK.\n");
@@ -722,6 +723,7 @@ EfErrCode ef_save_env(void) {
 
     /* write ENV to flash */
     result = ef_port_write(write_addr, env_cache, write_size);
+
     switch (result) {
     case EF_NO_ERR: {
         EF_INFO("Saved ENV OK.\n");
@@ -782,7 +784,7 @@ static bool env_crc_is_ok(void) {
  * @param key ENV name
  * @param value ENV value
  *
- * @return resultFind a Winbond flash chip
+ * @return result
  */
 EfErrCode ef_set_and_save_env(const char *key, const char *value) {
     EfErrCode result = EF_NO_ERR;

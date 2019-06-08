@@ -11,7 +11,7 @@
 #include <rtthread.h>
 #include "uart.h"
 #include "gyroscope.h"
-SensorType Sensor;//传感器参数
+Sensor_Type Sensor;//传感器参数
 uint8 Return_Data[22] = {0};
 uint8 device_hint_flag;		//设备提示字符
 
@@ -74,8 +74,8 @@ uint8 get_decimal(float data){ //得到浮点型 的1位小数位
   */
 void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 {
-		Return_Data[0] = Sensor.Power_volatge; //整数倍
-		Return_Data[1] = get_decimal(Sensor.Power_volatge);//小数的100倍
+		Return_Data[0] = Sensor.PowerSource.Voltage; //整数倍
+		Return_Data[1] = get_decimal(Sensor.PowerSource.Voltage);//小数的100倍
 	
 		Return_Data[2] = (int)Sensor.CPU.Temperature; //整数倍
 		Return_Data[3] = get_decimal(Sensor.CPU.Temperature) ;//小数的100倍

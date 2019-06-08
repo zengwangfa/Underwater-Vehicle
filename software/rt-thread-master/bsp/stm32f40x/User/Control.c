@@ -33,7 +33,7 @@ float Yaw = 0.0f;
  *  E—— 270°
  */
 
-void control_thread_entry(void *parameter)
+void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
 {
 
 		rt_thread_mdelay(1200);//等待串口设备初始化成功
@@ -44,7 +44,10 @@ void control_thread_entry(void *parameter)
 		}
 }
 
-
+void control_highSpeed_thread_entry(void *parameter)//高速控制线程
+{
+	
+}
 
 /**
   * @brief  Devices_Control(设备控制)
@@ -89,7 +92,7 @@ int control_lowSpeed_thread_init(void)
 		rt_thread_t control_tid;
 		/*创建动态线程*/
     control_tid = rt_thread_create("control_low",//线程名称
-                    control_thread_entry,				 //线程入口函数【entry】
+                    control_lowSpeed_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
                     8,										 	 //线程优先级【priority】
@@ -109,7 +112,7 @@ int control_highSpeed_thread_init(void)
 		rt_thread_t control_tid;
 		/*创建动态线程*/
     control_tid = rt_thread_create("control_high",//线程名称
-                    control_thread_entry,				 //线程入口函数【entry】
+                    control_highSpeed_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
                     8,										 	 //线程优先级【priority】

@@ -9,7 +9,7 @@
 #include "propeller.h"
 #include "PropellerControl.h"
 #include "RC_Data.h"
-#include "pwm.h"
+#include "drv_pwm.h"
 #include <rtthread.h>
 
 uint8 turnAngle = 45;    //转向角度
@@ -125,7 +125,7 @@ void Propeller_Output(void)
 	
 		PropellerPower.rightMiddle = Output_Limit(&PropellerPower.rightMiddle);
 		
-		PWM_Update();//PWM上传
+		PWM_Update(&PropellerPower);//PWM上传
 	
 		if(Frame_EndFlag == 1 && \
 			 Control.Move ==0x00 && Control.Translation == 0x00 && Control.Rotate == 0x00){//接收到一帧 并且 无控制字 
@@ -142,7 +142,7 @@ void Horizontal_Propeller_Power_Clear(void)//水平方向推力清零 10次后清空
 {
 		clear_count ++;
 		if(Control.Move ==0x00 && Control.Translation == 0x00 && Control.Rotate == 0x00){
-				if(clear_count >= 10 ){ //10次都无控制字清除 推进器动力
+				if(clear_count >= 20 ){ //10次都无控制字清除 推进器动力
 						PropellerPower.rightUp = 0;
 						PropellerPower.leftDown = 0;
 						PropellerPower.leftUp = 0;
@@ -221,10 +221,10 @@ void moveLeft(void)  //左移
 
 		PropellerPower.Power = Control.Power * 2;
 
-		PropellerPower.leftUp =    PropellerPower.Power +PropellerError.leftUpError;
-		PropellerPower.rightUp =   PropellerPower.Power +PropellerError.rightUpError;
-		PropellerPower.leftDown = -PropellerPower.Power +PropellerError.leftDownError;
-		PropellerPower.rightDown = PropellerPower.Power +PropellerError.rightDownError;
+		PropellerPower.leftUp =    PropellerPower.Power + PropellerError.leftUpError;
+		PropellerPower.rightUp =   PropellerPower.Power + PropellerError.rightUpError;
+		PropellerPower.leftDown = -PropellerPower.Power + PropellerError.leftDownError;
+		PropellerPower.rightDown = PropellerPower.Power + PropellerError.rightDownError;
 
 }
 
@@ -234,10 +234,10 @@ void moveRight(void)  //右移
 {
 		PropellerPower.Power = Control.Power * 2;
 	
-		PropellerPower.leftUp =    -PropellerPower.Power +PropellerError.leftUpError;
-		PropellerPower.rightUp =   -PropellerPower.Power +PropellerError.rightUpError;
-		PropellerPower.leftDown =   PropellerPower.Power +PropellerError.leftDownError;
-		PropellerPower.rightDown = -PropellerPower.Power +PropellerError.rightDownError;
+		PropellerPower.leftUp =    -PropellerPower.Power + PropellerError.leftUpError;
+		PropellerPower.rightUp =   -PropellerPower.Power + PropellerError.rightUpError;
+		PropellerPower.leftDown =   PropellerPower.Power + PropellerError.leftDownError;
+		PropellerPower.rightDown = -PropellerPower.Power + PropellerError.rightDownError;
 }
 MSH_CMD_EXPORT(moveRight,ag: moveRight);
 

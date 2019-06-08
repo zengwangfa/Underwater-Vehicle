@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\build\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -335,9 +335,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--c99</MiscControls>
-              <Define>RT_USING_ARM_LIBC, USE_STDPERIPH_DRIVER,</Define>
+              <Define>RT_USING_ARM_LIBC, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;Tools;..\..\components\utilities\ymodem;User;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\dfs\include;..\..\components\dfs\filesystems\devfs;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\spi;..\..\components\drivers\include;..\..\components\drivers\spi\sfud\inc;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\utilities\elog\inc;..\..\components\utilities\elog\plugins\flash;..\..\components\utilities\flash\inc</IncludePath>
+              <IncludePath>.;..\..\include;applications;.;drivers;Libraries\STM32F4xx_StdPeriph_Driver\inc;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\CMSIS\Include;Tools;..\..\components\utilities\ymodem;User;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;..\..\components\dfs\include;..\..\components\dfs\filesystems\devfs;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\include;..\..\components\drivers\spi;..\..\components\drivers\include;..\..\components\drivers\spi\sfud\inc;..\..\components\drivers\include;..\..\components\finsh;..\..\components\libc\compilers\armlibc;..\..\components\libc\compilers\common;..\..\components\utilities\elog\inc;..\..\components\utilities\elog\plugins\flash;..\..\components\utilities\flash\inc;..\..\components\utilities\partition</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -464,91 +464,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Applications</GroupName>
-          <Files>
-            <File>
-              <FileName>PID.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\PID.c</FilePath>
-            </File>
-            <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>buzzer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\buzzer.c</FilePath>
-            </File>
-            <File>
-              <FileName>flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>focus.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\focus.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyroscope.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\gyroscope.c</FilePath>
-            </File>
-            <File>
-              <FileName>key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\key.c</FilePath>
-            </File>
-            <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\led.c</FilePath>
-            </File>
-            <File>
-              <FileName>oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\oled.c</FilePath>
-            </File>
-            <File>
-              <FileName>propeller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\propeller.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>self_check.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\self_check.c</FilePath>
-            </File>
-            <File>
-              <FileName>sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>servo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\servo.c</FilePath>
-            </File>
-            <File>
-              <FileName>applications_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\uart.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>User</GroupName>
           <Files>
             <File>
@@ -587,14 +502,84 @@
               <FilePath>User\RC_Data.c</FilePath>
             </File>
             <File>
+              <FileName>Return_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\Return_Data.c</FilePath>
+            </File>
+            <File>
               <FileName>notes.c</FileName>
               <FileType>1</FileType>
               <FilePath>User\notes.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Applications</GroupName>
+          <Files>
             <File>
-              <FileName>Return_Data.c</FileName>
+              <FileName>PID.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\User\Return_Data.c</FilePath>
+              <FilePath>applications\PID.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyroscope.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\gyroscope.c</FilePath>
+            </File>
+            <File>
+              <FileName>focus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\focus.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>propeller.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\propeller.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>servo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\servo.c</FilePath>
+            </File>
+            <File>
+              <FileName>applications_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>self_check.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\self_check.c</FilePath>
+            </File>
+            <File>
+              <FileName>ioDevices.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\ioDevices.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -655,6 +640,16 @@
               <FileName>drv_ano.c</FileName>
               <FileType>1</FileType>
               <FilePath>drivers\drv_ano.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\drv_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\drv_adc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -986,19 +981,19 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>i2c_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\drivers\i2c\i2c_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c_dev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\drivers\i2c\i2c_dev.c</FilePath>
+            </File>
+            <File>
               <FileName>pin.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\components\drivers\misc\pin.c</FilePath>
-            </File>
-            <File>
-              <FileName>misc_adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\drivers\misc\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>rt_drv_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\drivers\misc\rt_drv_pwm.c</FilePath>
             </File>
             <File>
               <FileName>serial.c</FileName>
@@ -1264,6 +1259,16 @@
               <FileName>ef_port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\components\utilities\flash\port\ef_port.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Partition</GroupName>
+          <Files>
+            <File>
+              <FileName>partition.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\utilities\partition\partition.c</FilePath>
             </File>
           </Files>
         </Group>

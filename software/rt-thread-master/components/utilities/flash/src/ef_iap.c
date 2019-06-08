@@ -25,7 +25,7 @@
  * Function: IAP(In-Application Programming) operating interface.
  * Created on: 2015-01-05
  */
-
+#include <rtthread.h>
 #include <easyflash.h>
 
 #ifdef EF_USING_IAP
@@ -168,6 +168,7 @@ EfErrCode ef_write_data_to_bak(uint8_t *data, size_t size, size_t *cur_size,
     }
 
     result = ef_port_write(ef_get_bak_app_start_addr() + *cur_size, (uint32_t *) data, size);
+		EF_INFO("Write result: %d\n",result);
     switch (result) {
     case EF_NO_ERR: {
         *cur_size += size;
@@ -179,7 +180,7 @@ EfErrCode ef_write_data_to_bak(uint8_t *data, size_t size, size_t *cur_size,
         break;
     }
     }
-
+		EF_INFO("Write result: %d\n",result);
     return result;
 }
 

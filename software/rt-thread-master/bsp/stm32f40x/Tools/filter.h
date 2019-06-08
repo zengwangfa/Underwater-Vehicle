@@ -15,7 +15,7 @@ typedef struct
 		float b[3];
 }Butter_Parameter;
 
-short bubble(short *adc_value);
+short Bubble_Filter(short *value);
 
 float KalmanFilter(float *Original_Data);
 

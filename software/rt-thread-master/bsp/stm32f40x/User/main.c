@@ -20,15 +20,14 @@
  * 2019-02-16     Dwfish       Creat OLED Electronic compass.
  * 2019-02-19     Dwfish       Add VACN & ANO host computer debug.
  * 2019-02-20     Dwfish       Add Easylog & Easyflash & <update> msh.
- * 2019-03-23     Dwfish       Fix some bugs.
  * 2019-03-24     Dwfish       Add Cpuusage.
  * 2019-04-19     Dwfish       Add Focus Camera Control.
  * 2019-05-02     Dwfish       Add 
 	
 	
-	Error:
- * 2019-04-29     Dwfish       BUG:IAP Download dispaly success,but Download fail.
- * 2019-05-13 21:39
+	Bugs:
+ * 2019-04-29     BUG:IAP Download dispaly success,but Download fail.
+ * 2019-05-13     JY901 模块LED无法关闭
 *
 ******************************************************************************/
 #define LOG_TAG    "main"
@@ -57,7 +56,6 @@ int main(void)
 		rt_kprintf("* Date           Author       Notes\n");
 	
 		rt_kprintf("* 2019-02-06     Dwfish       Creat LED / KEY / Buzzer /PWM /ADC Thread.\n");
-		rt_kprintf("* 2019-02-07     Dwfish       Creat Buzzer Thread & Improve LED Thread\n");
 		rt_kprintf("* 2019-02-07     Dwfish       Creat OLED Thread\n"); 
 		rt_kprintf("* 2019-02-09     Dwfish       Creat Get_Gyroscope Thread.\n");
 	

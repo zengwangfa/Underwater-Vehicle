@@ -32,7 +32,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
-
+#include <elog_flash.h>
 #if !defined(ELOG_OUTPUT_LVL)
     #error "Please configure static output log level (in elog_cfg.h)"
 #endif
@@ -143,6 +143,7 @@ void (*elog_assert_hook)(const char* expr, const char* func, size_t line);
 extern void elog_port_output(const char *log, size_t size);
 extern void elog_port_output_lock(void);
 extern void elog_port_output_unlock(void);
+
 
 /**
  * EasyLogger initialize.
@@ -648,3 +649,28 @@ const char *elog_find_tag(const char *log, uint8_t lvl, size_t *tag_len) {
 
     return tag;
 }
+
+void elog_init_start(void)
+{
+	  /* 初始化日志系统 */
+    elog_init();
+		/* 设置日志格式 */
+    elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
+    elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
+    elog_set_fmt(ELOG_LVL_WARN, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+    elog_set_fmt(ELOG_LVL_INFO, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+    elog_set_fmt(ELOG_LVL_DEBUG,ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+    elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+
+    elog_set_filter_lvl(ELOG_LVL_TOTAL_NUM);
+
+#ifdef 	ELOG_COLOR_ENABLE  
+		/* 使能日志颜色 */
+    elog_set_text_color_enabled(true);
+#endif
+    /* 初始化EasyLogger的Flash插件 */
+    elog_flash_init();
+    /* 启动EasyLogger */
+    elog_start();
+}
+

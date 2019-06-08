@@ -37,7 +37,7 @@
 
 #define RT_USING_DEVICE
 #define RT_USING_CONSOLE
-#define RT_CONSOLEBUF_SIZE 128
+#define RT_CONSOLEBUF_SIZE 1024
 #define RT_CONSOLE_DEVICE_NAME "uart1"
 #define RT_VER_NUM 0x40001
 #define ARCH_ARM
@@ -85,9 +85,8 @@
 #define RT_USING_SERIAL
 #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_I2C
 #define RT_USING_PIN
-#define RT_USING_ADC
-#define RT_USING_PWM
 #define RT_USING_SPI
 #define RT_USING_SFUD
 #define RT_SFUD_USING_SFDP

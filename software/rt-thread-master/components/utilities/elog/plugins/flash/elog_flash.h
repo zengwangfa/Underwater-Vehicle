@@ -42,7 +42,7 @@ extern "C" {
 
 /* EasyLogger flash log plugin's software version number */
 #define ELOG_FLASH_SW_VERSION                "V2.0.1"
-
+void elog_init_start(void);
 /* elog_flash.c */
 ElogErrCode elog_flash_init(void);
 void elog_flash_output(size_t pos, size_t size);
