@@ -18,21 +18,27 @@ if GetDepend('RT_USING_PIN'):
     src += ['gpio.c']
 if GetDepend('RT_USING_SPI'):	
 	src += ['drv_spi.c']
-	
-if GetDepend('RT_USING_OV2640'):	
+
+#自己定义的 OV2640 Camera
+if GetDepend('RT_USING_OV2640'):	 
 	src += ['camera.c']
 	src += ['drv_ov2640.c']
 	src += ['drv_dcmi.c']
 	src += ['drv_sccb.c']	
 	
-src += ['drv_oled.c']
-src += ['drv_cpu_temp.c']
-src += ['drv_cpuusage.c']
+# 以下为默认添加的设备驱动
+
+
+
+src += ['drv_adc.c']
+src += ['drv_pwm.c']
 src += ['drv_i2c.c']
 src += ['drv_MS5837.c']
+src += ['drv_cpu_temp.c']
+src += ['drv_cpuusage.c']
+src += ['drv_oled.c']
 src += ['drv_ano.c']
 
-	
 CPPPATH = [cwd]
 
 group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)

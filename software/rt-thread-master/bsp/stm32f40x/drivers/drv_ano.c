@@ -159,8 +159,8 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 						ANO_Send_PID_Flag[4]=1;
 						ANO_Send_PID_Flag[5]=1;
 				
-						Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
-						Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
+						//Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
+						//Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
 				}
 				if(*(data_buf+4)==0x02)//读取飞行模式设置请求
 				{
@@ -173,8 +173,8 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 				if(*(data_buf+4)==0xA1)//恢复默认参数
 				{
 						Sort_PID_Flag = 2;	
-						Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
-						Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
+						//Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
+						//Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
 				}
 		}
 		
@@ -228,8 +228,8 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 				Sort_PID_Cnt++;
 				Sort_PID_Flag=1;
-				Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
-				Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
+				//Bling_Set(&Light_2,300,50,0.5,0,0,69,0);
+				//Bling_Set(&Light_3,300,100,0.5,0,0,70,0);
 		}
 }
 
@@ -551,7 +551,7 @@ void ANO_Data_Send_Voltage_Current(void)
 		data_to_send[_cnt++]=0x05;
 		data_to_send[_cnt++]=0;
 		
-		_temp = (int)(volatge*100);      //电压
+		_temp = (int)(Sensor.PowerSource.Voltage*100);      //电压
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
 	
@@ -715,7 +715,7 @@ void ANO_SEND_StateMachine(void)
 												0);
 				ANO_Send_PID_Flag[5]=0;
 				ANO_Cnt=0;
-				log_v("PID_Flash_Read -> success\r\n");
+				log_v("PID_Flash_Read -> success!");
 		}					
 }
 

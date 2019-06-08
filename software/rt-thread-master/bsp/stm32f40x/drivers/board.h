@@ -14,7 +14,23 @@
 
 #include <stm32f4xx.h>
 
-
+/* Flash 默认分区表 */
+#define RT_PARTITION_DEFAULT_TABLE               \
+{                                                \
+    {                                            \
+        /* EasyFlash Backup Section */           \
+        .name       = "ef_bak",                  \
+        .offset     = 0,                         \
+        .size       = 2 * 1024 * 1024,           \
+        .flags = PARTITION_WRITEABLE,            \
+    }, {                                         \
+        /* Fatfs*/                               \
+        .name       = "fatfs",                   \
+        .offset     = 2 * 1024 * 1024,           \
+        .size       = 14 * 1024 * 1024,          \
+        .flags = PARTITION_WRITEABLE,            \
+    }                                            \
+}
 
 /* board configuration */
 // <o> SDCard Driver <1=>SDIO sdcard <0=>SPI MMC card
