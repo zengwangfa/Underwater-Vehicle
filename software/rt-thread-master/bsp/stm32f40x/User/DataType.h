@@ -53,32 +53,36 @@ typedef struct
 		Vector3f Speed;   //速度
 		Vector3s Mag;     //磁场
 		Euler3f Euler;		//欧拉角
-		float Temperature;	//温度
-}JY901Type;
+		float Temperature;	//JY901温度
+}JY901_Type;
 
 typedef struct 
 {
-		float Temperature; 		//加速度
-		float Usage; 		//角速度
-}CPUType;
+		float Temperature; //CPU 温度
+		float Usage; 		   //CPU 使用率
+}CPU_Type;
 
 typedef struct 
 {
 		float Temperature; //水温
-		uint32 Value; 		 //深度
-		uint32 Init_Value; //初始化采集到得深度
-}MS5837Type;
+		uint32 PessureValue; 		 //压力值
+		uint32 Init_PessureValue; //初始化采集到得压力值
+}MS5837_Type;
 
+typedef struct 
+{
+		float Current; //水温
+		float Voltage;
+}PowerSource_Type;
 
 typedef struct{
 	
-		float Power_volatge;   //电源电压
-		int32 Depth;   				 //深度
-		CPUType CPU;           //CPU【温度】【使用率】
-		JY901Type JY901;       //【欧拉角】【速度】
-		MS5837Type MS5837;     //水【温度】【深度】
-
-}SensorType;
+		int32 Depth;  	 //深度
+		CPU_Type CPU;           //CPU【温度】【使用率】
+		JY901_Type JY901;       //【欧拉角】【速度】
+		MS5837_Type MS5837;     //水【温度】【深度】
+ 		PowerSource_Type PowerSource; //电源
+}Sensor_Type;
 
 
 typedef enum {
@@ -87,7 +91,7 @@ typedef enum {
 		System_ERROR_STATUS,
 }VehicleStatus_Enum;  //枚举系统状态
 
-extern SensorType Sensor;
+extern Sensor_Type Sensor;
 extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 
 /************重要定义***************/
