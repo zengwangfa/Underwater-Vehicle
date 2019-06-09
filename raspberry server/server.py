@@ -54,6 +54,8 @@ print("Receiving package...")
 while True:
     try:
         data=socket_con.recv(512)
+        print(type(data))
+        print(len(data))
         if len(data) > 0:
             print("Received:%s" % data)
             #if data == '1':
@@ -61,7 +63,7 @@ while True:
             #elif data == '0':
                 #GPIO.output(11, GPIO.LOW)
             #socket_con.send(data)
-            #print(type(data))
+            print(data)
             ser.write(data)
            # time.sleep(1)
             continue
