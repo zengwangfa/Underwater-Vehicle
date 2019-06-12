@@ -1,6 +1,10 @@
 ## 1、ROV航行器控制中心
 
-该航控 基于RT-Thread实时操作系统
+[软件说明](./software/README.md)
+[硬件说明](./hardware/README.md)
+[机械结构说明](./graphic model/README.md)
+
+该航控 基于国产RT-Thread实时操作系统
 
 | 硬件 | 描述 |
 | -- | -- |
@@ -11,10 +15,9 @@
 |SRAM| 192KB |
 |单元| FPU、DSP |
 
-
+- 系统架构简图：
 - ![构建图](https://images.gitee.com/uploads/images/2019/0314/162025_6336b3f6_2330851.png "构建图")
 
-- ![ROV 3D](https://images.gitee.com/uploads/images/2019/0527/140412_e23ebd0f_2330851.jpeg "ROV_3D Model.jpg")
 
 
 
