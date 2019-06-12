@@ -16,7 +16,6 @@
 
 - ![ROV 3D](https://images.gitee.com/uploads/images/2019/0527/140412_e23ebd0f_2330851.jpeg "ROV_3D Model.jpg")
 
-- ![ROV Controler 3D](https://images.gitee.com/uploads/images/2019/0527/140434_ed5fdc50_2330851.jpeg "ROV_Controler_3D Model.jpg")
 
 
 ## 2、目录说明
@@ -50,6 +49,8 @@
 ```
 
 ## 4、硬件结构
+- ![ROV Controler 3D](https://images.gitee.com/uploads/images/2019/0527/140434_ed5fdc50_2330851.jpeg "ROV_Controler_3D Model.jpg")
+
 ```
 +——Underwater_vehicle
 |--------+──DC 24V/48V 【Power management】 
@@ -88,7 +89,7 @@
 	- [X] Underwater_Vehicle核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] Underwater_Vehicle底板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] 变焦摄像头驱动控制板 by [@张静]	
-	- [X] 电源主板设计 by [@李浩辰]	
+	- [X] 电源主板设计 by [@李浩辰]	🆕
 	
 - [X] 控制程序
     - [X] 普通外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
@@ -100,15 +101,16 @@
 	- [X] 通信控制 by [@zengwangfa](https://github.com/zengwangfa)
 
 - [X] 上位机
-	- [X] C#上位机界面 by [@陈信任]
+	- [X] C#上位机界面 by [@陈信任] 🆕
 	- [X] 遥控器通信控制 by [@陈信任]	
 	
 - [X] 机械结构
-	- [X] 框架式结构CAD设计 by [@林麟亮]
+	- [X] 框架式结构CAD设计 by [@林麟亮] 🆕
 	- [X] 电子仓、电源仓设计 by [@林麟亮]
 	- [X] 云台3D打印模型 by [@洪华霖]
 	
-- [X] 其它
+- [X] 树莓派
+	- [X] server服务器by [@FatihBo] https://github.com/FatihBo
 
 
 
