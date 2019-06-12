@@ -1,3 +1,11 @@
+/*
+ * servo.c
+ *
+ *  Created on: 2019年2月30日
+ *      Author: zengwangfa
+ *      Notes:  推进器设备
+ */
+
 #include "focus.h"
 #include <rtthread.h>
 #include <elog.h>
@@ -40,28 +48,6 @@ void Focus_Zoom_Camera(uint8 *action)
 		}
 		*action = 0x00;
 }
-
-/* 设置 恢复初始值 */
-void focus_camera_clear(void)
-{
-		rt_device_write(focus_uart_device, 0,Camera_Clear_Data,    6);
-		log_i("focus_camera_clear... ");
-}
-MSH_CMD_EXPORT(focus_camera_clear,focus camera clear);
-
-
-/* 设置 放大 */
-void focus_camera_add(void)
-{
-		static int *p;
-		*p = 0x0l;
-		Focus_Zoom_Camera((uint8 *)p);
-		log_i("focus_camera_add ");
-}
-MSH_CMD_EXPORT(focus_camera_add,focus camera add);
-
-
-
 
 
 /**
@@ -116,6 +102,26 @@ void Camera_Focus_Data_Analysis(uint8 Data) //控制数据解析
 		}
 
 }
+
+/* 设置 恢复初始值 */
+void focus_camera_clear(void)
+{
+		rt_device_write(focus_uart_device, 0,Camera_Clear_Data,    6);
+		log_i("focus_camera_clear... ");
+}
+MSH_CMD_EXPORT(focus_camera_clear,focus camera clear);
+
+
+/* 设置 放大 */
+void focus_camera_add(void)
+{
+		static int *p;
+		*p = 0x0l;
+		Focus_Zoom_Camera((uint8 *)p);
+		log_i("focus_camera_add ");
+}
+MSH_CMD_EXPORT(focus_camera_add,focus camera add);
+
 
 
 

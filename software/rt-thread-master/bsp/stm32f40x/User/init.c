@@ -38,7 +38,7 @@
 u8 VehicleMode = ROV_Mode;   //ROV_Mode or AUV_Mode
 
 rt_spi_flash_device_t nor_flash;
-struct rt_thread thread_sys_monitor;
+
 extern struct rt_event init_event;/* ALL_init 事件控制块 */
 /*----------------------- Function Implement --------------------------------*/
 
@@ -65,10 +65,9 @@ void thread_entry_sys_monitor(void* parameter)
  */
 void sys_init_thread(void* parameter){
 	
-
 		rt_err_t result;
 
-    if ((nor_flash = rt_sfud_flash_probe("W25Q128", "spi20")) == NULL) { /* 初始化 nor_flash Flash 设备 */ 
+    if ((nor_flash = rt_sfud_flash_probe("W25Q128", "spi20")) == NULL) { /* 初始化 nor_flash W25Q128 Flash 设备 */ 
 				rt_kprintf("Error! No find W25Q128!");  //16MB Flash
         return;
     }
@@ -84,8 +83,6 @@ void sys_init_thread(void* parameter){
         log_e("init event failed.\n");
 		}
 
-
-
 }
 
 
@@ -94,13 +91,10 @@ static rt_err_t exception_hook(void *context) {
     extern long list_thread(void);
     uint8_t _continue = 1;
 	
+    rt_enter_critical();//禁止调度
 
-    rt_enter_critical();
-
-#ifdef RT_USING_FINSH
-    list_thread();
-#endif
-    while (_continue == 1);
+    list_thread();      //打印线程
+    while (_continue == 1);//异常卡死
     return RT_EOK;
 }
 
@@ -108,14 +102,11 @@ static rt_err_t exception_hook(void *context) {
 /* 设置RTT断言钩子 */
 static void rtt_user_assert_hook(const char* ex, const char* func, rt_size_t line) {
 	
-    rt_enter_critical();
+    rt_enter_critical();//禁止调度
+    elog_async_enabled(false); //禁用异步输出模式
+    elog_a("rtt", "(%s) has assert failed at %s:%ld.", ex, func, line);//打印造成断言C语言行数
 
-#ifdef ELOG_ASYNC_OUTPUT_ENABLE
-    elog_async_enabled(false);
-#endif
-    elog_a("rtt", "(%s) has assert failed at %s:%ld.", ex, func, line);
-
-    while(1);
+    while(1);//异常卡死
 }
 
 int rt_system_init(void)
@@ -182,12 +173,6 @@ void delay_us(u32 nTimer)
 			__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
 	}
 }
-
-//void delay_ms(u32 nTimer)
-//{
-//		u32 i=1000*nTimer;
-//		delay_us(i);
-//}
 
 
 

@@ -33,20 +33,23 @@ float Yaw = 0.0f;
  *  E—— 270°
  */
 
+/**
+  * @brief  Devices_Control(设备控制)
+  * @param  None
+  * @retval None
+  * @notice 
+  */
 void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
 {
 
-		rt_thread_mdelay(1200);//等待串口设备初始化成功
+		rt_thread_mdelay(1200);//等待外部设备初始化成功
 		while(1)
 		{
-				Devices_Control();
+				Light_Control(&Control.Light);  //探照灯控制
+				Propeller_Control(); //推进器控制
+			
 				rt_thread_mdelay(30);
 		}
-}
-
-void control_highSpeed_thread_entry(void *parameter)//高速控制线程
-{
-	
 }
 
 /**
@@ -55,75 +58,71 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
   * @retval None
   * @notice 
   */
-void Devices_Control(void)
+void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 {
-	
-		Light_Control(&Control.Light);  //探照灯控制
+		
+		rt_thread_mdelay(1200);//等待外部设备初始化成功
+		while(1)
+		{
+				Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
+				Depth_Control(); //深度控制
+			
+				rt_thread_mdelay(10);
+		}
 
-		Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
-	
-		Depth_Control(); //深度控制
-	
-		Propeller_Control();
-
-			/*
-				Control.Depth_Lock     = RC_Control_Data[3]; //深度锁定
-				Control.Direction_Lock = RC_Control_Data[4]; //方向锁定
-				Control.Move					 = RC_Control_Data[5]; //前后运动
-				Control.Translation		 = RC_Control_Data[6]; //左右云顶
-				Control.Vertical 			 = RC_Control_Data[7]; //垂直运动
-				Control.Rotate 				 = RC_Control_Data[8]; //旋转运动
-				
-				Control.Power 				 = RC_Control_Data[9];  //动力控制
-				Control.Light 				 = RC_Control_Data[10]; //灯光控制
-				
-				Control.Focus 				 = RC_Control_Data[11]; //变焦摄像头控制
-	
-				Control.Yuntai 				 = RC_Control_Data[12]; //云台控制
-				Control.Arm						 = RC_Control_Data[13]; //机械臂控制
-			*/
-	
 }
+/*
+	Control.Depth_Lock     = RC_Control_Data[3]; //深度锁定
+	Control.Direction_Lock = RC_Control_Data[4]; //方向锁定
+	Control.Move					 = RC_Control_Data[5]; //前后运动
+	Control.Translation		 = RC_Control_Data[6]; //左右云顶
+	Control.Vertical 			 = RC_Control_Data[7]; //垂直运动
+	Control.Rotate 				 = RC_Control_Data[8]; //旋转运动
+	
+	Control.Power 				 = RC_Control_Data[9];  //动力控制
+	Control.Light 				 = RC_Control_Data[10]; //灯光控制
+	
+	Control.Focus 				 = RC_Control_Data[11]; //变焦摄像头控制
 
+	Control.Yuntai 				 = RC_Control_Data[12]; //云台控制
+	Control.Arm						 = RC_Control_Data[13]; //机械臂控制
+*/
 
-
-int control_lowSpeed_thread_init(void)
+int control_thread_init(void)
 {
-		rt_thread_t control_tid;
+		rt_thread_t control_lowSpeed_tid;
+		rt_thread_t control_highSpeed_tid;
 		/*创建动态线程*/
-    control_tid = rt_thread_create("control_low",//线程名称
+    control_lowSpeed_tid = rt_thread_create("control_low",//线程名称
                     control_lowSpeed_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
-                    8,										 	 //线程优先级【priority】
+                    10,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
-    if (control_tid != RT_NULL){
-				rt_thread_startup(control_tid);
-		}
-		return 0;
-}
-INIT_APP_EXPORT(control_lowSpeed_thread_init);
-
-
-
-int control_highSpeed_thread_init(void)
-{
-		rt_thread_t control_tid;
-		/*创建动态线程*/
-    control_tid = rt_thread_create("control_high",//线程名称
+			/*创建动态线程*/
+    control_highSpeed_tid = rt_thread_create("control_high",//线程名称
                     control_highSpeed_thread_entry,				 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
-                    8,										 	 //线程优先级【priority】
+                    10,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
-
-    if (control_tid != RT_NULL){
-				rt_thread_startup(control_tid);
+	
+    if (control_lowSpeed_tid != RT_NULL && control_highSpeed_tid != RT_NULL  ){
+				rt_thread_startup(control_lowSpeed_tid);
+				rt_thread_startup(control_highSpeed_tid);
+				log_i("Control_Init()");
+		}
+		else {
+				log_e("Control Error!");
 		}
 		return 0;
 }
-INIT_APP_EXPORT(control_highSpeed_thread_init);
+INIT_APP_EXPORT(control_thread_init);
+
+
+
+
 
 void Angle_Control(void)
 {

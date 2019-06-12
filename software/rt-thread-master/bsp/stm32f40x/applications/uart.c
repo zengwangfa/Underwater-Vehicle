@@ -202,7 +202,12 @@ int device_uart_init(void)
 			
 					/* 以读写以及中断接打开串口设备 */
 				rt_device_open(gyro_uart_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_DMA_RX);
-
+				config.baud_rate = BAUD_RATE_115200;
+				config.data_bits = DATA_BITS_8;
+				config.stop_bits = STOP_BITS_1;
+				config.parity = PARITY_NONE;
+			
+				rt_device_control(gyro_uart_device, RT_DEVICE_CTRL_CONFIG, &config);
 				rt_sem_init(&gyro_rx_sem, "gyro_sem", 0, RT_IPC_FLAG_FIFO);
 				/* 设置接收回调函数 */
 				rt_device_set_rx_indicate(gyro_uart_device, gyroscope_uart_input);
@@ -238,7 +243,7 @@ int device_uart_init(void)
 																		control_thread_entry,
 																		RT_NULL, 
 																		512, 
-																		8,
+																		5,
 																		10);
     /* 创建 九轴 serial 线程 */
 		gyroscope_uart_tid = rt_thread_create("gyro_uart",

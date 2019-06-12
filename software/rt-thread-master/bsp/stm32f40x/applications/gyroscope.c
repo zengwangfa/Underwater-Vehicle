@@ -197,18 +197,18 @@ void print_gyroscope(void)
 	
 		return;
 }
-MSH_CMD_EXPORT(print_gyroscope,print Sensor.JY901[a]);
+//MSH_CMD_EXPORT(print_gyroscope,print Sensor.JY901[a]);
 
 
 /* Get ÎÂ¶È  Temperature */
 float print_temperature(void)
 {
 		char str[50];
-		sprintf(str,"Temperature:%.2f C\r\n",Sensor.JY901.Temperature);
+		sprintf(str,"JY901_Temperature:%.2f C\r\n",Sensor.JY901.Temperature);
 		log_i(str);	
 		return Sensor.JY901.Temperature;
 }
-MSH_CMD_EXPORT(print_temperature, print Temperature[T]);
+//MSH_CMD_EXPORT(print_temperature, print Temperature[T]);
 
 
 

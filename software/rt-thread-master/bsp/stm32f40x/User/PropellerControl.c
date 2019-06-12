@@ -132,9 +132,7 @@ void Propeller_Output(void)
 					Horizontal_Propeller_Power_Clear();//10次更新PWM后清空
 		}
 		
-//		if(Frame_EndFlag == 1 && Control.Move !=0x00 && Control.Translation != 0x00 && Control.Rotate != 0x00 &&(PropellerPower.rightUp != 0 || PropellerPower.leftUp != 0|| PropellerPower.rightDown != 0|| PropellerPower.leftDown != 0)){
-//				Horizontal_Propeller_Power_Clear();//10次更新PWM后清空
-//		}
+
 		
 }
 
@@ -142,7 +140,7 @@ void Horizontal_Propeller_Power_Clear(void)//水平方向推力清零 10次后清空
 {
 		clear_count ++;
 		if(Control.Move ==0x00 && Control.Translation == 0x00 && Control.Rotate == 0x00){
-				if(clear_count >= 20 ){ //10次都无控制字清除 推进器动力
+				if(clear_count >= 15 ){ //10次都无控制字清除 推进器动力
 						PropellerPower.rightUp = 0;
 						PropellerPower.leftDown = 0;
 						PropellerPower.leftUp = 0;
@@ -256,6 +254,6 @@ void robot_upDown(float depth_output)
 		
 		
 		PropellerPower.leftMiddle   = - depth_output;//正反桨
-		PropellerPower.rightMiddle  =  depth_output;
+		PropellerPower.rightMiddle  =   depth_output;
 }
 

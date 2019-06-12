@@ -29,9 +29,7 @@ extern struct rt_event init_event; /* ALL_init 事件控制块 */
 void sensor_lowSpeed_thread_entry(void* parameter)
 {
 		uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
-	
 		rt_thread_mdelay(1500);//等待1.5s系统稳定再获取数据
-		Sensor.MS5837.PessureValue = get_ms5837_init_pressure(); //获取压力初值
 
 		while(1)
 		{
@@ -54,15 +52,16 @@ void sensor_lowSpeed_thread_entry(void* parameter)
   */
 void sensor_highSpeed_thread_entry(void* parameter)
 {
-		uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
-	
+		uint8 ON_OFF = 0; //自锁开关
 		rt_thread_mdelay(1500);//等待1.5s系统稳定再获取数据
-		Sensor.MS5837.PessureValue = get_ms5837_init_pressure(); //获取压力初值
 
 		while(1)
 		{
-			
-			
+				if(0 == ON_OFF){
+						Sensor.MS5837.Init_PessureValue = get_ms5837_init_pressure(); //获取压力初值 
+						ON_OFF = 1;
+				}
+
 				MS5837_Convert();   //MS5837设备数据转换
 				JY901_Convert(&Sensor.JY901); //JY901数据转换
 				rt_thread_mdelay(10);
@@ -100,8 +99,7 @@ int sensor_thread_init(void)
 						log_e("MS5837_Init_Failed!");
 				}
 				
-				if(adc_init())
-				{
+				if(adc_init()){
 						log_i("Adc_Init()");
 				}
 				rt_thread_startup(sensor_lowSpeed_tid);
@@ -120,6 +118,7 @@ void MS5837_Convert(void)//MS5837数据转换
 		Sensor.MS5837.Temperature  = get_ms5837_temperature();
 		Sensor.MS5837.PessureValue = get_ms5837_pressure();
 		Sensor.Depth = (int)((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue)/10);
+
 }
 
 
@@ -128,14 +127,18 @@ void MS5837_Convert(void)//MS5837数据转换
 void print_pressure(void)
 {
 		static char str[50] = {0};
-
-
-		MS583703BA_getTemperature();//获取温度
-		MS583703BA_getPressure();   //获取大气压
-	
-		sprintf(str,"MS_Temp2:%f\n",MS5837_Temperature);
+		/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
+		rt_enter_critical();
+		print_gyroscope();
+		print_temperature();
+		
+		sprintf(str,"MS_Temp:%f\n",get_ms5837_temperature());
 		rt_kprintf(str);
-		rt_kprintf("MS_Pressure:%d\n",MS5837_Pressure);//MS5837_Pressure
+
+		rt_kprintf("MS_Pressure:%d\n",get_ms5837_pressure());//MS5837_Pressure
+		rt_kprintf("MS_Init_Pressure:%d\n",Sensor.MS5837.Init_PessureValue);//MS5837_Pressure	
+		/* 调度器解锁 */
+		rt_exit_critical();
 }
 MSH_CMD_EXPORT(print_pressure, printf pressure[pa]);
 

@@ -552,14 +552,14 @@
               <FilePath>applications\propeller.c</FilePath>
             </File>
             <File>
-              <FileName>sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\sensor.c</FilePath>
-            </File>
-            <File>
               <FileName>servo.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\servo.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\sensor.c</FilePath>
             </File>
             <File>
               <FileName>applications_timer.c</FileName>

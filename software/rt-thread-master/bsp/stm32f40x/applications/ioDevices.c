@@ -36,9 +36,7 @@
 /* ALL_init  ¬º˛øÿ÷∆øÈ. */
 extern struct rt_event init_event;
 
-
-
-Buzzer_Type Beep;
+Buzzer_Type Beep;  //∑‰√˘∆˜øÿ÷∆∆˜
 uint8 boma_value = 0;	//‘›¥Ê≤¶¬Î◊¥Ã¨ ≈–∂œ≤¶¬Î◊¥Ã¨ «∑Ò∏ƒ±‰
 
 /*----------------------- Function Implement --------------------------------*/
@@ -46,11 +44,11 @@ uint8 boma_value = 0;	//‘›¥Ê≤¶¬Î◊¥Ã¨ ≈–∂œ≤¶¬Î◊¥Ã¨ «∑Ò∏ƒ±‰
 void ioDevices_thread_entry(void* parameter)// --- KEY   BOMA ---
 {
 		if(System_NORMAL_STATUS == boma_value_get())
-				Buzzer_Set(&Beep,3,1);	
+				//Buzzer_Set(&Beep,3,1);	
     while (1)
     {
 				Buzzer_Process(&Beep); //∑‰√˘∆˜øÿ÷∆»ŒŒÒ
-				if(boma_value != boma_value_get()){
+				if(boma_value != boma_value_get()){ //»Ù≤¶¬Îø™πÿ ≤®∂Ø£¨∑‰√˘∆˜œÏ“ª…˘
 						Buzzer_Set(&Beep,1,1);	
 						boma_value = boma_value_get();	
 						log_i("\nCurrent Change: BOMA_Value = %d", boma_value);
@@ -88,18 +86,6 @@ void key_down(void *args)
 
 
 
-/*°æWIFI°ø÷ÿ∆Ù */
-int wifi_reload(void)
-{
-		rt_pin_write(WIFI_RELOAD_PIN ,PIN_LOW);
-		rt_thread_mdelay(4000);
-		rt_pin_write(WIFI_RELOAD_PIN ,PIN_HIGH);
-		rt_thread_mdelay(1000);
-		log_d("WIFI Reload!\r\n");
-		return 0;
-
-}
-MSH_CMD_EXPORT(wifi_reload,wifi reload);
 
 
 
@@ -163,12 +149,23 @@ int ioDevices_thread_init(void)
 				boma_value = boma_value_get();	//≥ı ºªØµ√µΩµ±«∞≤¶¬Î◊¥Ã¨ --> VehicleStatus
 				log_i("IoDev_Init()");
 				rt_thread_startup(ioDecices_tid);
-				//rt_event_send(&init_event, KEY_EVENT);
 		}
 		return 0;
 }
 INIT_APP_EXPORT(ioDevices_thread_init);
 
+/*°æWIFI°ø÷ÿ∆ÙMSH√¸¡Ó */
+int wifi_reload(void)
+{
+		rt_pin_write(WIFI_RELOAD_PIN ,PIN_LOW);
+		rt_thread_mdelay(4000);
+		rt_pin_write(WIFI_RELOAD_PIN ,PIN_HIGH);
+		rt_thread_mdelay(1000);
+		log_d("WIFI Reload!\r\n");
+		return 0;
+
+}
+MSH_CMD_EXPORT(wifi_reload,wifi reload);
 
 
 

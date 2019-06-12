@@ -240,18 +240,18 @@ void MS583703BA_getPressure(void)
 		MS5837_Temperature=(MS_TEMP-T2)/100;
 }
 
+
 uint32 get_ms5837_init_pressure(void)
 {		
 		uint32 ms5837_value = 0;
 		uint32 ms5837_init_value = 0;
-
 		for(char i = 0;i < 10;i++){  //先行获取 以防数据出错
 				MS583703BA_getTemperature();//获取外部温度
 				MS583703BA_getPressure();   //获取水压
 				rt_thread_mdelay(10);
 			
 				ms5837_value = get_ms5837_pressure();
-				if(ms5837_init_value > ms5837_value || ms5837_init_value == 0 ){//若 MS5837初始化值 
+				if(ms5837_init_value > ms5837_value || ms5837_init_value == 0 ){//若 MS5837初始化值
 						ms5837_init_value = ms5837_value;
 				}
 		}
