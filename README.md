@@ -92,13 +92,11 @@
 	- [X] 电源主板设计 by [@李浩辰]	🆕
 	
 - [X] 控制程序
-    - [X] 普通外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
-        - [X] Add LED/KEY/BUZZER by [@zengwangfa](https://github.com/zengwangfa) 
-        - [X] Add OLED/Gyroscope/ADC/PWM/FLASH by [@zengwangfa](https://github.com/zengwangfa) 
+    - [X] 外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
     - [X] 内置MSH方法 by [@zengwangfa](https://github.com/zengwangfa)
-    - [X] debug上位机、PID调试方法 by [@zengwangfa](https://github.com/zengwangfa)
-	- [X] PID定深控制 by [@zengwangfa](https://github.com/zengwangfa)
-	- [X] 通信控制 by [@zengwangfa](https://github.com/zengwangfa)
+    - [X] debug上位机:(Vcan【山外】/Ano【匿名】) by [@zengwangfa](https://github.com/zengwangfa)
+	- [X] 控制简易框架 by [@zengwangfa](https://github.com/zengwangfa)
+	- [X] 通信控制 by [@zengwangfa](https://github.com/zengwangfa)🆕
 
 - [X] 上位机
 	- [X] C#上位机界面 by [@陈信任] 🆕
@@ -110,7 +108,7 @@
 	- [X] 云台3D打印模型 by [@洪华霖]
 	
 - [X] 树莓派
-	- [X] server服务器by [@FatihBo] https://github.com/FatihBo
+	- [X] server服务器by [@FatihBo](https://github.com/FatihBo)🆕
 
 
 
