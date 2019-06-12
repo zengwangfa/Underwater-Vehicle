@@ -106,9 +106,9 @@
 	- [X] 框架式结构CAD设计 by [@林麟亮] 🆕
 	- [X] 电子仓、电源仓设计 by [@林麟亮]
 	- [X] 云台3D打印模型 by [@洪华霖]
-	
+
 - [X] 树莓派
-	- [X] server服务器by [@FatihBo](https://github.com/FatihBo)🆕
+	- [X] Server服务器by [@FatihBo](https://github.com/FatihBo)🆕
 
 
 
