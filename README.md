@@ -71,7 +71,7 @@
 |        │       ├── USR-C216 Wifi [UART]   
 |        │       ├── OV2640 Camera [DCMI-DMA]
 |        │       └──...... 
-|        +──Vehicle Devices
+|--------+──Vehicle Devices
 |        └── Searchlights [GPIO]
 |        ├── Propellers [PWM]
 |        ├── Servo Motor for Mechanical Arm [PWM]
