@@ -20,7 +20,7 @@
 #include "filter.h"
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
-
+Sensor_Type Sensor;//传感器参数
 /**
   * @brief  sensor_lowSpeed_thread_entry(低速获取传感器任务函数)
   * @param  void* parameter
@@ -53,7 +53,7 @@ void sensor_lowSpeed_thread_entry(void* parameter)
   */
 void sensor_highSpeed_thread_entry(void* parameter)
 {
-		uint8 ON_OFF = 0; //自锁开关
+		static uint8 ON_OFF = 0; //自锁开关
 		rt_thread_mdelay(1500);//等待1.5s系统稳定再获取数据
 
 		while(1)
@@ -61,7 +61,7 @@ void sensor_highSpeed_thread_entry(void* parameter)
 
 				if(0 == ON_OFF){
 						Sensor.MS5837.Init_PessureValue = get_ms5837_init_pressure(); //获取压力初值 
-						ON_OFF = 1;
+						ON_OFF = 1; //自锁
 				}
 
 				MS5837_Convert();   //MS5837设备数据转换

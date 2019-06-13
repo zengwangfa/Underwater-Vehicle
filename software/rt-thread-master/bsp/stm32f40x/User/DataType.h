@@ -75,7 +75,7 @@ typedef struct
 		float Voltage;
 }PowerSource_Type;
 
-typedef struct{
+typedef  struct{
 	
 		int32 Depth;  	 //深度
 		CPU_Type CPU;           //CPU【温度】【使用率】

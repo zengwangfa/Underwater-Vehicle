@@ -19,7 +19,7 @@ typedef struct {
 		uint8 pagenum;  				//Ò³Âë
 		uint8 pagechange;
 	  uint8 pagechange_flag;
-		char *pagename[20]; //Ò³Ãû
+		char *pagename[10]; //Ò³Ãû
 }Oled_Type;
 
 

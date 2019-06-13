@@ -11,7 +11,7 @@
 #include <rtthread.h>
 #include "uart.h"
 #include "gyroscope.h"
-Sensor_Type Sensor;//传感器参数
+
 uint8 Return_Data[22] = {0};
 uint8 device_hint_flag;		//设备提示字符
 

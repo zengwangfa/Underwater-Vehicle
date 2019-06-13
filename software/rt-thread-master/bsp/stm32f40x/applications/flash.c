@@ -51,6 +51,7 @@ int Normal_Parameter_Init_With_Flash(void)
 		Normal_Parameter_SelfCheck_With_Flash();//Flash参数自检 若为 0 则为 非正常数据，则不传递给真实数据 
 
 		log_i("Flash_Read()");
+
 		return 0;
 }
 INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash); //先将此句注释，msh />输入“Flash_Update”，再打开此句 再下载
@@ -59,7 +60,7 @@ INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash); //先将此句注释，msh />输入“F
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash参数自检 若为 0 则为 非正常数据 
 {
 		Parameter_SelfCheck( (uint32 *)&VehicleMode,&Normal_Parameter[VEHICLE_MODE_e] );//航行器模式  rov/auv
-		Parameter_SelfCheck( (uint32 *)&debug_tool, &Normal_Parameter[DEBUG_TOOL_e] );   //debug工具   vcan/ano
+		Parameter_SelfCheck( (uint32 *)&debug_tool, &Normal_Parameter[DEBUG_TOOL_e] );   //debug工具  vcan/ano
 		
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.MaxValue,&Normal_Parameter[ROBOTIC_ARM_MAX_VALUE_e] );//机械臂参数
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.MinValue,&Normal_Parameter[ROBOTIC_ARM_MIN_VALUE_e] );

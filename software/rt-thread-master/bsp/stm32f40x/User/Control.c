@@ -62,7 +62,7 @@ void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
 void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 {
 		
-		rt_thread_mdelay(1200);//等待外部设备初始化成功
+		rt_thread_mdelay(3000);//等待外部设备初始化成功
 		while(1)
 		{
 				Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制

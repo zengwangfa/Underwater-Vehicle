@@ -29,13 +29,15 @@ PropellerError_Type  PropellerError = {0,0,0,0,0,0}; //推进器偏差值
 
 void PWM_Update(PropellerPower_Type* power)
 {
-		TIM_SetCompare1(TIM1,PropellerParameter.PowerMed + power->rightUp);     //右上	 E9	
-		TIM_SetCompare2(TIM1,PropellerParameter.PowerMed + power->leftDown);    //左下	 E11
-		TIM_SetCompare3(TIM1,PropellerParameter.PowerMed + power->leftUp); 	    //左上   E13
-		TIM_SetCompare4(TIM1,PropellerParameter.PowerMed + power->rightDown);   //右下   E14
-	
-		TIM_SetCompare1(TIM4,PropellerParameter.PowerMed + power->leftMiddle);  //左中   D12
-		TIM_SetCompare2(TIM4,PropellerParameter.PowerMed + power->rightMiddle); //右中   D13
+		if(1 == Propeller_Init_Flag){
+				TIM_SetCompare1(TIM1,PropellerParameter.PowerMed + power->rightUp);     //右上	 E9	
+				TIM_SetCompare2(TIM1,PropellerParameter.PowerMed + power->leftDown);    //左下	 E11
+				TIM_SetCompare3(TIM1,PropellerParameter.PowerMed + power->leftUp); 	    //左上   E13
+				TIM_SetCompare4(TIM1,PropellerParameter.PowerMed + power->rightDown);   //右下   E14
+			
+				TIM_SetCompare1(TIM4,PropellerParameter.PowerMed + power->leftMiddle);  //左中   D12
+				TIM_SetCompare2(TIM4,PropellerParameter.PowerMed + power->rightMiddle); //右中   D13
+		}
 }
 
 
@@ -53,30 +55,30 @@ void PWM_Update(PropellerPower_Type* power)
 ********************************************/
 void Propeller_Init(void)//这边都需要经过限幅在给定
 {
-
-		TIM_SetCompare1(TIM1, PropellerPower_Min);  		//最高转速信号   	水平推进器1号
-		TIM_SetCompare2(TIM1, PropellerPower_Min);  		//最高转速信号    水平推进器2号
-		TIM_SetCompare3(TIM1, PropellerPower_Min); 		  //最高转速信号    水平推进器3号
-		TIM_SetCompare4(TIM1, PropellerPower_Min);  		//最高转速信号    水平推进器4号
+		rt_thread_mdelay(500);  //0.5s
+		TIM_SetCompare1(TIM1, 2000);  		//最高转速信号   	水平推进器1号
+		TIM_SetCompare2(TIM1, 2000);  		//最高转速信号    水平推进器2号
+		TIM_SetCompare3(TIM1, 2000); 		  //最高转速信号    水平推进器3号
+		TIM_SetCompare4(TIM1, 2000);  		//最高转速信号    水平推进器4号
 	
-		TIM_SetCompare1(TIM4, PropellerPower_Min); 	 	//最高转速信号  	垂直推进器1号
-		TIM_SetCompare2(TIM4, PropellerPower_Min);	  //最高转速信号  	垂直推进器2号
+		TIM_SetCompare1(TIM4, 2000); 	 	//最高转速信号  	垂直推进器1号
+		TIM_SetCompare2(TIM4, 2000);	  //最高转速信号  	垂直推进器2号
 
-		TIM_SetCompare3(TIM4, PropellerPower_Med);		//中值
+		TIM_SetCompare3(TIM4, 1500);		//中值
 		//TIM_SetCompare4(TIM4, 1700);		//向上	
 
 
 		rt_thread_mdelay(500);  //0.5s
 
-		TIM_SetCompare1(TIM1, PropellerPower_Med);			//停转信号
-		TIM_SetCompare2(TIM1, PropellerPower_Med);			//停转信号
-		TIM_SetCompare3(TIM1, PropellerPower_Med);			//停转信号
-		TIM_SetCompare4(TIM1, PropellerPower_Med);			//停转信号
+		TIM_SetCompare1(TIM1, 1500);			//停转信号
+		TIM_SetCompare2(TIM1, 1500);			//停转信号
+		TIM_SetCompare3(TIM1, 1500);			//停转信号
+		TIM_SetCompare4(TIM1, 1500);			//停转信号
 	
-		TIM_SetCompare1(TIM4, PropellerPower_Med);		//停转信号
-		TIM_SetCompare2(TIM4, PropellerPower_Med);		//停转信号
+		TIM_SetCompare1(TIM4, 1500);		//停转信号
+		TIM_SetCompare2(TIM4, 1500);		//停转信号
 
-		TIM_SetCompare3(TIM4, PropellerPower_Med);		//中值
+		TIM_SetCompare3(TIM4, 1500);		//中值
 		//TIM_SetCompare4(TIM4, 1000);		//向下
 		
 		rt_thread_mdelay(500);  //0.5s

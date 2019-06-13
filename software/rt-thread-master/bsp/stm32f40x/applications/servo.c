@@ -110,10 +110,14 @@ void YunTai_Control(uint8 *action)
   */
 void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
 {
-
+		TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
+		TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
 		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
 		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
-		Propeller_Init();
+	
+		rt_thread_mdelay(500);
+		Propeller_Init();       //推进器初始化
+		rt_thread_mdelay(100);
 		while(1)
 		{
 				YunTai_Control(&Control.Yuntai); //云台控制
@@ -134,12 +138,10 @@ int servo_thread_init(void)
                     servo_thread_entry,			 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
+                    15,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (servo_tid != RT_NULL){
-				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
-				TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
 
 				log_i("Servo_init()");
 			
