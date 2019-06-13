@@ -120,7 +120,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>??</Name>
+          <Name>槾??祑槾??祑槾?</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -198,32 +198,37 @@
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>MS5837_Pressure,0x0A</ItemText>
+          <ItemText>PropellerPower,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>MS5837_Temperature</ItemText>
+          <ItemText>Total_Controller</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Expect_Depth,0x0A</ItemText>
+          <ItemText>res_value,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PropellerPower,0x0A</ItemText>
+          <ItemText>(short)res_value,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Total_Controller.High_Position_Control.Control_OutPut</ItemText>
+          <ItemText>RoboticArm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Total_Controller</ItemText>
+          <ItemText>RC_Control_Data</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>debug_count,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

@@ -63,7 +63,7 @@ void Propeller_Init(void)//这边都需要经过限幅在给定
 		TIM_SetCompare2(TIM4, PropellerPower_Min);	  //最高转速信号  	垂直推进器2号
 
 		TIM_SetCompare3(TIM4, PropellerPower_Med);		//中值
-		TIM_SetCompare4(TIM4, 1700);		//向上	
+		//TIM_SetCompare4(TIM4, 1700);		//向上	
 
 
 		rt_thread_mdelay(500);  //0.5s

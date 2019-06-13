@@ -17,6 +17,7 @@
 #include "drv_adc.h"
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
+#include "filter.h"
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
 
@@ -57,6 +58,7 @@ void sensor_highSpeed_thread_entry(void* parameter)
 
 		while(1)
 		{
+
 				if(0 == ON_OFF){
 						Sensor.MS5837.Init_PessureValue = get_ms5837_init_pressure(); //获取压力初值 
 						ON_OFF = 1;
@@ -64,6 +66,8 @@ void sensor_highSpeed_thread_entry(void* parameter)
 
 				MS5837_Convert();   //MS5837设备数据转换
 				JY901_Convert(&Sensor.JY901); //JY901数据转换
+						
+
 				rt_thread_mdelay(10);
 		}
 }
@@ -80,14 +84,14 @@ int sensor_thread_init(void)
                     sensor_lowSpeed_thread_entry,		 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
-                    25,										 	 //线程优先级【priority】
+                    30,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
 	  sensor_highSpeed_tid = rt_thread_create("sensor",  //线程名称
                     sensor_highSpeed_thread_entry,		 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     1024,										 //线程栈大小，单位是字节【byte】
-                    25,										 	 //线程优先级【priority】
+                    15,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (sensor_lowSpeed_tid != RT_NULL && sensor_highSpeed_tid != RT_NULL){
@@ -112,11 +116,19 @@ INIT_APP_EXPORT(sensor_thread_init);
 
 void MS5837_Convert(void)//MS5837数据转换
 {
+		static uint32 res_value[10] = {0};
+		static uint8 i = 0;
 		MS583703BA_getTemperature();//获取外部温度
 		MS583703BA_getPressure();   //获取水压
 
+		if(i >= 9){i = 0;}
+		res_value[i++] = get_ms5837_pressure();
+		
 		Sensor.MS5837.Temperature  = get_ms5837_temperature();
-		Sensor.MS5837.PessureValue = get_ms5837_pressure();
+		Sensor.MS5837.PessureValue = Bubble_Filter(res_value);
+	
+	
+	
 		Sensor.Depth = (int)((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue)/10);
 
 }

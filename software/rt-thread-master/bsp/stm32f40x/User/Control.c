@@ -42,7 +42,8 @@ float Yaw = 0.0f;
 void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
 {
 
-		rt_thread_mdelay(1200);//等待外部设备初始化成功
+		rt_thread_mdelay(3000);//等待外部设备初始化成功
+		
 		while(1)
 		{
 				Light_Control(&Control.Light);  //探照灯控制

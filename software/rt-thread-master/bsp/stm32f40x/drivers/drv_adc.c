@@ -32,7 +32,7 @@ float get_voltage_value(void)
 {
 		uint8 i;
 		float voltage = 0.0f;
-		short adc_value[10] = {0};
+		uint32 adc_value[10] = {0};
 		
 		for(i = 0;i < 20;i+=2){
 				adc_value[i/2] = get_adc(ADC_Channel_10);//取偶次采样值

@@ -1,7 +1,7 @@
 #ifndef __FILTER_H_
 #define __FILTER_H_
 
-
+#include "DataType.h"
 
 typedef struct
 {
@@ -15,7 +15,7 @@ typedef struct
 		float b[3];
 }Butter_Parameter;
 
-short Bubble_Filter(short *value);
+uint32 Bubble_Filter(uint32 *value);
 
 float KalmanFilter(float *Original_Data);
 

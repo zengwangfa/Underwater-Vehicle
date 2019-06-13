@@ -1,14 +1,14 @@
 #include "sys.h"
 #include <math.h>
 #include "filter.h"
-
+#include "DataType.h"
 
 /* 冒泡 中值滤波  */
-short Bubble_Filter(short *value)
+uint32 Bubble_Filter(uint32 *value)
 {
 		u8 i,j,swapFlag; //交换标志位
-		short res = 0;   //reserve 暂存
-		short med = 0;   //中值
+		uint32 res = 0;   //reserve 暂存
+		uint32 med = 0;   //中值
 
 		for(j = 0;j < 10-1;j++){
 			  swapFlag = 0; //每一个大循环检验
@@ -24,7 +24,7 @@ short Bubble_Filter(short *value)
 				if(0 == swapFlag) break;//未发生交换，则提前结束
 		}
 		med = (*(value+4)+ *(value+5)+ *(value+6))/3;	//中间平均值	
-		return (short)med;
+		return med;
 } 
 
 /*
