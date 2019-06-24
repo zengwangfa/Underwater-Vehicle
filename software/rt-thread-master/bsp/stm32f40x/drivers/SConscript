@@ -26,9 +26,11 @@ if GetDepend('RT_USING_OV2640'):
 	src += ['drv_dcmi.c']
 	src += ['drv_sccb.c']	
 	
+#自己定义的 SPL1301
+if GetDepend('RT_USING_SPL1301'):	 
+	src += ['SPL1301.c']
+
 # 以下为默认添加的设备驱动
-
-
 
 src += ['drv_adc.c']
 src += ['drv_pwm.c']

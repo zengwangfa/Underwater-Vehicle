@@ -652,6 +652,11 @@
               <FileType>1</FileType>
               <FilePath>.\drivers\drv_adc.c</FilePath>
             </File>
+            <File>
+              <FileName>drv_spl1301.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\drv_spl1301.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
