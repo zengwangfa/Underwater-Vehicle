@@ -141,12 +141,16 @@ void print_pressure(void)
 		static char str[50] = {0};
 		/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
 		rt_enter_critical();
-		print_gyroscope();
-		print_temperature();
+		print_gyroscope();  //打印角度
 		
+		print_temperature();//打印温度
+		
+		sprintf(str,"Depth:%d",Sensor.Depth);
+		log_i(str);	
+
 		sprintf(str,"MS_Temp:%f\n",get_ms5837_temperature());
 		rt_kprintf(str);
-
+	
 		rt_kprintf("MS_Pressure:%d\n",get_ms5837_pressure());//MS5837_Pressure
 		rt_kprintf("MS_Init_Pressure:%d\n",Sensor.MS5837.Init_PessureValue);//MS5837_Pressure	
 		/* 调度器解锁 */

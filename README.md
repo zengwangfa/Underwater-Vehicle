@@ -96,7 +96,7 @@
 - [X] 电路设计
 	- [X] Underwater_Vehicle核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] Underwater_Vehicle底板 by [@zengwangfa](https://github.com/zengwangfa)	
-	- [X] 变焦摄像头驱动控制板 by [@张静]	
+	- [X] 变焦摄像头驱动控制板 by [@张静](https://gitee.com/xiaojing_1)	
 	- [X] 电源主板设计 by [@李浩辰]	🆕
 	
 - [X] 控制程序

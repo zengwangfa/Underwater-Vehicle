@@ -146,11 +146,8 @@ struct SQ
 /* Get时间  time */
 void get_time(void);
 
-
 void print_gyroscope(void);
-/* Get 温度  Temperature */
 float print_temperature(void);
-
 /*-----------------应用函数----------------*/
 
 void JY901_Convert(JY901_Type * pArr);

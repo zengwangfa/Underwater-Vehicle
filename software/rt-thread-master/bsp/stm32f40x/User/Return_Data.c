@@ -65,7 +65,9 @@ uint8 get_decimal(float data){ //得到浮点型 的1位小数位
 
 		return (uint8)((float)(data - (int)data)*100);
 }
-
+short res_Roll = 0;
+short res_Pitch = 0;
+short res_Yaw = 0;
 /**
   * @brief  Convert_Return_Computer_Data(转换返回上位机的数据包)
   * @param  None
@@ -74,6 +76,11 @@ uint8 get_decimal(float data){ //得到浮点型 的1位小数位
   */
 void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 {
+	
+		res_Roll = (short)((Sensor.JY901.Euler.Roll+180) *100); 
+		res_Pitch = (short)((Sensor.JY901.Euler.Pitch+180)*100);
+		res_Yaw = (short)((Sensor.JY901.Euler.Yaw+180)*100);
+	
 		Return_Data[0] = Sensor.PowerSource.Voltage; //整数倍
 		Return_Data[1] = get_decimal(Sensor.PowerSource.Voltage);//小数的100倍
 	
@@ -88,14 +95,14 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 		Return_Data[8] = Sensor.Depth ; //低8位
 	
 	
-		Return_Data[9]  = stcAngle.angle[0] >> 8 ; // Roll 高8位
-		Return_Data[10] = stcAngle.angle[0]; //低8位
+		Return_Data[9]  =  res_Yaw>> 8 ; // Roll 高8位
+		Return_Data[10] = (uint8)res_Yaw; //低8位
 	
-		Return_Data[11] = stcAngle.angle[1] >> 8;// Pitch 高8位
-		Return_Data[12] = stcAngle.angle[1];//低8位
+		Return_Data[11] = res_Pitch >> 8;// Pitch 高8位
+		Return_Data[12] = (uint8)res_Pitch;//低8位
 	
-		Return_Data[13] = stcAngle.angle[2] >> 8; // Yaw 高8位
-		Return_Data[14] = stcAngle.angle[2]; //低8位
+		Return_Data[13] = res_Roll >> 8; // Yaw 高8位
+		Return_Data[14] = (uint8)res_Roll; //低8位
 		
 		Return_Data[15] = 0x01;//(uint8)Sensor.JY901.Speed.x;//   x轴航速
 		Return_Data[16] = 0x02;//device_hint_flag;  //设备提示字符

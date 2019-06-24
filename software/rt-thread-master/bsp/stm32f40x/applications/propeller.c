@@ -87,6 +87,34 @@ void Propeller_Init(void)//这边都需要经过限幅在给定
 		Propeller_Init_Flag = 1;
 }
 
+/*【推进器】 【动一下】防重启MSH方法 */
+static void propeller_reset(int argc, char **argv)
+{
+
+		TIM_SetCompare1(TIM1, 1520);			//停转信号
+		TIM_SetCompare2(TIM1, 1520);			//停转信号
+		TIM_SetCompare3(TIM1, 1520);			//停转信号
+		TIM_SetCompare4(TIM1, 1520);			//停转信号
+	
+		TIM_SetCompare1(TIM4, 1520);		//停转信号
+		TIM_SetCompare2(TIM4, 1520);		//停转信号
+}
+MSH_CMD_EXPORT(propeller_reset,ag: propeller set 1600);
+
+/*【推进器】 【Stop】MSH方法 */
+static void propeller_stop(int argc, char **argv)
+{
+		PropellerPower.leftDown = 0;
+	  PropellerPower.leftMiddle = 0;
+		PropellerPower.leftUp = 0;
+		PropellerPower.rightDown = 0;
+		PropellerPower.rightMiddle = 0;
+		PropellerPower.rightUp = 0;
+}
+MSH_CMD_EXPORT(propeller_stop,ag: propeller_stop);
+
+
+
 /*【推进器】 修改 【正向最大值】MSH方法 */
 static int propeller_maxvalue_set(int argc, char **argv)
 {
