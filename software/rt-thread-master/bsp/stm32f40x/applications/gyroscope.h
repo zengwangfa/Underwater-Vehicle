@@ -144,7 +144,7 @@ struct SQ
 /*-----------------MSHÃüÁîº¯Êı----------------*/
 
 /* GetÊ±¼ä  time */
-void get_time(void);
+void print_time(void);
 
 void print_gyroscope(void);
 float print_temperature(void);

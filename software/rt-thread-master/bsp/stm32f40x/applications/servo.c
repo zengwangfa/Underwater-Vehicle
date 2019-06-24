@@ -5,6 +5,8 @@
  *      Author: zengwangfa
  *      Notes:  ¶æ»úÉè±¸
  */
+#define  LOG_TAG    "servo"
+
 #include "servo.h"
 #include "propeller.h"
 #include "flash.h"

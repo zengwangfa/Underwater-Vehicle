@@ -68,7 +68,7 @@ int main(void)
 		rt_kprintf("* 2019-02-20     Dwfish       Add Easylog & Easyflash & <update> msh.\n");
 
 		rt_kprintf("* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");	 
-		//get_time();  //打印参考时间戳
+		//print_time();  //打印参考时间戳
 		
 		return 0;
 }

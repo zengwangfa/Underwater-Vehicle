@@ -5,6 +5,8 @@
  *      Author: zengwangfa
  *      Notes:  推进器设备
  */
+ #define LOG_TAG    "propeller"
+ 
 #include "propeller.h"
 #include <elog.h>
 #include <rtthread.h>
