@@ -30,7 +30,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=Project Outputs for ROBOT
+OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
 
@@ -39,40 +39,6 @@ PrefsVaultGUID=
 PrefsRevisionGUID=
 
 [Document1]
-DocumentPath=Underwater_vehicle-V3.0.SchDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=WIOUMGFA
-
-[Document2]
-DocumentPath=Underwater_vehicle-V3.0.PcbDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=HUYIXWLG
-
-[Document3]
 DocumentPath=..\..\..\..\AD15库文件与学习资料\我的库\集大电协1.5.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -89,7 +55,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=PLYXJNTX
 
-[Document4]
+[Document2]
 DocumentPath=..\..\..\..\AD15库文件与学习资料\我的库\集大电协1.5.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -106,8 +72,8 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document5]
-DocumentPath=Underwater_vehicle-V3.0.Harness
+[Document3]
+DocumentPath=Core Controller V3.0.PcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -121,10 +87,10 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=
+DocumentUniqueId=HUYIXWLG
 
-[Document6]
-DocumentPath=ROBOT.OutJob
+[Document4]
+DocumentPath=Core Controller V3.0.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -138,15 +104,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=
-
-[GeneratedDocument1]
-DocumentPath=Project Outputs for ROBOT\Board Information - Underwater_vehicle-V3.html
-DItemRevisionGUID=
-
-[GeneratedDocument2]
-DocumentPath=Project Outputs for ROBOT\Design Rule Check - Underwater_vehicle-V3.html
-DItemRevisionGUID=
+DocumentUniqueId=WIOUMGFA
 
 [Configuration1]
 Name=Default Configuration
@@ -194,7 +152,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=-1
 
 [Generic_EDE]
-OutputDir=Project Outputs for ROBOT
+OutputDir=
 
 [OutputGroup1]
 Name=Netlist Outputs
