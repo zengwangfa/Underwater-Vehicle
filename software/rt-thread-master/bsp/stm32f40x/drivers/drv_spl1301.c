@@ -1,5 +1,5 @@
 #include "drv_spl1301.h"
- 
+#include "drv_i2c.h"   
 
 static struct spl1301_t spl1301; 
 static struct spl1301_t *p_spl1301;
@@ -72,6 +72,7 @@ uint8 spl1301_read(uint8 hwadr, uint8 regadr)
 *****************************************************************************/
 void spl1301_init(void)
 {
+		IIC_Init();	
     p_spl1301 = &spl1301; /* read Chip Id */
     p_spl1301->i32rawPressure = 0;
     p_spl1301->i32rawTemperature = 0;

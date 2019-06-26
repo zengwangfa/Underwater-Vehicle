@@ -120,7 +120,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>pn??Jwpn??Jwpn?</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -188,7 +187,7 @@
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RC_Control_Data</ItemText>
+          <ItemText>RC_Control_Data,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
@@ -198,7 +197,37 @@
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RC_Control_Data</ItemText>
+          <ItemText>RC_Control_Data,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spl_pressure</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spl_init_pressure</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spl_temp</ItemText>
+        </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spl_init_temp</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spl_init_temp</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spl_temp</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

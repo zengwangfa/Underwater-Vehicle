@@ -3,7 +3,7 @@
  *
  *  Created on: 2019年2月30日
  *      Author: zengwangfa
- *      Notes:  传感器设备【深度传感器、CPU、ADC电压】
+ *      Notes:  传感器设备【深度传感器、CPU参数、ADC电压】
  */
  
  #define LOG_TAG    "sensor"
@@ -18,6 +18,10 @@
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
 #include "filter.h"
+#include "drv_spl1301.h"
+
+#define Using_SPL1301
+
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
 Sensor_Type Sensor;//传感器参数
@@ -41,7 +45,8 @@ void sensor_lowSpeed_thread_entry(void* parameter)
 				cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
 				Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
 			
-				rt_thread_mdelay(100);
+
+				rt_thread_mdelay(1000);
 		}
 }
 
@@ -51,6 +56,12 @@ void sensor_lowSpeed_thread_entry(void* parameter)
   * @retval None
   * @notice 
   */
+float spl_pressure = 0.0f;
+float spl_init_pressure = 0.0f;
+float spl_res_pressure = 0.0f;
+float spl_init_temp = 0.0f;
+float spl_temp = 0.0f;
+
 void sensor_highSpeed_thread_entry(void* parameter)
 {
 		static uint8 ON_OFF = 0; //自锁开关
@@ -58,17 +69,27 @@ void sensor_highSpeed_thread_entry(void* parameter)
 
 		while(1)
 		{
-
+				JY901_Convert(&Sensor.JY901); //JY901数据转换
+#ifdef Using_SPL1301		
+			
+				spl1301_get_raw_temp();
+				spl1301_get_raw_pressure();
+				if(0 == ON_OFF){
+						Sensor.MS5837.Init_PessureValue = spl1301_get_pressure(); //获取压力初值 
+						ON_OFF = 1; //自锁
+				}
+				Sensor.MS5837.PessureValue = (spl_res_pressure - spl_init_pressure)/20;
+				Sensor.MS5837.Temperature = spl1301_get_temperature();
+#else
 				if(0 == ON_OFF){
 						Sensor.MS5837.Init_PessureValue = get_ms5837_init_pressure(); //获取压力初值 
 						ON_OFF = 1; //自锁
 				}
-
 				MS5837_Convert();   //MS5837设备数据转换
-				JY901_Convert(&Sensor.JY901); //JY901数据转换
-						
+#endif
 
-				rt_thread_mdelay(10);
+				
+				rt_thread_mdelay(20);
 		}
 }
 
@@ -95,7 +116,11 @@ int sensor_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (sensor_lowSpeed_tid != RT_NULL && sensor_highSpeed_tid != RT_NULL){
-				if(MS5837_Init()){
+			
+#ifdef Using_SPL1301
+				spl1301_init();
+#else
+			  if(MS5837_Init()){
 						log_i("MS5837_Init()");
 						//rt_event_send(&init_event, MS5837_EVENT);
 				}
@@ -103,9 +128,11 @@ int sensor_thread_init(void)
 						log_e("MS5837_Init_Failed!");
 				}
 				
+#endif
 				if(adc_init()){
 						log_i("Adc_Init()");
 				}
+				
 				rt_thread_startup(sensor_lowSpeed_tid);
 				rt_thread_startup(sensor_highSpeed_tid);
 		}
