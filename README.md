@@ -37,9 +37,9 @@
 |            └──.pdf
 |--------+ software:【相关软件设计】
 |            ├──README.md
-|			 └──rt-thread-master
-|               └──bsp
-|                   └──stm32f40x 【主要系统控制程序】
+|            ├──rt-thread-master
+|                 └──bsp
+|                    └──stm32f40x 【主要系统控制程序】
 |--------+ README.md
 ```
 
@@ -97,7 +97,7 @@
 	- [X] Underwater_Vehicle核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] Underwater_Vehicle底板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] 变焦摄像头驱动控制板 by [@张静](https://gitee.com/xiaojing_1)	
-	- [X] 电源主板设计 by [@李浩辰]	🆕
+	- [X] 电源主板设计 by [@李浩丞]	🆕
 	
 - [X] 控制程序
     - [X] 外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
@@ -116,7 +116,7 @@
 	- [X] 云台3D打印模型 by [@洪华霖]
 
 - [X] 树莓派
-	- [X] Server服务器by [@FatihBo](https://github.com/FatihBo)🆕
+	- [X] 数据Server服务器 by [@FatihBo](https://github.com/FatihBo)🆕
 
 
 
