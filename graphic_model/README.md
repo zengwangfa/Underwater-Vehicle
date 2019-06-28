@@ -6,9 +6,8 @@
 
 
 
-- ![ROV 3D](https://images.gitee.com/uploads/images/2019/0527/140412_e23ebd0f_2330851.jpeg "ROV_3D Model.jpg")
 
-
+- ![ROV-3D](https://images.gitee.com/uploads/images/2019/0629/011224_9f0161f0_2330851.jpeg "ROV-Model.jpg")
 
 
 ## 5、Underwater Vehicle 的进展
