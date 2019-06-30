@@ -43,7 +43,10 @@
 |--------+ README.md
 ```
 
-## 3、软件结构
+## 3、机械结构
+![ROV 3D](https://images.gitee.com/uploads/images/2019/0629/011224_9f0161f0_2330851.jpeg "ROV-Model.jpg")
+
+## 4、软件结构
 ```
 +——RT-Thread
 |    ├── Kernel 【RT-Thread内核初始化】                  
@@ -56,42 +59,19 @@
 |    └──  Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
 ```
 
-## 4、硬件结构
+## 5、硬件结构
 ![Controller PCB 3D](https://images.gitee.com/uploads/images/2019/0630/203052_a928c81e_2330851.jpeg "Controller 3D.jpg")
-```
-+——Underwater_vehicle
-|--------+──DC 24V/48V 【Power management】 
-|--------+──STM32F407ZGT6 【Control-Center】                  
-|        │       └──【Normal Peripherals】
-|        │       ├── RGB [GPIO]   
-|        │       ├── KEY [GPIO] 
-|        │       ├── BUZZER [GPIO]      
-|        │       ├── Dial Switch [GPIO]   
-|        │       ├── OLED [Software SPI]       
-|        │       ├── Voltage Detection [ADC]             
-|        │       ├── Bluetooth [UART]       
-|        │       ├── W25Q128 FLASH [SPI]
-|        │       ├── USB to serial port CP2102 UART Bridge [UART]
-|        │       └──......  
-|        │       └── 【Important Peripherals】
-|        │       ├── Nine axis gyroscope [UART]
-|        │       ├── USR-C216 Wifi [UART]   
-|        │       ├── OV2640 Camera [DCMI-DMA]
-|        │       └──...... 
-|--------+──Vehicle Devices
-|        └── Searchlights [GPIO]
-|        ├── Propellers [PWM]
-|        ├── Servo Motor for Mechanical Arm [PWM]
-|        ├── CAMERAs 
-|        └──...... 
-```
+- 拥有外设：
+| 外设名称 | RGB LED | Key | Buzzer | Dial Switch | MS5837 | OLED | W25Q128 | Voltage Detection | Current Detection | Zigbee |  JY901 | USR-C216 | CP2102 | OV2640 Camera | Servo Motor | Searchlights | Perpellers |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |  --- | --- |  --- |  --- | --- |
+| 控制方式 | GPIO | GPIO | GPIO | GPIO | I2C | SPI | SPI | ADC | ADC | USART | USART | USART  | USART | DCMI-DMA | PWM | PWM | PWM |
+| 功能描述 | 指示灯 | 按键 | 蜂鸣器 | 拨码开关 | 深度传感器 | 显示屏 | 闪存芯片 | 电压检测 | 电流检测 | 2.4G无线通信 | 九轴 | WiFi模块 | 串口转USB | 摄像头 | 舵机  | 探照灯 | 推进器 |
 
 
 
 
 
-
-## 5、Underwater Vehicle 的进展
+## 6、Underwater Vehicle 的进展
 - [X] 电路设计
 	- [X] Underwater_Vehicle核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] Underwater_Vehicle底板 by [@zengwangfa](https://github.com/zengwangfa)	

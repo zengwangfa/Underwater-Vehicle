@@ -1,6 +1,6 @@
-
-
-![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
+[软件说明](./../software/README.md)|
+[硬件说明](./../hardware/README.md)| 
+[机械结构说明](./graphic_model/README.md)
 
 
 # 1.目录说明
@@ -11,7 +11,7 @@
    ├──RT-Thread 【RTT示例】
    ├──rt-thread-master
         └──bsp
-            └──stm32f40x 【控制中心】 详细目录说明**
+            └──stm32f40x 【控制中心程序】
 
 ```			
 
