@@ -9,9 +9,8 @@
 |SRAM| 192KB |
 |单元| FPU、DSP |
 
-![Underwater Vehicle](https://images.gitee.com/uploads/images/2019/0222/201120_1db060f5_2330851.png "控制中心")
 
-![ROV](https://images.gitee.com/uploads/images/2019/0314/160752_50b3c61c_2330851.jpeg "ROV")
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0630/203052_a928c81e_2330851.jpeg "Controller 3D.jpg")
 
 # 2.硬件架构
 ```
@@ -41,7 +40,8 @@
 |        ├── CAMERAs 
 |        └──...... 
 ```
-
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0630/202225_428ce6a4_2330851.jpeg "Controller原理图.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0630/203041_d9d9f3a8_2330851.jpeg "Controller PCB.jpg")
 ------
 ### 2.1 电源及 USB
 核心板可以通过 Micro-USB 或 5V 电源供电。使用 Micro-USB 接到电脑时，电脑弹出串口CP210x USB to UART Bridge。连接该串口后，可以通过 shell 命令行工具进行交互，也可以查看实时的日志信息。

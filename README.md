@@ -21,7 +21,7 @@
 |单元| FPU、DSP |
 
 - 系统架构简图：
-- ![构建图](https://images.gitee.com/uploads/images/2019/0314/162025_6336b3f6_2330851.png "构建图")
+![构建图](https://images.gitee.com/uploads/images/2019/0314/162025_6336b3f6_2330851.png "构建图")
 
 
 
@@ -57,8 +57,7 @@
 ```
 
 ## 4、硬件结构
-- ![ROV Controler 3D](https://images.gitee.com/uploads/images/2019/0527/140434_ed5fdc50_2330851.jpeg "ROV_Controler_3D Model.jpg")
-
+![Controller PCB 3D](https://images.gitee.com/uploads/images/2019/0630/203052_a928c81e_2330851.jpeg "Controller 3D.jpg")
 ```
 +——Underwater_vehicle
 |--------+──DC 24V/48V 【Power management】 

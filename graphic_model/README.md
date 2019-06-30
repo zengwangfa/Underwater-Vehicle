@@ -1,7 +1,7 @@
 ## 1、ROV航行器控制中心
 
-[软件说明](./software/README.md)
-[硬件说明](./hardware/README.md)
+[软件说明](./../software/README.md)
+[硬件说明](./../hardware/README.md)
 [机械结构说明](./graphic_model/README.md)
 
 
