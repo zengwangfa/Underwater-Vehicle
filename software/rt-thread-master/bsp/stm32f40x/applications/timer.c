@@ -66,7 +66,7 @@ int timer1_init(void)
     timer1 = rt_timer_create("timer1",  /* 定时器名字是 timer1 */
                         timer1_out, 		  /* 超时时回调的处理函数 */
                         RT_NULL, 			  /* 超时函数的入口参数 */
-                        1,      			  /* 定时长度，以OS Tick为单位，即5个OS Tick   --> 50MS*/  
+                        10,      			  /* 定时长度，以OS Tick为单位，即5个OS Tick   --> 50MS*/  
                         RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER); /* 周期性定时器 */
     /* 启动定时器 */
     if (timer1 != RT_NULL){ 

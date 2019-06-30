@@ -86,11 +86,6 @@ void key_down(void *args)
 
 
 
-
-
-
-
-
 /*buzzer为蜂鸣器控制器  count为响的次数  length响的时间长度  */
 void Buzzer_Set(Buzzer_Type* buzzer,uint8_t count,uint8_t length)
 {

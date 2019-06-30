@@ -10,14 +10,14 @@
 #include "PropellerControl.h"
 #define MAX_DATA_LENS 16  //有效数据包长度【不包含 包头、长度位、校验位】
 
-ReceiveDataType ReceiveData = {
+ReceiveData_Type ReceiveData = {
 		.THR = 1500,
 		.YAW = 1500,
 		.ROL = 1500,
 	  .PIT = 1500
 };
 
-ControlCmdType ControlCmd = {
+ControlCmd_Type ControlCmd = {
 										.Power = 0
 };
 uint32 Frame_Conut = 0;//数据包 帧计数
@@ -59,29 +59,27 @@ void Remote_Control_Data_Analysis(uint8 Data) //控制数据解析
 												Control_RxCount = 0;	
 										}
 								}
-								else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear();return;} //接收不成功清零
+								else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear(&ControlCmd);return;} //接收不成功清零
 						}//
 				}
-				else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear();return;} //接收不成功清零
+				else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear(&ControlCmd);;return;} //接收不成功清零
 		}
-		else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear();return;} //接收不成功清零
+		else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear(&ControlCmd);return;} //接收不成功清零
 		
 		if(1 == Receive_Data_OK){
 
-
+				Control_Cmd_Get(&ControlCmd); //控制命令获取
 				Receive_Data_OK = 0x00; //数据包正确标志位 清零
 		}
 		else{//数据包错误清零
-				Control_Cmd_Clear();
+				Control_Cmd_Clear(&ControlCmd);
 		}
-
-
 }
 
 
-void Control_Cmd_Get(void)
+void Control_Cmd_Get(ControlCmd_Type *cmd) //控制命令获取
 {
-		ControlCmd.Depth_Lock     = RC_Control_Data[3]; //深度锁定
+		cmd->Depth_Lock     = RC_Control_Data[3]; //深度锁定
 		ControlCmd.Direction_Lock = RC_Control_Data[4]; //方向锁定
 	
 		ControlCmd.Move					  = RC_Control_Data[5]; //前后
@@ -99,7 +97,7 @@ void Control_Cmd_Get(void)
 }
 
 
-void Control_Cmd_Clear(void)
+void Control_Cmd_Clear(ControlCmd_Type *cmd)
 {
 		ControlCmd.Depth_Lock     = 0x00; //姿态控制
 		ControlCmd.Direction_Lock = 0x00;

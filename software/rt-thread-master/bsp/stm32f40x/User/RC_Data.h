@@ -10,7 +10,7 @@ typedef struct{
 		uint16  ROL;
 		uint16  PIT;
 	
-}ReceiveDataType;
+}ReceiveData_Type;
 
 typedef struct{
 		uint8  All_Lock;       //总开关  
@@ -26,15 +26,15 @@ typedef struct{
 		uint8  Yuntai;         //【云台】	 0x01 向上、    0x02 向下、  0x00表示不动作（默认）
 		uint8  Arm;            //【机械臂】0x01 张开、    0x02 关闭、  0x00表示不动作（默认）
 		uint8  Reserve;        //【机械臂】0x01 张开、    0x02 关闭、  0x00表示不动作（默认）
-}ControlCmdType;
+}ControlCmd_Type;
 
 
 
 
-extern ControlCmdType ControlCmd;
-extern ReceiveDataType ReceiveData;
-void Control_Cmd_Get(void);
-void Control_Cmd_Clear(void);
+extern ControlCmd_Type ControlCmd;
+extern ReceiveData_Type ReceiveData;
+void Control_Cmd_Get(ControlCmd_Type *cmd); //控制命令获取
+void Control_Cmd_Clear(ControlCmd_Type *cmd);//控制命令清零
 void Remote_Control_Data_Analysis(uint8 Data); //控制数据解析
 
 

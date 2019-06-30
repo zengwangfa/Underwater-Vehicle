@@ -26,7 +26,7 @@ void return_computer_thread_entry(void* parameter)
 		
 		while(uart_startup_flag){ //当debug_uart初始化完毕后 才进行上位机通信
 			
-				Convert_Return_Computer_Data(); //转换返回上位机的数据
+				Convert_Return_Computer_Data(&Sensor); //转换返回上位机的数据
 				Send_Buffer_Agreement(begin_buff,Return_Data,22); //发送数据包协议
 				rt_thread_mdelay(100);
 		}
@@ -71,28 +71,28 @@ uint8 get_decimal(float data){ //得到浮点型 的1位小数位
   * @retval None
   * @notice 
   */
-void Convert_Return_Computer_Data(void) //返回上位机数据 转换
+void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 {
 		static short res_Roll = 0;
 		static short res_Pitch = 0;
 		static short res_Yaw = 0;
 	
-		res_Roll = (short)((Sensor.JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
-		res_Pitch = (short)((Sensor.JY901.Euler.Pitch+180)*100);
-		res_Yaw = (short)((Sensor.JY901.Euler.Yaw+180)*100);
+		res_Roll = (short)((sensor->JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
+		res_Pitch = (short)((sensor->JY901.Euler.Pitch+180)*100);
+		res_Yaw = (short)((sensor->JY901.Euler.Yaw+180)*100);
 	
-		Return_Data[0] = Sensor.PowerSource.Voltage; //整数倍
-		Return_Data[1] = get_decimal(Sensor.PowerSource.Voltage);//小数的100倍
+		Return_Data[0] = sensor->PowerSource.Voltage; //整数倍
+		Return_Data[1] = get_decimal(sensor->PowerSource.Voltage);//小数的100倍
 	
-		Return_Data[2] = (int)Sensor.CPU.Temperature; //整数倍
-		Return_Data[3] = get_decimal(Sensor.CPU.Temperature) ;//小数的100倍
+		Return_Data[2] = (int)sensor->CPU.Temperature; //整数倍
+		Return_Data[3] = get_decimal(sensor->CPU.Temperature) ;//小数的100倍
 	
-		Return_Data[4] = (int)Sensor.MS5837.Temperature; //整数倍
-		Return_Data[5] = get_decimal(Sensor.MS5837.Temperature);//小数的100倍	
+		Return_Data[4] = (int)sensor->MS5837.Temperature; //整数倍
+		Return_Data[5] = get_decimal(sensor->MS5837.Temperature);//小数的100倍	
 	
-		Return_Data[6] = Sensor.Depth >> 16; //高8位
-		Return_Data[7] = Sensor.Depth >> 8 ;//中8位
-		Return_Data[8] = Sensor.Depth ; //低8位
+		Return_Data[6] = sensor->Depth >> 16; //高8位
+		Return_Data[7] = sensor->Depth >> 8 ;//中8位
+		Return_Data[8] = sensor->Depth ; //低8位
 	
 	
 		Return_Data[9]  =  res_Yaw>> 8 ; // Roll 高8位
@@ -103,8 +103,8 @@ void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 	
 		Return_Data[13] = res_Roll >> 8; // Yaw 高8位
 		Return_Data[14] = (uint8)res_Roll; //低8位
-		
-		Return_Data[15] = 0x01;//(uint8)Sensor.JY901.Speed.x;//   x轴航速
+
+		Return_Data[15] = (uint8)sensor->JY901.Speed.x;//x轴航速
 		Return_Data[16] = 0x02;//device_hint_flag;  //设备提示字符
 }
 

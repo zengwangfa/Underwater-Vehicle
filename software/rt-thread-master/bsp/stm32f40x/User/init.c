@@ -91,6 +91,7 @@ static rt_err_t exception_hook(void *context) {
     extern long list_thread(void);
     uint8_t _continue = 1;
 	
+		ErrorStatus_LED(); //异常状态指示灯 红色
     rt_enter_critical();//禁止调度
 
     list_thread();      //打印线程
@@ -102,6 +103,7 @@ static rt_err_t exception_hook(void *context) {
 /* 设置RTT断言钩子 */
 static void rtt_user_assert_hook(const char* ex, const char* func, rt_size_t line) {
 	
+		ErrorStatus_LED();  //异常状态指示灯 红色
     rt_enter_critical();//禁止调度
     elog_async_enabled(false); //禁用异步输出模式
     elog_a("rtt", "(%s) has assert failed at %s:%ld.", ex, func, line);//打印造成断言C语言行数
