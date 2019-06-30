@@ -13,7 +13,7 @@
 #include <rtthread.h>
 #include <elog.h>
 #include "drv_MS5837.h"
-#include  "Control.h"
+#include "Control.h"
 #include "gyroscope.h"
 #include "debug.h"
 #include "Return_Data.h"

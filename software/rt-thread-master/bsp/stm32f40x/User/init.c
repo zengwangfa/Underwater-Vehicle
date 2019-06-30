@@ -47,7 +47,7 @@ static void rtt_user_assert_hook(const char* ex, const char* func, rt_size_t lin
 
 /**
  * 系统监控线程
- * @param parameter parameter
+ * @param  parameter
  */
 void thread_entry_sys_monitor(void* parameter)
 {

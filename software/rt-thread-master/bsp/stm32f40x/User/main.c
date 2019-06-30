@@ -21,7 +21,7 @@
  * 2019-02-19     Dwfish       Add VACN & ANO host computer debug.
  * 2019-02-20     Dwfish       Add Easylog & Easyflash & <update> msh.
  * 2019-03-24     Dwfish       Add Cpuusage.
- * 2019-04-19     Dwfish       Add Focus Camera Control.
+ * 2019-04-19     Dwfish       Add Focus Camera ControlCmd.
  * 2019-05-02     Dwfish       Add 
 	
 	

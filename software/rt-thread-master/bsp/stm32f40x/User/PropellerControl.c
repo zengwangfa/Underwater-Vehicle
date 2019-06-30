@@ -65,30 +65,30 @@ uint16 Output_Limit(int16 *PowerValue)
 void Propeller_Control(void)
 {
 
-		switch(Control.Move){
+		switch(ControlCmd.Move){
 				case  Forward : robotForward();break;  //前进
 				case  BackAway: robotBackAway();break;	 //后退
 				default:break;
 		}
 
 
-		switch(Control.Translation){
+		switch(ControlCmd.Translation){
 				case  MoveLeft : moveLeft()	;break;  //左移
 				case  MoveRight: moveRight();break;  //右移		
 				default:break;
 		}
 
 		
-		switch(Control.Vertical){//有控制数据不定深度
+		switch(ControlCmd.Vertical){//有控制数据不定深度
 			
 				case  RiseUp: Expect_Depth-- ; break;  //上升
 				case  Dive:   Expect_Depth++ ; break;  //下潜
 				
 				default:break/*定深度PID*/;
 		}
-		Control.Vertical = 0x00;
+		ControlCmd.Vertical = 0x00;
 		
-		switch(Control.Rotate){
+		switch(ControlCmd.Rotate){
 				case  TurnLeft : turnLeft(); break;  //左转
 				case  TurnRight: turnRight();break;  //右转			
 				default:break;
@@ -96,9 +96,9 @@ void Propeller_Control(void)
 		
 		Propeller_Output();  //推进器限幅输出
 		
-		Control.Move = 0x00;
-		Control.Translation = 0x00;
-		Control.Rotate = 0x00;
+		ControlCmd.Move = 0x00;
+		ControlCmd.Translation = 0x00;
+		ControlCmd.Rotate = 0x00;
 
 }
 
@@ -128,7 +128,7 @@ void Propeller_Output(void)
 		PWM_Update(&PropellerPower);//PWM上传
 	
 		if(Frame_EndFlag == 1 && \
-			 Control.Move ==0x00 && Control.Translation == 0x00 && Control.Rotate == 0x00){//接收到一帧 并且 无控制字 
+			 ControlCmd.Move ==0x00 && ControlCmd.Translation == 0x00 && ControlCmd.Rotate == 0x00){//接收到一帧 并且 无控制字 
 					Horizontal_Propeller_Power_Clear();//10次更新PWM后清空
 		}
 		
@@ -139,7 +139,7 @@ void Propeller_Output(void)
 void Horizontal_Propeller_Power_Clear(void)//水平方向推力清零 10次后清空
 {
 		clear_count ++;
-		if(Control.Move ==0x00 && Control.Translation == 0x00 && Control.Rotate == 0x00){
+		if(ControlCmd.Move ==0x00 && ControlCmd.Translation == 0x00 && ControlCmd.Rotate == 0x00){
 				if(clear_count >= 15 ){ //10次都无控制字清除 推进器动力
 						PropellerPower.rightUp = 0;
 						PropellerPower.leftDown = 0;
@@ -167,7 +167,7 @@ void Horizontal_Propeller_Power_Clear(void)//水平方向推力清零 10次后清空
 ********************************************/
 void robotForward(void)  //前进
 {
-		PropellerPower.Power = Control.Power * 2; //油门大小
+		PropellerPower.Power = ControlCmd.Power * 2; //油门大小
 	
 		PropellerPower.leftUp =    - PropellerPower.Power +PropellerError.leftUpError;
 		PropellerPower.rightUp =     PropellerPower.Power +PropellerError.rightUpError;   
@@ -179,7 +179,7 @@ MSH_CMD_EXPORT(robotForward,ag: robotForward);
 void robotBackAway(void)  //后退
 {
 
-		PropellerPower.Power = Control.Power * 2;
+		PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =    PropellerPower.Power +PropellerError.leftUpError;
 		PropellerPower.rightUp = - PropellerPower.Power +PropellerError.rightUpError;
@@ -193,7 +193,7 @@ MSH_CMD_EXPORT(robotBackAway,ag: robotBackAway);
 void turnRight(void)  //右转
 {
 
-		PropellerPower.Power = Control.Power * 2;
+		PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =     PropellerPower.Power  +PropellerError.leftUpError;
 		PropellerPower.rightUp =    0 +PropellerError.rightUpError;
@@ -205,7 +205,7 @@ MSH_CMD_EXPORT(turnRight,ag: turnRight);
 void turnLeft(void)  //左转
 {
 
-		PropellerPower.Power = Control.Power * 2;
+		PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =     0 +PropellerError.leftUpError;
 		PropellerPower.rightUp =   -PropellerPower.Power +PropellerError.rightUpError;
@@ -217,7 +217,7 @@ MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
 void moveLeft(void)  //左移
 {
 
-		PropellerPower.Power = Control.Power * 2;
+		PropellerPower.Power = ControlCmd.Power * 2;
 
 		PropellerPower.leftUp =    PropellerPower.Power + PropellerError.leftUpError;
 		PropellerPower.rightUp =   PropellerPower.Power + PropellerError.rightUpError;
@@ -230,7 +230,7 @@ MSH_CMD_EXPORT(moveLeft,ag: moveLeft);
 
 void moveRight(void)  //右移
 {
-		PropellerPower.Power = Control.Power * 2;
+		PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =    -PropellerPower.Power + PropellerError.leftUpError;
 		PropellerPower.rightUp =   -PropellerPower.Power + PropellerError.rightUpError;

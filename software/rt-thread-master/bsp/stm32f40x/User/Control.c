@@ -1,21 +1,24 @@
 /*
- * Control.c
+ * ControlCmd.c
  *
  *  Created on: 2019年3月20日
  *      Author: zengwangfa
  *      Notes:  方位角控制、深度控制
  */
+#include <rtthread.h>
+#include <elog.h>
+#include <stdlib.h>
+
 #include "Control.h"
 #include "PID.h"
-#include <rtthread.h>
-#include <stdlib.h>
 #include "RC_Data.h"
+
 #include "focus.h"
 #include "led.h"
 #include "servo.h"
 #include "PropellerControl.h"
 #include "propeller.h"
-#include <elog.h>
+
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
@@ -46,7 +49,7 @@ void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
 		
 		while(1)
 		{
-				Light_Control(&Control.Light);  //探照灯控制
+				Light_Control(&ControlCmd.Light);  //探照灯控制
 				Propeller_Control(); //推进器控制
 			
 				rt_thread_mdelay(30);
@@ -65,7 +68,7 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 		rt_thread_mdelay(3000);//等待外部设备初始化成功
 		while(1)
 		{
-				Focus_Zoom_Camera(&Control.Focus);//变焦聚焦摄像头控制
+				Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
 				Depth_Control(); //深度控制
 			
 				rt_thread_mdelay(10);
@@ -73,20 +76,20 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 
 }
 /*
-	Control.Depth_Lock     = RC_Control_Data[3]; //深度锁定
-	Control.Direction_Lock = RC_Control_Data[4]; //方向锁定
-	Control.Move					 = RC_Control_Data[5]; //前后运动
-	Control.Translation		 = RC_Control_Data[6]; //左右云顶
-	Control.Vertical 			 = RC_Control_Data[7]; //垂直运动
-	Control.Rotate 				 = RC_Control_Data[8]; //旋转运动
+	ControlCmd.Depth_Lock     = RC_Control_Data[3]; //深度锁定
+	ControlCmd.Direction_Lock = RC_Control_Data[4]; //方向锁定
+	ControlCmd.Move					 = RC_Control_Data[5]; //前后运动
+	ControlCmd.Translation		 = RC_Control_Data[6]; //左右云顶
+	ControlCmd.Vertical 			 = RC_Control_Data[7]; //垂直运动
+	ControlCmd.Rotate 				 = RC_Control_Data[8]; //旋转运动
 	
-	Control.Power 				 = RC_Control_Data[9];  //动力控制
-	Control.Light 				 = RC_Control_Data[10]; //灯光控制
+	ControlCmd.Power 				 = RC_Control_Data[9];  //动力控制
+	ControlCmd.Light 				 = RC_Control_Data[10]; //灯光控制
 	
-	Control.Focus 				 = RC_Control_Data[11]; //变焦摄像头控制
+	ControlCmd.Focus 				 = RC_Control_Data[11]; //变焦摄像头控制
 
-	Control.Yuntai 				 = RC_Control_Data[12]; //云台控制
-	Control.Arm						 = RC_Control_Data[13]; //机械臂控制
+	ControlCmd.Yuntai 				 = RC_Control_Data[12]; //云台控制
+	ControlCmd.Arm						 = RC_Control_Data[13]; //机械臂控制
 */
 
 int control_thread_init(void)

@@ -17,7 +17,7 @@ ReceiveDataType ReceiveData = {
 	  .PIT = 1500
 };
 
-ControlDataType Control = {
+ControlCmdType ControlCmd = {
 										.Power = 0
 };
 uint32 Frame_Conut = 0;//数据包 帧计数
@@ -59,54 +59,60 @@ void Remote_Control_Data_Analysis(uint8 Data) //控制数据解析
 												Control_RxCount = 0;	
 										}
 								}
-								else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Clear();return;} //接收不成功清零
+								else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear();return;} //接收不成功清零
 						}//
 				}
-				else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Clear();return;} //接收不成功清零
+				else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear();return;} //接收不成功清零
 		}
-		else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Clear();return;} //接收不成功清零
+		else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear();return;} //接收不成功清零
 		
 		if(1 == Receive_Data_OK){
-			
-				Control.Depth_Lock     = RC_Control_Data[3]; //姿态控制
-				Control.Direction_Lock = RC_Control_Data[4];
-				Control.Move					 = RC_Control_Data[5]; //前后
-				Control.Translation		 = RC_Control_Data[6]; //左右平移
-				Control.Vertical 			 = RC_Control_Data[7]; //垂直
-				Control.Rotate 				 = RC_Control_Data[8]; //旋转
-				
-				Control.Power 				 = RC_Control_Data[9];  //动力控制 两倍[0~500]
-				Control.Light 				 = RC_Control_Data[10]; //灯光控制
-				
-				Control.Focus 				 = RC_Control_Data[11]; //变焦摄像头控制
-				
-				Control.Yuntai 				 = RC_Control_Data[12]; //云台控制
-				Control.Arm						 = RC_Control_Data[13]; //机械臂控制
 
-		}
-		else{
 
-				Control_Clear();
+				Receive_Data_OK = 0x00; //数据包正确标志位 清零
 		}
+		else{//数据包错误清零
+				Control_Cmd_Clear();
+		}
+
 
 }
 
-void Control_Clear(void)
+
+void Control_Cmd_Get(void)
 {
-		Control.Depth_Lock     = 0x00; //姿态控制
-		Control.Direction_Lock = 0x00;
-		Control.Move					 = 0x00;
-		Control.Translation		 = 0x00;
-		Control.Vertical 			 = 0x00;
-		Control.Rotate 				 = 0x00;
+		ControlCmd.Depth_Lock     = RC_Control_Data[3]; //深度锁定
+		ControlCmd.Direction_Lock = RC_Control_Data[4]; //方向锁定
+	
+		ControlCmd.Move					  = RC_Control_Data[5]; //前后
+		ControlCmd.Translation	  = RC_Control_Data[6]; //左右平移
+		ControlCmd.Vertical 			= RC_Control_Data[7]; //垂直
+		ControlCmd.Rotate 				= RC_Control_Data[8]; //旋转
 		
-		//Control.Power 				 = 0x00;  //动力控制
-		Control.Light 				 = 0x00; //灯光控制
+		ControlCmd.Power 				  = RC_Control_Data[9];  //动力控制 两倍[0~500]
+		ControlCmd.Light 				  = RC_Control_Data[10]; //灯光控制
+		ControlCmd.Focus 				  = RC_Control_Data[11]; //变焦摄像头控制
+		ControlCmd.Yuntai 				= RC_Control_Data[12]; //云台控制
+		ControlCmd.Arm						= RC_Control_Data[13]; //机械臂控制
+
+		ControlCmd.All_Lock       = RC_Control_Data[18];
+}
+
+
+void Control_Cmd_Clear(void)
+{
+		ControlCmd.Depth_Lock     = 0x00; //姿态控制
+		ControlCmd.Direction_Lock = 0x00;
+		ControlCmd.Move					  = 0x00;
+		ControlCmd.Translation	  = 0x00;
+		ControlCmd.Vertical 			= 0x00;
+		ControlCmd.Rotate 				= 0x00;
 		
-		Control.Focus 				 = 0x00; //变焦摄像头控制
-		
-		Control.Yuntai 				 = 0x00; //云台控制
-		Control.Arm						 = 0x00; //机械臂控制
+		//ControlCmd.Power 				 = 0x00;  //动力控制
+		ControlCmd.Light 				  = 0x00; //灯光控制
+		ControlCmd.Focus 				  = 0x00; //变焦摄像头控制
+		ControlCmd.Yuntai 				= 0x00; //云台控制
+		ControlCmd.Arm						= 0x00; //机械臂控制
 }
 
 			

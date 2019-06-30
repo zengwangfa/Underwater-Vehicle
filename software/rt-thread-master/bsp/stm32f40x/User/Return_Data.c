@@ -15,7 +15,7 @@
 uint8 Return_Data[22] = {0};
 uint8 device_hint_flag;		//设备提示字符
 
-extern uint8 uart_startup_flag;
+
 extern struct SAngle 	stcAngle;
 
 void return_computer_thread_entry(void* parameter)
@@ -27,9 +27,8 @@ void return_computer_thread_entry(void* parameter)
 		while(uart_startup_flag){ //当debug_uart初始化完毕后 才进行上位机通信
 			
 				Convert_Return_Computer_Data(); //转换返回上位机的数据
-
 				Send_Buffer_Agreement(begin_buff,Return_Data,22); //发送数据包协议
-				rt_thread_mdelay(1000);
+				rt_thread_mdelay(100);
 		}
 }
 
@@ -65,9 +64,7 @@ uint8 get_decimal(float data){ //得到浮点型 的1位小数位
 
 		return (uint8)((float)(data - (int)data)*100);
 }
-short res_Roll = 0;
-short res_Pitch = 0;
-short res_Yaw = 0;
+
 /**
   * @brief  Convert_Return_Computer_Data(转换返回上位机的数据包)
   * @param  None
@@ -76,8 +73,11 @@ short res_Yaw = 0;
   */
 void Convert_Return_Computer_Data(void) //返回上位机数据 转换
 {
+		static short res_Roll = 0;
+		static short res_Pitch = 0;
+		static short res_Yaw = 0;
 	
-		res_Roll = (short)((Sensor.JY901.Euler.Roll+180) *100); 
+		res_Roll = (short)((Sensor.JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
 		res_Pitch = (short)((Sensor.JY901.Euler.Pitch+180)*100);
 		res_Yaw = (short)((Sensor.JY901.Euler.Yaw+180)*100);
 	
