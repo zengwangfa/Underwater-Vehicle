@@ -57,12 +57,12 @@ C -->|YES| E[树莓派通信 上行与下行]
 C -->|NO| F[软件异常中断 卡死 亮红灯]
 ```
 
-```
+
 - Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
-```
+
 
 ## 5、硬件结构
-![Controller PCB 3D](/docs/pictures/Controller_3D "Controller 3D.jpg")
+![Controller PCB 3D](/docs/pictures/Controller_3D.jpg "Controller 3D.jpg")
 - 拥有外设：
 
 | 外设名称 | RGB LED | Key | Buzzer | Dial Switch | MS5837 | OLED | W25Q128 | Voltage Detection | Current Detection | Zigbee |  JY901 | USR-C216 | CP2102 | OV2640 Camera | Servo Motor | Searchlights | Perpellers |
