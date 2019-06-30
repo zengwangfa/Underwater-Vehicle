@@ -15,7 +15,7 @@
 |单元| FPU、DSP |
 
 
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0630/203052_a928c81e_2330851.jpeg "Controller 3D.jpg")
+![Controller PCB 3D](/docs/pictures/Controller_3D "Controller 3D.jpg")
 
 # 2.硬件架构
 

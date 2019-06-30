@@ -1,4 +1,4 @@
-# 1、ROV航行器控制中心
+# 1、ROV/AUV航行器控制中心
 
 [软件说明](./software/README.md) |
 [硬件说明](./hardware/README.md) |
@@ -21,7 +21,7 @@
 |单元| FPU、DSP |
 
 - 系统架构简图：
-![构建图](https://images.gitee.com/uploads/images/2019/0314/162025_6336b3f6_2330851.png "构建图")
+![构建图](/docs/pictures/构建图.jpg "构建图")
 
 
 
@@ -44,23 +44,25 @@
 ```
 
 ## 3、机械结构
-![ROV 3D](https://images.gitee.com/uploads/images/2019/0629/011224_9f0161f0_2330851.jpeg "ROV-Model.jpg")
+![ROV 3D](/docs/pictures/ROV-Model.jpg "ROV-Model.jpg")
 
 ## 4、软件结构
+
+```mermaid
+graph TD
+A[RT-Thread系统初始化] --> B(外设初始化)
+B --> C{是否初始化成功}
+C -->|YES| D[采集各个传感器数据并进行数据处理]
+C -->|YES| E[树莓派通信 上行与下行]
+C -->|NO| F[软件异常中断 卡死 亮红灯]
 ```
-+——RT-Thread
-|    ├── Kernel 【RT-Thread内核初始化】                  
-|    ├── Normal Peripherals Init 【普通外设初始化】
-|    └── System self-check 【系统自检:检测是否所有外设初始化完成】 
-|           ├── Read Gyroscope data 【读取JY901 九轴数据】 
-|           ├── Detection input devices 【检测输入设备】 
-|           ├── ....
-|           └── ....
-|    └──  Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
+
+```
+- Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
 ```
 
 ## 5、硬件结构
-![Controller PCB 3D](https://images.gitee.com/uploads/images/2019/0630/203052_a928c81e_2330851.jpeg "Controller 3D.jpg")
+![Controller PCB 3D](/docs/pictures/Controller_3D "Controller 3D.jpg")
 - 拥有外设：
 
 | 外设名称 | RGB LED | Key | Buzzer | Dial Switch | MS5837 | OLED | W25Q128 | Voltage Detection | Current Detection | Zigbee |  JY901 | USR-C216 | CP2102 | OV2640 Camera | Servo Motor | Searchlights | Perpellers |
