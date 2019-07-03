@@ -3,6 +3,11 @@
 [机械结构说明](./graphic_model/README.md)
 
 
+- 本项目用用到了两个实用的软件包：
+	- [EasyFlash](https://github.com/armink/EasyFlash)一款开源的轻量级嵌入式Flash存储器库
+	- [EasyLogger](https://github.com/armink/EasyLogger)一款超轻量级、高性能的 C/C++ 日志库
+
+
 # 1.目录说明
 
 **software:【相关软件设计】**
@@ -32,7 +37,7 @@
 |Utilities| 它用于存放相关工具与滤波算法 |
 
 
-# 2.软件架构
+# 2.软件结构
 ```
 +——RT-Thread
 |    └──Kernel 【RT-Thread内核初始化】                  
@@ -40,6 +45,7 @@
 |    ├── System self-check 【系统自检:检测是否所有外设初始化完成】 
 |           └── Read Gyroscope data 【读取JY901 九轴数据】 
 |           ├── Detection input devices 【检测输入设别】 
+|           ├── Attitude Control 【姿态控制】 	
 |    └──...... 
 ```
 
