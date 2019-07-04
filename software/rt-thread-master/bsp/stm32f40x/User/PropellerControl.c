@@ -82,7 +82,7 @@ void Propeller_Control(void)
 		ControlCmd.Vertical = 0x00;
 	
 		
-		if(1 == ControlCmd.All_Lock){
+		if(LOCK == ControlCmd.All_Lock){
 				Propeller_Output();  //推进器限幅输出
 		}
 		else {

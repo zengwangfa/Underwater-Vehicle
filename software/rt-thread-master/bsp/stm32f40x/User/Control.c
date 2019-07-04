@@ -52,7 +52,7 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 		while(1)
 		{
 				Control_Cmd_Get(&ControlCmd);
-				if(1 == ControlCmd.All_Lock){
+				if(LOCK == ControlCmd.All_Lock){
 						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
 						Depth_Control(); //深度控制
 				}

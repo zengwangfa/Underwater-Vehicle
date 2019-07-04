@@ -108,14 +108,15 @@ extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 #define MS5837_EVENT 	  (1 << 8)  //Sensor事件标志位
 
 #define PI 3.141592f
-#define Rad2Deg(Rad) (Rad * 180.0f / PI)
-#define Deg2Rad(Deg) (Deg * PI / 180.0f)
+#define Rad2Deg(Rad) (Rad * 180.0f / PI) //弧度制转角度值
+#define Deg2Rad(Deg) (Deg * PI / 180.0f) //角度值转弧度制
 
 
 #define AUV_Mode  0//0
 #define ROV_Mode  1//1
 
-
+#define LOCK   1 //全局锁   宏定义
+#define UNLOCK 2 //全军解锁 
 
 #define PropellerPower_Med  1500
 #define PropellerPower_Min  1000
