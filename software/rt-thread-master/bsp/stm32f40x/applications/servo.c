@@ -26,15 +26,13 @@ uint8 Yuntai_Speed = 5;
 ServoType RoboticArm = {
 		 .MaxValue = 2000, 		//机械臂 正向最大值
 		 .MinValue = 1500,	  //机械臂 反向
-		 .MedValue = 1500,
-		 .CurrentValue = 1500, //机械臂当前值
+		 .MedValue = 1900,
 	   .Speed  = 5//机械臂当前值
 };  //机械臂
 ServoType  YunTai = {
 		 .MaxValue = 1700, 		//机械臂 正向最大值
 		 .MinValue = 1000,	  //机械臂 反向
 		 .MedValue = 1300,
-		 .CurrentValue = 1300, //机械臂当前值
 	   .Speed  = 10//云台转动速度
 };      //云台
 
@@ -58,7 +56,12 @@ uint16 Servo_Output_Limit(ServoType *Servo)
 }
 
 
-
+/**
+  * @brief  RoboticArm_Control(机械臂控制)
+  * @param  控制指令 0x00：不动作  0x01：张开  0x02：关闭
+  * @retval None
+  * @notice 
+  */
 void RoboticArm_Control(uint8 *action)
 {
 		switch(*action)
@@ -66,19 +69,27 @@ void RoboticArm_Control(uint8 *action)
 				case 0x01:RoboticArm.CurrentValue += RoboticArm.Speed;
 									if(RoboticArm.CurrentValue >= RoboticArm.MaxValue){device_hint_flag |= 0x01;}//机械臂到头标志
 									else {device_hint_flag &= 0xFE;}; //清除机械臂到头标志
-									RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm);
+
 									break;
 				case 0x02:RoboticArm.CurrentValue -= RoboticArm.Speed;
 									if(RoboticArm.CurrentValue <= RoboticArm.MinValue){device_hint_flag |= 0x01;}//机械臂到头标志
 									else {device_hint_flag &= 0xFE;}; //清除机械臂到头标志
-									RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm);
+
 									break;
 				default:break;
 		}
+		RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm);//机械臂舵机限幅
 		TIM_SetCompare3(TIM4,RoboticArm.CurrentValue);
 		*action = 0x00; //清除控制字
 }
 
+
+/**
+  * @brief  YunTai_Control(云台控制)
+  * @param  控制指令 0x00：不动作  0x01：向上  0x02：向下
+  * @retval None
+  * @notice 
+  */
 void YunTai_Control(uint8 *action)
 {
 		switch(*action)
@@ -86,18 +97,19 @@ void YunTai_Control(uint8 *action)
 				case 0x01:YunTai.CurrentValue += YunTai.Speed;  //向上
 						if(YunTai.CurrentValue <= YunTai.MaxValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-						YunTai.CurrentValue = Servo_Output_Limit(&YunTai);
+
 						break;  
 						
 				case 0x02:YunTai.CurrentValue -= YunTai.Speed; //向下
 						if(YunTai.CurrentValue >= YunTai.MinValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-						YunTai.CurrentValue = Servo_Output_Limit(&YunTai);
+
 						break;  
 
 				case 0x03:YunTai.CurrentValue = YunTai.MedValue;break;   //归中
 				default: break;
 		}
+		YunTai.CurrentValue = Servo_Output_Limit(&YunTai);
 		TIM_SetCompare4(TIM4,YunTai.CurrentValue); 
 		*action = 0x00; //清除控制字
 }
@@ -112,12 +124,12 @@ void YunTai_Control(uint8 *action)
   */
 void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
 {
-		TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
+		TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
 		TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
 		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
 		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
 	
-		rt_thread_mdelay(500);
+
 		Propeller_Init();       //推进器初始化
 		rt_thread_mdelay(100);
 		while(1)

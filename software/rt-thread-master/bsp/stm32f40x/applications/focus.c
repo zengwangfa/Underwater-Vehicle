@@ -85,7 +85,7 @@ void Camera_Focus_Data_Analysis(uint8 Data) //控制数据解析
 		}
 		else {focus_data_ok = 0;RxCount = 0;return;} //接收不成功清零
 		
-		if(focus_data_ok){
+		if(focus_data_ok){ // 提示字符 标志计算
 			
 				if(focus_data[3] == 0xFF ){
 						device_hint_flag |= 0x04;

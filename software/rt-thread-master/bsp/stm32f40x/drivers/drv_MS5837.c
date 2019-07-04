@@ -200,8 +200,7 @@ void MS583703BA_getTemperature(void)
 {
 	
 	D2_Temp = MS583703BA_getConversion(MS583703BA_D2_OSR_2048);
-	//rt_thread_mdelay(10);
-	
+
 	dT=D2_Temp - (((uint32_t)Cal_C[5])*256);
 	MS_TEMP=2000+dT*((uint32_t)Cal_C[6])/8388608;  //问题在于此处没有出现负号
 }
@@ -213,13 +212,13 @@ void MS583703BA_getTemperature(void)
   */
 void MS583703BA_getPressure(void)
 {
-		D1_Pres= MS583703BA_getConversion(MS583703BA_D1_OSR_4096);
-		//rt_thread_mdelay(10);
+		D1_Pres= MS583703BA_getConversion(MS583703BA_D1_OSR_8192);
+
 		
 		OFF_=(uint32_t)Cal_C[2]*65536+((uint32_t)Cal_C[4]*dT)/128;
 		SENS=(uint32_t)Cal_C[1]*32768+((uint32_t)Cal_C[3]*dT)/256;
 
-		if(MS_TEMP<2000)  // low temp
+		if(MS_TEMP<2000)  // 低于20℃时
 		{
 				Aux = (2000-MS_TEMP)*(2000-MS_TEMP);
 				T2 = 3*(dT*dT) /0x80000000; 
@@ -246,12 +245,12 @@ uint32 get_ms5837_init_pressure(void)
 
 		uint32 ms5837_init_value = 0;
 	
-		for(char i = 0;i < 10;i++){  //先行获取 以防数据出错
+		for(char i = 0;i < 10;i++){  //先行获取 10次数据以防数据出错
 				MS583703BA_getTemperature();//获取外部温度
 				MS583703BA_getPressure();   //获取水压
 				rt_thread_mdelay(10);
 				
-				res_value[i] = get_ms5837_pressure();
+				res_value[i] = get_ms5837_pressure(); 
 	
 		}
 		ms5837_init_value = Bubble_Filter(res_value);

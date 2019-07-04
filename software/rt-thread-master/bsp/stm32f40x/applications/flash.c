@@ -127,22 +127,22 @@ void list_value(void)
 		log_i("VehicleMode               %s",VehicleModeName[VehicleMode]);
 		log_i("debug_tool                %s",debug_tool_name[debug_tool]);
 	  log_i("----------------------   ---------");
-	  log_i("RoboticArm_MaxValue       %d",RoboticArm.MaxValue);
-	  log_i("RoboticArm_MinValue       %d",RoboticArm.MinValue);
-		log_i("RoboticArm_CurrentValue   %d",RoboticArm.CurrentValue);
-		log_i("RoboticArm_Speed          %d",RoboticArm.Speed);
+	  log_i("RoboticArm.MaxValue       %d",RoboticArm.MaxValue);
+	  log_i("RoboticArm.MinValue       %d",RoboticArm.MinValue);
+		log_i("RoboticArm.CurrentValue   %d",RoboticArm.CurrentValue);
+		log_i("RoboticArm.Speed          %d",RoboticArm.Speed);
 	  log_i("----------------------   ---------");
-	  log_i("YunTai_MaxValue           %d",YunTai.MaxValue);
-	  log_i("YunTai_MinValue           %d",YunTai.MinValue);
-		log_i("YunTai_MedValue           %d",YunTai.MedValue);
-		log_i("YunTai_CurrentValue       %d",YunTai.CurrentValue);
-		log_i("YunTai_Speed              %d",YunTai.Speed);
+	  log_i("YunTai.MaxValue           %d",YunTai.MaxValue);
+	  log_i("YunTai.MinValue           %d",YunTai.MinValue);
+		log_i("YunTai.MedValue           %d",YunTai.MedValue);
+		log_i("YunTai.CurrentValue       %d",YunTai.CurrentValue);
+		log_i("YunTai.Speed              %d",YunTai.Speed);
 	  log_i("----------------------   ---------");
 	  log_i("Propeller_Max             %d",PropellerParameter.PowerMax);
 	  log_i("Propeller_Min             %d",PropellerParameter.PowerMin);
 		log_i("Propeller_Med             %d",PropellerParameter.PowerMed);
 		log_i("----------------------   ---------");
-		log_i("Compass_Offset_Angle      %d",Compass_Offset_Angle);
+		log_i("Compass Offset Angle      %d",Compass_Offset_Angle);//Ö¸ÄÏÕë Æ«ÒÆ½Ç¶È
     rt_kprintf("\n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);

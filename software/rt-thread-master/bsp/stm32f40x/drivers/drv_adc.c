@@ -42,15 +42,6 @@ float get_voltage_value(void)
 		return voltage;
 } 
 
-/* MSH  get 电压方法 */
-void print_voltage(void)
-{
-		char str[128];
-		sprintf(str,"voltage:%.2f\r\n",get_voltage_value()); // 23.4为分压电路系数
-		rt_kprintf(str);
-}
-MSH_CMD_EXPORT(print_voltage,print voltage[u]);
-
 
 //获得ADC值
 //ch: @ref ADC_channels 

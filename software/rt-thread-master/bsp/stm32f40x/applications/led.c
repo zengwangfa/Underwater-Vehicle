@@ -116,6 +116,7 @@ void Light_Control(uint8 *action)//探照灯
 {
 		static uint8 Light_Mode_Count = 0;//探照灯模式计数
 		// 探照灯连续开关会产生三种模式 【高亮】【普通】【快闪】
+	
 		switch(*action)
 		{
 				case 0x01:

@@ -171,47 +171,42 @@ MSH_CMD_EXPORT(set_compass_offset_angle,ag: set_compass_offset_angle 360);
 
 
 
-/* Get时间  time */
-void print_time(void)
-{
-		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出.
-		char str[50];
-		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
-		log_i(str);
-}
-MSH_CMD_EXPORT(print_time,print time[a]);
 
 
-/* Get加速度  acceleration */
-void print_gyroscope(void)
+/* print JY901 */
+void print_JY901_info(void)
 {		
-		char str[50];
-		sprintf(str,"Acc:%.3f %.3f %.3f",  Sensor.JY901.Acc.x,  Sensor.JY901.Acc.y,  Sensor.JY901.Acc.z);
-		log_i(str);
-		sprintf(str,"Gyro:%.3f %.3f %.3f", Sensor.JY901.Gyro.x, Sensor.JY901.Gyro.y, Sensor.JY901.Gyro.z);
-		log_i(str);
-		sprintf(str,"Angle:%.3f %.3f %.3f",Sensor.JY901.Euler.Roll,Sensor.JY901.Euler.Pitch,Sensor.JY901.Euler.Yaw);
-		log_i(str);
-		sprintf(str,"Mag:%d %d %d",				 Sensor.JY901.Mag.x,  Sensor.JY901.Mag.y,   Sensor.JY901.Mag.z);
-		log_i(str);	
+
+
+		log_i("      Roll          | %0.3f",Sensor.JY901.Euler.Roll);
+		log_i("      Pitch         | %0.3f",Sensor.JY901.Euler.Pitch);
+		log_i("      Yaw           | %0.3f",Sensor.JY901.Euler.Yaw);
+		log_i("--------------------|-----------");
+		log_i("      Acc.x         | %0.3f",Sensor.JY901.Acc.x);
+		log_i("      Acc.y         | %0.3f",Sensor.JY901.Acc.y);//
+		log_i("      Acc.z         | %0.3f",Sensor.JY901.Acc.z);//
+		log_i("--------------------|-----------");
+		log_i("      Gyro.x        | %0.3f",Sensor.JY901.Gyro.x);
+		log_i("      Gyro.y        | %0.3f",Sensor.JY901.Gyro.y);//	
+		log_i("      Gyro.z        | %0.3f",Sensor.JY901.Gyro.z);//	
+		log_i("  JY901_Temperature | %0.3f",Sensor.JY901.Temperature);//		
+         
 	
 		return;
 }
 //MSH_CMD_EXPORT(print_gyroscope,print Sensor.JY901[a]);
 
 
-/* Get 温度  Temperature */
-float print_temperature(void)
-{
-		char str[50];
-		sprintf(str,"JY901_Temperature:%.2f C\r\n",Sensor.JY901.Temperature);
-		log_i(str);	
-		return Sensor.JY901.Temperature;
-}
-//MSH_CMD_EXPORT(print_temperature, print Temperature[T]);
 
-
-
+///* Get时间  time */
+//void print_time(void)
+//{
+//		//数据打包成string型       因为RT-Thread rt_kprintf()函数无法输出浮点型，因此现将数据打包成String型发出.
+//		char str[50];
+//		sprintf(str,"Time:20%d-%d-%d %d:%d:%.3f",stcTime.ucYear,stcTime.ucMonth,stcTime.ucDay,stcTime.ucHour,stcTime.ucMinute,(float)stcTime.ucSecond+(float)stcTime.usMiliSecond/1000);
+//		log_i(str);
+//}
+//MSH_CMD_EXPORT(print_time,print time[a]);
 
 
 /* 设置 九轴模块 保存配置 */

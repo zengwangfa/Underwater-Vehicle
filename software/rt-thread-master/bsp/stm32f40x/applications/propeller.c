@@ -7,13 +7,18 @@
  */
  #define LOG_TAG    "propeller"
  
+ 
+#include <stdlib.h>
+#include <string.h>
+#include "sys.h"
 #include "propeller.h"
 #include <elog.h>
 #include <rtthread.h>
-#include <stdlib.h>
-#include "sys.h"
-#include "flash.h"
 
+#include "flash.h"
+#include "RC_Data.h"
+
+#define Propeller_MedValue 1500
 uint8 Propeller_Init_Flag = 0;
 PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 		 .PowerMax = 1700,//正向最大值
@@ -29,17 +34,28 @@ PropellerPower_Type  PropellerPower = {0,0,0,0,0,0,0}; //推进器推力控制器
 PropellerError_Type  PropellerError = {0,0,0,0,0,0}; //推进器偏差值
 
 
+PropellerPower_Type power_test; //调试用的变量
+
 void PWM_Update(PropellerPower_Type* power)
-{
-		if(1 == Propeller_Init_Flag){
-				TIM_SetCompare1(TIM1,PropellerParameter.PowerMed + power->rightUp);     //右上	 E9	
-				TIM_SetCompare2(TIM1,PropellerParameter.PowerMed + power->leftDown);    //左下	 E11
-				TIM_SetCompare3(TIM1,PropellerParameter.PowerMed + power->leftUp); 	    //左上   E13
-				TIM_SetCompare4(TIM1,PropellerParameter.PowerMed + power->rightDown);   //右下   E14
+{	
+		power_test.rightUp = Propeller_MedValue + power->rightUp;
+		power_test.leftDown = Propeller_MedValue + power->leftDown;
+		power_test.leftUp = Propeller_MedValue + power->leftUp;
+		power_test.rightDown = Propeller_MedValue + power->rightDown;
+		
+		power_test.leftMiddle = Propeller_MedValue + power->leftMiddle;
+		power_test.rightMiddle = Propeller_MedValue + power->rightMiddle;
+		if(1 == Propeller_Init_Flag && 1 == ControlCmd.All_Lock){
+				
+				TIM_SetCompare1(TIM1,power_test.rightUp);     //右上	 E9	
+				TIM_SetCompare2(TIM1,power_test.leftDown);    //左下	 E11
+				TIM_SetCompare3(TIM1,power_test.leftUp); 	    //左上   E13
+				TIM_SetCompare4(TIM1,power_test.rightDown);   //右下   E14
 			
-				TIM_SetCompare1(TIM4,PropellerParameter.PowerMed + power->leftMiddle);  //左中   D12
-				TIM_SetCompare2(TIM4,PropellerParameter.PowerMed + power->rightMiddle); //右中   D13
+				TIM_SetCompare1(TIM4,power_test.leftMiddle);  //左中   D12
+				TIM_SetCompare2(TIM4,power_test.rightMiddle); //右中   D13
 		}
+
 }
 
 
@@ -55,9 +71,9 @@ void PWM_Update(PropellerPower_Type* power)
 *           3,给电调1.5ms停转信号,哔一声
 *           4,初始化完成，可以开始控制
 ********************************************/
-void Propeller_Init(void)//这边都需要经过限幅在给定
+void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 {
-		rt_thread_mdelay(500);  //0.5s
+
 		TIM_SetCompare1(TIM1, 2000);  		//最高转速信号   	水平推进器1号
 		TIM_SetCompare2(TIM1, 2000);  		//最高转速信号    水平推进器2号
 		TIM_SetCompare3(TIM1, 2000); 		  //最高转速信号    水平推进器3号
@@ -66,54 +82,36 @@ void Propeller_Init(void)//这边都需要经过限幅在给定
 		TIM_SetCompare1(TIM4, 2000); 	 	//最高转速信号  	垂直推进器1号
 		TIM_SetCompare2(TIM4, 2000);	  //最高转速信号  	垂直推进器2号
 
-		TIM_SetCompare3(TIM4, 1500);		//中值
+		TIM_SetCompare3(TIM4, 1900);		//中值
 		//TIM_SetCompare4(TIM4, 1700);		//向上	
 
+		rt_thread_mdelay(2000);  //2s
 
-		rt_thread_mdelay(500);  //0.5s
 
 		TIM_SetCompare1(TIM1, 1500);			//停转信号
 		TIM_SetCompare2(TIM1, 1500);			//停转信号
 		TIM_SetCompare3(TIM1, 1500);			//停转信号
 		TIM_SetCompare4(TIM1, 1500);			//停转信号
 	
-		TIM_SetCompare1(TIM4, 1500);		//停转信号
-		TIM_SetCompare2(TIM4, 1500);		//停转信号
+		TIM_SetCompare1(TIM4, 1500);		  //停转信号
+		TIM_SetCompare2(TIM4, 1500);		  //停转信号
 
-		TIM_SetCompare3(TIM4, 1500);		//中值
+		TIM_SetCompare3(TIM4, 1900);		//中值
 		//TIM_SetCompare4(TIM4, 1000);		//向下
-		
-		rt_thread_mdelay(500);  //0.5s
+		rt_thread_mdelay(1000);  //1s
 		
 	  log_i("Propeller_Init()");
 		Propeller_Init_Flag = 1;
 }
 
-/*【推进器】 【动一下】防重启MSH方法 */
-static void propeller_reset(int argc, char **argv)
-{
-
-		TIM_SetCompare1(TIM1, 1520);			//停转信号
-		TIM_SetCompare2(TIM1, 1520);			//停转信号
-		TIM_SetCompare3(TIM1, 1520);			//停转信号
-		TIM_SetCompare4(TIM1, 1520);			//停转信号
-	
-		TIM_SetCompare1(TIM4, 1520);		//停转信号
-		TIM_SetCompare2(TIM4, 1520);		//停转信号
-}
-MSH_CMD_EXPORT(propeller_reset,ag: propeller set 1600);
 
 /*【推进器】 【Stop】MSH方法 */
-static void propeller_stop(int argc, char **argv)
+void Propeller_Stop(void)
 {
-		PropellerPower.leftDown = 0;
-	  PropellerPower.leftMiddle = 0;
-		PropellerPower.leftUp = 0;
-		PropellerPower.rightDown = 0;
-		PropellerPower.rightMiddle = 0;
-		PropellerPower.rightUp = 0;
+		memset(&PropellerPower,0,sizeof(PropellerPower));
+
 }
-MSH_CMD_EXPORT(propeller_stop,ag: propeller_stop);
+MSH_CMD_EXPORT(Propeller_Stop,ag: Propeller Stop);
 
 
 

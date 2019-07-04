@@ -107,7 +107,7 @@ extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 #define CAM_EVENT 			(1 << 7)  //Camera事件标志位
 #define MS5837_EVENT 	  (1 << 8)  //Sensor事件标志位
 
-#define PI 3.1415926f
+#define PI 3.141592f
 #define Rad2Deg(Rad) (Rad * 180.0f / PI)
 #define Deg2Rad(Deg) (Deg * PI / 180.0f)
 

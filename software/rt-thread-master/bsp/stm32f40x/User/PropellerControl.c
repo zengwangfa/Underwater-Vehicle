@@ -12,11 +12,10 @@
 #include "drv_pwm.h"
 #include <rtthread.h>
 
-uint8 turnAngle = 45;    //转向角度
 
 int32 Expect_Depth = 0;
-uint16 clear_count = 0;
-extern uint8 Frame_EndFlag;
+
+
 /*******************************************
 * 函 数 名：askResultant
 * 功    能：求出合力大小及方向
@@ -30,6 +29,8 @@ double askResultant(double angle,double forceSize)
 		force = forceSize*cos(Deg2Rad(angle));
 		return force;
 }
+
+
 
 
 /*******************************************
@@ -65,20 +66,12 @@ uint16 Output_Limit(int16 *PowerValue)
 void Propeller_Control(void)
 {
 
-		switch(ControlCmd.Move){
-				case  Forward : robotForward();break;  //前进
-				case  BackAway: robotBackAway();break;	 //后退
-				default:break;
+		if(ControlCmd.Move != 128 ||  ControlCmd.Translation != 128){
+				PropellerPower.leftUp =    128 - ControlCmd.Move;
+				PropellerPower.rightUp =   128 - ControlCmd.Move;   
+				PropellerPower.leftDown =  128 - ControlCmd.Translation; 
+				PropellerPower.rightDown = 128 - ControlCmd.Translation;
 		}
-
-
-		switch(ControlCmd.Translation){
-				case  MoveLeft : moveLeft()	;break;  //左移
-				case  MoveRight: moveRight();break;  //右移		
-				default:break;
-		}
-
-		
 		switch(ControlCmd.Vertical){//有控制数据不定深度
 			
 				case  RiseUp: Expect_Depth-- ; break;  //上升
@@ -87,18 +80,17 @@ void Propeller_Control(void)
 				default:break/*定深度PID*/;
 		}
 		ControlCmd.Vertical = 0x00;
+	
 		
-		switch(ControlCmd.Rotate){
-				case  TurnLeft : turnLeft(); break;  //左转
-				case  TurnRight: turnRight();break;  //右转			
-				default:break;
+		if(1 == ControlCmd.All_Lock){
+				Propeller_Output();  //推进器限幅输出
+		}
+		else {
+				Propeller_Stop();	//推进器数值清零
 		}
 		
-		Propeller_Output();  //推进器限幅输出
-		
-		ControlCmd.Move = 0x00;
-		ControlCmd.Translation = 0x00;
-		ControlCmd.Rotate = 0x00;
+
+
 
 }
 
@@ -125,35 +117,10 @@ void Propeller_Output(void)
 	
 		PropellerPower.rightMiddle = Output_Limit(&PropellerPower.rightMiddle);
 		
-		PWM_Update(&PropellerPower);//PWM上传
+		PWM_Update(&PropellerPower);//PWM值更新
 	
-		if(Frame_EndFlag == 1 && \
-			 ControlCmd.Move ==0x00 && ControlCmd.Translation == 0x00 && ControlCmd.Rotate == 0x00){//接收到一帧 并且 无控制字 
-					Horizontal_Propeller_Power_Clear();//10次更新PWM后清空
-		}
-		
-
-		
 }
 
-void Horizontal_Propeller_Power_Clear(void)//水平方向推力清零 10次后清空
-{
-		clear_count ++;
-		if(ControlCmd.Move ==0x00 && ControlCmd.Translation == 0x00 && ControlCmd.Rotate == 0x00){
-				if(clear_count >= 15 ){ //10次都无控制字清除 推进器动力
-						PropellerPower.rightUp = 0;
-						PropellerPower.leftDown = 0;
-						PropellerPower.leftUp = 0;
-						PropellerPower.rightDown= 0;
-					  
-						clear_count = 0;
-						Frame_EndFlag = 0;
-				}
-		}
-		else {
-			clear_count = 0;
-		}
-}
 
 
 
@@ -238,6 +205,20 @@ void moveRight(void)  //右移
 		PropellerPower.rightDown = -PropellerPower.Power + PropellerError.rightDownError;
 }
 MSH_CMD_EXPORT(moveRight,ag: moveRight);
+
+
+void Propller_stop(void)  //推进器测试
+{
+		PropellerPower.leftUp =    0 + PropellerError.leftUpError;
+		PropellerPower.rightUp =   0 + PropellerError.rightUpError;
+		PropellerPower.leftDown =  0 + PropellerError.leftDownError;
+		PropellerPower.rightDown = 0 + PropellerError.rightDownError;
+	
+		PropellerPower.leftMiddle = 0 + PropellerError.leftMiddleError;
+		PropellerPower.rightMiddle = 0+ PropellerError.rightMiddleError; 
+}
+MSH_CMD_EXPORT(Propller_stop,ag: propller_stop);
+
 
 /*******************************************
 * 函 数 名：Propeller_upDown

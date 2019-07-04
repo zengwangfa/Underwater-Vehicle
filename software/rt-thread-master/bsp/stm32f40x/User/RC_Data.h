@@ -5,6 +5,14 @@
 
 
 typedef struct{
+
+		int16 X;
+		int16 Y;
+		int16 Force;
+		float Angle;
+}Rocker_Type;
+
+typedef struct{
 		uint16  THR;
 		uint16  YAW;
 		uint16  ROL;
@@ -14,7 +22,7 @@ typedef struct{
 
 typedef struct{
 		uint8  All_Lock;       //总开关  
-		uint8  Depth_Lock;     //【深度】	 0x01 深度锁定、0x02 人工控制
+		uint8  Depth_Lock;     //【深度】	 0x01 深度锁定、0x02 人工控制 
 		uint8  Direction_Lock; //【方向】	 0x01 方向锁定、0x02 随水动
 		uint8  Move;      		 //【运动】	 0x01 前进、    0x02 后退、  0x00 不动作（默认）
 		uint8  Translation;    //【平移】	 0x01 左平移、  0x02 右平移、0x00 不动作（默认）
@@ -30,7 +38,7 @@ typedef struct{
 
 
 
-
+extern Rocker_Type Rocker;
 extern ControlCmd_Type ControlCmd;
 extern ReceiveData_Type ReceiveData;
 void Control_Cmd_Get(ControlCmd_Type *cmd); //控制命令获取

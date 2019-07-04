@@ -20,7 +20,7 @@
 #include "filter.h"
 #include "drv_spl1301.h"
 
-#define Using_SPL1301
+//#define Using_SPL1301 
 
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
@@ -78,17 +78,18 @@ void sensor_highSpeed_thread_entry(void* parameter)
 						Sensor.MS5837.Init_PessureValue = spl1301_get_pressure(); //获取压力初值 
 						ON_OFF = 1; //自锁
 				}
-				Sensor.MS5837.PessureValue = (spl_res_pressure - spl_init_pressure)/20;
+				Sensor.MS5837.PessureValue = spl1301_get_pressure();
 				Sensor.MS5837.Temperature = spl1301_get_temperature();
 #else
+				MS5837_Convert();   //MS5837设备数据转换
 				if(0 == ON_OFF){
 						Sensor.MS5837.Init_PessureValue = get_ms5837_init_pressure(); //获取压力初值 
 						ON_OFF = 1; //自锁
 				}
-				MS5837_Convert();   //MS5837设备数据转换
-#endif
 
-				
+#endif
+			
+				Sensor.Depth = (int)((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue)/10);		
 				rt_thread_mdelay(20);
 		}
 }
@@ -122,7 +123,7 @@ int sensor_thread_init(void)
 #else
 			  if(MS5837_Init()){
 						log_i("MS5837_Init()");
-						//rt_event_send(&init_event, MS5837_EVENT);
+
 				}
 				else {
 						log_e("MS5837_Init_Failed!");
@@ -153,37 +154,34 @@ void MS5837_Convert(void)//MS5837数据转换
 		
 		Sensor.MS5837.Temperature  = get_ms5837_temperature();
 		Sensor.MS5837.PessureValue = Bubble_Filter(res_value);
-	
-	
-	
-		Sensor.Depth = (int)((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue)/10);
-
 }
 
 
 
-/* Get Pressure */
-void print_pressure(void)
+/* 打印传感器信息 */
+void print_sensor_info(void)
 {
-		static char str[50] = {0};
-		/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-		rt_enter_critical();
-		print_gyroscope();  //打印角度
-		
-		print_temperature();//打印温度
-		
-		sprintf(str,"Depth:%d",Sensor.Depth);
-		log_i(str);	
-
-		sprintf(str,"MS_Temp:%f\n",get_ms5837_temperature());
-		rt_kprintf(str);
+		log_i("    variable        |  value");
+		log_i("--------------------|-----------");
 	
-		rt_kprintf("MS_Pressure:%d\n",get_ms5837_pressure());//MS5837_Pressure
-		rt_kprintf("MS_Init_Pressure:%d\n",Sensor.MS5837.Init_PessureValue);//MS5837_Pressure	
-		/* 调度器解锁 */
-		rt_exit_critical();
+		print_JY901_info();  //打印角度
+				
+
+
+		log_i("--------------------|-----------");
+		log_i("     Voltage        |   %0.3f",Sensor.PowerSource.Voltage); //电压
+		log_i("     Current        |   %d",Sensor.PowerSource.Current); //电流
+		log_i("--------------------|-----------");
+		log_i(" Water Temperature  |   %0.3f",Sensor.MS5837.Temperature);  //水温
+		log_i("sensor_Init_Pressure|   %d",Sensor.MS5837.Init_PessureValue); //深度传感器初始压力值	
+		log_i("   sensor_Pressure  |   %d",Sensor.MS5837.PessureValue); //深度传感器当前压力值	
+		log_i("     Depth          |   %d",Sensor.Depth); //深度值
+	
+
+		
+
 }
-MSH_CMD_EXPORT(print_pressure, printf pressure[pa]);
+MSH_CMD_EXPORT(print_sensor_info, printf gysocope & PowerSource & pressure);
 
 
 

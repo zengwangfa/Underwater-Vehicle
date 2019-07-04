@@ -146,8 +146,8 @@ struct SQ
 /* Get时间  time */
 void print_time(void);
 
-void print_gyroscope(void);
-float print_temperature(void);
+void print_JY901_info(void);//打印JY901传感器信息
+
 /*-----------------应用函数----------------*/
 
 void JY901_Convert(JY901_Type * pArr);

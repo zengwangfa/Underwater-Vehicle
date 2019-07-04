@@ -73,13 +73,13 @@ uint8 get_decimal(float data){ //得到浮点型 的1位小数位
   */
 void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 {
-		static short res_Roll = 0;
+		static short res_Roll = 0; //暂存数据
 		static short res_Pitch = 0;
 		static short res_Yaw = 0;
 	
-		res_Roll = (short)((sensor->JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
+		res_Roll  = (short)((sensor->JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
 		res_Pitch = (short)((sensor->JY901.Euler.Pitch+180)*100);
-		res_Yaw = (short)((sensor->JY901.Euler.Yaw+180)*100);
+		res_Yaw   = (short)((sensor->JY901.Euler.Yaw+180)*100);
 	
 		Return_Data[0] = sensor->PowerSource.Voltage; //整数倍
 		Return_Data[1] = get_decimal(sensor->PowerSource.Voltage);//小数的100倍
