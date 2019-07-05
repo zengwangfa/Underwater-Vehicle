@@ -4,10 +4,10 @@
  *  Created on: 2019年3月30日
  *      Author: zengwangfa
  *       Notes: 水深传感器设备驱动
- *   Attention: SCL - A11 (黑色)   
- *							SDA - A8  (黄色)   
+ *   Attention: SCL - E10 (黑色)   
+ *							SDA - E12 (黄色)   
  */
- 
+
 #include "init.h"
 #include "drv_MS5837.h"
 #include "drv_i2c.h"

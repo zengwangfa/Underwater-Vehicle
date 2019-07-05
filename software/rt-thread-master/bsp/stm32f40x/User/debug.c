@@ -46,7 +46,6 @@ uint8 debug_tool = PC_ANO; //山外 / 匿名上位机 调试标志位
 
 
 /*-----------------------Debug Thread Begin-----------------------------*/
-uint32 debug_count = 0;
 void debug_send_thread_entry(void* parameter)
 {
 		rt_thread_mdelay(2000);//等待 串口设备初始化完成
@@ -57,7 +56,7 @@ void debug_send_thread_entry(void* parameter)
 				switch(debug_tool)//选择上位机
 				{
 
-						case PC_VCAN: Vcan_Send_Data();	debug_count ++;break;
+						case PC_VCAN: Vcan_Send_Data();break;
 						case PC_ANO :	ANO_SEND_StateMachine();break;
 						default :break;
 				}
@@ -75,7 +74,7 @@ int Debug_thread_init(void)
                     debug_send_thread_entry, //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
-                    8,										 	 //线程优先级【priority】
+                    10,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (debug_send_tid != RT_NULL){
@@ -160,7 +159,7 @@ static int set_debug_tool(int argc,char **argv)
 {
 		int result = 0;
     if (argc != 2){
-				log_e("Proper Usage: debug_by vcan / ano / null");//用法:设置上位机工具
+				log_e("set_dubug_tool <vcan|ano|null>");//用法:设置上位机工具
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -176,17 +175,17 @@ static int set_debug_tool(int argc,char **argv)
 		}
 		else if( !strcmp(argv[1],"null") ){ //设置为 山外上位机
 				debug_tool = DEBUG_NULL;
-				log_v("Debug Tool:DEBUG_NULL\r\n");
+				log_v("Debug Tool:NULL\r\n");
 		}
 		else {
-				log_e("Proper Usage: debug_by vcan / ano / null");//用法:设置上位机工具
+				log_e("set_dubug_tool <vcan|ano|null>");//用法:设置上位机工具
 				goto _exit;
 		}
 		Flash_Update();
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(set_debug_tool,debug_by vcan / ano / null);
+MSH_CMD_EXPORT(set_debug_tool,set_dubug_tool <vcan|ano|null>);
 
 
 

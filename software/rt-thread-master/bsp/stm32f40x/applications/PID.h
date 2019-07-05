@@ -53,6 +53,7 @@ typedef struct
 	
 		PID_Controler High_Speed_Control;  //¸ß¶È
 		PID_Controler High_Position_Control;
+	
 
 }AllControler;
 

@@ -64,7 +64,7 @@ void Remote_Control_Data_Analysis(uint8 Data) //控制数据解析
 										}
 								}
 								else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear(&ControlCmd);return;} //接收不成功清零
-						}//
+						}
 				}
 				else {Receive_Data_OK = 0;Control_RxCount = 0;Receive_Data_OK = 0;Control_Cmd_Clear(&ControlCmd);;return;} //接收不成功清零
 		}

@@ -173,29 +173,6 @@ MSH_CMD_EXPORT(set_compass_offset_angle,ag: set_compass_offset_angle 360);
 
 
 
-/* print JY901 */
-void print_JY901_info(void)
-{		
-
-
-		log_i("      Roll          | %0.3f",Sensor.JY901.Euler.Roll);
-		log_i("      Pitch         | %0.3f",Sensor.JY901.Euler.Pitch);
-		log_i("      Yaw           | %0.3f",Sensor.JY901.Euler.Yaw);
-		log_i("--------------------|-----------");
-		log_i("      Acc.x         | %0.3f",Sensor.JY901.Acc.x);
-		log_i("      Acc.y         | %0.3f",Sensor.JY901.Acc.y);//
-		log_i("      Acc.z         | %0.3f",Sensor.JY901.Acc.z);//
-		log_i("--------------------|-----------");
-		log_i("      Gyro.x        | %0.3f",Sensor.JY901.Gyro.x);
-		log_i("      Gyro.y        | %0.3f",Sensor.JY901.Gyro.y);//	
-		log_i("      Gyro.z        | %0.3f",Sensor.JY901.Gyro.z);//	
-		log_i("  JY901_Temperature | %0.3f",Sensor.JY901.Temperature);//		
-         
-	
-		return;
-}
-//MSH_CMD_EXPORT(print_gyroscope,print Sensor.JY901[a]);
-
 
 
 ///* Get ±º‰  time */

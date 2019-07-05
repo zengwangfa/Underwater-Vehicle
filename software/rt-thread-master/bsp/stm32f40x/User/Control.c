@@ -23,20 +23,36 @@
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
+int16 Force1 = 0;
+int16 Force2 = 0;
 
 
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
 
-		rc->X = ControlCmd.Move - 128; 			 //X轴摇杆值 -127 ~ +127
-		rc->Y = ControlCmd.Translation- 128  ;//Y轴摇杆值 -127 ~ +127
+		rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
+		rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
 		
-
 		rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));
-		if(rc->Angle < 0){rc->Angle += 360;}
-
+		if(rc->Angle < 0){rc->Angle += 360;} //角度变换 
+																				 /* 以极坐标定义 角度顺序 0~360°*/ 	
 		rc->Force = sqrt(rc->X*rc->X+rc->Y*rc->Y);	//求合力斜边
+		
+		Force1 = (sqrt(2)/2)*(rc->X + rc->Y);
+		Force2 = (sqrt(2)/2)*(rc->X - rc->Y);		
+		
+		//掌舵一号
+		PropellerPower.leftUp =    PropellerDir.leftUp    * (-Force1)*2 + PropellerError.leftUp;
+		PropellerPower.rightUp =   PropellerDir.rightUp   * ( Force2)*2 + PropellerError.rightUp;   
+		PropellerPower.leftDown =  PropellerDir.leftDown  * (-Force2)*2 + PropellerError.leftDown ; 
+		PropellerPower.rightDown = PropellerDir.rightDown * (-Force1)*2 + PropellerError.rightDown;
+		
 }
+
+
+
+
+
 
 
 /**
@@ -51,8 +67,10 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 		rt_thread_mdelay(5000);//等待外部设备初始化成功
 		while(1)
 		{
-				Control_Cmd_Get(&ControlCmd);
-				if(LOCK == ControlCmd.All_Lock){
+				Control_Cmd_Get(&ControlCmd); //控制命令获取 所有上位控制命令都来自于此【Important】
+				Convert_RockerValue(&Rocker);
+
+				if(UNLOCK == ControlCmd.All_Lock){
 						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
 						Depth_Control(); //深度控制
 				}
@@ -75,9 +93,10 @@ void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
 		
 		while(1)
 		{
-				Convert_RockerValue(&Rocker);
+
 				Light_Control(&ControlCmd.Light);  //探照灯控制
 				Propeller_Control(); //推进器控制
+			
 				rt_thread_mdelay(30);
 		}
 }
@@ -140,7 +159,7 @@ void Angle_Control(void)
 void Depth_Control(void)
 {
 		
-		Total_Controller.High_Position_Control.Expect = (float)Expect_Depth*10; //期望深度由遥控器给定
+		Total_Controller.High_Position_Control.Expect = (float)Expect_Depth; //期望深度由遥控器给定
 		Total_Controller.High_Position_Control.FeedBack = (float)Sensor.Depth;  //当前深度反馈
 		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
 	
@@ -203,9 +222,7 @@ static int yaw(int argc, char **argv)
 				result = -RT_ERROR;
         goto _exit;
     }
-
-		Yaw_Control = atoi(argv[1]);
-
+		Yaw_Control = atoi(argv[1]); //ASCII to Integer
 		
 _exit:
     return result;

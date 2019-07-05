@@ -60,15 +60,6 @@ float get_cpu_temp(void) {
 }
 
 
-void get_cpu_temperature(void)
-{
-		char str[50]={0};
-		float temp = 0.0f;
-		temp = get_cpu_temp();
-		sprintf(str,"STM32 CPU Temperature : %.2f C",KalmanFilter(&temp));
-		log_v(str);
-}
-MSH_CMD_EXPORT(get_cpu_temperature,cpu temperature get);
 
 /**
  * CPU 温度 ADC 硬件初始化

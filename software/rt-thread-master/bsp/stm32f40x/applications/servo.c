@@ -6,17 +6,20 @@
  *      Notes:  舵机设备
  */
 #define  LOG_TAG    "servo"
+#include <stdio.h>
+#include <stdlib.h>
+#include <rtthread.h>
+#include <elog.h>
+
+#include "sys.h"
 
 #include "servo.h"
 #include "propeller.h"
 #include "flash.h"
-#include <rtthread.h>
-#include <elog.h>
-#include <stdlib.h>
-#include "sys.h"
 #include "Return_Data.h"
 #include "RC_Data.h"
 #include "focus.h"
+
 #define RoboticArm_MedValue  1500
 #define YunTai_MedValue  		 2000
 
@@ -370,6 +373,34 @@ _exit:
     return result;
 }
 MSH_CMD_EXPORT(yuntai_currentValue_set,ag: yuntai_currentValue_set 1500);
+
+
+/*【云台】舵机 修改 【当前】 MSH方法 */
+static int yuntai(int argc, char **argv)
+{
+    int result = 0;
+		ServoType servo;
+    if (argc > 1){
+        log_e("Error! Proper Usage: YunTai_medvalue_set 2000");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		rt_kprintf("Set Min Value:");
+		scanf("%d",(int *)(&servo.MinValue));
+
+		if(servo.MinValue <= 7000 ){		
+				log_i("Write_Successed! servo.MinValue  %d",servo.MinValue);
+		}
+		else {
+				log_e("Error! The value is out of range!");
+		}
+
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(yuntai,ag: yuntai_currentValue_set 1500);
+
+
 
 
 

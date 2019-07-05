@@ -13,15 +13,25 @@ typedef struct //推进器中值、最大值、最小值
 	
 }PropellerParameter_Type;//推进器参数结构体
 
+typedef struct //推进器方向
+{
+		int16 leftUp;  //左上
+		int16 rightUp;
+		int16 leftDown; //左下
+		int16 rightDown;
+		int16 leftMiddle; //左中
+		int16 rightMiddle;		
+
+}PropellerDir_Type;
 
 typedef struct//调试时各个推进器的偏差量 
 {
-		int leftUpError;  //左上
-		int rightUpError;
-		int leftDownError; //左下
-		int rightDownError;
-		int leftMiddleError; //左中
-		int rightMiddleError;
+		int16 leftUp;  //左上
+		int16 rightUp;
+		int16 leftDown; //左下
+		int16 rightDown;
+		int16 leftMiddle; //左中
+		int16 rightMiddle;
 
 }PropellerError_Type;//推进器偏移值
 
@@ -57,9 +67,9 @@ typedef enum
 		
 }ActionType_Enum; //动作指令枚举
 
-
+extern PropellerDir_Type PropellerDir;
 extern PropellerParameter_Type PropellerParameter; 
-extern ActionType_Enum       Posture_Flag; //机器人姿态标志位
+extern ActionType_Enum      Posture_Flag; //机器人姿态标志位
 extern PropellerPower_Type  PropellerPower; //推进器推理控制器
 extern PropellerError_Type  PropellerError; //推进器偏差值
 

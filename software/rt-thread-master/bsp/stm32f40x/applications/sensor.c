@@ -89,7 +89,7 @@ void sensor_highSpeed_thread_entry(void* parameter)
 
 #endif
 			
-				Sensor.Depth = (int)((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue)/10);		
+				Sensor.Depth = (int) ((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue)/10);		
 				rt_thread_mdelay(20);
 		}
 }
@@ -123,7 +123,6 @@ int sensor_thread_init(void)
 #else
 			  if(MS5837_Init()){
 						log_i("MS5837_Init()");
-
 				}
 				else {
 						log_e("MS5837_Init_Failed!");
@@ -150,7 +149,7 @@ void MS5837_Convert(void)//MS5837数据转换
 		MS583703BA_getPressure();   //获取水压
 
 		if(i >= 9){i = 0;}
-		res_value[i++] = get_ms5837_pressure();
+		res_value[i++] = get_ms5837_pressure();//获取10次数据
 		
 		Sensor.MS5837.Temperature  = get_ms5837_temperature();
 		Sensor.MS5837.PessureValue = Bubble_Filter(res_value);
@@ -164,19 +163,31 @@ void print_sensor_info(void)
 		log_i("    variable        |  value");
 		log_i("--------------------|-----------");
 	
-		print_JY901_info();  //打印角度
-				
-
-
+		log_i("      Roll          |  %+0.3f",Sensor.JY901.Euler.Roll);
+		log_i("      Pitch         |  %+0.3f",Sensor.JY901.Euler.Pitch);
+		log_i("      Yaw           |  %+0.3f",Sensor.JY901.Euler.Yaw);
 		log_i("--------------------|-----------");
-		log_i("     Voltage        |   %0.3f",Sensor.PowerSource.Voltage); //电压
-		log_i("     Current        |   %d",Sensor.PowerSource.Current); //电流
+		log_i("      Acc.x         |  %+0.3f",Sensor.JY901.Acc.x);
+		log_i("      Acc.y         |  %+0.3f",Sensor.JY901.Acc.y);//
+		log_i("      Acc.z         |  %+0.3f",Sensor.JY901.Acc.z);//
 		log_i("--------------------|-----------");
-		log_i(" Water Temperature  |   %0.3f",Sensor.MS5837.Temperature);  //水温
-		log_i("sensor_Init_Pressure|   %d",Sensor.MS5837.Init_PessureValue); //深度传感器初始压力值	
-		log_i("   sensor_Pressure  |   %d",Sensor.MS5837.PessureValue); //深度传感器当前压力值	
-		log_i("     Depth          |   %d",Sensor.Depth); //深度值
+		log_i("      Gyro.x        |  %+0.3f",Sensor.JY901.Gyro.x);
+		log_i("      Gyro.y        |  %+0.3f",Sensor.JY901.Gyro.y);//	
+		log_i("      Gyro.z        |  %+0.3f",Sensor.JY901.Gyro.z);//	
+		log_i("  JY901_Temperature |  %+0.3f",Sensor.JY901.Temperature);//					
+
 	
+		log_i("--------------------|-----------");
+		log_i("     Voltage        |  %0.3f",Sensor.PowerSource.Voltage); //电压
+		log_i("     Current        |  %d",Sensor.PowerSource.Current);    //电流
+		log_i("--------------------|-----------");
+		log_i(" Water Temperature  |  %0.3f",Sensor.MS5837.Temperature);    //水温
+		log_i("sensor_Init_Pressure|  %d",Sensor.MS5837.Init_PessureValue); //深度传感器初始压力值	
+		log_i("   sensor_Pressure  |  %d",Sensor.MS5837.PessureValue); 		 //深度传感器当前压力值	
+		log_i("     Depth          |  %d",Sensor.Depth); 									 //深度值
+		log_i("--------------------|-----------");	
+		log_i("    CPU.Usages      |  %0.3f",	Sensor.CPU.Temperature); //CPU温度
+		log_i("   CPU.Temperature  |  %0.3f",	Sensor.CPU.Usage); 			 //CPU使用率
 
 		
 

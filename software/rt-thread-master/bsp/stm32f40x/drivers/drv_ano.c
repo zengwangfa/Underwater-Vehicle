@@ -10,14 +10,15 @@
  *【统一接口】发送只需要调用 -> ANO_SEND_StateMachine(void);
  *            保存参数需调用 -> void Save_Or_Reset_PID_Parameter(void);
  */
+ #include <rtdevice.h>
+#include <elog.h>
 #include "drv_ano.h"
 #include "sys.h"
 #include "PID.h"
 #include "led.h"
 #include "flash.h"
 #include "gyroscope.h"
-#include <rtdevice.h>
-#include <elog.h>
+
 #include "drv_MS5837.h"
 #include "RC_Data.h"
 #include "PropellerControl.h"
@@ -32,7 +33,7 @@
 
 #define HardwareType 	0.00  //硬件种类  00为其他硬件版本
 #define HardwareVER 	2.00  //硬件版本
-#define SoftwareVER 	3.27  //软件版本  3月10日
+#define SoftwareVER 	7.50  //软件版本  7月5日
 #define ProtocolVER 	1  		//协议版本
 #define BootloaderVER 1  		//Bootloader版本
 /*----------------------- Variable Declarations. -----------------------------*/
@@ -218,13 +219,15 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 		{
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 		}
-		if(*(data_buf+2)==0x14)                             //接收PID5
+		if(*(data_buf+2)==0x14)                             //接收PID5 【改为推进器方向标志】
 		{
-	 
+
+			
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 		}
-		if(*(data_buf+2)==0x15)                             //接收PID6
+		if(*(data_buf+2)==0x15)                             //接收PID6  【改为推进器方向标志】
 		{
+			
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 				Sort_PID_Cnt++;
 				Sort_PID_Flag=1;
@@ -241,7 +244,7 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void ANO_Data_Send_Version(void)//发送版本信息
+void ANO_Data_Send_Version(int hardwareType,int hardwareVER,int softwareVER,int protocolVER,int bootloaderVER)//发送版本信息
 {
 		uint8 _cnt=0;
 		vs16 _temp;
@@ -288,7 +291,7 @@ void ANO_Data_Send_Version(void)//发送版本信息
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void ANO_Data_Send_Status(void)//发送基本信息（姿态、锁定状态）
+void ANO_Data_Send_Status(int roll,int pitch,int yaw,int depth)//发送基本信息（姿态、锁定状态）
 {
 		uint8 _cnt=0;
 		vs16 _temp;
@@ -300,25 +303,25 @@ void ANO_Data_Send_Status(void)//发送基本信息（姿态、锁定状态）
 		data_to_send[_cnt++]=0x01;
 		data_to_send[_cnt++]=0;
 		
-		_temp = (int)(Sensor.JY901.Euler.Roll*100);
+		_temp = (int)(roll*100);
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
-		_temp = (int)(Sensor.JY901.Euler.Pitch*100);
+		_temp = (int)(pitch*100);
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
-		_temp = (int)(-Sensor.JY901.Euler.Yaw*100);
+		_temp = (int)(yaw*100);
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
 		
-		_temp2 = MS5837_Pressure;//单位cm
+		_temp2 = (int)(depth);//单位cm
 		data_to_send[_cnt++]=BYTE3(_temp2);
 		data_to_send[_cnt++]=BYTE2(_temp2);
 		data_to_send[_cnt++]=BYTE1(_temp2);
 		data_to_send[_cnt++]=BYTE0(_temp2);
 		
 		data_to_send[_cnt++]=0x01;//飞行模式
-		data_to_send[_cnt++]=1;//上锁0、解锁1
-		
+		data_to_send[_cnt++]=2-ControlCmd.All_Lock;//【匿名】上锁0、解锁1   自定义为：0x01解锁，0x02上锁
+   		
 		data_to_send[3] = _cnt-4;
 		sum = 0;
 		for(i=0;i<_cnt;i++){
@@ -535,11 +538,11 @@ void ANO_DT_Send_RCData(u16 thr,u16 yaw,u16 rol,u16 pit,u16 aux1,u16 aux2,u16 au
 /*******************************************
 * 函 数 名：ANO_Data_Send_Voltage_Current
 * 功    能：发送电压、电流【第5组】
-* 输入参数：none
+* 输入参数：电压、电流
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void ANO_Data_Send_Voltage_Current(void)
+void ANO_Data_Send_Voltage_Current(float volatge,float current)
 {
 		uint8 _cnt=0;
 		vs16 _temp;
@@ -551,11 +554,11 @@ void ANO_Data_Send_Voltage_Current(void)
 		data_to_send[_cnt++]=0x05;
 		data_to_send[_cnt++]=0;
 		
-		_temp = (int)(Sensor.PowerSource.Voltage*100);      //电压
+		_temp = (int)(volatge*100);      //电压
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
 	
-		_temp = (int)(0.5*100); //电流
+		_temp = (int)(current*100); //电流
 		data_to_send[_cnt++]=BYTE1(_temp);
 		data_to_send[_cnt++]=BYTE0(_temp);
 			
@@ -583,17 +586,16 @@ void ANO_SEND_StateMachine(void)
 {
 		static u16 ANO_Cnt = 0;
 
-
 		if(ANO_Cnt == 0){
-				ANO_Data_Send_Version();
+				ANO_Data_Send_Version((int)HardwareType,(int)HardwareVER,(int)SoftwareVER,(int)ProtocolVER,(int)BootloaderVER);//发送基本版本信息（硬件种类、硬件、软件、协议、Bootloader版本）【第一组】
 		}
 		ANO_Cnt++;
 		
 		if(ANO_Cnt == 1){		
-				ANO_Data_Send_Status();
+				ANO_Data_Send_Status(Sensor.JY901.Euler.Roll,Sensor.JY901.Euler.Pitch,-Sensor.JY901.Euler.Yaw,Sensor.Depth); //发送基本信息（欧拉三角、高度、锁定状态）【第二组】
 		}
 	
-		else if(ANO_Cnt == 2){
+		else if(ANO_Cnt == 2){//发送传感器原始数字量 (加速度、角速度、磁场)  【第三组】
 				ANO_DT_Send_Senser(Sensor.JY901.Acc.x,Sensor.JY901.Acc.y,Sensor.JY901.Acc.z,
 													 Sensor.JY901.Gyro.x,Sensor.JY901.Gyro.y,Sensor.JY901.Gyro.z,
 													 Sensor.JY901.Mag.x,Sensor.JY901.Mag.y,Sensor.JY901.Mag.z);
@@ -605,22 +607,17 @@ void ANO_SEND_StateMachine(void)
 													 PropellerPower.leftDown+1500,PropellerPower.rightDown+1500,
 													 PropellerPower.leftMiddle+1500,PropellerPower.rightMiddle+1500,
 													 0,0,0,0);
-//				ANO_DT_Send_RCData(ReceiveData.THR,ReceiveData.YAW,
-//													 ReceiveData.ROL,ReceiveData.PIT,
-//													 0,0,
-//													 0,0,0,0);
-
 		}
 		else if(ANO_Cnt == 4){
-				ANO_Data_Send_Voltage_Current();
+				ANO_Data_Send_Voltage_Current(Sensor.PowerSource.Voltage,Sensor.PowerSource.Current);
 		}
 		
-		else if(ANO_Cnt == 5)
+		else if(ANO_Cnt == 5) //发送高度数据 (气压计高度、超声波高低)  【第七组】
 		{
-				ANO_DT_Send_High(MS5837_Pressure,0);
+				ANO_DT_Send_High(MS5837_Pressure,0); //发送高度数据 (气压计高度、超声波高低)
 		}
 
-		else if(ANO_Cnt == 6
+		else if(ANO_Cnt == 6 //发送PID数据
           &&ANO_Send_PID_Flag[0] == 0
             &&ANO_Send_PID_Flag[1] == 0
               &&ANO_Send_PID_Flag[2] == 0
@@ -687,6 +684,7 @@ void ANO_SEND_StateMachine(void)
 												0);
 				ANO_Send_PID_Flag[3]=0;
 		}
+		
 		else if(ANO_Cnt == 11 && ANO_Send_PID_Flag[4] == 1)//第5帧 PID
 		{
 				ANO_DT_Send_PID(5,
@@ -701,18 +699,18 @@ void ANO_SEND_StateMachine(void)
 												0);
 				ANO_Send_PID_Flag[4]=0;
 		}
-		else if(ANO_Cnt == 12 && ANO_Send_PID_Flag[5] == 1)//第6帧 PID
+		else if(ANO_Cnt == 12 && ANO_Send_PID_Flag[5] == 1)//第6帧 PID PropellerDir
 		{
 				ANO_DT_Send_PID(6,  
 												0,
 												0,
 												0,
-												0,
-												0,
-												0,
-												0,
-												0,
-												0);
+												(float)PropellerDir.rightUp,
+												(float)PropellerDir.leftDown,
+												(float)PropellerDir.leftUp,
+												(float)PropellerDir.rightDown,
+												(float)PropellerDir.leftMiddle,
+												(float)PropellerDir.rightMiddle);
 				ANO_Send_PID_Flag[5]=0;
 				ANO_Cnt=0;
 				log_v("PID_Flash_Read -> success!");
@@ -760,9 +758,12 @@ void Save_Or_Reset_PID_Parameter(void)
 				PID_Parameter[7].p=Total_Controller.High_Position_Control.Kp;
 				PID_Parameter[7].i=Total_Controller.High_Position_Control.Ki;
 				PID_Parameter[7].d=Total_Controller.High_Position_Control.Kd;			
+			
 
+			
+				
 				log_v("PID_Save_Flash -> Success!");
-				Save_PID_Parameter();
+				Save_PID_Parameter(); //保存参数至FLASH
 				Sort_PID_Flag=0;
 		}
 		else if(Sort_PID_Flag==2)//将复位PID参数，并写入Flash
@@ -802,9 +803,10 @@ void Save_Or_Reset_PID_Parameter(void)
 				PID_Parameter[7].i=Total_Controller.High_Position_Control.Ki;
 				PID_Parameter[7].d=Total_Controller.High_Position_Control.Kd;
 				
-				Save_PID_Parameter();
+
+				Save_PID_Parameter(); //保存参数至FLASH
 				
-				Sort_PID_Flag=0;
+				Sort_PID_Flag = 0;
 				log_v("PID_Reset_Flash -> Success!");
 				ANO_Send_PID_Flag[0]=1;//回复默认参数后，将更新的数据发送置地面站		
 				ANO_Send_PID_Flag[1]=1;

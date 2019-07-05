@@ -115,8 +115,9 @@ extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 #define AUV_Mode  0//0
 #define ROV_Mode  1//1
 
-#define LOCK   1 //全局锁   宏定义
-#define UNLOCK 2 //全军解锁 
+#define UNLOCK 1 //全局解锁【启动】  宏定义
+#define LOCK   2 //全局锁  【停止】
+
 
 #define PropellerPower_Med  1500
 #define PropellerPower_Min  1000

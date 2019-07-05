@@ -70,10 +70,4 @@ void cpu_usage_init()
 }
 
 
-static void get_cpuusages(void) {
-    uint8_t cpu_usage_major, cpu_usage_minor; //整数位、小数位
 
-    cpu_usage_get(&cpu_usage_major, &cpu_usage_minor);
-    rt_kprintf("The CPU usage is %d.%d% now.\n", cpu_usage_major, cpu_usage_minor);
-}
-MSH_CMD_EXPORT(get_cpuusages, Get cpu usage);

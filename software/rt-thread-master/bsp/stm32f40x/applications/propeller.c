@@ -28,24 +28,25 @@ PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 	   .PowerDeadband = 10	//死区值
 }; 
 
-ActionType_Enum      Posture_Flag; //机器人姿态标志位
-
+ActionType_Enum      Posture_Flag;                     //机器人姿态标志位
+PropellerDir_Type    PropellerDir = {1,1,1,1,1,1};     //推进器方向，默认为1
 PropellerPower_Type  PropellerPower = {0,0,0,0,0,0,0}; //推进器推力控制器
-PropellerError_Type  PropellerError = {0,0,0,0,0,0}; //推进器偏差值
+PropellerError_Type  PropellerError = {0,0,0,0,0,0};   //推进器偏差值
 
 
 PropellerPower_Type power_test; //调试用的变量
 
-void PWM_Update(PropellerPower_Type* power)
+void PWM_Update(PropellerPower_Type* propeller)
 {	
-		power_test.rightUp = Propeller_MedValue + power->rightUp;
-		power_test.leftDown = Propeller_MedValue + power->leftDown;
-		power_test.leftUp = Propeller_MedValue + power->leftUp;
-		power_test.rightDown = Propeller_MedValue + power->rightDown;
+		power_test.rightUp     = Propeller_MedValue + propeller->rightUp;
+		power_test.leftDown    = Propeller_MedValue + propeller->leftDown;
+		power_test.leftUp      = Propeller_MedValue + propeller->leftUp;
+		power_test.rightDown   = Propeller_MedValue + propeller->rightDown;
 		
-		power_test.leftMiddle = Propeller_MedValue + power->leftMiddle;
-		power_test.rightMiddle = Propeller_MedValue + power->rightMiddle;
-		if(1 == Propeller_Init_Flag && 1 == ControlCmd.All_Lock){
+		power_test.leftMiddle  = Propeller_MedValue + propeller->leftMiddle;
+		power_test.rightMiddle = Propeller_MedValue + propeller->rightMiddle;
+	
+		if(1 == Propeller_Init_Flag && UNLOCK == ControlCmd.All_Lock){
 				
 				TIM_SetCompare1(TIM1,power_test.rightUp);     //右上	 E9	
 				TIM_SetCompare2(TIM1,power_test.leftDown);    //左下	 E11
@@ -73,7 +74,7 @@ void PWM_Update(PropellerPower_Type* power)
 ********************************************/
 void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 {
-
+		rt_thread_mdelay(1000);//等待外部设备初始化成功
 		TIM_SetCompare1(TIM1, 2000);  		//最高转速信号   	水平推进器1号
 		TIM_SetCompare2(TIM1, 2000);  		//最高转速信号    水平推进器2号
 		TIM_SetCompare3(TIM1, 2000); 		  //最高转速信号    水平推进器3号

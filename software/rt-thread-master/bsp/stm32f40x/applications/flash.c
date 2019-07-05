@@ -160,9 +160,10 @@ void Save_PID_Parameter(void)
 				ef_port_write(IMP_FLASH_ADDRESS+12*(PID1_PARAMETER_KP+i*3)+8,(uint32 *)&PID_Parameter[i].d,4);
 			
 		}
+
 }
 
-int PID_Paramter_Init_With_Flash()//初始化读取PID参数
+int PID_Paramter_Init_With_Flash(void)//初始化读取PID参数
 {
 		uint8 i = 0;
 		Total_PID_Init();//初始化PID参数表
@@ -178,6 +179,7 @@ int PID_Paramter_Init_With_Flash()//初始化读取PID参数
 				 }
 			
 		}
+
 		
 		if(PID_Parameter_Read_Flag.No_0xFF[0]!=0x00
 			 &&PID_Parameter_Read_Flag.No_0xFF[1]!=0x00
@@ -219,6 +221,8 @@ int PID_Paramter_Init_With_Flash()//初始化读取PID参数
 				Total_Controller.High_Position_Control.Kp=PID_Parameter[7].p;
 				Total_Controller.High_Position_Control.Ki=PID_Parameter[7].i;
 				Total_Controller.High_Position_Control.Kd=PID_Parameter[7].d;
+
+				
 				
 		}
 		return 0;
