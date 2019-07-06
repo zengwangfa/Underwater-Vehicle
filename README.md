@@ -21,7 +21,7 @@
 |单元| FPU、DSP |
 
 - 系统架构简图：
-![构建图](/docs/pictures/构建图.jpg "构建图")
+![构建图](/docs/pictures/Structure.jpg "构建图")
 
 
 
@@ -48,8 +48,8 @@
 
 <table>
     <tr>
-        <td ><center><img src="/docs/pictures/ROV-Model.jpg" >  3维模型 </center></td>
-        <td ><center><img src="/docs/pictures/ROV-Model.jpg"  > 实物图 </center></td>
+        <td ><center><img src="/docs/pictures/ROV-Model.jpg" > 3维模型 </center></td>
+        <td ><center><img src="/docs/pictures/Entity.jpg" > 实物图  </center></td>
     </tr>
 </table>
 
