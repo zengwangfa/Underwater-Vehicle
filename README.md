@@ -44,14 +44,14 @@
 ```
 
 ## 3、机械结构
+
+- 3维模型
+
 ![ROV 3D](/docs/pictures/ROV-Model.jpg "ROV-Model.jpg")
 
-<table>
-    <tr>
-        <td ><center><img src="/docs/pictures/ROV-Model.jpg" > 3维模型 </center></td>
-        <td ><center><img src="/docs/pictures/Entity.jpg" > 实物图  </center></td>
-    </tr>
-</table>
+- 实物图
+
+![Entity](/docs/pictures/Entity.jpg "ROV-Entity.jpg")
 
 ## 4、软件结构
 
