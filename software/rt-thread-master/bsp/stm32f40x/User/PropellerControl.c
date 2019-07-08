@@ -60,15 +60,15 @@ uint16 Output_Limit(int16 *PowerValue)
 ********************************************/
 void Propeller_Control(void)
 {
-		switch(ControlCmd.Vertical){//有控制数据不定深度
-				
-				case  RiseUp: Expect_Depth-- ; break;  //上升
-				case  Dive:   Expect_Depth++ ; break;  //下潜
-				
-				default:break/*定深度PID*/;
-		}
+
 
 		if(UNLOCK == ControlCmd.All_Lock){ //解锁
+				switch(ControlCmd.Vertical){//有控制数据不定深度
+				case  RiseUp: Expect_Depth-- ; break;  //上升
+				case  Dive:   Expect_Depth++ ; break;  //下潜
+				default:break/*定深度PID*/;
+				}
+				
 				Propeller_Output();  //推进器限幅输出
 		}
 		else {
@@ -118,7 +118,7 @@ void Propeller_Output(void)
 ********************************************/
 void robotForward(void)  //前进
 {
-		PropellerPower.Power = ControlCmd.Power * 2; //油门大小
+		//PropellerPower.Power = ControlCmd.Power * 2; //油门大小
 	
 		PropellerPower.leftUp =    - PropellerPower.Power +PropellerError.leftUp;
 		PropellerPower.rightUp =     PropellerPower.Power +PropellerError.rightUp;   
@@ -130,7 +130,7 @@ MSH_CMD_EXPORT(robotForward,ag: robotForward);
 void robotBackAway(void)  //后退
 {
 
-		PropellerPower.Power = ControlCmd.Power * 2;
+		//PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =    PropellerPower.Power +PropellerError.leftUp;
 		PropellerPower.rightUp = - PropellerPower.Power +PropellerError.rightUp;
@@ -144,7 +144,7 @@ MSH_CMD_EXPORT(robotBackAway,ag: robotBackAway);
 void turnRight(void)  //右转
 {
 
-		PropellerPower.Power = ControlCmd.Power * 2;
+		//PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =     PropellerPower.Power  +PropellerError.leftUp;
 		PropellerPower.rightUp =    0 +PropellerError.rightUp;
@@ -156,7 +156,7 @@ MSH_CMD_EXPORT(turnRight,ag: turnRight);
 void turnLeft(void)  //左转
 {
 
-		PropellerPower.Power = ControlCmd.Power * 2;
+		//PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =     0 +PropellerError.leftUp;
 		PropellerPower.rightUp =   -PropellerPower.Power +PropellerError.rightUp;
@@ -167,7 +167,7 @@ MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
 
 void moveLeft(void)  //左移
 {
-		PropellerPower.Power = ControlCmd.Power * 2;
+		//PropellerPower.Power = ControlCmd.Power * 2;
 
 		PropellerPower.leftUp =    PropellerPower.Power + PropellerError.leftUp;
 		PropellerPower.rightUp =   PropellerPower.Power + PropellerError.rightUp;
@@ -179,7 +179,7 @@ MSH_CMD_EXPORT(moveLeft,ag: moveLeft);
 
 void moveRight(void)  //右移
 {
-		PropellerPower.Power = ControlCmd.Power * 2;
+		//PropellerPower.Power = ControlCmd.Power * 2;
 	
 		PropellerPower.leftUp =    -PropellerPower.Power + PropellerError.leftUp;
 		PropellerPower.rightUp =   -PropellerPower.Power + PropellerError.rightUp;

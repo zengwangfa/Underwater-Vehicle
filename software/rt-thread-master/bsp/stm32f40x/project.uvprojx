@@ -564,11 +564,6 @@
               <FilePath>applications\sensor.c</FilePath>
             </File>
             <File>
-              <FileName>applications_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\timer.c</FilePath>
-            </File>
-            <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\uart.c</FilePath>
@@ -582,6 +577,11 @@
               <FileName>ioDevices.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\ioDevices.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\timer.c</FilePath>
             </File>
           </Files>
         </Group>

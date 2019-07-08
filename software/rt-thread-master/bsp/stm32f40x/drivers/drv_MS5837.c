@@ -137,7 +137,6 @@ uint8 MS5837_Init(void){
 		
 		IIC_Init();	
 		rt_thread_mdelay(100);
-	
 		MS583703BA_RESET();	     
 		rt_thread_mdelay(100);  
 	

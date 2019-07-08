@@ -56,40 +56,20 @@ void sensor_lowSpeed_thread_entry(void* parameter)
   * @retval None
   * @notice 
   */
-float spl_pressure = 0.0f;
-float spl_init_pressure = 0.0f;
-float spl_res_pressure = 0.0f;
-float spl_init_temp = 0.0f;
-float spl_temp = 0.0f;
+
 
 void sensor_highSpeed_thread_entry(void* parameter)
 {
-		static uint8 ON_OFF = 0; //自锁开关
-		rt_thread_mdelay(1500);//等待1.5s系统稳定再获取数据
+
+		rt_thread_mdelay(3000);//等待3s系统稳定再获取数据
 
 		while(1)
 		{
 				JY901_Convert(&Sensor.JY901); //JY901数据转换
-#ifdef Using_SPL1301		
-			
-				spl1301_get_raw_temp();
-				spl1301_get_raw_pressure();
-				if(0 == ON_OFF){
-						Sensor.MS5837.Init_PessureValue = spl1301_get_pressure(); //获取压力初值 
-						ON_OFF = 1; //自锁
-				}
-				Sensor.MS5837.PessureValue = spl1301_get_pressure();
-				Sensor.MS5837.Temperature = spl1301_get_temperature();
-#else
-				MS5837_Convert();   //MS5837设备数据转换
-				if(0 == ON_OFF){
-						Sensor.MS5837.Init_PessureValue = get_ms5837_init_pressure(); //获取压力初值 
-						ON_OFF = 1; //自锁
-				}
+				
+				Depth_Sensor_Data_Convert();  //深度数据转换
 
-#endif
-			
-				Sensor.Depth = (int) ((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue)/10);		
+				Sensor.Depth = (int) ((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue));		
 				rt_thread_mdelay(20);
 		}
 }
@@ -118,18 +98,20 @@ int sensor_thread_init(void)
 
     if (sensor_lowSpeed_tid != RT_NULL && sensor_highSpeed_tid != RT_NULL){
 			
-#ifdef Using_SPL1301
-				spl1301_init();
-#else
-			  if(MS5837_Init()){
-						log_i("MS5837_Init()");
+				if(AUV_Mode == VehicleMode){
+						spl1301_init();        //AUV使用的传感器
+						log_i("SPL1301_init()");
 				}
-				else {
-						log_e("MS5837_Init_Failed!");
+				else{
+						if(MS5837_Init()){
+								log_i("MS5837_Init()");
+						}
+						else {
+								log_e("MS5837_Init_Failed!");
+						}
 				}
 				
-#endif
-				if(adc_init()){
+				if(adc_init()){ //ADC电压采集初始化
 						log_i("Adc_Init()");
 				}
 				
@@ -141,20 +123,50 @@ int sensor_thread_init(void)
 INIT_APP_EXPORT(sensor_thread_init);
 
 
-void MS5837_Convert(void)//MS5837数据转换
+void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 {
-		static uint32 res_value[10] = {0};
+		static uint32 value[10] = {0};
+		static uint8 ON_OFF = 0; //自锁开关
 		static uint8 i = 0;
-		MS583703BA_getTemperature();//获取外部温度
-		MS583703BA_getPressure();   //获取水压
-
-		if(i >= 9){i = 0;}
-		res_value[i++] = get_ms5837_pressure();//获取10次数据
 		
-		Sensor.MS5837.Temperature  = get_ms5837_temperature();
-		Sensor.MS5837.PessureValue = Bubble_Filter(res_value);
-}
+		if(AUV_Mode == VehicleMode){  //AUV使用歌尔 SPL1301
+				spl1301_get_raw_temp();
+				spl1301_get_raw_pressure();//传感器数据转换
+				
+				if(ON_OFF == 0){
+						ON_OFF = 1;
+						Sensor.MS5837.Init_PessureValue = get_spl1301_pressure();//获取初始化数据
+				}
+				for(i = 0;i < 10;i++){
+						value[i++] = get_spl1301_pressure();//获取1次数据
+				}
+				Sensor.MS5837.Temperature = get_spl1301_temperature();
+				Sensor.MS5837.PessureValue = Bubble_Filter(value);
+			
+		}
+		else{ //否则为ROV使用MS5837
+				MS583703BA_getTemperature();//先获取外部温度,是为了给深度传感器进行温度曲线校准
+				MS583703BA_getPressure();   //获取水压
+				
+				if(ON_OFF == 0){
+						ON_OFF = 1;
+						Sensor.MS5837.Init_PessureValue = get_ms5837_pressure();//获取初始化数据
+				}
+				for(i = 0;i < 10;i++){
+						value[i++] = get_ms5837_pressure();//获取10次
+				}
+				Sensor.MS5837.Temperature  = get_ms5837_temperature();
+				Sensor.MS5837.PessureValue = Bubble_Filter(value);
+				
+				
+		}
 
+		
+
+		
+		
+
+}
 
 
 /* 打印传感器信息 */

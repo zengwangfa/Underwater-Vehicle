@@ -38,7 +38,7 @@ typedef struct//调试时各个推进器的偏差量
 
 typedef struct
 {
-	  int16 Power; //基础推力
+	  int16 Power; //推进器动力系数 【不能为负】
 	
 		int16 leftUp;
 		int16 rightUp;

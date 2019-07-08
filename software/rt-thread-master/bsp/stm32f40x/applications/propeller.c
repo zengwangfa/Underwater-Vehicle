@@ -19,6 +19,9 @@
 #include "RC_Data.h"
 
 #define Propeller_MedValue 1500
+
+extern int16 Power;
+
 uint8 Propeller_Init_Flag = 0;
 PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 		 .PowerMax = 1700,//正向最大值
@@ -185,4 +188,72 @@ _exit:
     return result;
 }
 MSH_CMD_EXPORT(propeller_minvalue_set,ag: propeller set 1200);
+
+
+
+/*【推进器】 修改 【方向】MSH方法 */
+static int propeller_dir_set(int argc, char **argv) //只能是 -1 or 1
+{
+    int result = 0;
+    if (argc != 7){ //6个推进器
+				log_i("Propeller: rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle");   //其标志只能是 1  or  -1 
+        log_e("Error! Proper Usage: propeller_dir_set 1 1 1 1 1 1 ");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+
+	
+		
+		if(abs(atoi(argv[1])) == 1 && abs(atoi(argv[2])) == 1  && abs(atoi(argv[3])) == 1  && \
+			 abs(atoi(argv[4])) == 1  && abs(atoi(argv[5])) == 1  && abs(atoi(argv[6])) == 1  ) {
+				 
+				PropellerDir.rightUp   = atoi(argv[1]);
+				PropellerDir.leftDown    = atoi(argv[2]);
+				PropellerDir.leftUp      = atoi(argv[3]);
+				PropellerDir.rightDown   = atoi(argv[4]);
+				PropellerDir.leftMiddle  = atoi(argv[5]);
+				PropellerDir.rightMiddle = atoi(argv[6]);
+				 
+				Flash_Update();
+				rt_kprintf("\n");
+				log_i("Propeller: rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle");   //其标志只能是 1  or  -1 
+				log_i("Propeller:    %d           %d          %d          %d            %d             %d",\
+				 atoi(argv[1]),atoi(argv[2]),atoi(argv[3]),atoi(argv[4]),atoi(argv[5]),atoi(argv[6]));
+		}
+		
+		else {
+				log_e("Error! Input Error!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(propeller_dir_set,propeller <1 1 1 1 1 1>);
+
+
+/*【推进器】 修改 【动力】MSH方法 */
+static int propeller_power_set(int argc, char **argv) //只能是 0~3.0f
+{
+    int result = 0;
+    if (argc != 2){ //6个推进器
+        log_e("Error! Proper Usage: propeller_power_set <0~300> % ");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		
+	  if( atoi(argv[1]) >=0 && atoi(argv[1]) <=300  ) {
+				 
+				Power = atoi(argv[1]); //百分制
+				Flash_Update();
+
+				log_i("Propeller_Power: %d %%",Power);
+		}
+		
+		else {
+				log_e("Error! Input Error!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(propeller_power_set,propeller_power_set <0~300> %);
+
 

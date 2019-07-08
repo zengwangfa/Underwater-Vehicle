@@ -28,8 +28,24 @@ typedef enum  // _e 表示枚举
 
 		COMPASS_OFFSET_ANGLE_e,    //指南针补偿角度
 	
-
-
+	/*
+				TIM_SetCompare1(TIM1,power_test.rightUp);     //右上	 E9	
+				TIM_SetCompare2(TIM1,power_test.leftDown);    //左下	 E11
+				TIM_SetCompare3(TIM1,power_test.leftUp); 	    //左上   E13
+				TIM_SetCompare4(TIM1,power_test.rightDown);   //右下   E14
+			
+				TIM_SetCompare1(TIM4,power_test.leftMiddle);  //左中   D12
+				TIM_SetCompare2(TIM4,power_test.rightMiddle); //右中   D13
+	*/                        
+																//【推进器方向】
+		PROPELLER_RIGHT_UP_DIR_e,   // 右上
+		PROPELLER_LEFT_DOWN_DIR_e,  //左下
+		PROPELLER_LEFT_UP_DIR_e,    //左上
+		PROPELLER_RIGHT_DOWN_DIR_e, //右下
+		PROPELLER_LEFT_MED_DIR_e,   //左中
+		PROPELLER_RIGHT_MED_DIR_e,  //右中
+	
+		PROPELLER_POWER_e,  //推进器动力系数
 	
 		PARAMEMER_MAX_NUMBER_e,    //最大参数值
 	

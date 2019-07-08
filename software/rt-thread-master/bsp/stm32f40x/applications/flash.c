@@ -3,7 +3,7 @@
  *
  *  Created on: 2019Äê2ÔÂ30ÈÕ
  *      Author: zengwangfa
- *      Notes:  Flash¶ÁÐ´
+ *      Notes:  Flash¶ÁÐ´·½·¨
  */
 #define LOG_TAG       "flash"
 
@@ -13,6 +13,7 @@
 #include <rtthread.h>
 #include <elog.h>
 
+#include "oled.h"
 #include "PID.h"
 #include "debug.h"
 #include "flash.h"
@@ -26,16 +27,16 @@
 
 #define IMP_FLASH_ADDRESS    (0x1000) 	//W25Q128 FLASHµÄ ÖØÒª²ÎÊýÆðÊ¼µØÖ· ¡¾µÚ¸öÉÈÇø¡¿
 
-extern char *VehicleModeName[2];
 
 
+int16 Power= 0;
 PID_Parameter_Flag  PID_Parameter_Read_Flag;
 
 uint32 Normal_Parameter[PARAMEMER_MAX_NUMBER_e]={0};
 
 /*******************************************
 * º¯ Êý Ãû£ºNormal_Parameter_Init_With_Flash
-* ¹¦    ÄÜ£º¶ÁÈ¡FlashÆÕÍ¨²ÎÊý
+* ¹¦    ÄÜ£º¶ÁÈ¡FlashÆÕÍ¨²ÎÊý¡¾Ò²·Ç³£ÖØÒª¡¿
 * ÊäÈë²ÎÊý£ºnone
 * ·µ »Ø Öµ£ºnone
 * ×¢    Òâ£ºNORMAL_PARAMETER_TABLE Ã¶¾Ù±í ÖÐÌí¼Ó×ÔÉíÐèÒªµÄµÄ²ÎÊýµÄ Ã¶¾ÙÖµ
@@ -54,7 +55,7 @@ int Normal_Parameter_Init_With_Flash(void)
 
 		return 0;
 }
-INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash); //ÏÈ½«´Ë¾ä×¢ÊÍ£¬msh />ÊäÈë¡°Flash_Update¡±£¬ÔÙ´ò¿ª´Ë¾ä ÔÙÏÂÔØ
+//INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash); //ÏÈ½«´Ë¾ä×¢ÊÍ£¬msh />ÊäÈë¡°Flash_Update¡±£¬ÔÙ´ò¿ª´Ë¾ä ÔÙÏÂÔØ
 
 
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕý³£Êý¾Ý 
@@ -74,6 +75,16 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 	
 		Parameter_SelfCheck( (uint32 *)&Compass_Offset_Angle,&Normal_Parameter[COMPASS_OFFSET_ANGLE_e] );//Ö¸ÄÏÕë²¹³¥½Ç¶È
 
+		/* ¡¾ÍÆ½øÆ÷·½Ïò¡¿ */
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightUp    ,&Normal_Parameter[PROPELLER_RIGHT_UP_DIR_e]  );// ÓÒÉÏ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftUp     ,&Normal_Parameter[PROPELLER_LEFT_DOWN_DIR_e] );// ×óÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftUp     ,&Normal_Parameter[PROPELLER_LEFT_UP_DIR_e]   );// ×óÉÏ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightDown  ,&Normal_Parameter[PROPELLER_RIGHT_DOWN_DIR_e]);// ÓÒÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftMiddle ,&Normal_Parameter[PROPELLER_LEFT_MED_DIR_e]  );// ×óÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightMiddle,&Normal_Parameter[PROPELLER_RIGHT_MED_DIR_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
+
+		/* ¡¾ÍÆ½øÆ÷¶¯Á¦ÏµÊý¡¿  */
+		Parameter_SelfCheck( (uint32 *)&Power,&Normal_Parameter[PROPELLER_POWER_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
 }
 /*
 void test_env(void) {
@@ -108,13 +119,21 @@ void Flash_Update(void)
 		ef_port_write(Nor_FLASH_ADDRESS+4*ROBOTIC_ARM_SPEED_e,(uint32 *)&RoboticArm.Speed,4); // µØÖ·
 	
 	
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MAX_VALUE_e,(uint32 *)&YunTai.MaxValue,4);		// µØÖ·
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MIN_VALUE_e,(uint32 *)&YunTai.MinValue,4); // µØÖ·
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MED_VALUE_e,(uint32 *)&YunTai.MedValue,4); 		// µØÖ·  ÔÆÌ¨ÖÐÖµ
-		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_SPEED_e,(uint32 *)&YunTai.Speed,4); // µØÖ·
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MAX_VALUE_e,(uint32 *)&YunTai.MaxValue,4); //ÔÆÌ¨×î´óÖµ
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MIN_VALUE_e,(uint32 *)&YunTai.MinValue,4); 
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_MED_VALUE_e,(uint32 *)&YunTai.MedValue,4); // ÔÆÌ¨ÖÐÖµ
+		ef_port_write(Nor_FLASH_ADDRESS+4*YUNTAI_SPEED_e,(uint32 *)&YunTai.Speed,4); 
 
 		ef_port_write(Nor_FLASH_ADDRESS+4*COMPASS_OFFSET_ANGLE_e,(uint32 *)&Compass_Offset_Angle,4); // µØÖ·
 
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_UP_DIR_e  ,(uint32 *)&PropellerDir.rightUp    ,4); // ÓÒÉÏ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_LEFT_DOWN_DIR_e ,(uint32 *)&PropellerDir.leftDown   ,4); //×óÏÂ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_LEFT_UP_DIR_e   ,(uint32 *)&PropellerDir.leftUp     ,4); //×óÉÏ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_DOWN_DIR_e,(uint32 *)&PropellerDir.rightDown  ,4); //ÓÒÏÂ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_LEFT_MED_DIR_e  ,(uint32 *)&PropellerDir.leftMiddle ,4); //×óÖÐ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_MED_DIR_e ,(uint32 *)&PropellerDir.rightMiddle,4); //ÓÒÖÐ
+
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_POWER_e ,(uint32 *)&Power,4); //ÓÒÖÐ
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
@@ -143,6 +162,15 @@ void list_value(void)
 		log_i("Propeller_Med             %d",PropellerParameter.PowerMed);
 		log_i("----------------------   ---------");
 		log_i("Compass Offset Angle      %d",Compass_Offset_Angle);//Ö¸ÄÏÕë Æ«ÒÆ½Ç¶È
+		log_i("----------------------   ---------");
+	  log_i("rightUp_Dir               %d",PropellerDir.rightUp);
+	  log_i("leftDown_Dir              %d",PropellerDir.leftDown);
+		log_i("leftUp_Dir                %d",PropellerDir.leftUp);
+		log_i("rightDown_Dir             %d",PropellerDir.rightDown);
+	  log_i("leftMiddle_Dir            %d",PropellerDir.leftMiddle);
+		log_i("rightMiddle_Dir           %d",PropellerDir.rightMiddle);
+		log_i("Propeller_Power           %d",Power);//ÍÆ½øÆ÷¶¯Á¦ÏµÊý
+		
     rt_kprintf("\n");
 }
 MSH_CMD_EXPORT(list_value,list some important values);

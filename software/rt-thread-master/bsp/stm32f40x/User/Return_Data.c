@@ -95,7 +95,7 @@ void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 		Return_Data[8] = sensor->Depth ; //低8位
 	
 	
-		Return_Data[9]  =  res_Yaw>> 8 ; // Roll 高8位
+		Return_Data[9]  = res_Yaw>> 8 ; // Roll 高8位
 		Return_Data[10] = (uint8)res_Yaw; //低8位
 	
 		Return_Data[11] = res_Pitch >> 8;// Pitch 高8位

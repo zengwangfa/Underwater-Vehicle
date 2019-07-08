@@ -365,7 +365,7 @@ void spl1301_get_raw_pressure(void)
  Calls: 
  Called By: 
 *****************************************************************************/
-float spl1301_get_temperature(void)
+float get_spl1301_temperature(void)
 {
     float fTCompensate;
     float fTsc;
@@ -386,7 +386,7 @@ float spl1301_get_temperature(void)
  Called By: 
 *****************************************************************************/
 
-float spl1301_get_pressure(void)
+float get_spl1301_pressure(void)
 {
     float fTsc, fPsc;
     float qua2, qua3;

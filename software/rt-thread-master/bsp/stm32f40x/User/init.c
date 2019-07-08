@@ -32,10 +32,10 @@
 #include <easyflash.h>
 #include <elog_flash.h>
 #include <spi_flash_sfud.h>
-#include <partition.h>
+
+#include "flash.h"
 /*----------------------- Variable Declarations -----------------------------*/
 
-u8 VehicleMode = ROV_Mode;   //ROV_Mode or AUV_Mode
 
 rt_spi_flash_device_t nor_flash;
 
@@ -53,14 +53,14 @@ void thread_entry_sys_monitor(void* parameter)
 {
     while (1)
     {
-        IWDG_Feed(); //喂狗
+        IWDG_Feed(); //喂狗,放置系统异常卡死
 				rt_thread_mdelay(500);
     }
 }
 
 
 /**
- * 系统初始化线程
+ * 系统初easylogger 与 easyflash 组件始化线程
  * @param parameter parameter
  */
 void sys_init_thread(void* parameter){
@@ -82,6 +82,7 @@ void sys_init_thread(void* parameter){
     if (result != RT_EOK){
         log_e("init event failed.\n");
 		}
+		Normal_Parameter_Init_With_Flash(); //Flash参数初始化读取
 
 }
 

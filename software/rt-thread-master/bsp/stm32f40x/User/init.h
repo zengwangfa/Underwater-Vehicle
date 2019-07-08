@@ -23,11 +23,7 @@
 
 
 
-//void delay_us(unsigned int us);
-//void delay_ms(unsigned int ms);
 
-//void delay_us(u32 nTimer);
-//void delay_ms(u32 nTimer);
 void rt_hw_us_delay(uint32 us);
 void rt_hw_ms_delay(uint32 ms);
 void delay_us(uint32 nTimer);

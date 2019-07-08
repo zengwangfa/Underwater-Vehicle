@@ -15,6 +15,7 @@
 	
 #define my_abs(x)  (((x)>0)?(x):-(x))
 
+/* ------------------------【数据结构体定义】---------------------------------*/
 typedef struct
 {
 		float p;
@@ -91,12 +92,9 @@ typedef enum {
 		System_ERROR_STATUS,
 }VehicleStatus_Enum;  //枚举系统状态
 
-extern Sensor_Type Sensor;
-extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
-
-/************重要定义***************/
 
 
+/* ------------------------【重要定义】---------------------------------*/
 #define LED_EVENT 			(1 << 0)  //LED事件标志位
 #define KEY_EVENT 			(1 << 1)  //KEY事件标志位
 #define BUZZ_EVENT 			(1 << 2)  //BUZZER事件标志位
@@ -107,21 +105,28 @@ extern  uint8 VehicleMode;   //ROV_Mode or AUV_Mode
 #define CAM_EVENT 			(1 << 7)  //Camera事件标志位
 #define MS5837_EVENT 	  (1 << 8)  //Sensor事件标志位
 
-#define PI 3.141592f
+#define PI 3.141592f  //大写标明其为常量
 #define Rad2Deg(Rad) (Rad * 180.0f / PI) //弧度制转角度值
 #define Deg2Rad(Deg) (Deg * PI / 180.0f) //角度值转弧度制
 
 
-#define AUV_Mode  0//0
-#define ROV_Mode  1//1
+#define AUV_Mode  0// AUV标志
+#define ROV_Mode  1// ROV标志
 
-#define UNLOCK 1 //全局解锁【启动】  宏定义
-#define LOCK   2 //全局锁  【停止】
+#define UNLOCK    1   //全局解锁【启动】  宏定义
+#define LOCK      2   //全局锁  【停止】
 
 
 #define PropellerPower_Med  1500
 #define PropellerPower_Min  1000
 #define PropellerPower_Max  2000
+
+
+/* 最重要定义 直接从设定好的模式(Flash中读取)*/
+extern uint8 VehicleMode;   //【ROV_Mode】 or 【AUV_Mode】
+
+extern Sensor_Type Sensor;
+
 
 
 #endif

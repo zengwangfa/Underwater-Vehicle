@@ -5,6 +5,9 @@
  *      Author: zengwangfa
  *      Notes:  方位角控制、深度控制
  */
+ 
+#define LOG_TAG "Control"
+
 #include <rtthread.h>
 #include <elog.h>
 #include <stdlib.h>
@@ -26,7 +29,7 @@ float Yaw = 0.0f;
 int16 Force1 = 0;
 int16 Force2 = 0;
 
-
+extern int16 Power;
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
 
@@ -41,11 +44,19 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		Force1 = (sqrt(2)/2)*(rc->X + rc->Y);
 		Force2 = (sqrt(2)/2)*(rc->X - rc->Y);		
 		
-		//掌舵一号
-		PropellerPower.leftUp =    PropellerDir.leftUp    * (-Force1)*2 + PropellerError.leftUp;
-		PropellerPower.rightUp =   PropellerDir.rightUp   * ( Force2)*2 + PropellerError.rightUp;   
-		PropellerPower.leftDown =  PropellerDir.leftDown  * (-Force2)*2 + PropellerError.leftDown ; 
-		PropellerPower.rightDown = PropellerDir.rightDown * (-Force1)*2 + PropellerError.rightDown;
+		//掌舵一号 -1  1   -1  -1                    //AUV       
+		/* 推力F = 推进器方向*推力系数*摇杆打杆程度 */
+		PropellerPower.leftUp =    (PropellerDir.leftUp    * (Power) * ( Force1) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
+		PropellerPower.rightUp =   (PropellerDir.rightUp   * (Power) * ( Force2) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+		PropellerPower.leftDown =  (PropellerDir.leftDown  * (Power) * ( Force2) )/70 + PropellerError.leftDown ; 
+		PropellerPower.rightDown = (PropellerDir.rightDown * (Power) * ( Force1) )/70 + PropellerError.rightDown;
+		
+		if(rc->Angle < 180 && PropellerPower.rightUp> 10){//正转时
+				PropellerPower.rightUp = PropellerPower.rightUp -10; //右上推进器 由于反向  需要进行特殊补偿
+		}
+		else if(rc->Angle > 180 && PropellerPower.rightUp < -10){//反转时
+				PropellerPower.rightUp = PropellerPower.rightUp - 10;
+		}
 		
 }
 
@@ -68,12 +79,14 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 		while(1)
 		{
 				Control_Cmd_Get(&ControlCmd); //控制命令获取 所有上位控制命令都来自于此【Important】
-				Convert_RockerValue(&Rocker);
+				Convert_RockerValue(&Rocker); //遥控数据 转换  为推进器动力
 
-				if(UNLOCK == ControlCmd.All_Lock){
+				if(UNLOCK == ControlCmd.All_Lock){ //如果解锁
 						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
-						Depth_Control(); //深度控制
+						Depth_Control();     //深度控制
+						
 				}
+				Propeller_Control(); //推进器控制
 
 				rt_thread_mdelay(10);
 		}
@@ -95,9 +108,10 @@ void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
 		{
 
 				Light_Control(&ControlCmd.Light);  //探照灯控制
-				Propeller_Control(); //推进器控制
+				YunTai_Control(&ControlCmd.Yuntai); //云台控制
+				RoboticArm_Control(&ControlCmd.Arm);//机械臂控制	
 			
-				rt_thread_mdelay(30);
+				rt_thread_mdelay(20);
 		}
 }
 

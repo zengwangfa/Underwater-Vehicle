@@ -34,7 +34,7 @@
   * @brief  timer1_out(定时器中断函数)
   * @param  void* parameter
   * @retval None
-  * @notice 定时器中不能存在延时或者释放线程的操作
+  * @notice Attention! -> 定时器中不能存在延时或者释放线程的操作
   */
 static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 {
@@ -45,8 +45,8 @@ static void timer1_out(void* parameter)// 定时器1超时函数  进行JY901模块数据转换
 				
 
 	
-		get_speed(&Sensor.JY901.Acc.x,&Sensor.JY901.Speed.x);//得到x速度
-		get_zspeed();
+		get_speed(&Sensor.JY901.Acc.x,&Sensor.JY901.Speed.x);//得到x速度,数据有问题，累积效应过大
+		get_zspeed(); 
 		//Angle_Control(); //角度控制
 
 

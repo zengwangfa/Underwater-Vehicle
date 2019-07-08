@@ -36,23 +36,23 @@
 		(0,0)-----→x  
 							63
 */
-/*---------------------- Constant / Macro Definitions -----------------------*/
-	
+/*---------------------- Static / Constant / Macro Definitions ---------------------*/
+static float slope = 0.0; //东北天坐标系下 航向斜率 slope
+static uint32 total_mem,used_mem,max_used_mem;
 
-/*----------------------- Variable Declarations -----------------------------*/
+/*--------------------------- Variable Declarations --------------------------------*/
+
+char *VehicleModeName[2] = {"AUV","ROV"}; //定义用于显示的 模式字符 0->AUV  1->ROV
+volatile MENU_LIST_Enum MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
+																				  //volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接在其内存中读值。
 
 
 extern struct rt_event init_event;/* ALL_init 事件控制块 */
-extern struct SAngle 	stcAngle;
 
-extern uint8 VehicleMode;
 
-float slope = 0.0; //东北天坐标系下 航向斜率 slope
 
-char *VehicleModeName[2] = {"AUV","ROV"};
-volatile MENU_LIST_Enum MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
-																				//volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接读值。
-uint32 total_mem,used_mem,max_used_mem;
+
+
 /* OLED 变量 初始化. */
 Oled_Type oled = {	 
 									 .pagenum = StatusPage,		 //页码 pagenum
@@ -131,14 +131,12 @@ void OLED_StatusPage(void)
 {
 		static char str[50];
 
-
-	
 		OLED_ShowMyChar(100,0,0,16,1); //3G数据图标2
 		if(wifi_connect_get()){
 				OLED_ShowMyChar(119,0,1,16,1);} //Wifi图标
 		else {OLED_ShowMyChar(119,0,2,16,1);} //清空图标
 	
-		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get());
+		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get()); //获取本机为ROV or AUV
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
 		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.PowerSource.Voltage);

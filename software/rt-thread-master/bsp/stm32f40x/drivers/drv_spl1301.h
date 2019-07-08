@@ -43,8 +43,8 @@ void spl1301_start_pressure(void);
 void spl1301_start_continuous(uint8 mode);
 void spl1301_get_raw_temp(void);
 void spl1301_get_raw_pressure(void);
-float spl1301_get_temperature(void);
-float spl1301_get_pressure(void);
+float get_spl1301_temperature(void);
+float get_spl1301_pressure(void);
 
 
 #endif

@@ -18,6 +18,7 @@
 #include "gyroscope.h"
 #include "drv_MS5837.h"
 #include "PID.h"
+#include "oled.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
@@ -28,8 +29,8 @@ extern rt_device_t debug_uart_device;
 extern uint8 uart_startup_flag;
 extern float  volatge;
 extern float  Yaw;
-extern char *VehicleModeName[2];
-extern u8 VehicleMode;
+
+
 
 enum 
 {

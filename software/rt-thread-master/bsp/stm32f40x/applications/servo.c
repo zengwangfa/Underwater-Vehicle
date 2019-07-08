@@ -120,7 +120,7 @@ void YunTai_Control(uint8 *action)
 
 
 /**
-  * @brief  servo_thread_entry(舵机任务函数)
+  * @brief  servo_thread_entry(舵机初始化任务函数)
   * @param  void* parameter
   * @retval None
   * @notice 
@@ -132,17 +132,9 @@ void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% vol
 		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
 		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
 	
-
 		Propeller_Init();       //推进器初始化
+	
 		rt_thread_mdelay(100);
-		while(1)
-		{
-				YunTai_Control(&ControlCmd.Yuntai); //云台控制
-				RoboticArm_Control(&ControlCmd.Arm);//机械臂控制
-
-				rt_thread_mdelay(10);
-
-		}
 	
 }
 
