@@ -1,10 +1,10 @@
 # 1、ROV/AUV航行器控制中心
 
-[个人主页](https://zengwangfa.top/)
 
+[个人主页](https://zengwangfa.top/)|
 [软件说明](./software/README.md) |
 [硬件说明](./hardware/README.md) |
-[机械结构说明](./graphic_model/README.md)|
+[机械结构说明](./graphic_model/README.md)
 
 
 ## 该航控 基于国产RT-Thread实时操作系统
@@ -125,7 +125,7 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 - 提交代码
 - 新建 Pull Request
 
-#### 个人博客
+#### 个人主页
 
 [淹死的鱼](https://zengwangfa.top/)
 
