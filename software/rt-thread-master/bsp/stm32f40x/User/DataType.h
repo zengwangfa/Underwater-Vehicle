@@ -68,7 +68,7 @@ typedef struct
 		float Temperature; //水温
 		uint32 PessureValue; 		 //压力值
 		uint32 Init_PessureValue; //初始化采集到得压力值
-}MS5837_Type;
+}Depth_Sensor_Type;
 
 typedef struct 
 {
@@ -79,10 +79,10 @@ typedef struct
 typedef  struct{
 	
 		int32 Depth;  	 //深度
-		CPU_Type CPU;           //CPU【温度】【使用率】
-		JY901_Type JY901;       //【欧拉角】【速度】
-		MS5837_Type MS5837;     //水【温度】【深度】
- 		PowerSource_Type PowerSource; //电源
+		CPU_Type CPU;    //CPU【温度】【使用率】
+		JY901_Type JY901;//【欧拉角】【速度】
+		Depth_Sensor_Type DepthSensor;//水【温度】【深度】
+ 		PowerSource_Type PowerSource;  //电源
 }Sensor_Type;
 
 

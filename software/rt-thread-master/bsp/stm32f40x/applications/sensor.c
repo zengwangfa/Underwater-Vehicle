@@ -69,7 +69,7 @@ void sensor_highSpeed_thread_entry(void* parameter)
 				
 				Depth_Sensor_Data_Convert();  //深度数据转换
 
-				Sensor.Depth = (int) ((int)(Sensor.MS5837.PessureValue - Sensor.MS5837.Init_PessureValue));		
+				Sensor.Depth = (int) ((int)(Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue));		
 				rt_thread_mdelay(20);
 		}
 }
@@ -135,13 +135,13 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 				
 				if(ON_OFF == 0){
 						ON_OFF = 1;
-						Sensor.MS5837.Init_PessureValue = get_spl1301_pressure();//获取初始化数据
+						Sensor.DepthSensor.Init_PessureValue = get_spl1301_pressure();//获取初始化数据
 				}
 				for(i = 0;i < 10;i++){
 						value[i++] = get_spl1301_pressure();//获取1次数据
 				}
-				Sensor.MS5837.Temperature = get_spl1301_temperature();
-				Sensor.MS5837.PessureValue = Bubble_Filter(value);
+				Sensor.DepthSensor.Temperature = get_spl1301_temperature();
+				Sensor.DepthSensor.PessureValue = Bubble_Filter(value);
 			
 		}
 		else{ //否则为ROV使用MS5837
@@ -150,13 +150,13 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 				
 				if(ON_OFF == 0){
 						ON_OFF = 1;
-						Sensor.MS5837.Init_PessureValue = get_ms5837_pressure();//获取初始化数据
+						Sensor.DepthSensor.Init_PessureValue = get_ms5837_pressure();//获取初始化数据
 				}
 				for(i = 0;i < 10;i++){
 						value[i++] = get_ms5837_pressure();//获取10次
 				}
-				Sensor.MS5837.Temperature  = get_ms5837_temperature();
-				Sensor.MS5837.PessureValue = Bubble_Filter(value);
+				Sensor.DepthSensor.Temperature  = get_ms5837_temperature();
+				Sensor.DepthSensor.PessureValue = Bubble_Filter(value);
 				
 				
 		}
@@ -193,9 +193,9 @@ void print_sensor_info(void)
 		log_i("     Voltage        |  %0.3f",Sensor.PowerSource.Voltage); //电压
 		log_i("     Current        |  %d",Sensor.PowerSource.Current);    //电流
 		log_i("--------------------|-----------");
-		log_i(" Water Temperature  |  %0.3f",Sensor.MS5837.Temperature);    //水温
-		log_i("sensor_Init_Pressure|  %d",Sensor.MS5837.Init_PessureValue); //深度传感器初始压力值	
-		log_i("   sensor_Pressure  |  %d",Sensor.MS5837.PessureValue); 		 //深度传感器当前压力值	
+		log_i(" Water Temperature  |  %0.3f",Sensor.DepthSensor.Temperature);    //水温
+		log_i("sensor_Init_Pressure|  %d",Sensor.DepthSensor.Init_PessureValue); //深度传感器初始压力值	
+		log_i("   sensor_Pressure  |  %d",Sensor.DepthSensor.PessureValue); 		 //深度传感器当前压力值	
 		log_i("     Depth          |  %d",Sensor.Depth); 									 //深度值
 		log_i("--------------------|-----------");	
 		log_i("    CPU.Usages      |  %0.3f",	Sensor.CPU.Temperature); //CPU温度
