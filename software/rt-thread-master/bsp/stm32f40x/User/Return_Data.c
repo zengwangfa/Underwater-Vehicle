@@ -73,13 +73,13 @@ uint8 get_decimal(float data){ //得到浮点型 的1位小数位
   */
 void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 {
-		static short res_Roll = 0; //暂存数据
-		static short res_Pitch = 0;
-		static short res_Yaw = 0;
+		static short temp_Roll = 0; //暂存数据
+		static short temp_Pitch = 0;
+		static short temp_Yaw = 0;
 	
-		res_Roll  = (short)((sensor->JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
-		res_Pitch = (short)((sensor->JY901.Euler.Pitch+180)*100);
-		res_Yaw   = (short)((sensor->JY901.Euler.Yaw+180)*100);
+		temp_Roll  = (short)((sensor->JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
+		temp_Pitch = (short)((sensor->JY901.Euler.Pitch+180)*100);
+		temp_Yaw   = (short)((sensor->JY901.Euler.Yaw+180)*100);
 	
 		Return_Data[0] = sensor->PowerSource.Voltage; //整数倍
 		Return_Data[1] = get_decimal(sensor->PowerSource.Voltage);//小数的100倍
@@ -95,14 +95,14 @@ void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 		Return_Data[8] = sensor->Depth ; //低8位
 	
 	
-		Return_Data[9]  = res_Yaw>> 8 ; // Roll 高8位
-		Return_Data[10] = (uint8)res_Yaw; //低8位
+		Return_Data[9]  = temp_Yaw>> 8 ; // Yaw 高8位
+		Return_Data[10] = (uint8)temp_Yaw; //低8位
 	
-		Return_Data[11] = res_Pitch >> 8;// Pitch 高8位
-		Return_Data[12] = (uint8)res_Pitch;//低8位
+		Return_Data[11] = temp_Pitch >> 8;// Pitch 高8位
+		Return_Data[12] = (uint8)temp_Pitch;//低8位
 	
-		Return_Data[13] = res_Roll >> 8; // Yaw 高8位
-		Return_Data[14] = (uint8)res_Roll; //低8位
+		Return_Data[13] = temp_Roll >> 8; // Roll 高8位
+		Return_Data[14] = (uint8)temp_Roll; //低8位
 
 		Return_Data[15] = (uint8)sensor->JY901.Speed.x;//x轴航速
 		Return_Data[16] = 0x02;//device_hint_flag;  //设备提示字符
@@ -135,7 +135,7 @@ uint8 Calculate_Check_Byte(uint8 *begin_buff,uint8 *buff,uint8 len)
   */
 void Send_Buffer_Agreement(uint8 *begin_buff,uint8 *buff,uint8 len)
 {
-		uint8 Check_Byte = Calculate_Check_Byte(begin_buff ,buff ,len);
+		uint8 Check_Byte = Calculate_Check_Byte(begin_buff ,buff ,len); //计算校验位
 		
 		begin_buff[2] = len; //长度位
 		rt_device_write(control_uart_device,0,begin_buff, 3);    //发送包头

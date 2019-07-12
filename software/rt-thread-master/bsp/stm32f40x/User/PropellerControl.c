@@ -30,9 +30,6 @@ double askResultant(double angle,double forceSize)
 		return force;
 }
 
-
-
-
 /*******************************************
 * 函 数 名：Output_Limit
 * 功    能：推进器输出限制
@@ -50,7 +47,6 @@ uint16 Output_Limit(int16 *PowerValue)
 		return *PowerValue ;
 }
 
-
 /*******************************************
 * 函 数 名：propeller_control
 * 功    能：水平轴推进器的控制
@@ -64,11 +60,22 @@ void Propeller_Control(void)
 
 		if(UNLOCK == ControlCmd.All_Lock){ //解锁
 				switch(ControlCmd.Vertical){//有控制数据不定深度
-				case  RiseUp: Expect_Depth-- ; break;  //上升
-				case  Dive:   Expect_Depth++ ; break;  //下潜
-				default:break/*定深度PID*/;
+						case RiseUp: 
+							   Expect_Depth-- ; 
+								 if(Expect_Depth < 0) Expect_Depth= 0;//超过空气中的深度值，不再上升
+								 break;  //上升
+					
+						case Dive:   
+								 Expect_Depth++ ;
+								 break;  //下潜
+						default:break/*定深度PID*/;
 				}
-				
+
+				switch(ControlCmd.Rotate){//有控制数据不定深度
+						case  TurnLeft : turnLeft(); break;  //上升
+						case  TurnRight: turnRight(); break;  //下潜
+						default:break;
+				}
 				Propeller_Output();  //推进器限幅输出
 		}
 		else {
@@ -106,9 +113,6 @@ void Propeller_Output(void)
 }
 
 
-
-
-
 /*******************************************
 * 函 数 名：robotForward
 * 功    能：机器人前进
@@ -116,77 +120,25 @@ void Propeller_Output(void)
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void robotForward(void)  //前进
-{
-		//PropellerPower.Power = ControlCmd.Power * 2; //油门大小
-	
-		PropellerPower.leftUp =    - PropellerPower.Power +PropellerError.leftUp;
-		PropellerPower.rightUp =     PropellerPower.Power +PropellerError.rightUp;   
-		PropellerPower.leftDown =  - PropellerPower.Power +PropellerError.leftDown;  //√
-		PropellerPower.rightDown = - PropellerPower.Power +PropellerError.rightDown;
-}
-MSH_CMD_EXPORT(robotForward,ag: robotForward);
-
-void robotBackAway(void)  //后退
-{
-
-		//PropellerPower.Power = ControlCmd.Power * 2;
-	
-		PropellerPower.leftUp =    PropellerPower.Power +PropellerError.leftUp;
-		PropellerPower.rightUp = - PropellerPower.Power +PropellerError.rightUp;
-		PropellerPower.leftDown =  PropellerPower.Power +PropellerError.leftDown;
-		PropellerPower.rightDown = PropellerPower.Power +PropellerError.rightDown;
-
-}
-MSH_CMD_EXPORT(robotBackAway,ag: robotBackAway);
-
-
 void turnRight(void)  //右转
 {
-
-		//PropellerPower.Power = ControlCmd.Power * 2;
-	
-		PropellerPower.leftUp =     PropellerPower.Power  +PropellerError.leftUp;
-		PropellerPower.rightUp =    0 +PropellerError.rightUp;
-		PropellerPower.leftDown =   0 +PropellerError.leftDown;
-		PropellerPower.rightDown =  -PropellerPower.Power +PropellerError.rightDown;
+		PropellerPower.leftUp =     PropellerDir.leftUp*(-100) + PropellerError.leftUp;
+		PropellerPower.rightUp =    0 + PropellerError.rightUp;
+		PropellerPower.leftDown =   PropellerDir.leftDown*(-100) + PropellerError.leftDown;
+		PropellerPower.rightDown =  0 + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnRight,ag: turnRight);
+
 
 void turnLeft(void)  //左转
 {
 
-		//PropellerPower.Power = ControlCmd.Power * 2;
-	
-		PropellerPower.leftUp =     0 +PropellerError.leftUp;
-		PropellerPower.rightUp =   -PropellerPower.Power +PropellerError.rightUp;
-		PropellerPower.leftDown =  -PropellerPower.Power +PropellerError.leftDown;
-		PropellerPower.rightDown =  0 +PropellerError.rightDown;
+		PropellerPower.leftUp =     0 + PropellerError.leftUp;
+		PropellerPower.rightUp =   PropellerDir.rightUp*(-100) + PropellerError.rightUp;
+		PropellerPower.leftDown =  0 + PropellerError.leftDown;
+		PropellerPower.rightDown = PropellerDir.rightUp*(-100) + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
-
-void moveLeft(void)  //左移
-{
-		//PropellerPower.Power = ControlCmd.Power * 2;
-
-		PropellerPower.leftUp =    PropellerPower.Power + PropellerError.leftUp;
-		PropellerPower.rightUp =   PropellerPower.Power + PropellerError.rightUp;
-		PropellerPower.leftDown = -PropellerPower.Power + PropellerError.leftDown;
-		PropellerPower.rightDown = PropellerPower.Power + PropellerError.rightDown;
-}
-
-MSH_CMD_EXPORT(moveLeft,ag: moveLeft);
-
-void moveRight(void)  //右移
-{
-		//PropellerPower.Power = ControlCmd.Power * 2;
-	
-		PropellerPower.leftUp =    -PropellerPower.Power + PropellerError.leftUp;
-		PropellerPower.rightUp =   -PropellerPower.Power + PropellerError.rightUp;
-		PropellerPower.leftDown =   PropellerPower.Power + PropellerError.leftDown;
-		PropellerPower.rightDown = -PropellerPower.Power + PropellerError.rightDown;
-}
-MSH_CMD_EXPORT(moveRight,ag: moveRight);
 
 
 void Propller_stop(void)  //推进器停转
@@ -219,5 +171,13 @@ void robot_upDown(float depth_output)
 		
 		PropellerPower.leftMiddle   = - depth_output + PropellerError.leftMiddle;//正反桨
 		PropellerPower.rightMiddle  =   depth_output + PropellerError.rightMiddle;
+	
+	
+		if( PropellerPower.leftMiddle > 10){//当 正转时并推力超过10
+				PropellerPower.leftMiddle = PropellerPower.leftMiddle -10; //右上推进器 由于反向  需要进行特殊补偿
+		}
+		else if( PropellerPower.rightMiddle < -10){//反转时
+				PropellerPower.rightMiddle = PropellerPower.rightMiddle - 10;
+		}
 }
 

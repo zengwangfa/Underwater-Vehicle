@@ -307,6 +307,7 @@ INIT_APP_EXPORT(device_uart_init);
 
 int list_serial_devices(void)
 {
+		log_v("  ");
 		log_v("name             serial number");
     log_v("---------------  -------------");
 		log_v("control serial:      %s", control_uart_device);	

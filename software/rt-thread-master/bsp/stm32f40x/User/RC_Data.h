@@ -3,13 +3,14 @@
 
 #include "DataType.h"
 
-
 typedef struct{
 
-		int16 X;
+		int16 X;    //摇杆 X、Y轴模拟量
 		int16 Y;
-		int16 Force;
-		float Angle;
+		int16 Fx;   //转换的 X轴分力
+		int16 Fy;   //转换的 Y轴分力
+		int16 Force;//合力
+		float Angle;//合力的角度
 }Rocker_Type;
 
 typedef struct{

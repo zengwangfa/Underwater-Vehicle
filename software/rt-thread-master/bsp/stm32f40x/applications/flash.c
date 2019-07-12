@@ -29,7 +29,7 @@
 
 
 
-int16 Power= 0;
+int16 PowerPercent = 0;
 PID_Parameter_Flag  PID_Parameter_Read_Flag;
 
 uint32 Normal_Parameter[PARAMEMER_MAX_NUMBER_e]={0};
@@ -84,7 +84,7 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightMiddle,&Normal_Parameter[PROPELLER_RIGHT_MED_DIR_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
 
 		/* ¡¾ÍÆ½øÆ÷¶¯Á¦ÏµÊý¡¿  */
-		Parameter_SelfCheck( (uint32 *)&Power,&Normal_Parameter[PROPELLER_POWER_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
+		Parameter_SelfCheck( (uint32 *)&PowerPercent,&Normal_Parameter[PROPELLER_POWER_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
 }
 /*
 void test_env(void) {
@@ -133,7 +133,7 @@ void Flash_Update(void)
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_LEFT_MED_DIR_e  ,(uint32 *)&PropellerDir.leftMiddle ,4); //×óÖÐ
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_MED_DIR_e ,(uint32 *)&PropellerDir.rightMiddle,4); //ÓÒÖÐ
 
-		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_POWER_e ,(uint32 *)&Power,4); //ÓÒÖÐ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_POWER_e ,(uint32 *)&PowerPercent,4); //ÓÒÖÐ
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
@@ -169,7 +169,7 @@ void list_value(void)
 		log_i("rightDown_Dir             %d",PropellerDir.rightDown);
 	  log_i("leftMiddle_Dir            %d",PropellerDir.leftMiddle);
 		log_i("rightMiddle_Dir           %d",PropellerDir.rightMiddle);
-		log_i("Propeller_Power           %d",Power);//ÍÆ½øÆ÷¶¯Á¦ÏµÊý
+		log_i("Propeller_Power           %d",PowerPercent);//ÍÆ½øÆ÷¶¯Á¦°Ù·Ö±È
 		
     rt_kprintf("\n");
 }

@@ -27,7 +27,6 @@
 
 extern rt_device_t debug_uart_device;	
 extern uint8 uart_startup_flag;
-extern float  volatge;
 extern float  Yaw;
 
 
@@ -49,11 +48,11 @@ uint8 debug_tool = PC_ANO; //山外 / 匿名上位机 调试标志位
 /*-----------------------Debug Thread Begin-----------------------------*/
 void debug_send_thread_entry(void* parameter)
 {
-		rt_thread_mdelay(2000);//等待 串口设备初始化完成
+		rt_thread_mdelay(3000);//等待 串口设备初始化完成
 	
 		while(uart_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
 		{		
-				rt_thread_mdelay(1);
+				//rt_thread_mdelay(1);
 				switch(debug_tool)//选择上位机
 				{
 

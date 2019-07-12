@@ -20,13 +20,13 @@
 
 #define Propeller_MedValue 1500
 
-extern int16 Power;
+extern int16 PowerPercent;
 
 uint8 Propeller_Init_Flag = 0;
 PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
-		 .PowerMax = 1700,//正向最大值
+		 .PowerMax = 2000,//正向最大值
 		 .PowerMed = 1500,//中值
-		 .PowerMin = 1300,//反向最小值【反向推力最大】
+		 .PowerMin = 1000,//反向最小值【反向推力最大】
 	
 	   .PowerDeadband = 10	//死区值
 }; 
@@ -131,7 +131,7 @@ static int propeller_maxvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 2000){
 				PropellerParameter.PowerMax = atoi(argv[1]);
 				Flash_Update();
-				log_d("Current propeller max_value_set:  %d",PropellerParameter.PowerMax);
+				log_i("Current propeller max_value_set:  %d",PropellerParameter.PowerMax);
 		}
 		
 		else {
@@ -155,7 +155,7 @@ static int propeller_medvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 1500){
 				PropellerParameter.PowerMed = atoi(argv[1]);
 				Flash_Update();
-				log_d("Current propeller med_value_set:  %d",PropellerParameter.PowerMed);
+				log_i("Current propeller med_value_set:  %d",PropellerParameter.PowerMed);
 		}
 		
 		else {
@@ -178,7 +178,7 @@ static int propeller_minvalue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 1500){
 				PropellerParameter.PowerMin = atoi(argv[1]);
 				Flash_Update();
-				log_d("Current propeller min_value_set:  %d",PropellerParameter.PowerMin);
+				log_i("Current propeller min_value_set:  %d",PropellerParameter.PowerMin);
 		}
 		
 		else {
@@ -242,10 +242,10 @@ static int propeller_power_set(int argc, char **argv) //只能是 0~3.0f
 		
 	  if( atoi(argv[1]) >=0 && atoi(argv[1]) <=300  ) {
 				 
-				Power = atoi(argv[1]); //百分制
+				PowerPercent = atoi(argv[1]); //百分制
 				Flash_Update();
 
-				log_i("Propeller_Power: %d %%",Power);
+				log_i("Propeller_Power: %d %%",PowerPercent);
 		}
 		
 		else {
