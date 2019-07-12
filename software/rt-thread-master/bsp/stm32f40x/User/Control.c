@@ -45,13 +45,13 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		Force2 = (sqrt(2)/2)*(rc->X - rc->Y);		
 		
 		//掌舵一号 -1  1   -1  -1                    //AUV       
-		/* 推力F = 推进器方向*推力系数*摇杆打杆程度 */
+		/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
 		PropellerPower.leftUp =    (PropellerDir.leftUp    * (Power) * ( Force1) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
 		PropellerPower.rightUp =   (PropellerDir.rightUp   * (Power) * ( Force2) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
 		PropellerPower.leftDown =  (PropellerDir.leftDown  * (Power) * ( Force2) )/70 + PropellerError.leftDown ; 
 		PropellerPower.rightDown = (PropellerDir.rightDown * (Power) * ( Force1) )/70 + PropellerError.rightDown;
 		
-		if(rc->Angle < 180 && PropellerPower.rightUp> 10){//正转时
+		if(rc->Angle < 180 && PropellerPower.rightUp> 10){//当 正转时并推力超过10
 				PropellerPower.rightUp = PropellerPower.rightUp -10; //右上推进器 由于反向  需要进行特殊补偿
 		}
 		else if(rc->Angle > 180 && PropellerPower.rightUp < -10){//反转时

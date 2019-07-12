@@ -37,7 +37,7 @@
 #include "DataType.h"
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
-uint8 VehicleMode;   //【ROV_Mode】 or 【AUV_Mode】
+uint8 VehicleMode = ROV_Mode;   //【ROV_Mode】 or 【AUV_Mode】
 
 /**
  * @addtogroup STM32

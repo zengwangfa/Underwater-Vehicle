@@ -85,7 +85,7 @@ void Control_Cmd_Get(ControlCmd_Type *cmd) //控制命令获取
 				cmd->Vertical 			= RC_Control_Data[7]; //垂直
 				cmd->Rotate 				= RC_Control_Data[8]; //旋转
 				
-			  cmd->Power 				  = RC_Control_Data[9];  //动力控制 两倍[0~500]  推进器动力系数
+			  cmd->Power 				  = RC_Control_Data[9];  //动力控制  推进器动力系数
 				cmd->Light 				  = RC_Control_Data[10]; //灯光控制
 				cmd->Focus 				  = RC_Control_Data[11]; //变焦摄像头控制
 				cmd->Yuntai 				= RC_Control_Data[12]; //云台控制
