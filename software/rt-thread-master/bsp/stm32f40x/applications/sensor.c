@@ -70,8 +70,8 @@ void sensor_highSpeed_thread_entry(void* parameter)
 				JY901_Convert(&Sensor.JY901); //JY901数据转换
 				
 				Depth_Sensor_Data_Convert();  //深度数据转换
-
-				Sensor.DepthSensor.Depth = (int) ((int)(Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue));		
+				
+				Sensor.DepthSensor.Depth = (int) ((int)(Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/10);		
 				rt_thread_mdelay(20);
 		}
 }
@@ -153,7 +153,7 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 				
 				if(ON_OFF == 0){
 						ON_OFF = 1;
-						Sensor.DepthSensor.Init_PessureValue = get_ms5837_pressure();//获取初始化数据
+						Sensor.DepthSensor.Init_PessureValue = get_ms5837_init_pressure();//获取初始化数据
 				}
 				for(i = 0;i < 10;i++){
 						value[i++] = get_ms5837_pressure();//获取10次

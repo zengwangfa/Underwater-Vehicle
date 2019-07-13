@@ -11,7 +11,7 @@
 #include "RC_Data.h"
 #include "drv_pwm.h"
 #include <rtthread.h>
-
+#include "PID.h"
 
 int32 Expect_Depth = 0;
 
@@ -66,7 +66,10 @@ void Propeller_Control(void)
 								 break;  //上升
 					
 						case Dive:   
-								 Expect_Depth++ ;
+									if(Total_Controller.High_Position_Control.Control_OutPut < 500){ //超过输出范围 停止
+											Expect_Depth++ ;
+									}
+									
 								 break;  //下潜
 						default:break/*定深度PID*/;
 				}
@@ -84,6 +87,7 @@ void Propeller_Control(void)
 		Propeller_Output();  //推进器限幅输出
 		
 		ControlCmd.Vertical = 0x00;
+		ControlCmd.Rotate = 0x00;
 }
 
 /*******************************************
@@ -121,23 +125,23 @@ void Propeller_Output(void)
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void turnRight(void)  //右转
+void turnRight(void)  //右旋
 {
-		PropellerPower.leftUp =     PropellerDir.leftUp*(-100) + PropellerError.leftUp;
+		PropellerPower.leftUp =     PropellerDir.leftUp*(100) + PropellerError.leftUp;
 		PropellerPower.rightUp =    0 + PropellerError.rightUp;
-		PropellerPower.leftDown =   PropellerDir.leftDown*(-100) + PropellerError.leftDown;
+		PropellerPower.leftDown =   PropellerDir.leftDown*(100) + PropellerError.leftDown;
 		PropellerPower.rightDown =  0 + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnRight,ag: turnRight);
 
 
-void turnLeft(void)  //左转
+void turnLeft(void)  //左旋
 {
 
-		PropellerPower.leftUp =     0 + PropellerError.leftUp;
-		PropellerPower.rightUp =   PropellerDir.rightUp*(-100) + PropellerError.rightUp;
+		PropellerPower.leftUp =    0 + PropellerError.leftUp;
+		PropellerPower.rightUp =   PropellerDir.rightUp*(100) + PropellerError.rightUp;
 		PropellerPower.leftDown =  0 + PropellerError.leftDown;
-		PropellerPower.rightDown = PropellerDir.rightUp*(-100) + PropellerError.rightDown;
+		PropellerPower.rightDown = PropellerDir.rightDown*(100) + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
 
@@ -172,12 +176,12 @@ void robot_upDown(float depth_output)
 		
 		PropellerPower.leftMiddle   = - depth_output + PropellerError.leftMiddle;//正反桨
 		PropellerPower.rightMiddle  =   depth_output + PropellerError.rightMiddle;
+		
 	
-	
-		if( PropellerPower.leftMiddle > 10){//当 正转时并推力超过10
+		if( PropellerPower.rightMiddle > 10){//当 正转时并推力超过10
 				PropellerPower.leftMiddle = PropellerPower.leftMiddle -10; //右上推进器 由于反向  需要进行特殊补偿
 		}
-		else if( PropellerPower.rightMiddle < -10){//反转时
+		else if( PropellerPower.leftMiddle < -10){//反转时
 				PropellerPower.rightMiddle = PropellerPower.rightMiddle - 10;
 		}
 }

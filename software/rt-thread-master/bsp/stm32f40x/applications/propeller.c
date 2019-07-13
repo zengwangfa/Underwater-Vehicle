@@ -49,7 +49,7 @@ void PWM_Update(PropellerPower_Type* propeller)
 		power_test.leftMiddle  = Propeller_MedValue + propeller->leftMiddle;
 		power_test.rightMiddle = Propeller_MedValue + propeller->rightMiddle;
 	
-		if(1 == Propeller_Init_Flag && UNLOCK == ControlCmd.All_Lock){
+		if(1 == Propeller_Init_Flag){
 				
 				TIM_SetCompare1(TIM1,power_test.rightUp);     //срио	 E9	
 				TIM_SetCompare2(TIM1,power_test.leftDown);    //вСоб	 E11

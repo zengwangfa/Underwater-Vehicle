@@ -28,28 +28,31 @@ float Yaw_Control = 0.0f;//Yaw—— 偏航控制
 float Yaw = 0.0f;
 int16 Force1 = 0;
 int16 Force2 = 0;
-
+Rocker_Type last_rc;		
+		
 extern int16 PowerPercent;
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
-		static uint8 cnt = 0;
-		static Rocker_Type last_rc;
-		last_rc.X = rc->X;  //保存上一次摇杆值
-		last_rc.Y = rc->Y;
+		static uint8 cnt = 0,count = 0;
+
+		count ++;
+		if(count > 200){
+				last_rc.X = rc->X;  //保存1s前的摇杆值
+				last_rc.Y = rc->Y;
+				count = 0;
+		}
 			
 		rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
 		rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
 		
-		cnt++;
-		if(cnt > 20){ //100ms 缓慢停止机制
-				cnt = 0;  //清零
-				if(last_rc.X - rc->X > 60 && rc->X == 128 ){ //当摇杆瞬间 播到中间
-						rc->X = last_rc.X - 20;
-				}
-				if(last_rc.Y - rc->Y > 60 && rc->Y == 128){
-						rc->Y = last_rc.Y - 20;						
-				}
+
+		if(last_rc.X - rc->X > 30 && rc->X == 0 ){ //当摇杆瞬间 播到中间
+				rc->X = last_rc.X - 5;
 		}
+		if(last_rc.Y - rc->Y > 30 && rc->Y == 0){
+				rc->Y = last_rc.Y - 5;						
+		}
+	
 			
 		rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 180 ~ -180
 		if(rc->Angle < 0){rc->Angle += 360;} //角度变换成 0~360° (以极坐标系定义)

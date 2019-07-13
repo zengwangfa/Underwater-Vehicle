@@ -145,7 +145,7 @@ void OLED_StatusPage(void)
 	  sprintf(str,"CPU Usage:%.2f %% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
 		OLED_ShowString(0,32,(uint8 *)str,12); 
 		
-		sprintf(str,"Temperature:%.2f C \r\n",KalmanFilter(&Sensor.CPU.Temperature));//显示卡尔曼滤波后的温度
+		sprintf(str,"Temperature:%.2f C \r\n",Sensor.CPU.Temperature);//显示的温度
 		OLED_ShowString(0,48,(uint8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }
