@@ -52,7 +52,7 @@ void debug_send_thread_entry(void* parameter)
 	
 		while(uart_startup_flag)//当debug_uart初始化完毕后 才进行上位机通信
 		{		
-				//rt_thread_mdelay(1);
+				rt_thread_mdelay(1);
 				switch(debug_tool)//选择上位机
 				{
 

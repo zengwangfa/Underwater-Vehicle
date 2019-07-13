@@ -188,7 +188,7 @@ void Depth_Control(void)
 {
 		
 		Total_Controller.High_Position_Control.Expect = (float)Expect_Depth; //期望深度由遥控器给定
-		Total_Controller.High_Position_Control.FeedBack = (float)Sensor.Depth;  //当前深度反馈
+		Total_Controller.High_Position_Control.FeedBack = (float)Sensor.DepthSensor.Depth;  //当前深度反馈
 		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
 	
 		robot_upDown(Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制

@@ -47,6 +47,9 @@ typedef enum  // _e 表示枚举
 	
 		PROPELLER_POWER_e,  //推进器动力系数
 	
+		DEPTH_SENSOR_TYPE_e,  //深度传感器 类型
+	
+	/******************************************/
 		PARAMEMER_MAX_NUMBER_e,    //最大参数值
 	
 }NORMAL_PARAMETER_TABLE;

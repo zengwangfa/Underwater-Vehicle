@@ -90,9 +90,9 @@ void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 		Return_Data[4] = (int)sensor->DepthSensor.Temperature; //整数倍
 		Return_Data[5] = get_decimal(sensor->DepthSensor.Temperature);//小数的100倍	
 	
-		Return_Data[6] = sensor->Depth >> 16; //高8位
-		Return_Data[7] = sensor->Depth >> 8 ;//中8位
-		Return_Data[8] = sensor->Depth ; //低8位
+		Return_Data[6] = sensor->DepthSensor.Depth >> 16; //高8位
+		Return_Data[7] = sensor->DepthSensor.Depth >> 8 ;//中8位
+		Return_Data[8] = sensor->DepthSensor.Depth ; //低8位
 	
 	
 		Return_Data[9]  = temp_Yaw>> 8 ; // Yaw 高8位

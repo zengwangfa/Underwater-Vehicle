@@ -592,7 +592,7 @@ void ANO_SEND_StateMachine(void)
 		ANO_Cnt++;
 		
 		if(ANO_Cnt == 1){		
-				ANO_Data_Send_Status(Sensor.JY901.Euler.Roll,Sensor.JY901.Euler.Pitch,-Sensor.JY901.Euler.Yaw,Sensor.Depth); //发送基本信息（欧拉三角、高度、锁定状态）【第二组】
+				ANO_Data_Send_Status(Sensor.JY901.Euler.Roll,Sensor.JY901.Euler.Pitch,-Sensor.JY901.Euler.Yaw,Sensor.DepthSensor.Depth); //发送基本信息（欧拉三角、高度、锁定状态）【第二组】
 		}
 	
 		else if(ANO_Cnt == 2){//发送传感器原始数字量 (加速度、角速度、磁场)  【第三组】

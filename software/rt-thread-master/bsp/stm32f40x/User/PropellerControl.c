@@ -76,11 +76,12 @@ void Propeller_Control(void)
 						case  TurnRight: turnRight(); break;  //下潜
 						default:break;
 				}
-				Propeller_Output();  //推进器限幅输出
+
 		}
 		else {
 				Propeller_Stop();		 //推进器数值清零
 		}
+		Propeller_Output();  //推进器限幅输出
 		
 		ControlCmd.Vertical = 0x00;
 }

@@ -17,6 +17,7 @@
 #include "PID.h"
 #include "debug.h"
 #include "flash.h"
+#include "sensor.h"
 #include "drv_ano.h"
 #include "servo.h"
 #include "propeller.h"
@@ -85,6 +86,9 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 
 		/* ¡¾ÍÆ½øÆ÷¶¯Á¦ÏµÊý¡¿  */
 		Parameter_SelfCheck( (uint32 *)&PowerPercent,&Normal_Parameter[PROPELLER_POWER_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
+				
+		/* ¡¾Éî¶È´«¸ÐÆ÷ÀàÐÍ¡¿  */
+		Parameter_SelfCheck( (uint32 *)&Sensor.DepthSensor.Type,&Normal_Parameter[DEPTH_SENSOR_TYPE_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
 }
 /*
 void test_env(void) {
@@ -133,7 +137,9 @@ void Flash_Update(void)
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_LEFT_MED_DIR_e  ,(uint32 *)&PropellerDir.leftMiddle ,4); //×óÖÐ
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_MED_DIR_e ,(uint32 *)&PropellerDir.rightMiddle,4); //ÓÒÖÐ
 
-		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_POWER_e ,(uint32 *)&PowerPercent,4); //ÓÒÖÐ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_POWER_e ,(uint32 *)&PowerPercent,4); //ÍÆ½øÆ÷¶¯Á¦°Ù·Ö±È
+		
+		ef_port_write(Nor_FLASH_ADDRESS+4*DEPTH_SENSOR_TYPE_e ,(uint32 *)&Sensor.DepthSensor.Type,4); //Éî¶È´«¸ÐÆ÷ ÀàÐÍ
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
@@ -144,6 +150,7 @@ void list_value(void)
 		log_i	("variable  name          value");
     log_i("----------------------   ---------");
 		log_i("VehicleMode               %s",VehicleModeName[VehicleMode]);
+		log_i("Depth Sensor Type         %s",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //Éî¶È´«¸ÐÆ÷ÀàÐÍ
 		log_i("debug_tool                %s",debug_tool_name[debug_tool]);
 	  log_i("----------------------   ---------");
 	  log_i("RoboticArm.MaxValue       %d",RoboticArm.MaxValue);

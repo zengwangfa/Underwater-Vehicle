@@ -65,6 +65,8 @@ typedef struct
 
 typedef struct 
 {
+		uint8 Type;
+		int32 Depth;  	   //深度
 		float Temperature; //水温
 		uint32 PessureValue; 		 //压力值
 		uint32 Init_PessureValue; //初始化采集到得压力值
@@ -76,9 +78,11 @@ typedef struct
 		float Voltage;
 }PowerSource_Type;
 
+
+/***********************传感器数据 句柄******************************/
 typedef  struct{
 	
-		int32 Depth;  	 //深度
+
 		CPU_Type CPU;    //CPU【温度】【使用率】
 		JY901_Type JY901;//【欧拉角】【速度】
 		Depth_Sensor_Type DepthSensor;//水【温度】【深度】
@@ -116,6 +120,8 @@ typedef enum {
 #define UNLOCK    1   //全局解锁【启动】  宏定义
 #define LOCK      2   //全局锁  【停止】
 
+#define MS5837    0   //深度传感器：MS5837
+#define SPL1301   1   //深度传感器：SPL1301
 
 #define PropellerPower_Med  1500
 #define PropellerPower_Min  1000

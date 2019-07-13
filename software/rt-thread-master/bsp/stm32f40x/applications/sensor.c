@@ -10,8 +10,10 @@
 #include "sensor.h"
 #include <rtthread.h>
 #include <elog.h>
+#include <string.h>
 #include "drv_MS5837.h"
 #include "gyroscope.h"
+#include "flash.h"
 #include "stdio.h"
 #include "drv_i2c.h"
 #include "drv_adc.h"
@@ -20,7 +22,7 @@
 #include "filter.h"
 #include "drv_spl1301.h"
 
-//#define Using_SPL1301 
+char *Depth_Sensor_Name[2] = {"MS5837","SPL1301"};
 
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
@@ -69,7 +71,7 @@ void sensor_highSpeed_thread_entry(void* parameter)
 				
 				Depth_Sensor_Data_Convert();  //深度数据转换
 
-				Sensor.Depth = (int) ((int)(Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue));		
+				Sensor.DepthSensor.Depth = (int) ((int)(Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue));		
 				rt_thread_mdelay(20);
 		}
 }
@@ -129,7 +131,7 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 		static uint8 ON_OFF = 0; //自锁开关
 		static uint8 i = 0;
 		
-		if(AUV_Mode == VehicleMode){  //AUV使用歌尔 SPL1301
+		if(SPL1301 == Sensor.DepthSensor.Type){  //歌尔 SPL1301
 				spl1301_get_raw_temp();
 				spl1301_get_raw_pressure();//传感器数据转换
 				
@@ -144,7 +146,8 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 				Sensor.DepthSensor.PessureValue = Bubble_Filter(value);
 			
 		}
-		else{ //否则为ROV使用MS5837
+		else if(MS5837 == Sensor.DepthSensor.Type){ //使用MS5837
+			
 				MS583703BA_getTemperature();//先获取外部温度,是为了给深度传感器进行温度曲线校准
 				MS583703BA_getPressure();   //获取水压
 				
@@ -160,11 +163,6 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 				
 				
 		}
-
-		
-
-		
-		
 
 }
 
@@ -193,10 +191,11 @@ void print_sensor_info(void)
 		log_i("     Voltage        |  %0.3f",Sensor.PowerSource.Voltage); //电压
 		log_i("     Current        |  %d",Sensor.PowerSource.Current);    //电流
 		log_i("--------------------|-----------");
+		log_i("  Depth Sensor Type |  %s",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
 		log_i(" Water Temperature  |  %0.3f",Sensor.DepthSensor.Temperature);    //水温
 		log_i("sensor_Init_Pressure|  %d",Sensor.DepthSensor.Init_PessureValue); //深度传感器初始压力值	
 		log_i("   sensor_Pressure  |  %d",Sensor.DepthSensor.PessureValue); 		 //深度传感器当前压力值	
-		log_i("     Depth          |  %d",Sensor.Depth); 									 //深度值
+		log_i("     Depth          |  %d",Sensor.DepthSensor.Depth); 									 //深度值
 		log_i("--------------------|-----------");	
 		log_i("    CPU.Usages      |  %0.3f",	Sensor.CPU.Temperature); //CPU温度
 		log_i("   CPU.Temperature  |  %0.3f",	Sensor.CPU.Usage); 			 //CPU使用率
@@ -209,6 +208,39 @@ MSH_CMD_EXPORT(print_sensor_info, printf gysocope & PowerSource & pressure);
 
 
 
+
+
+/*【深度传感器】 修改 【类型】MSH方法 */
+static int depth_sensor_type_set(int argc, char **argv) //只能是 0~3.0f
+{
+    int result = 0;
+    if (argc != 2){ //6个推进器
+        log_e("Error! Proper Usage: propeller_power_set <0~300> % ");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		
+	  if( !strcmp(argv[1],"ms5837") ) {
+				 
+				Sensor.DepthSensor.Type = MS5837; //
+				Flash_Update();
+	
+				log_i("Sensor.DepthSensor.Type :%s",Depth_Sensor_Name[Sensor.DepthSensor.Type]);
+		}
+	  else if( !strcmp(argv[1],"spl1301") ) {
+				 
+				Sensor.DepthSensor.Type = SPL1301; //
+				Flash_Update();
+
+				log_i("Sensor.DepthSensor.Type :%s",Depth_Sensor_Name[Sensor.DepthSensor.Type]);
+		}		
+		else {
+				log_e("Error! Input Error!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(depth_sensor_type_set,depth_sensor_type_set <ms5837/spl1301> );
 
 
 
