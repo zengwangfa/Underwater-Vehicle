@@ -114,8 +114,9 @@ typedef enum {
 #define Deg2Rad(Deg) (Deg * PI / 180.0f) //角度值转弧度制
 
 
-#define AUV_Mode  0// AUV标志
-#define ROV_Mode  1// ROV标志
+
+#define ROV_Mode  0// ROV标志
+#define AUV_Mode  1// AUV标志
 
 #define UNLOCK    1   //全局解锁【启动】  宏定义
 #define LOCK      2   //全局锁  【停止】

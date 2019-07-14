@@ -77,9 +77,9 @@ void Propeller_Control(void)
 		else {
 				Propeller_Stop();		 //推进器数值清零
 		}
-		//Propeller_Output();  //推进器限幅输出
+		Propeller_Output();  //推进器限幅输出
 		
-		//ControlCmd.Vertical = 0x00;
+		ControlCmd.Vertical = 0x00;
 
 		
 
@@ -165,19 +165,25 @@ void robot_upDown(float depth_output)
 {
 		//限幅 限制在推进器 设定的最大油门值-停转值(中值)
 	
-	
 		depth_output = depth_output < -(PropellerParameter.PowerMax - PropellerParameter.PowerMed ) ? -(PropellerParameter.PowerMax - PropellerParameter.PowerMed ):depth_output;
 		depth_output = depth_output >  (PropellerParameter.PowerMax - PropellerParameter.PowerMed ) ?  (PropellerParameter.PowerMax - PropellerParameter.PowerMed ):depth_output;
 		
-		PropellerPower.leftMiddle   = - depth_output + PropellerError.leftMiddle;//正反桨
-		PropellerPower.rightMiddle  =   depth_output + PropellerError.rightMiddle;
+		PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -depth_output + PropellerError.leftMiddle);//正反桨
+		PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -depth_output + PropellerError.rightMiddle);//输出为负值
 		
-	
-		if( PropellerPower.rightMiddle > 10){//当 正转时并推力超过10
-				PropellerPower.leftMiddle = PropellerPower.leftMiddle -10; //右上推进器 由于反向  需要进行特殊补偿
+		if(ROV_Mode == VehicleMode){ //这个是为了平衡两边推力(以为正反推进器，其特有推力不一致)
+				if( PropellerPower.rightMiddle > 10){//当 正转时并推力超过10
+						PropellerPower.leftMiddle = PropellerPower.leftMiddle -10; //右上推进器 由于反向  需要进行特殊补偿
+				}
+				else if( PropellerPower.leftMiddle < -10){//反转时
+						PropellerPower.rightMiddle = PropellerPower.rightMiddle - 10;
+				}
 		}
-		else if( PropellerPower.leftMiddle < -10){//反转时
-				PropellerPower.rightMiddle = PropellerPower.rightMiddle - 10;
+		
+		else if(AUV_Mode == VehicleMode) //这个是为了补偿推进器死区值
+		{
+			  PropellerPower.leftMiddle  -= (PropellerDir.leftMiddle  * 20);//死区值 20
+				PropellerPower.rightMiddle -= (PropellerDir.rightMiddle * 20);	
 		}
 }
 

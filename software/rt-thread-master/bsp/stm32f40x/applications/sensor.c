@@ -70,8 +70,7 @@ void sensor_highSpeed_thread_entry(void* parameter)
 				JY901_Convert(&Sensor.JY901); //JY901数据转换
 				
 				Depth_Sensor_Data_Convert();  //深度数据转换
-				                              /* 深度数值 单位为cm   定标系数为 1.3 单位/cm */
-				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/1.3f);		
+
 				rt_thread_mdelay(20);
 		}
 }
@@ -138,6 +137,8 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 				}
 				Sensor.DepthSensor.Temperature = get_spl1301_temperature();
 				Sensor.DepthSensor.PessureValue = Bubble_Filter(value);
+								 				                              /* 深度数值 单位为cm   定标系数为 1.3 单位/cm */
+				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/20);		
 			
 		}
 		else if(MS5837 == Sensor.DepthSensor.Type){ //使用MS5837
@@ -156,6 +157,8 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 			
 						Sensor.DepthSensor.Init_PessureValue = Sensor.DepthSensor.PessureValue;
 				}
+					 				                              /* 深度数值 单位为cm   定标系数为 1.3 单位/cm */
+				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/1.3f);		
 			
 																													
 				

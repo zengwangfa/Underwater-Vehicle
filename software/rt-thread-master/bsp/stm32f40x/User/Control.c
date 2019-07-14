@@ -99,11 +99,24 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		
 		else if(AUV_Mode == VehicleMode){
 
-				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->X ) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Y ) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->X ) )/70 + PropellerError.leftDown ; 
-				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Y ) )/70 + PropellerError.rightDown;
-		
+				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
+				PropellerPower.rightUp =   (PropellerDir.rightUp   * ((PowerPercent) * ( rc->Y ) /70 )) + PropellerError.rightUp ;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+				PropellerPower.leftDown =  (PropellerDir.leftDown  * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftDown ; 
+				PropellerPower.rightDown = (PropellerDir.rightDown * ((PowerPercent) * ( rc->Y ) /70 )) + PropellerError.rightDown;
+			
+				if( rc->X >= 0){//当 正转时并推力超过10
+						PropellerPower.leftDown = PropellerPower.leftDown + 10; //右上推进器 由于反向  需要进行特殊补偿
+				}
+				else {
+					  PropellerPower.leftDown = PropellerPower.leftDown - 10; //右上推进器 由于反向  需要进行特殊补偿
+				}
+				
+				if( PropellerPower.rightDown >= 0){//反转时
+						PropellerPower.rightDown = PropellerPower.rightDown + 10;
+				}
+				else {
+						PropellerPower.rightDown = PropellerPower.rightDown - 10;
+				}
 		}
 }
 

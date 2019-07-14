@@ -15,7 +15,7 @@
 #include <elog.h>
 #include <drivers/pin.h>
 #include <easyflash.h>
-
+#include "sensor.h"
 
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
@@ -59,10 +59,16 @@ void led_blink_task(void)
 		static rt_uint8_t status = 1;
 	  static rt_uint8_t cut = 0;
 		cut++;
-		if(boma_value_get() == System_NORMAL_STATUS && cut >= 40 ){
+		if(boma_value_get() == System_NORMAL_STATUS && cut >= 40 && Sensor.PowerSource.Voltage >= 9 ){
 				cut = 0;
 				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
 		}
+		else if(Sensor.PowerSource.Voltage < 9) //
+		{
+				cut = 0;
+				LED_Turn(LED_Red,status);	//初始化为高电平 【熄灭】					
+		}
+		
 }
 	
 

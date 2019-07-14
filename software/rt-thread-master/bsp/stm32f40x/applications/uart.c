@@ -20,8 +20,8 @@
 
 char GYRO_UART_NAME[]    = "uart2";
 
-char DEBUG_UART_NAME[]  =  "uart3" ; //uart4 CP2102
-char CONTROL_UART_NAME[] = "uart4";  //
+char DEBUG_UART_NAME[]  =  "uart3" ; //WIFI uart3
+char CONTROL_UART_NAME[] = "uart4";  //CP2101
 char FOCUS_UART_NAME[]  =  "uart5";  //可更改为uart3 WIFI 、 uart1 蓝牙
 
 #define Query_JY901_data 0     /* "1"为调试查询  "0"为正常读取 */
