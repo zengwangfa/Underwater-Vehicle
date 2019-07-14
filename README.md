@@ -94,10 +94,10 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 
 ## 6、Underwater Vehicle 的进展
 - [X] 电路设计
-	- [X] Underwater_Vehicle核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
-	- [X] Underwater_Vehicle底板 by [@zengwangfa](https://github.com/zengwangfa)	
-	- [X] 变焦摄像头驱动控制板 by [@张静](https://gitee.com/xiaojing_1)	
-	- [X] 电源主板设计 by [@李浩丞]	🆕
+	- [X] Core Controller核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
+	- [X] Underwater_Vehicle主板 by [@zengwangfa](https://github.com/zengwangfa)	
+	- [X] 变焦摄像头驱动控制板 by [@李昕凯]
+	- [X] 电源主板设计 by [@zengwangfa](https://github.com/zengwangfa)🆕
 	
 - [X] 控制程序
     - [X] 外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
@@ -124,7 +124,15 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 
 #### 使用说明
 
-- 暂无添加
+- set_vehicle_mode <parameter> 
+> 设置工作模式（auv/rov）
+- propeller_dir_set <parameter parameter parameter parameter parameter parameter>
+> propeller_dir_set rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle 设置六个推进器方向(1代表正方向，-1代表反方向)
+
+- propeller_power_set <parameter>
+> 设置推进器动力 0~300%
+- set_depth_sensor_type <parameter>
+> 修改深度传感器 类型<ms5737/spl1301>
 
 #### 参与贡献
 
