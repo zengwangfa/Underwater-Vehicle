@@ -253,7 +253,7 @@
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>(float *)Sensor.DepthSensor.PessureValue</ItemText>
+          <ItemText>(float *)Sensor.DepthSensor.PessureValue,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>21</count>

@@ -151,7 +151,7 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 				Sensor.DepthSensor.Temperature  = get_ms5837_temperature();
 
 				//理想状态，深度传感器的压力值理应越来越大
-				if(Sensor.DepthSensor.Init_PessureValue - Sensor.DepthSensor.PessureValue >= 0 && \
+				if(Sensor.DepthSensor.Init_PessureValue - Sensor.DepthSensor.PessureValue >= 1 && \
 					 Sensor.DepthSensor.Init_PessureValue - Sensor.DepthSensor.PessureValue <= 5 ){	//若深度传感器 当前值逐渐变小，则判定为发生漂移，令初值等于当前值
 			
 						Sensor.DepthSensor.Init_PessureValue = Sensor.DepthSensor.PessureValue;
@@ -208,7 +208,7 @@ MSH_CMD_EXPORT(print_sensor_info, printf gysocope & PowerSource & pressure);
 
 
 /*【深度传感器】 修改 【类型】MSH方法 */
-static int depth_sensor_type_set(int argc, char **argv) //只能是 0~3.0f
+static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 {
     int result = 0;
     if (argc != 2){ //6个推进器
@@ -237,7 +237,7 @@ static int depth_sensor_type_set(int argc, char **argv) //只能是 0~3.0f
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(depth_sensor_type_set,depth_sensor_type_set <ms5837/spl1301> );
+MSH_CMD_EXPORT(set_depth_sensor_type,depth_sensor_type_set <ms5837/spl1301> );
 
 
 

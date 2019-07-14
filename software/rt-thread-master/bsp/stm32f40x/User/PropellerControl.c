@@ -12,7 +12,7 @@
 #include "drv_pwm.h"
 #include <rtthread.h>
 #include "PID.h"
-
+#include "Return_Data.h"
 int32 Expect_Depth = 0;
 
 
@@ -46,9 +46,6 @@ uint16 Output_Limit(int16 *PowerValue)
 void Propeller_Control(void)
 {
 
-		
-
-	
 		if(UNLOCK == ControlCmd.All_Lock){ //解锁
 				switch(ControlCmd.Vertical){//有控制数据不定深度
 						case RiseUp: 
@@ -66,8 +63,13 @@ void Propeller_Control(void)
 				}
 
 				switch(ControlCmd.Rotate){
-						case  TurnLeft : turnLeft() ; break;  //上升
-						case  TurnRight: turnRight(); break; //下潜
+						case  TurnLeft : 
+									if(Rocker.Force == 0){turnLeft();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
+									break;  //上升
+									
+						case  TurnRight: 
+									if(Rocker.Force == 0){turnRight();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
+									break; //下潜
 						default:break;
 				}
 
@@ -75,9 +77,9 @@ void Propeller_Control(void)
 		else {
 				Propeller_Stop();		 //推进器数值清零
 		}
-		Propeller_Output();  //推进器限幅输出
+		//Propeller_Output();  //推进器限幅输出
 		
-		ControlCmd.Vertical = 0x00;
+		//ControlCmd.Vertical = 0x00;
 
 		
 
