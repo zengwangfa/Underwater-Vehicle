@@ -29,34 +29,46 @@ float Yaw = 0.0f;
 int16 Force1 = 0;
 int16 Force2 = 0;
 Rocker_Type last_rc;		
-		
+uint8 flag1 = 0,flag2 = 0;	
+
 extern int16 PowerPercent;
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
-		static uint8 cnt = 0,count = 0;
+//		static uint8 count = 0;
 
-		count ++;
-		if(count > 200){
-				last_rc.X = rc->X;  //保存1s前的摇杆值
-				last_rc.Y = rc->Y;
-				count = 0;
-		}
+//		count ++;
+//		if(count > 10){
+//				last_rc.X = rc->X;  //保存100ms前的摇杆值
+//				last_rc.Y = rc->Y;
+//				count = 0;
+//		}
 			
 		rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
 		rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
 		
-
-		if(last_rc.X - rc->X > 30 && rc->X == 0 ){ //当摇杆瞬间 播到中间
-				rc->X = last_rc.X - 5;
-		}
-		if(last_rc.Y - rc->Y > 30 && rc->Y == 0){
-				rc->Y = last_rc.Y - 5;						
-		}
-	
-			
+																			 //当摇杆瞬间 拨到中间
+//		if(last_rc.X  > 15 && rc->X == 0 ){//当上一次的值比当前值大
+//				rc->X = last_rc.X - 5;
+//		}
+//		else if(last_rc.X < -15 && rc->X == 0){
+//				rc->X = last_rc.X + 5;
+//		}
+//		
+//		if(last_rc.Y > 15 && rc->Y == 0){
+//				rc->Y = last_rc.Y - 5;			
+//		}
+//		else if(last_rc.Y < -15 && rc->Y == 0){
+//				rc->Y = last_rc.Y + 5;			
+//		}
+//			
+		
+		
+		
+		
+		
 		rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 180 ~ -180
-		if(rc->Angle < 0){rc->Angle += 360;} //角度变换成 0~360° (以极坐标系定义)
-																				 /* 以极坐标定义 角度顺序 0~360°*/ 	
+		if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
+																		
 		rc->Force = sqrt(rc->X*rc->X+rc->Y*rc->Y);	//求合力斜边
 
 		rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	

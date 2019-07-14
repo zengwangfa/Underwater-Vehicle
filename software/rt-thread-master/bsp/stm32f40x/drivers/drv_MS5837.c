@@ -239,33 +239,26 @@ void MS583703BA_getPressure(void)
 }
 
 uint32 res_value[10] = {0};
-uint32 get_ms5837_init_pressure(void)
-{		
 
-		uint32 ms5837_init_value = 0;
+uint32 get_ms5837_pressure(void)
+{		
+		uint32 ms5837_value = 0;
 	
 		for(char i = 0;i < 10;i++){  //先行获取 10次数据以防数据出错
 				MS583703BA_getTemperature();//获取外部温度
 				MS583703BA_getPressure();   //获取水压
-				rt_thread_mdelay(10);
+				rt_thread_mdelay(5); //50ms
 				
-				res_value[i] = get_ms5837_pressure(); 
-	
+				res_value[i] = MS5837_Pressure; 
 		}
-		ms5837_init_value = Bubble_Filter(res_value);
-
-		return ms5837_init_value;
+		ms5837_value = Bubble_Filter(res_value);
+		//rt_kprintf("ms5837_init_value: %d",ms5837_init_value);
+		return ms5837_value;
 }
 
 float get_ms5837_temperature(void)
 {
 		return MS5837_Temperature;
 }
-
-uint32 get_ms5837_pressure(void)
-{
-		return MS5837_Pressure;
-}
-
 
 

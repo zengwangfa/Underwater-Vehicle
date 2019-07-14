@@ -16,19 +16,7 @@
 int32 Expect_Depth = 0;
 
 
-/*******************************************
-* 函 数 名：askResultant
-* 功    能：求出合力大小及方向
-* 输入参数：输入需要的角度和大小 forceSize 为需要的合力的大小  angle为转向的角度 
-* 返 回 值：force 根据力和行进角度算出的单个推进器的推力大小
-* 注    意：none
-********************************************/
-double askResultant(double angle,double forceSize)
-{
-		double force=0;
-		force = forceSize*cos(Deg2Rad(angle));
-		return force;
-}
+
 
 /*******************************************
 * 函 数 名：Output_Limit
@@ -47,6 +35,7 @@ uint16 Output_Limit(int16 *PowerValue)
 		return *PowerValue ;
 }
 
+
 /*******************************************
 * 函 数 名：propeller_control
 * 功    能：水平轴推进器的控制
@@ -57,7 +46,9 @@ uint16 Output_Limit(int16 *PowerValue)
 void Propeller_Control(void)
 {
 
+		
 
+	
 		if(UNLOCK == ControlCmd.All_Lock){ //解锁
 				switch(ControlCmd.Vertical){//有控制数据不定深度
 						case RiseUp: 
@@ -66,7 +57,7 @@ void Propeller_Control(void)
 								 break;  //上升
 					
 						case Dive:   
-									if(Total_Controller.High_Position_Control.Control_OutPut < 500){ //超过输出范围 停止
+									if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
 											Expect_Depth++ ;
 									}
 									
@@ -74,9 +65,9 @@ void Propeller_Control(void)
 						default:break/*定深度PID*/;
 				}
 
-				switch(ControlCmd.Rotate){//有控制数据不定深度
-						case  TurnLeft : turnLeft(); break;  //上升
-						case  TurnRight: turnRight(); break;  //下潜
+				switch(ControlCmd.Rotate){
+						case  TurnLeft : turnLeft() ; break;  //上升
+						case  TurnRight: turnRight(); break; //下潜
 						default:break;
 				}
 
@@ -87,7 +78,9 @@ void Propeller_Control(void)
 		Propeller_Output();  //推进器限幅输出
 		
 		ControlCmd.Vertical = 0x00;
-		ControlCmd.Rotate = 0x00;
+
+		
+
 }
 
 /*******************************************
@@ -127,9 +120,9 @@ void Propeller_Output(void)
 ********************************************/
 void turnRight(void)  //右旋
 {
-		PropellerPower.leftUp =     PropellerDir.leftUp*(100) + PropellerError.leftUp;
+		PropellerPower.leftUp =     PropellerDir.leftUp*(70) + PropellerError.leftUp;
 		PropellerPower.rightUp =    0 + PropellerError.rightUp;
-		PropellerPower.leftDown =   PropellerDir.leftDown*(100) + PropellerError.leftDown;
+		PropellerPower.leftDown =   PropellerDir.leftDown*(70) + PropellerError.leftDown;
 		PropellerPower.rightDown =  0 + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnRight,ag: turnRight);
@@ -139,9 +132,9 @@ void turnLeft(void)  //左旋
 {
 
 		PropellerPower.leftUp =    0 + PropellerError.leftUp;
-		PropellerPower.rightUp =   PropellerDir.rightUp*(100) + PropellerError.rightUp;
+		PropellerPower.rightUp =   PropellerDir.rightUp*(70) + PropellerError.rightUp;
 		PropellerPower.leftDown =  0 + PropellerError.leftDown;
-		PropellerPower.rightDown = PropellerDir.rightDown*(100) + PropellerError.rightDown;
+		PropellerPower.rightDown = PropellerDir.rightDown*(70) + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
 

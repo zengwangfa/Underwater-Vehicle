@@ -95,7 +95,7 @@ void menu_define(void) //菜单定义
 					MENU = GyroscopePage;OLED_GyroscopePage();break;
 			}
 			case 3:{
-					MENU = FlashPage;		OLED_FlashPage(); 	  break;
+					MENU = FlashPage;		OLED_FlashPage(); 	  break; //更改为 锁定界面
 			}
 			case 4:{
 					MENU = PicturePage;	 OLED_PicturePage(); break;
@@ -176,11 +176,11 @@ void OLED_GyroscopePage(void)
 	  OLED_Refresh_Gram();//更新显示到OLED
 }
 /*******************************************
-* 函 数 名：OLED_GyroscopePage
-* 功    能：显示九轴模块参数【加速度、角速度、欧拉角、磁场】
+* 函 数 OLED_FlashPage
+* 功    能：显示
 * 输入参数：none
 * 返 回 值：none
-* 注    意：OLED第二页 【九轴参数页】
+* 注    意：OLED第三页 
 ********************************************/
 void OLED_FlashPage(void)
 {

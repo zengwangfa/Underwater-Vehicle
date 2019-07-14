@@ -36,13 +36,13 @@ Sensor_Type Sensor;//传感器参数
 void sensor_lowSpeed_thread_entry(void* parameter)
 {
 		uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
-		rt_thread_mdelay(1500);//等待1.5s系统稳定再获取数据
+		rt_thread_mdelay(3000);//等待1.5s系统稳定再获取数据
 
 		while(1)
 		{
 			
-				Sensor.CPU.Temperature = get_cpu_temp(); //获取CPU温度
-				Sensor.PowerSource.Voltage = get_voltage_value();//获取电源电压值
+				Sensor.CPU.Temperature = get_cpu_temp();           //获取CPU温度
+				Sensor.PowerSource.Voltage = get_voltage_value();  //获取电源电压值
 			
 				cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
 				Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
@@ -70,8 +70,8 @@ void sensor_highSpeed_thread_entry(void* parameter)
 				JY901_Convert(&Sensor.JY901); //JY901数据转换
 				
 				Depth_Sensor_Data_Convert();  //深度数据转换
-				
-				Sensor.DepthSensor.Depth = (int) ((int)(Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/10);		
+				                              /* 深度数值 单位为cm   定标系数为 1.3 单位/cm */
+				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/1.3f);		
 				rt_thread_mdelay(20);
 		}
 }
@@ -87,35 +87,29 @@ int sensor_thread_init(void)
     sensor_lowSpeed_tid = rt_thread_create("sensor",  //线程名称
                     sensor_lowSpeed_thread_entry,		 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    2048,										 //线程栈大小，单位是字节【byte】
                     30,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
 	  sensor_highSpeed_tid = rt_thread_create("sensor",  //线程名称
                     sensor_highSpeed_thread_entry,		 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
+                    2048,										 //线程栈大小，单位是字节【byte】
                     15,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (sensor_lowSpeed_tid != RT_NULL && sensor_highSpeed_tid != RT_NULL){
 			
-				if(AUV_Mode == VehicleMode){
-						spl1301_init();        //AUV使用的传感器
+				if(MS5837 == Sensor.DepthSensor.Type){ //深度传感器类型判定
+						if(MS5837_Init()){log_i("MS5837_Init()");}
+						else {log_e("MS5837_Init_Failed!");}
+				}
+				else if(SPL1301 == Sensor.DepthSensor.Type){
+						spl1301_init();        
 						log_i("SPL1301_init()");
 				}
-				else{
-						if(MS5837_Init()){
-								log_i("MS5837_Init()");
-						}
-						else {
-								log_e("MS5837_Init_Failed!");
-						}
-				}
-				
-				if(adc_init()){ //ADC电压采集初始化
-						log_i("Adc_Init()");
-				}
+
+				if(adc_init()){ log_i("Adc_Init()");}//ADC电压采集初始化
 				
 				rt_thread_startup(sensor_lowSpeed_tid);
 				rt_thread_startup(sensor_highSpeed_tid);
@@ -148,19 +142,22 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 		}
 		else if(MS5837 == Sensor.DepthSensor.Type){ //使用MS5837
 			
-				MS583703BA_getTemperature();//先获取外部温度,是为了给深度传感器进行温度曲线校准
-				MS583703BA_getPressure();   //获取水压
-				
-				if(ON_OFF == 0){
-						ON_OFF = 1;
-						Sensor.DepthSensor.Init_PessureValue = get_ms5837_init_pressure();//获取初始化数据
-				}
-				for(i = 0;i < 10;i++){
-						value[i++] = get_ms5837_pressure();//获取10次
-				}
+				if(ON_OFF == 0 ){
+						ON_OFF = 1; //自锁开关																							       
+						Sensor.DepthSensor.Init_PessureValue = get_ms5837_pressure();//获取初始化数据
+				}		 
+						
+				Sensor.DepthSensor.PessureValue = get_ms5837_pressure();
 				Sensor.DepthSensor.Temperature  = get_ms5837_temperature();
-				Sensor.DepthSensor.PessureValue = Bubble_Filter(value);
-				
+
+				//理想状态，深度传感器的压力值理应越来越大
+				if(Sensor.DepthSensor.Init_PessureValue - Sensor.DepthSensor.PessureValue >= 0 && \
+					 Sensor.DepthSensor.Init_PessureValue - Sensor.DepthSensor.PessureValue <= 5 ){	//若深度传感器 当前值逐渐变小，则判定为发生漂移，令初值等于当前值
+			
+						Sensor.DepthSensor.Init_PessureValue = Sensor.DepthSensor.PessureValue;
+				}
+			
+																													
 				
 		}
 

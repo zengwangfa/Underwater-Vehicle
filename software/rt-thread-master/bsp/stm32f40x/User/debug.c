@@ -113,9 +113,9 @@ void Vcan_Send_Data(void)
 		list[1] = (short)Total_Controller.Yaw_Angle_Control.Control_OutPut;  //¸©Ñö½Ç Pitch
 		list[2] = (short)Sensor.JY901.Euler.Yaw; 	  //Æ«º½½Ç Yaw
 		list[3] = (short)Yaw;    //CPUÎÂ¶È temp
-		list[4] = (short)0;//KalmanFilter(&temp);//¿¨¶ûÂüÂË²¨ºóµÄÎÂ¶È
+		list[4] = (short)0;//
 		list[5] = (short)Total_Controller.High_Position_Control.Err;//MS_TEMP;//get_vol();
-		list[6] = (short)Total_Controller.High_Position_Control.Control_OutPut;//MS5837_Pressure;	//KalmanFilter(&vol)
+		list[6] = (short)Total_Controller.High_Position_Control.Control_OutPut;//MS5837_Pressure;	
 		list[7] = (short)Total_Controller.High_Position_Control.Expect;	//camera_center;
 		
 		Vcan_Send_Cmd(list,sizeof(list));
