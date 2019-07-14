@@ -139,7 +139,7 @@ void OLED_StatusPage(void)
 		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get()); //获取本机为ROV or AUV
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
-		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.PowerSource.Voltage);
+		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,16,(uint8 *)str,12); 
 	
 	  sprintf(str,"CPU Usage:%.2f %% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则

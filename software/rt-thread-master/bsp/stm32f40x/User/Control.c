@@ -32,6 +32,14 @@ Rocker_Type last_rc;
 uint8 flag1 = 0,flag2 = 0;	
 
 extern int16 PowerPercent;
+
+
+/**
+  * @brief  highSpeed Devices_Control(高速设备控制)
+  * @param  None
+  * @retval None
+  * @notice 
+  */
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
 //		static uint8 count = 0;
@@ -60,33 +68,43 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 //		else if(last_rc.Y < -15 && rc->Y == 0){
 //				rc->Y = last_rc.Y + 5;			
 //		}
-//			
-		
-		
-		
-		
-		
-		rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 180 ~ -180
-		if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
-																		
-		rc->Force = sqrt(rc->X*rc->X+rc->Y*rc->Y);	//求合力斜边
 
-		rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	
-		rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	
-		//掌舵一号 -1  1   -1  -1                    //AUV       
-		/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-		PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-		PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-		PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.leftDown ; 
-		PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.rightDown;
-		
-		if(rc->Angle < 180 && PropellerPower.rightUp> 10){//当 正转时并推力超过10
-				PropellerPower.rightUp = PropellerPower.rightUp -10; //右上推进器 由于反向  需要进行特殊补偿
+
+
+
+
+		if(ROV_Mode == VehicleMode){
+				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
+				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
+																				
+				rc->Force = sqrt(rc->X*rc->X+rc->Y*rc->Y);	//求合力斜边
+				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
+				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
+				
+				//掌舵一号 -1  1   -1  -1                    //AUV       
+				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
+				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
+				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.leftDown ; 
+				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.rightDown;
+				
+				if(rc->Angle < 180 && PropellerPower.rightUp> 10){//当 正转时并推力超过10
+						PropellerPower.rightUp = PropellerPower.rightUp -10; //右上推进器 由于反向  需要进行特殊补偿
+				}
+				else if(rc->Angle > 180 && PropellerPower.rightUp < -10){//反转时
+						PropellerPower.rightUp = PropellerPower.rightUp - 10;
+				}
 		}
-		else if(rc->Angle > 180 && PropellerPower.rightUp < -10){//反转时
-				PropellerPower.rightUp = PropellerPower.rightUp - 10;
-		}
 		
+		
+		else if(AUV_Mode == VehicleMode){
+
+				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->X ) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
+				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Y ) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->X ) )/70 + PropellerError.leftDown ; 
+				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Y ) )/70 + PropellerError.rightDown;
+		
+		}
 }
 
 
