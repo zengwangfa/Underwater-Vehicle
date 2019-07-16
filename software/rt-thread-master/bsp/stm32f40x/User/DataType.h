@@ -130,7 +130,7 @@ typedef enum {
 
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
-extern uint8 VehicleMode;   //【ROV_Mode】 or 【AUV_Mode】
+extern volatile uint8 VehicleMode;   //【ROV_Mode】 or 【AUV_Mode】
 
 extern Sensor_Type Sensor;
 

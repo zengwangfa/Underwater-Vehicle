@@ -13,11 +13,9 @@ void Horizontal_Propeller_Power_Clear(void);//水平方向推力清零
 void robotForward(void);  //前进
 void robotBackAway(void); //后退
 
-void turnRight(void);  //右转
-void turnLeft(void);  //左转
+void turnRight(uint16 power); //右转
+void turnLeft(uint16 power);  //左转
 
-void moveLeft(void);  //左移
-void moveRight(void);  //右移
 
 
 extern int32 Expect_Depth;

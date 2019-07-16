@@ -22,23 +22,22 @@
  * 2019-02-20     Dwfish       Add Easylog & Easyflash & <update> msh.
  * 2019-03-24     Dwfish       Add Cpuusage.
  * 2019-04-19     Dwfish       Add Focus Camera ControlCmd.
- * 2019-05-02     Dwfish       Add 
-	
+ * 2019-07-01     Dwfish       Add Control Method.
 	
 	Bugs:
  * 2019-04-29     BUG:IAP Download dispaly success,but Download fail.
- * 2019-05-13     JY901 模块LED无法关闭
+
 *
 ******************************************************************************/
 #define LOG_TAG    "main"
 
 
 #include <rtthread.h>
-#include "DataType.h"
+#include "DataType.h" //自定义数据类型 头文件【重要】
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
-uint8 VehicleMode = ROV_Mode;   //【ROV_Mode】 or 【AUV_Mode】
-
+volatile uint8 VehicleMode = ROV_Mode;   //【ROV_Mode】 or 【AUV_Mode】
+//volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接在其内存中读值。
 /**
  * @addtogroup STM32
  */

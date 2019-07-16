@@ -53,7 +53,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 			
 		rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
 		rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
-		
+		rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
 																			 //当摇杆瞬间 拨到中间
 //		if(last_rc.X  > 15 && rc->X == 0 ){//当上一次的值比当前值大
 //				rc->X = last_rc.X - 5;
@@ -68,8 +68,20 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 //		else if(last_rc.Y < -15 && rc->Y == 0){
 //				rc->Y = last_rc.Y + 5;			
 //		}
-
-
+		
+		/* 垂直控制 */
+		
+		if(rc->Z > 0){
+			 Expect_Depth -= rc->Z /10; 
+			 if(Expect_Depth < 0) {//超过空气中的深度值，期望值不再上升
+					Expect_Depth= 0;
+				}
+		}
+		else{
+				if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
+						Expect_Depth += abs(rc->Z)/10 ;
+				}
+		}
 
 
 
@@ -80,15 +92,14 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Force = sqrt(rc->X*rc->X+rc->Y*rc->Y);	//求合力斜边
 				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
 				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
-				
-				//掌舵一号 -1  1   -1  -1                    //AUV       
+				   
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
 				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
 				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
 				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.leftDown ; 
 				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.rightDown;
 				
-				if(rc->Angle < 180 && PropellerPower.rightUp> 10){//当 正转时并推力超过10
+				if(rc->Angle <= 180 && PropellerPower.rightUp> 10){//当 正转时并推力超过10
 						PropellerPower.rightUp = PropellerPower.rightUp -10; //右上推进器 由于反向  需要进行特殊补偿
 				}
 				else if(rc->Angle > 180 && PropellerPower.rightUp < -10){//反转时
@@ -98,7 +109,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		
 		
 		else if(AUV_Mode == VehicleMode){
-
+				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */ 
 				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
 				PropellerPower.rightUp =   (PropellerDir.rightUp   * ((PowerPercent) * ( rc->Y ) /70 )) + PropellerError.rightUp ;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
 				PropellerPower.leftDown =  (PropellerDir.leftDown  * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftDown ; 
@@ -128,7 +139,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 
 /**
   * @brief  highSpeed Devices_Control(高速设备控制)
-  * @param  None
+  * @param  * parameter
   * @retval None
   * @notice 
   */
@@ -139,13 +150,13 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 		while(1)
 		{
 				Control_Cmd_Get(&ControlCmd); //控制命令获取 所有上位控制命令都来自于此【Important】
-				Convert_RockerValue(&Rocker); //遥控数据 转换  为推进器动力
+
 
 				if(UNLOCK == ControlCmd.All_Lock){ //如果解锁
+						Convert_RockerValue(&Rocker); //遥控数据 转换 为推进器动力
 						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
-						Depth_Control();     //深度控制
-						
 				}
+				Depth_Control(Expect_Depth,Sensor.DepthSensor.Depth);//深度控制 不受【解锁】字节控制
 				Propeller_Control(); //推进器控制
 
 				rt_thread_mdelay(10);
@@ -230,11 +241,11 @@ void Angle_Control(void)
 
 
 
-void Depth_Control(void)
+void Depth_Control(float expect_depth,float sensor_depth)
 {
 		
-		Total_Controller.High_Position_Control.Expect = (float)Expect_Depth; //期望深度由遥控器给定
-		Total_Controller.High_Position_Control.FeedBack = (float)Sensor.DepthSensor.Depth;  //当前深度反馈
+		Total_Controller.High_Position_Control.Expect = expect_depth; //期望深度由遥控器给定
+		Total_Controller.High_Position_Control.FeedBack = sensor_depth;  //当前深度反馈
 		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
 	
 		robot_upDown(Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制

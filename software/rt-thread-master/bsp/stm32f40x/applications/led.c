@@ -63,10 +63,12 @@ void led_blink_task(void)
 				cut = 0;
 				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
 		}
-		else if(Sensor.PowerSource.Voltage < 9) //
+		else if(Sensor.PowerSource.Voltage < 9) //当电压小于9V时，亮红灯
 		{
 				cut = 0;
-				LED_Turn(LED_Red,status);	//初始化为高电平 【熄灭】					
+				LED_Turn(LED_Red,status);	//初始化为高电平 【熄灭】		
+				LED_OFF(LED_Green);			
+				LED_OFF(LED_Blue);			
 		}
 		
 }
@@ -102,10 +104,10 @@ int led_thread_init(void)
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (led_tid != RT_NULL){
-				rt_pin_mode(LED_Red, 	PIN_MODE_OUTPUT);//设置输出模式	
+				rt_pin_mode(LED_Red, 	 PIN_MODE_OUTPUT);//设置输出模式	
 				rt_pin_mode(LED_Green, PIN_MODE_OUTPUT);	
-				rt_pin_mode(LED_Blue, 	PIN_MODE_OUTPUT);
-				rt_pin_mode(LED_Camera, 	PIN_MODE_OUTPUT); //OV2640 LED
+				rt_pin_mode(LED_Blue,  PIN_MODE_OUTPUT);
+				rt_pin_mode(LED_Camera,PIN_MODE_OUTPUT); //OV2640 LED
 			
 				rt_pin_mode(Light_PIN, 	PIN_MODE_OUTPUT);	  //探照灯
 				rt_pin_write(Light_PIN ,PIN_LOW);
@@ -222,12 +224,12 @@ void Bling_Working(uint8 bling_mode)
 				Bling_Process(&Light_2);
 				Bling_Process(&Light_3);
 		}
-		else if(1 == bling_mode)//加速度计6面校准模式
+		else if(1 == bling_mode)//
 		{
 				Bling_Process(&Light_1);
 
 		}
-		else if(2 == bling_mode)//磁力计校准模式
+		else if(2 == bling_mode)//
 		{
 				Bling_Process(&Light_2);
 		}

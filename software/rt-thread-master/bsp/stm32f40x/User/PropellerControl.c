@@ -47,31 +47,33 @@ void Propeller_Control(void)
 {
 
 		if(UNLOCK == ControlCmd.All_Lock){ //解锁
-				switch(ControlCmd.Vertical){//有控制数据不定深度
-						case RiseUp: 
-							   Expect_Depth-- ; 
-								 if(Expect_Depth < 0) Expect_Depth= 0;//超过空气中的深度值，不再上升
-								 break;  //上升
+			
 					
-						case Dive:   
-									if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
-											Expect_Depth++ ;
-									}
-									
-								 break;  //下潜
-						default:break/*定深度PID*/;
-				}
+//				switch(ControlCmd.Vertical){//有控制数据不定深度
+//						case RiseUp: 
+//							   Expect_Depth-- ; 
+//								 if(Expect_Depth < 0) {Expect_Depth= 0;}//超过空气中的深度值，期望值不再上升
+//								 break;  //上升
+//					
+//						case Dive:   
+//									if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
+//											Expect_Depth++ ;
+//									}
+//									
+//								 break;  //下潜
+//						default:break/*定深度PID*/;
+//				}
 
-				switch(ControlCmd.Rotate){
-						case  TurnLeft : 
-									if(Rocker.Force == 0){turnLeft();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
-									break;  //上升
-									
-						case  TurnRight: 
-									if(Rocker.Force == 0){turnRight();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
-									break; //下潜
-						default:break;
-				}
+//				switch(ControlCmd.Rotate){
+//						case  TurnLeft : 
+//									if(Rocker.Force == 0){turnLeft();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
+//									break;  //上升
+//									
+//						case  TurnRight: 
+//									if(Rocker.Force == 0){turnRight();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
+//									break; //下潜
+//						default:break;
+//				}
 
 		}
 		else {
@@ -79,7 +81,7 @@ void Propeller_Control(void)
 		}
 		Propeller_Output();  //推进器限幅输出
 		
-		ControlCmd.Vertical = 0x00;
+		//ControlCmd.Vertical = 0x00;
 
 		
 
@@ -114,29 +116,29 @@ void Propeller_Output(void)
 
 
 /*******************************************
-* 函 数 名：robotForward
-* 功    能：机器人前进
+* 函 数 名：turnRight
+* 功    能：机器人右旋
 * 输入参数：none
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void turnRight(void)  //右旋
+void turnRight(uint16 power)  //右旋
 {
-		PropellerPower.leftUp =     PropellerDir.leftUp*(70) + PropellerError.leftUp;
+		PropellerPower.leftUp =     PropellerDir.leftUp*(power) + PropellerError.leftUp;
 		PropellerPower.rightUp =    0 + PropellerError.rightUp;
-		PropellerPower.leftDown =   PropellerDir.leftDown*(70) + PropellerError.leftDown;
+		PropellerPower.leftDown =   PropellerDir.leftDown*(power) + PropellerError.leftDown;
 		PropellerPower.rightDown =  0 + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnRight,ag: turnRight);
 
 
-void turnLeft(void)  //左旋
+void turnLeft(uint16 power)  //左旋
 {
 
 		PropellerPower.leftUp =    0 + PropellerError.leftUp;
-		PropellerPower.rightUp =   PropellerDir.rightUp*(70) + PropellerError.rightUp;
+		PropellerPower.rightUp =   PropellerDir.rightUp*(power) + PropellerError.rightUp;
 		PropellerPower.leftDown =  0 + PropellerError.leftDown;
-		PropellerPower.rightDown = PropellerDir.rightDown*(70) + PropellerError.rightDown;
+		PropellerPower.rightDown = PropellerDir.rightDown*(power) + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
 
