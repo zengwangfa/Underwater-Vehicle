@@ -1,9 +1,9 @@
 /*
- * ControlCmd.c
+ * Control.c
  *
  *  Created on: 2019年3月20日
  *      Author: zengwangfa
- *      Notes:  方位角控制、深度控制
+ *      Notes:  运动总控制
  */
  
 #define LOG_TAG "Control"
@@ -22,14 +22,13 @@
 #include "servo.h"
 #include "PropellerControl.h"
 #include "propeller.h"
+#include "sensor.h"
+#include "Depth.h"
 
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
-int16 Force1 = 0;
-int16 Force2 = 0;
-Rocker_Type last_rc;		
-uint8 flag1 = 0,flag2 = 0;	
+
 
 extern int16 PowerPercent;
 
@@ -69,19 +68,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 //				rc->Y = last_rc.Y + 5;			
 //		}
 		
-		/* 垂直控制 */
-		
-		if(rc->Z > 0){
-			 Expect_Depth -= rc->Z /10; 
-			 if(Expect_Depth < 0) {//超过空气中的深度值，期望值不再上升
-					Expect_Depth= 0;
-				}
-		}
-		else{
-				if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
-						Expect_Depth += abs(rc->Z)/10 ;
-				}
-		}
+
 
 
 
@@ -107,7 +94,6 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				}
 		}
 		
-		
 		else if(AUV_Mode == VehicleMode){
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */ 
 				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
@@ -115,21 +101,22 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				PropellerPower.leftDown =  (PropellerDir.leftDown  * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftDown ; 
 				PropellerPower.rightDown = (PropellerDir.rightDown * ((PowerPercent) * ( rc->Y ) /70 )) + PropellerError.rightDown;
 			
-				if( rc->X >= 0){//当 正转时并推力超过10
-						PropellerPower.leftDown = PropellerPower.leftDown + 10; //右上推进器 由于反向  需要进行特殊补偿
-				}
-				else {
-					  PropellerPower.leftDown = PropellerPower.leftDown - 10; //右上推进器 由于反向  需要进行特殊补偿
-				}
-				
-				if( PropellerPower.rightDown >= 0){//反转时
-						PropellerPower.rightDown = PropellerPower.rightDown + 10;
-				}
-				else {
-						PropellerPower.rightDown = PropellerPower.rightDown - 10;
-				}
+//				if( rc->X >= 0){//当 正转时并推力超过10
+//						PropellerPower.leftDown = PropellerPower.leftDown + 10; //右上推进器 由于反向  需要进行特殊补偿
+//				}
+//				else {
+//					  PropellerPower.leftDown = PropellerPower.leftDown - 10; //右上推进器 由于反向  需要进行特殊补偿
+//				}
+//				
+//				if( PropellerPower.rightDown >= 0){//反转时
+//						PropellerPower.rightDown = PropellerPower.rightDown + 10;
+//				}
+//				else {
+//						PropellerPower.rightDown = PropellerPower.rightDown - 10;
+//				}
 		}
 }
+
 
 
 
@@ -147,16 +134,17 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 {
 		
 		rt_thread_mdelay(5000);//等待外部设备初始化成功
+		print_sensor_info();
 		while(1)
 		{
 				Control_Cmd_Get(&ControlCmd); //控制命令获取 所有上位控制命令都来自于此【Important】
-
 
 				if(UNLOCK == ControlCmd.All_Lock){ //如果解锁
 						Convert_RockerValue(&Rocker); //遥控数据 转换 为推进器动力
 						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
 				}
-				Depth_Control(Expect_Depth,Sensor.DepthSensor.Depth);//深度控制 不受【解锁】字节控制
+				Depth_Control(&Rocker);
+
 				Propeller_Control(); //推进器控制
 
 				rt_thread_mdelay(10);
@@ -241,10 +229,10 @@ void Angle_Control(void)
 
 
 
-void Depth_Control(float expect_depth,float sensor_depth)
+void Depth_PID_Control(float expect_depth,float sensor_depth)
 {
 		
-		Total_Controller.High_Position_Control.Expect = expect_depth; //期望深度由遥控器给定
+		Total_Controller.High_Position_Control.Expect = expect_depth ; //期望深度由遥控器给定
 		Total_Controller.High_Position_Control.FeedBack = sensor_depth;  //当前深度反馈
 		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
 	

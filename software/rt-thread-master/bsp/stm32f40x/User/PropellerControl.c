@@ -13,7 +13,9 @@
 #include <rtthread.h>
 #include "PID.h"
 #include "Return_Data.h"
-int32 Expect_Depth = 0;
+#include "Control.h"
+
+float Expect_Depth = 0.0f;
 
 
 
@@ -36,6 +38,7 @@ uint16 Output_Limit(int16 *PowerValue)
 }
 
 
+
 /*******************************************
 * 函 数 名：propeller_control
 * 功    能：水平轴推进器的控制
@@ -48,21 +51,23 @@ void Propeller_Control(void)
 
 		if(UNLOCK == ControlCmd.All_Lock){ //解锁
 			
-					
-//				switch(ControlCmd.Vertical){//有控制数据不定深度
-//						case RiseUp: 
-//							   Expect_Depth-- ; 
-//								 if(Expect_Depth < 0) {Expect_Depth= 0;}//超过空气中的深度值，期望值不再上升
-//								 break;  //上升
-//					
-//						case Dive:   
-//									if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
-//											Expect_Depth++ ;
-//									}
-//									
-//								 break;  //下潜
-//						default:break/*定深度PID*/;
-//				}
+				if(AUV_Mode == VehicleMode){	 //AUV深度控制位数字量
+						switch(ControlCmd.Vertical){//有控制数据不定深度
+								case RiseUp: 
+										 Expect_Depth-=3 ; 
+										 if(Expect_Depth < 0) {Expect_Depth= 0;}//超过空气中的深度值，期望值不再上升
+										 break;  //上升
+							
+								case Dive:   
+											if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
+													Expect_Depth+=3 ;
+											}
+											
+										 break;  //下潜
+								default:break/*定深度PID*/;
+						}
+						ControlCmd.Vertical = 0x00;
+				}
 
 //				switch(ControlCmd.Rotate){
 //						case  TurnLeft : 
@@ -77,11 +82,11 @@ void Propeller_Control(void)
 
 		}
 		else {
-				Propeller_Stop();		 //推进器数值清零
+				Propller_stop();		 //推进器数值清零
 		}
 		Propeller_Output();  //推进器限幅输出
 		
-		//ControlCmd.Vertical = 0x00;
+
 
 		
 
@@ -150,8 +155,8 @@ void Propller_stop(void)  //推进器停转
 		PropellerPower.leftDown =  0 + PropellerError.leftDown;
 		PropellerPower.rightDown = 0 + PropellerError.rightDown;
 	
-		PropellerPower.leftMiddle = 0 + PropellerError.leftMiddle;
-		PropellerPower.rightMiddle = 0+ PropellerError.rightMiddle; 
+//		PropellerPower.leftMiddle = 0 + PropellerError.leftMiddle;
+//		PropellerPower.rightMiddle = 0+ PropellerError.rightMiddle; 
 }
 MSH_CMD_EXPORT(Propller_stop,ag: propller_stop);
 
@@ -184,8 +189,8 @@ void robot_upDown(float depth_output)
 		
 		else if(AUV_Mode == VehicleMode) //这个是为了补偿推进器死区值
 		{
-			  PropellerPower.leftMiddle  -= (PropellerDir.leftMiddle  * 20);//死区值 20
-				PropellerPower.rightMiddle -= (PropellerDir.rightMiddle * 20);	
+//			  PropellerPower.leftMiddle  -= (PropellerDir.leftMiddle  * 20);//死区值 20
+//				PropellerPower.rightMiddle -= (PropellerDir.rightMiddle * 20);	
 		}
 }
 

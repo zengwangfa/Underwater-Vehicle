@@ -39,6 +39,7 @@ void led_thread_entry(void *parameter)
 		LED_OFF(LED_Green);			
 		LED_OFF(LED_Blue);
 				
+		rt_thread_mdelay(1000);		
     while (1)
     {			
 				/* FLASH保存 或者 复位PID参数 */
@@ -57,15 +58,17 @@ void led_thread_entry(void *parameter)
 void led_blink_task(void)
 {
 		static rt_uint8_t status = 1;
-	  static rt_uint8_t cut = 0;
-		cut++;
-		if(boma_value_get() == System_NORMAL_STATUS && cut >= 40 && Sensor.PowerSource.Voltage >= 9 ){
-				cut = 0;
+	  static rt_uint8_t cnt = 0;
+		cnt++;
+		if(boma_value_get() == System_NORMAL_STATUS && cnt >= 40 && Sensor.PowerSource.Voltage >= 9 ){
+				cnt = 0;
 				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
+				LED_OFF(LED_Red);			
+				LED_OFF(LED_Blue);	
 		}
-		else if(Sensor.PowerSource.Voltage < 9) //当电压小于9V时，亮红灯
+		else if(Sensor.PowerSource.Voltage < 9 && cnt >= 40) //当电压小于9V时，亮红灯
 		{
-				cut = 0;
+				cnt = 0;
 				LED_Turn(LED_Red,status);	//初始化为高电平 【熄灭】		
 				LED_OFF(LED_Green);			
 				LED_OFF(LED_Blue);			

@@ -7,7 +7,7 @@
 
 
 void Angle_Control(void);
-void Depth_Control(float expect_depth,float sensor_depth);
+void Depth_PID_Control(float expect_depth,float sensor_depth);
 
 
 

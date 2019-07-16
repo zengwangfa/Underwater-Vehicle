@@ -509,6 +509,11 @@
               <FilePath>User\Return_Data.c</FilePath>
             </File>
             <File>
+              <FileName>Depth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Depth.c</FilePath>
+            </File>
+            <File>
               <FileName>notes.c</FileName>
               <FileType>1</FileType>
               <FilePath>User\notes.c</FilePath>
