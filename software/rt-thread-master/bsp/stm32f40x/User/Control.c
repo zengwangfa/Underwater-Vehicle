@@ -53,6 +53,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
 		rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
 		rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
+		rc->Yaw = ControlCmd.Rotate - 128;    //偏航
 																			 //当摇杆瞬间 拨到中间
 //		if(last_rc.X  > 15 && rc->X == 0 ){//当上一次的值比当前值大
 //				rc->X = last_rc.X - 5;
@@ -76,7 +77,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
 				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
 																				
-				rc->Force = sqrt(rc->X*rc->X+rc->Y*rc->Y);	//求合力斜边
+				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
 				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
 				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
 				   
@@ -143,9 +144,12 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 						Convert_RockerValue(&Rocker); //遥控数据 转换 为推进器动力
 						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
 				}
-				Depth_Control(&Rocker);
-
-				Propeller_Control(); //推进器控制
+				
+				AUV_Depth_Control(&Rocker);
+				ROV_Depth_Control(&Rocker);
+				ROV_Rotate_Control(&Rocker);
+				
+				Propeller_Control(); //推进器真实PWM输出
 
 				rt_thread_mdelay(10);
 		}

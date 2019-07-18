@@ -69,7 +69,7 @@ typedef struct
 		float Depth;  	   //深度
 		float Temperature; //水温
 		float PessureValue; 		 //压力值
-		uint32 Init_PessureValue; //初始化采集到得压力值
+		float Init_PessureValue; //初始化采集到得压力值
 }Depth_Sensor_Type;
 
 typedef struct 

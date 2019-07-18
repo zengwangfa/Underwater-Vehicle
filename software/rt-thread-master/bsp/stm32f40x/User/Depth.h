@@ -6,12 +6,12 @@
 #include "RC_Data.h"
 
 
-void Depth_Control(Rocker_Type *rc);
 
+void AUV_Depth_Control(Rocker_Type *rc);
 
+void ROV_Depth_Control(Rocker_Type *rc);
 
-
-
+void ROV_Rotate_Control(Rocker_Type *rc);
 
 
 #endif

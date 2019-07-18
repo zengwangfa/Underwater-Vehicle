@@ -10,7 +10,7 @@ typedef struct{
 		int16 Z;    //Z为垂直方向
 		int16 Fx;   //转换的 X轴分力
 		int16 Fy;   //转换的 Y轴分力
-
+		int16 Yaw;  //偏航
 		int16 Force;//合力
 		float Angle;//合力的角度
 }Rocker_Type;
