@@ -12,7 +12,9 @@
 #include <math.h>
 #include <elog.h>
 #include <stdio.h>
+#include "sys.h"
 
+#include "RC_Data.h"
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
 #include "drv_oled.h"
@@ -48,21 +50,21 @@ volatile MENU_LIST_Enum MENU = StatusPage; //OLED初始页面为 状态页. volatile是一
 
 
 extern struct rt_event init_event;/* ALL_init 事件控制块 */
-
+u16 RCLock;
 
 
 
 
 /* OLED 变量 初始化. */
 Oled_Type oled = {	 
-									 .pagenum = StatusPage,		 //页码 pagenum
-									 .pagechange = StatusPage, //暂存页码 检测页码是否改变 pagechange
+									 .pagenum = LockPage,		 //页码 pagenum
+									 .pagechange = LockPage, //暂存页码 检测页码是否改变 pagechange
 									 .pagechange_flag = 0,     //页码改变标志位 pagechange flag
 									 .pagename = //页名定义 pagename
 										{	
 												"StatusPage",
 												"GyroscopePage",
-												"FlashPage",
+												"LockPage",
 												"PicturePage"} 							
 };
 /*----------------------- Function Implement --------------------------------*/
@@ -95,7 +97,7 @@ void menu_define(void) //菜单定义
 					MENU = GyroscopePage;OLED_GyroscopePage();break;
 			}
 			case 3:{
-					MENU = FlashPage;		OLED_FlashPage(); 	  break; //更改为 锁定界面
+					MENU = LockPage;		OLED_LockPage(); 	  break; //更改为 锁定界面
 			}
 			case 4:{
 					MENU = PicturePage;	 OLED_PicturePage(); break;
@@ -176,15 +178,16 @@ void OLED_GyroscopePage(void)
 	  OLED_Refresh_Gram();//更新显示到OLED
 }
 /*******************************************
-* 函 数 OLED_FlashPage
+* 函 数 OLED_LockPage
 * 功    能：显示
 * 输入参数：none
 * 返 回 值：none
 * 注    意：OLED第三页 
 ********************************************/
-void OLED_FlashPage(void)
+void OLED_LockPage(void)
 {
-
+		
+		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);
 	  OLED_Refresh_Gram();//更新显示到OLED
 }
 

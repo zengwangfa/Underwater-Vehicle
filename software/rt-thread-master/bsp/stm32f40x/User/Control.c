@@ -290,3 +290,20 @@ _exit:
 }
 MSH_CMD_EXPORT(yaw,ag: yaw 100);
 
+
+
+/*【解锁】 修改MSH方法 */
+static int unlock(int argc, char **argv) //只能是 0~3.0f
+{
+		ControlCmd.All_Lock = UNLOCK;
+}
+MSH_CMD_EXPORT(unlock,unlock);
+
+
+/*【锁定】 修改MSH方法 */
+static int lock(int argc, char **argv) //只能是 0~3.0f
+{
+		ControlCmd.All_Lock = LOCK;
+}
+MSH_CMD_EXPORT(lock,lock);
+
