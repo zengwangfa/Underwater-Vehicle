@@ -1,8 +1,10 @@
-[软件说明](./../software/README.md)|
-[硬件说明](./../hardware/README.md)| 
+[软件说明](./../software/README.md) |
+[硬件说明](./../hardware/README.md) | 
 [机械结构说明](./graphic_model/README.md)
 
 
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+[![Slack](https://img.shields.io/badge/slack-996icu-green.svg)](https://join.slack.com/t/996icu/shared_invite/enQtNTg4MjA3MzA1MzgxLWQyYzM5M2IyZmIyMTVjMzU5NTE5MGI5Y2Y2YjgwMmJiMWMxMWMzNGU3NDJmOTdhNmRlYjJlNjk5ZWZhNWIwZGM)
 - 本项目用用到了两个实用的软件包：
 	- [EasyFlash](https://github.com/armink/EasyFlash)一款开源的轻量级嵌入式Flash存储器库
 	- [EasyLogger](https://github.com/armink/EasyLogger)一款超轻量级、高性能的 C/C++ 日志库

@@ -72,10 +72,6 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=KRRGRWAK
 
-[GeneratedDocument1]
-DocumentPath=Project Outputs for Power Controller V2.0\Board Information - Power Controller V2.html
-DItemRevisionGUID=
-
 [Configuration1]
 Name=Default Configuration
 ParameterCount=0
