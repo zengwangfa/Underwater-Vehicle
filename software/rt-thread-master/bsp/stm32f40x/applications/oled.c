@@ -43,13 +43,11 @@ static uint32 total_mem,used_mem,max_used_mem;
 /*--------------------------- Variable Declarations --------------------------------*/
 
 char *VehicleModeName[2] = {"ROV","AUV"}; //定义用于显示的 模式字符 0->AUV  1->ROV
-volatile MENU_LIST_Enum MENU = StatusPage; //OLED初始页面为 状态页. volatile是一种类型修饰符。
+volatile MENU_LIST_Enum MENU = StatusPage;//OLED初始页面为 状态页. volatile是一种类型修饰符。
 																				  //volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接在其内存中读值。
 
 
 extern struct rt_event init_event;/* ALL_init 事件控制块 */
-
-
 
 
 
@@ -116,7 +114,7 @@ void oled_thread_entry(void* parameter)
 		OLED_Clear();
 		while(1){	
 				menu_define();//菜单定义选择
-				rt_thread_mdelay(1000/pow(MENU+2,2)); //菜单号越大 刷新速率越大
+				rt_thread_mdelay(1000/pow(MENU+2,3)); //菜单号越大 刷新速率越大
 		}
 }
 
@@ -198,7 +196,7 @@ void OLED_FlashPage(void)
 void OLED_PicturePage(void)
 {
 		static uint8 y=0;
-		char str[100];
+		static char str[100];
 		static int Angle_x = 0,Angle_y = 0;
 		
 		draw_fill_circle(31+Angle_x,31+Angle_y,6,0); //清空实心圆，用于刷新坐标
@@ -394,7 +392,7 @@ int oled_thread_init(void)
                     oled_thread_entry,	//线程入口函数【entry】
                     RT_NULL,				    //线程入口函数参数【parameter】
                     2048,							  //线程栈大小，单位是字节【byte】
-                    25,								  //线程优先级【priority】
+                    10,								  //线程优先级【priority】
                     10);							  //线程的时间片大小【tick】= 100ms
 
     if (oled_tid != RT_NULL){

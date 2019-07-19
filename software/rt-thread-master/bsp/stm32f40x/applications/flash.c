@@ -53,9 +53,11 @@ int Normal_Parameter_Init_With_Flash(void)
 		Normal_Parameter_SelfCheck_With_Flash();//Flash参数自检 若为 0 则为 非正常数据，则不传递给真实数据 
 
 		log_i("Flash_Read()");
-		log_i("VehicleMode               %s",VehicleModeName[VehicleMode]);
-		log_i("Depth Sensor Type         %s",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
-		log_i("debug_tool                %s",debug_tool_name[debug_tool]);
+		log_i("                      --------");
+		log_i("VehicleMode           |%s   |",VehicleModeName[VehicleMode]);
+		log_i("Depth Sensor Type     |%s|",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
+		log_i("debug_tool            |%s   |",debug_tool_name[debug_tool]);
+		log_i("                      --------");
 		return 0;
 }
 //INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash); //先将此句注释，msh />输入“Flash_Update”，再打开此句 再下载

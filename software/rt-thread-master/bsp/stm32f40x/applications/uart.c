@@ -28,7 +28,7 @@ char FOCUS_UART_NAME[]  =  "uart5";  //可更改为uart3 WIFI 、 uart1 蓝牙
 
 #if Query_JY901_data
 char recv_buffer[128]; 				//串口2接收数据缓冲变量,
-unsigned char recv_data_p=0x00;  //  串口2接收数据指针
+unsigned char recv_data_p = 0x00;  //  串口2接收数据指针
 #endif
 
 /*----------------------- Variable Declarations -----------------------------*/
