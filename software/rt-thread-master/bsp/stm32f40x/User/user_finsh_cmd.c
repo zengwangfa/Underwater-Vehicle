@@ -94,3 +94,5 @@ __exit:
     elog_set_output_enabled(true);
 }
 MSH_CMD_EXPORT(update, Update user application firmware);
+
+

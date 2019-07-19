@@ -1,7 +1,8 @@
 #include "oled.h"
 #include "stdlib.h"
-#include "oledfont.h"  	 
+ 	 
 #include "init.h"
+
 
 /*---------------------- Constant / Macro Definitions -----------------------*/			   
 #define OLED_CS 	PGout(9)  //未接入
@@ -207,6 +208,44 @@ void OLED_ShowMyChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
 			}
 		}  	 
     }          
+}
+
+//显示图片
+//x,y:起点坐标  
+//p_w:图片宽（单位像素）
+//p_h:图片高（单位像素）
+//*p:图片起始地址 
+void OLED_ShowPicture(u8 x,u8 y,const u8 *p,u8 p_w,u8 p_h)
+{	
+	u8 temp,i,col,row;
+	u8 y0=y;
+	u8 width=p_w;
+	if(x+p_w>128)width=128-p_w;//实际显示宽度
+	u8 high=p_h;
+	if(y+p_h>64)high=64-p_h;//实际显示高度
+	u8 exp_col_bytes=(p_h/8+((p_h%8)?1:0));//显示一列的字节数
+	u8 act_col_bytes=(high/8+((high%8)?1:0));//实际显示一列的字节数
+	
+	for(row=0;row<width;row++)//列++
+	{
+		for(col=0;col<act_col_bytes;col++)//显示一列
+		{   
+			temp = p[col+row*exp_col_bytes];
+			for(i=0;i<8;i++)
+			{
+				if(temp&0x80)OLED_DrawPoint(x,y,1);
+				else OLED_DrawPoint(x,y,0);
+				temp<<=1;
+				y++;
+				if((y-y0)==high)
+				{
+					y=y0;
+					x++;
+					break;
+				}		
+			} 
+		}
+	}		
 }
 //m^n函数
 u32 mypow(u8 m,u8 n)

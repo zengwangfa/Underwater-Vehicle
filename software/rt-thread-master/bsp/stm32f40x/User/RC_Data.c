@@ -19,7 +19,8 @@ ReceiveData_Type ReceiveData = {
 };
 
 ControlCmd_Type ControlCmd = { //上位机控制数据
-										.Power = 0
+										.Power = 0,
+										.All_Lock = LOCK //初始化定义为锁定状态
 };
 
 Rocker_Type Rocker; // 摇杆数据结构体

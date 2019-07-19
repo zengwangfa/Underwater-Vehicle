@@ -12,7 +12,9 @@
 #include <math.h>
 #include <elog.h>
 #include <stdio.h>
+#include "sys.h"
 
+#include "RC_Data.h"
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
 #include "drv_oled.h"
@@ -48,19 +50,19 @@ volatile MENU_LIST_Enum MENU = StatusPage;//OLED³õÊ¼Ò³ÃæÎª ×´Ì¬Ò³. volatileÊÇÒ»Ö
 
 
 extern struct rt_event init_event;/* ALL_init ÊÂ¼ş¿ØÖÆ¿é */
-
+u16 RCLock;
 
 
 /* OLED ±äÁ¿ ³õÊ¼»¯. */
 Oled_Type oled = {	 
-									 .pagenum = StatusPage,		 //Ò³Âë pagenum
-									 .pagechange = StatusPage, //Ôİ´æÒ³Âë ¼ì²âÒ³ÂëÊÇ·ñ¸Ä±ä pagechange
+									 .pagenum = LockPage,		 //Ò³Âë pagenum
+									 .pagechange = LockPage, //Ôİ´æÒ³Âë ¼ì²âÒ³ÂëÊÇ·ñ¸Ä±ä pagechange
 									 .pagechange_flag = 0,     //Ò³Âë¸Ä±ä±êÖ¾Î» pagechange flag
 									 .pagename = //Ò³Ãû¶¨Òå pagename
 										{	
 												"StatusPage",
 												"GyroscopePage",
-												"FlashPage",
+												"LockPage",
 												"PicturePage"} 							
 };
 /*----------------------- Function Implement --------------------------------*/
@@ -93,7 +95,7 @@ void menu_define(void) //²Ëµ¥¶¨Òå
 					MENU = GyroscopePage;OLED_GyroscopePage();break;
 			}
 			case 3:{
-					MENU = FlashPage;		OLED_FlashPage(); 	  break; //¸ü¸ÄÎª Ëø¶¨½çÃæ
+					MENU = LockPage;		OLED_LockPage(); 	  break; //¸ü¸ÄÎª Ëø¶¨½çÃæ
 			}
 			case 4:{
 					MENU = PicturePage;	 OLED_PicturePage(); break;
@@ -174,15 +176,16 @@ void OLED_GyroscopePage(void)
 	  OLED_Refresh_Gram();//¸üĞÂÏÔÊ¾µ½OLED
 }
 /*******************************************
-* º¯ Êı OLED_FlashPage
+* º¯ Êı OLED_LockPage
 * ¹¦    ÄÜ£ºÏÔÊ¾
 * ÊäÈë²ÎÊı£ºnone
 * ·µ »Ø Öµ£ºnone
 * ×¢    Òâ£ºOLEDµÚÈıÒ³ 
 ********************************************/
-void OLED_FlashPage(void)
+void OLED_LockPage(void)
 {
-
+		
+		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);
 	  OLED_Refresh_Gram();//¸üĞÂÏÔÊ¾µ½OLED
 }
 

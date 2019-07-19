@@ -2,7 +2,7 @@
 #define __DRV_OLED_H			  	 
 #include "stdlib.h"	  
 #include "DataType.h"
-
+#include "oledfont.h" 	 
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //ALIENTEK STM32F407开发板
@@ -41,6 +41,7 @@ void OLED_Fill(uint8 x1,uint8 y1,uint8 x2,uint8 y2,uint8 dot);
 void OLED_ShowChar(uint8 x,uint8 y,uint8 chr,uint8 size,uint8 mode);
 void OLED_ShowNum(uint8 x,uint8 y,uint32 num,uint8 len,uint8 size);
 void OLED_ShowString(uint8 x,uint8 y,const uint8 *p,uint8 size);	
+void OLED_ShowPicture(uint8 x,uint8 y,const uint8 *p,uint8 p_w,uint8 p_h);
 
 void OLED_DrawBMP(uint8 x,uint8 y,uint8 chr,uint8 size,uint8 mode);
 
