@@ -27,6 +27,7 @@ char *Depth_Sensor_Name[2] = {"MS5837","SPL1301"};
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
 Sensor_Type Sensor;//传感器参数
+
 /**
   * @brief  sensor_lowSpeed_thread_entry(低速获取传感器任务函数)
   * @param  void* parameter
@@ -241,6 +242,48 @@ _exit:
     return result;
 }
 MSH_CMD_EXPORT(set_depth_sensor_type,depth_sensor_type_set <ms5837/spl1301> );
+
+
+
+/*【电源容量】 修改 【容量】MSH方法 */
+static int set_battery_capacity(int argc, char **argv) //只能是 0~3.0f
+{
+    int result = 0;
+    if (argc != 2){ //6个推进器
+        log_e("Error! Proper Usage: propeller_power_set <0~300> % ");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		
+	  if( !strcmp(argv[1],"3s") ) {
+				 
+				Sensor.PowerSource.Capacity = 12; // 3s->12v的满电压
+				Flash_Update();
+	
+				log_i("Sensor.PowerSource.Capacity :%d v",Sensor.PowerSource.Capacity);
+		}
+	  else if( !strcmp(argv[1],"4s") ) {
+				 
+				Sensor.PowerSource.Capacity = 16; // 4s->16v的满电压
+				Flash_Update();
+
+				log_i("Sensor.PowerSource.Capacity :%d v",Sensor.PowerSource.Capacity);
+		}		
+		
+		else if( !strcmp(argv[1],"6s") ) {
+				 
+				Sensor.PowerSource.Capacity = 24; // 6s->24v的满电压
+				Flash_Update();
+
+				log_i("Sensor.PowerSource.Capacity :%d v",Sensor.PowerSource.Capacity);
+		}		
+		else {
+				log_e("Error! Input Error!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(set_battery_capacity,set_battery_capacity <3s/4s/6s> );
 
 
 

@@ -76,7 +76,6 @@ Oled_Type oled = {
 ********************************************/
 void menu_define(void) //菜单定义
 {
-
 	if(oled.pagenum >= OLED_Page_MAX || oled.pagenum < StatusPage) oled.pagenum = StatusPage; //超出页面范围 则为第一页
 	if(oled.pagechange != oled.pagenum){
 			Buzzer_Set(&Beep,1,1);
@@ -87,6 +86,7 @@ void menu_define(void) //菜单定义
 	else {oled.pagechange_flag = 0;}
 	oled.pagechange = oled.pagenum;
 	
+	if(ControlCmd.All_Lock == LOCK){oled.pagenum = LockPage;}
 	switch(oled.pagenum){
 			case 1:{
 					MENU = StatusPage;	 OLED_StatusPage();		break;
@@ -187,27 +187,40 @@ void OLED_GyroscopePage(void)
 ********************************************/
 void OLED_LockPage(void)
 {
-<<<<<<< HEAD
+		
 		static char str[50] = {0};
-		OLED_ShowPicture(49,28,bmp_lock[ControlCmd.All_Lock-1],30,30);
+		uint16 oled_voltage = 0;
+		
+		if(Sensor.PowerSource.Capacity != 0){ //判定非0
+				oled_voltage = Sensor.PowerSource.Voltage*12/Sensor.PowerSource.Capacity; //oled电量显示 = 真实电压值*12格/最大电池容量的电压
+		}
+		else{ //如果未设定，提示设定电池容量参数
+				log_w("yet set battery capacity!");
+				rt_thread_mdelay(5000);//5s
+		}
 		
 		if(is_raspi_start()){
 				Buzzer_Set(&Beep,3,1);
-				OLED_ShowPicture(0,28,raspberry_logo,28,33);//28*33
+				OLED_ShowPicture(0,28,raspberry_logo,28,33);//显示树莓派LOGO
 		}
+		
+		sprintf(str,"%d%%",(uint8)(Sensor.PowerSource.Voltage*100/16));//当前电量
+		OLED_ShowString(90,0, (uint8 *)str,12);
+
 		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,0,(uint8 *)str,12); 
-=======
-		uint16 Voltage = Sensor.PowerSource.Voltage*12/16;
-		OLED_ShowPicture(106,4,bmp_battery[Voltage],10,16);//显示电量
+
+		OLED_ShowPicture(107,0,bmp_battery[oled_voltage],10,16);//显示电量
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//锁屏
->>>>>>> 4317de468a4b44dd3857b2701def2407f65b19ec
+		
 	  OLED_Refresh_Gram();//更新显示到OLED
 		
 		if(UNLOCK == ControlCmd.All_Lock){	//如果解锁则跳转至状态页面
 				rt_thread_mdelay(1000); //延时1s
 				oled.pagenum = StatusPage;
 		}
+				
+
 }
 
 /*******************************************

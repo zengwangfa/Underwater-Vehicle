@@ -120,6 +120,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -238,6 +239,11 @@
           <count>17</count>
           <WinNumber>1</WinNumber>
           <ItemText>VehicleMode</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Sensor.PowerSource.Capacity</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
