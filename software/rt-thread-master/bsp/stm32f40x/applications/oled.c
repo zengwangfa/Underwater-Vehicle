@@ -50,7 +50,6 @@ volatile MENU_LIST_Enum MENU = StatusPage;//OLED³õÊ¼Ò³ÃæÎª ×´Ì¬Ò³. volatileÊÇÒ»Ö
 
 
 extern struct rt_event init_event;/* ALL_init ÊÂ¼þ¿ØÖÆ¿é */
-u16 RCLock;
 
 
 /* OLED ±äÁ¿ ³õÊ¼»¯. */
@@ -86,7 +85,7 @@ void menu_define(void) //²Ëµ¥¶¨Òå
 	}
 	else {oled.pagechange_flag = 0;}
 	oled.pagechange = oled.pagenum;
-
+	
 	switch(oled.pagenum){
 			case 1:{
 					MENU = StatusPage;	 OLED_StatusPage();		break;
@@ -95,7 +94,7 @@ void menu_define(void) //²Ëµ¥¶¨Òå
 					MENU = GyroscopePage;OLED_GyroscopePage();break;
 			}
 			case 3:{
-					MENU = LockPage;		OLED_LockPage(); 	  break; //¸ü¸ÄÎª Ëø¶¨½çÃæ
+					MENU = LockPage;		 OLED_LockPage(); 	  break; //Ëø¶¨½çÃæ
 			}
 			case 4:{
 					MENU = PicturePage;	 OLED_PicturePage(); break;
@@ -130,11 +129,14 @@ void oled_thread_entry(void* parameter)
 void OLED_StatusPage(void)
 {
 		static char str[50];
-
-		OLED_ShowMyChar(100,0,0,16,1); //3GÊý¾ÝÍ¼±ê2
-		if(wifi_connect_get()){
-				OLED_ShowMyChar(119,0,1,16,1);} //WifiÍ¼±ê
-		else {OLED_ShowMyChar(119,0,2,16,1);} //Çå¿ÕÍ¼±ê
+		
+		if(is_raspi_start()){
+				OLED_ShowMyChar(100,0,0,16,1); //3GÊý¾ÝÍ¼±ê2
+		}
+		else {OLED_ShowMyChar(119,0,2,16,1);} //Çå¿ÕÍ¼±ê0
+		if(is_wifi_connect()){
+				OLED_ShowMyChar(119,0,1,16,1);} //WifiÍ¼±ê1
+		else {OLED_ShowMyChar(119,0,2,16,1);} //Çå¿ÕÍ¼±ê0
 	
 		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get()); //»ñÈ¡±¾»úÎªROV or AUV
 		OLED_ShowString(0,0, (uint8 *)str,12); 
@@ -184,9 +186,17 @@ void OLED_GyroscopePage(void)
 ********************************************/
 void OLED_LockPage(void)
 {
-		
+		static char str[50] = {0};
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);
+		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//µçÑ¹
+		
+		OLED_ShowString(0,0,(uint8 *)str,12); 
 	  OLED_Refresh_Gram();//¸üÐÂÏÔÊ¾µ½OLED
+		
+		if(UNLOCK == ControlCmd.All_Lock){	//Èç¹û½âËøÔòÌø×ªÖÁ×´Ì¬Ò³Ãæ
+				rt_thread_mdelay(1000); //ÑÓÊ±1s
+				oled.pagenum = StatusPage;
+		}
 }
 
 /*******************************************
@@ -395,7 +405,7 @@ int oled_thread_init(void)
                     oled_thread_entry,	//Ïß³ÌÈë¿Úº¯Êý¡¾entry¡¿
                     RT_NULL,				    //Ïß³ÌÈë¿Úº¯Êý²ÎÊý¡¾parameter¡¿
                     2048,							  //Ïß³ÌÕ»´óÐ¡£¬µ¥Î»ÊÇ×Ö½Ú¡¾byte¡¿
-                    10,								  //Ïß³ÌÓÅÏÈ¼¶¡¾priority¡¿
+                    20,								  //Ïß³ÌÓÅÏÈ¼¶¡¾priority¡¿
                     10);							  //Ïß³ÌµÄÊ±¼äÆ¬´óÐ¡¡¾tick¡¿= 100ms
 
     if (oled_tid != RT_NULL){

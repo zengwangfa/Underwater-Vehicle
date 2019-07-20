@@ -37,14 +37,14 @@
 extern struct rt_event init_event;
 
 Buzzer_Type Beep;  //蜂鸣器控制器
-uint8 boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
+static uint8 boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
 
 /*----------------------- Function Implement --------------------------------*/
 
 void ioDevices_thread_entry(void* parameter)// --- KEY   BOMA ---
 {
-		if(System_NORMAL_STATUS == boma_value_get())
-				//Buzzer_Set(&Beep,3,1);	
+		if(VehicleMode == ROV_Mode || VehicleMode == AUV_Mode){
+				Buzzer_Set(&Beep,3,1);}
     while (1)
     {
 				Buzzer_Process(&Beep); //蜂鸣器控制任务
@@ -68,7 +68,7 @@ uint8 boma_value_get(void)
 }
 
 /**
-	* @brief  wifi_connect_get(wifi连接)
+	* @brief  wifi_connect_get(wifi是否连接)
   * @param  None
   * @retval 1 连接上   0无连接
   * @notice 
