@@ -19,6 +19,7 @@
 #include "drv_cpuusage.h"
 #include "drv_oled.h"
 #include "drv_adc.h"
+#include "sensor.h"
 
 #include "ioDevices.h"
 
@@ -186,6 +187,7 @@ void OLED_GyroscopePage(void)
 ********************************************/
 void OLED_LockPage(void)
 {
+<<<<<<< HEAD
 		static char str[50] = {0};
 		OLED_ShowPicture(49,28,bmp_lock[ControlCmd.All_Lock-1],30,30);
 		
@@ -195,6 +197,11 @@ void OLED_LockPage(void)
 		}
 		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,0,(uint8 *)str,12); 
+=======
+		uint16 Voltage = Sensor.PowerSource.Voltage*12/16;
+		OLED_ShowPicture(106,4,bmp_battery[Voltage],10,16);//显示电量
+		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//锁屏
+>>>>>>> 4317de468a4b44dd3857b2701def2407f65b19ec
 	  OLED_Refresh_Gram();//更新显示到OLED
 		
 		if(UNLOCK == ControlCmd.All_Lock){	//如果解锁则跳转至状态页面
