@@ -36,6 +36,7 @@ typedef struct{
 		uint8  Focus;          //【聚焦】  0x01 聚焦、		0x02 放焦、  0x11 放大、0x12 缩小、0x00表示不动作（默认） 
 		uint8  Yuntai;         //【云台】	 0x01 向上、    0x02 向下、  0x00表示不动作（默认）
 		uint8  Arm;            //【机械臂】0x01 张开、    0x02 关闭、  0x00表示不动作（默认）
+		uint8  Raspi;          //【树莓派】0x01 代表树莓派开机，0x00为无开机响应（默认）
 		uint8  Reserve;        //【机械臂】0x01 张开、    0x02 关闭、  0x00表示不动作（默认）
 }ControlCmd_Type;
 
@@ -48,6 +49,8 @@ void Control_Cmd_Get(ControlCmd_Type *cmd); //控制命令获取
 void Control_Cmd_Clear(ControlCmd_Type *cmd);//控制命令清零
 void Remote_Control_Data_Analysis(uint8 Data); //控制数据解析
 
+// is_raspi_start(树莓派是否开机)
+uint8 is_raspi_start(void);
 
 #endif 
 

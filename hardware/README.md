@@ -17,7 +17,19 @@
 
 ![Controller PCB 3D](/docs/pictures/Controller_3D.jpg "Controller 3D.jpg")
 
-# 2.硬件架构
+# 2.硬件目录
+**Hardware:【相关硬件设计】**
+
+| 目录组                      | 描述                                |
+| --------------------------- | ----------------------------------- |
+| Core Controller             | ROV核心控制板PCB文件                |
+| Depth Sensor                | 深度传感器MS5837 V1.0               |
+| Robot Main Board            | ROV主控板PCB文件及Robot设备管理文件 |
+| SMT                         | 钢网PDF文件                         |
+| Zoom Camrea Controller      | 变焦摄像头PCB文件                   |
+# 3.硬件架构
+
+
 
 - 拥有外设：
 

@@ -31,7 +31,7 @@ float Yaw = 0.0f;
 
 
 extern int16 PowerPercent;
-
+extern uint8 Frame_EndFlag;
 
 /**
   * @brief  highSpeed Devices_Control(高速设备控制)
@@ -41,36 +41,14 @@ extern int16 PowerPercent;
   */
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
-//		static uint8 count = 0;
 
-//		count ++;
-//		if(count > 10){
-//				last_rc.X = rc->X;  //保存100ms前的摇杆值
-//				last_rc.Y = rc->Y;
-//				count = 0;
-//		}
-			
-		rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
-		rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
-		rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
-		rc->Yaw = ControlCmd.Rotate - 128;    //偏航
-																			 //当摇杆瞬间 拨到中间
-//		if(last_rc.X  > 15 && rc->X == 0 ){//当上一次的值比当前值大
-//				rc->X = last_rc.X - 5;
-//		}
-//		else if(last_rc.X < -15 && rc->X == 0){
-//				rc->X = last_rc.X + 5;
-//		}
-//		
-//		if(last_rc.Y > 15 && rc->Y == 0){
-//				rc->Y = last_rc.Y - 5;			
-//		}
-//		else if(last_rc.Y < -15 && rc->Y == 0){
-//				rc->Y = last_rc.Y + 5;			
-//		}
-		
-
-
+		if(Frame_EndFlag){	
+				rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
+				rc->Y = ControlCmd.Translation - 128  ;//					  Y轴摇杆值 -127 ~ +127
+				rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
+				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
+		}
+																			
 
 
 		if(ROV_Mode == VehicleMode){
@@ -102,19 +80,6 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				PropellerPower.leftDown =  (PropellerDir.leftDown  * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftDown ; 
 				PropellerPower.rightDown = (PropellerDir.rightDown * ((PowerPercent) * ( rc->Y ) /70 )) + PropellerError.rightDown;
 			
-//				if( rc->X >= 0){//当 正转时并推力超过10
-//						PropellerPower.leftDown = PropellerPower.leftDown + 10; //右上推进器 由于反向  需要进行特殊补偿
-//				}
-//				else {
-//					  PropellerPower.leftDown = PropellerPower.leftDown - 10; //右上推进器 由于反向  需要进行特殊补偿
-//				}
-//				
-//				if( PropellerPower.rightDown >= 0){//反转时
-//						PropellerPower.rightDown = PropellerPower.rightDown + 10;
-//				}
-//				else {
-//						PropellerPower.rightDown = PropellerPower.rightDown - 10;
-//				}
 		}
 }
 
@@ -147,7 +112,7 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 				
 				AUV_Depth_Control(&Rocker);
 				ROV_Depth_Control(&Rocker);
-				ROV_Rotate_Control(&Rocker);
+				ROV_Rotate_Control(&Rocker); //ROV旋转控制
 				
 				Propeller_Control(); //推进器真实PWM输出
 
@@ -312,6 +277,7 @@ MSH_CMD_EXPORT(yaw,ag: yaw 100);
 static int unlock(int argc, char **argv) //只能是 0~3.0f
 {
 		ControlCmd.All_Lock = UNLOCK;
+		return 0;
 }
 MSH_CMD_EXPORT(unlock,unlock);
 
@@ -320,6 +286,7 @@ MSH_CMD_EXPORT(unlock,unlock);
 static int lock(int argc, char **argv) //只能是 0~3.0f
 {
 		ControlCmd.All_Lock = LOCK;
+		return 0;
 }
 MSH_CMD_EXPORT(lock,lock);
 

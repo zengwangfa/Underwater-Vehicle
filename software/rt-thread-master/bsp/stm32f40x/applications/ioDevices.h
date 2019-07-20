@@ -10,7 +10,7 @@ typedef struct
 }Buzzer_Type;
 
 uint8 boma_value_get(void);
-uint8 wifi_connect_get(void);
+uint8 is_wifi_connect(void);
 
 
 void Buzzer_Init(void);

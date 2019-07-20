@@ -60,7 +60,7 @@ int Normal_Parameter_Init_With_Flash(void)
 		log_i("                      --------");
 		return 0;
 }
-//INIT_APP_EXPORT(Normal_Parameter_Init_With_Flash); //ÏÈ½«´Ë¾ä×¢ÊÍ£¬msh />ÊäÈë¡°Flash_Update¡±£¬ÔÙ´ò¿ª´Ë¾ä ÔÙÏÂÔØ
+
 
 
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕý³£Êý¾Ý 
@@ -92,7 +92,10 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		Parameter_SelfCheck( (uint32 *)&PowerPercent,&Normal_Parameter[PROPELLER_POWER_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
 				
 		/* ¡¾Éî¶È´«¸ÐÆ÷ÀàÐÍ¡¿  */
-		Parameter_SelfCheck( (uint32 *)&Sensor.DepthSensor.Type,&Normal_Parameter[DEPTH_SENSOR_TYPE_e] );// ÓÒÖÐ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊý¡¿	
+		Parameter_SelfCheck( (uint32 *)&Sensor.DepthSensor.Type,&Normal_Parameter[DEPTH_SENSOR_TYPE_e] );//Éî¶È´«¸ÐÆ÷ MS5837/SPL1301
+		
+		/* ¡¾µç³ØÈÝÁ¿ÀàÐÍ¡¿  */
+		Parameter_SelfCheck( (uint32 *)&Sensor.PowerSource.Capacity,&Normal_Parameter[BATTERY_CAPACITY_e] );//3s/4s/6s
 }
 /*
 void test_env(void) {
@@ -144,6 +147,8 @@ void Flash_Update(void)
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_POWER_e ,(uint32 *)&PowerPercent,4); //ÍÆ½øÆ÷¶¯Á¦°Ù·Ö±È
 		
 		ef_port_write(Nor_FLASH_ADDRESS+4*DEPTH_SENSOR_TYPE_e ,(uint32 *)&Sensor.DepthSensor.Type,4); //Éî¶È´«¸ÐÆ÷ ÀàÐÍ
+		
+		ef_port_write(Nor_FLASH_ADDRESS+4*BATTERY_CAPACITY_e ,(uint32 *)&Sensor.PowerSource.Capacity,4); //Éî¶È´«¸ÐÆ÷ ÀàÐÍ
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
@@ -173,14 +178,16 @@ void list_value(void)
 		log_i("Propeller_Med             %d",PropellerParameter.PowerMed);
 		log_i("----------------------   ---------");
 		log_i("Compass Offset Angle      %d",Compass_Offset_Angle);//Ö¸ÄÏÕë Æ«ÒÆ½Ç¶È
-		log_i("----------------------   ---------");
-	  log_i("rightUp_Dir               %d",PropellerDir.rightUp);
+		log_i("----------------------   ---------")
+;	  log_i("rightUp_Dir               %d",PropellerDir.rightUp);
 	  log_i("leftDown_Dir              %d",PropellerDir.leftDown);
 		log_i("leftUp_Dir                %d",PropellerDir.leftUp);
 		log_i("rightDown_Dir             %d",PropellerDir.rightDown);
 	  log_i("leftMiddle_Dir            %d",PropellerDir.leftMiddle);
 		log_i("rightMiddle_Dir           %d",PropellerDir.rightMiddle);
 		log_i("Propeller_Power           %d",PowerPercent);//ÍÆ½øÆ÷¶¯Á¦°Ù·Ö±È
+		log_i("----------------------   ---------");
+		log_i("Battery Capacity          %d",Sensor.PowerSource.Capacity);//µç³ØÈÝÁ¿²ÎÊý
 		
     rt_kprintf("\n");
 }

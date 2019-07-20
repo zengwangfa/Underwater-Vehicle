@@ -13,8 +13,8 @@ typedef struct
 
 typedef enum  // _e 表示枚举
 {
-		VEHICLE_MODE_e,              //工作模式
-		DEBUG_TOOL_e,                //Debug工具
+		VEHICLE_MODE_e,              //工作模式  rov/auv
+		DEBUG_TOOL_e,                //Debug工具 ano/vcan
 		
 		ROBOTIC_ARM_MAX_VALUE_e,    //机械臂开启最大值  
 		ROBOTIC_ARM_MIN_VALUE_e,   	//机械臂关闭值
@@ -49,6 +49,8 @@ typedef enum  // _e 表示枚举
 	
 		DEPTH_SENSOR_TYPE_e,  //深度传感器 类型
 	
+		BATTERY_CAPACITY_e, //电池电量参数 3s/4s/6s
+		
 	/******************************************/
 		PARAMEMER_MAX_NUMBER_e,    //最大参数值
 	

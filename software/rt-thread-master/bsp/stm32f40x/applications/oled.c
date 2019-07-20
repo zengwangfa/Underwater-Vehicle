@@ -51,7 +51,6 @@ volatile MENU_LIST_Enum MENU = StatusPage;//OLED³õÊ¼Ò³ÃæÎª ×´Ì¬Ò³. volatileÊÇÒ»Ö
 
 
 extern struct rt_event init_event;/* ALL_init ÊÂ¼ş¿ØÖÆ¿é */
-u16 RCLock;
 
 
 /* OLED ±äÁ¿ ³õÊ¼»¯. */
@@ -77,7 +76,6 @@ Oled_Type oled = {
 ********************************************/
 void menu_define(void) //²Ëµ¥¶¨Òå
 {
-
 	if(oled.pagenum >= OLED_Page_MAX || oled.pagenum < StatusPage) oled.pagenum = StatusPage; //³¬³öÒ³Ãæ·¶Î§ ÔòÎªµÚÒ»Ò³
 	if(oled.pagechange != oled.pagenum){
 			Buzzer_Set(&Beep,1,1);
@@ -87,7 +85,8 @@ void menu_define(void) //²Ëµ¥¶¨Òå
 	}
 	else {oled.pagechange_flag = 0;}
 	oled.pagechange = oled.pagenum;
-
+	
+	if(ControlCmd.All_Lock == LOCK){oled.pagenum = LockPage;}
 	switch(oled.pagenum){
 			case 1:{
 					MENU = StatusPage;	 OLED_StatusPage();		break;
@@ -96,7 +95,7 @@ void menu_define(void) //²Ëµ¥¶¨Òå
 					MENU = GyroscopePage;OLED_GyroscopePage();break;
 			}
 			case 3:{
-					MENU = LockPage;		OLED_LockPage(); 	  break; //¸ü¸ÄÎª Ëø¶¨½çÃæ
+					MENU = LockPage;		 OLED_LockPage(); 	  break; //Ëø¶¨½çÃæ
 			}
 			case 4:{
 					MENU = PicturePage;	 OLED_PicturePage(); break;
@@ -131,11 +130,14 @@ void oled_thread_entry(void* parameter)
 void OLED_StatusPage(void)
 {
 		static char str[50];
-
-		OLED_ShowMyChar(100,0,0,16,1); //3GÊı¾İÍ¼±ê2
-		if(wifi_connect_get()){
-				OLED_ShowMyChar(119,0,1,16,1);} //WifiÍ¼±ê
-		else {OLED_ShowMyChar(119,0,2,16,1);} //Çå¿ÕÍ¼±ê
+		
+		if(is_raspi_start()){
+				OLED_ShowMyChar(100,0,0,16,1); //3GÊı¾İÍ¼±ê2
+		}
+		else {OLED_ShowMyChar(119,0,2,16,1);} //Çå¿ÕÍ¼±ê0
+		if(is_wifi_connect()){
+				OLED_ShowMyChar(119,0,1,16,1);} //WifiÍ¼±ê1
+		else {OLED_ShowMyChar(119,0,2,16,1);} //Çå¿ÕÍ¼±ê0
 	
 		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get()); //»ñÈ¡±¾»úÎªROV or AUV
 		OLED_ShowString(0,0, (uint8 *)str,12); 
@@ -184,6 +186,7 @@ void OLED_GyroscopePage(void)
 * ×¢    Òâ£ºOLEDµÚÈıÒ³ 
 ********************************************/
 void OLED_LockPage(void)
+<<<<<<< HEAD
 {		
 		static char str[100];
 	
@@ -195,8 +198,43 @@ void OLED_LockPage(void)
 	
 		uint16 Voltage = Sensor.PowerSource.Voltage*12/16;
 		OLED_ShowPicture(106,4,bmp_battery[Voltage],10,16);//ÏÔÊ¾µçÁ¿
+=======
+{
+		
+		static char str[50] = {0};
+		uint16 oled_voltage = 0;
+		
+		if(Sensor.PowerSource.Capacity != 0){ //ÅĞ¶¨·Ç0
+				oled_voltage = Sensor.PowerSource.Voltage*12/Sensor.PowerSource.Capacity; //oledµçÁ¿ÏÔÊ¾ = ÕæÊµµçÑ¹Öµ*12¸ñ/×î´óµç³ØÈİÁ¿µÄµçÑ¹
+		}
+		else{ //Èç¹ûÎ´Éè¶¨£¬ÌáÊ¾Éè¶¨µç³ØÈİÁ¿²ÎÊı
+				log_w("yet set battery capacity!");
+				rt_thread_mdelay(5000);//5s
+		}
+		
+		if(is_raspi_start()){
+				Buzzer_Set(&Beep,3,1);
+				OLED_ShowPicture(0,28,raspberry_logo,28,33);//ÏÔÊ¾Ê÷İ®ÅÉLOGO
+		}
+		
+		sprintf(str,"%d%%",(uint8)(Sensor.PowerSource.Voltage*100/16));//µ±Ç°µçÁ¿
+		OLED_ShowString(90,0, (uint8 *)str,12);
+
+		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//µçÑ¹
+		OLED_ShowString(0,0,(uint8 *)str,12); 
+
+		OLED_ShowPicture(107,0,bmp_battery[oled_voltage],10,16);//ÏÔÊ¾µçÁ¿
+>>>>>>> b1aae581cb760ad26bee18e22e49aafa48529e9d
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//ËøÆÁ
+		
 	  OLED_Refresh_Gram();//¸üĞÂÏÔÊ¾µ½OLED
+		
+		if(UNLOCK == ControlCmd.All_Lock){	//Èç¹û½âËøÔòÌø×ªÖÁ×´Ì¬Ò³Ãæ
+				rt_thread_mdelay(1000); //ÑÓÊ±1s
+				oled.pagenum = StatusPage;
+		}
+				
+
 }
 
 /*******************************************
@@ -405,7 +443,7 @@ int oled_thread_init(void)
                     oled_thread_entry,	//Ïß³ÌÈë¿Úº¯Êı¡¾entry¡¿
                     RT_NULL,				    //Ïß³ÌÈë¿Úº¯Êı²ÎÊı¡¾parameter¡¿
                     2048,							  //Ïß³ÌÕ»´óĞ¡£¬µ¥Î»ÊÇ×Ö½Ú¡¾byte¡¿
-                    10,								  //Ïß³ÌÓÅÏÈ¼¶¡¾priority¡¿
+                    20,								  //Ïß³ÌÓÅÏÈ¼¶¡¾priority¡¿
                     10);							  //Ïß³ÌµÄÊ±¼äÆ¬´óĞ¡¡¾tick¡¿= 100ms
 
     if (oled_tid != RT_NULL){

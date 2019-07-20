@@ -91,9 +91,10 @@ void Control_Cmd_Get(ControlCmd_Type *cmd) //控制命令获取
 				cmd->Focus 				  = RC_Control_Data[11]; //变焦摄像头控制
 				cmd->Yuntai 				= RC_Control_Data[12]; //云台控制
 				cmd->Arm						= RC_Control_Data[13]; //机械臂控制
-
+				cmd->Raspi          = RC_Control_Data[14]; //树莓派启动位
 				cmd->All_Lock       = RC_Control_Data[18];
 				Receive_Data_OK = 0x00;//清零标志位
+				Frame_EndFlag = 0;
 		}
 }
 
@@ -103,6 +104,18 @@ void Control_Cmd_Clear(ControlCmd_Type *cmd) //memset(&addr,0,sizeof(addr));
 		memset(cmd,0,sizeof(*cmd));//内存块内填充0
 }
 
+
+
+/**
+	* @brief  is_raspi_start(树莓派是否启动)
+  * @param  None
+  * @retval 1 连接上   0无连接
+  * @notice 
+  */
+uint8 is_raspi_start(void)
+{
+		return ControlCmd.Raspi; 
+}
 			
 
 

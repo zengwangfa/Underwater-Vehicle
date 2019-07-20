@@ -76,6 +76,7 @@ typedef struct
 {
 		float Current; //Ë®ÎÂ
 		float Voltage;
+		uint8 Capacity;//µç³ØÈİÁ¿
 }PowerSource_Type;
 
 
