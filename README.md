@@ -1,17 +1,18 @@
 # 1、ROV/AUV航行器控制中心
 
 
-[个人主页](https://zengwangfa.top/)|
-[软件说明](./software/README.md) |
-[硬件说明](./hardware/README.md) |
-[机械结构说明](./graphic_model/README.md)
+[个人主页🕺](https://zengwangfa.top/) |
+[软件说明💻](./software/README.md) |
+[硬件说明📚](./hardware/README.md) |
+[机械结构说明🎮](./graphic_model/README.md)
 
 
-## 该航控 基于国产RT-Thread实时操作系统
+### 简介
 [![Badge](https://img.shields.io/badge/link-996.icu-%23FF4D5B.svg)](https://996.icu/#/en_US)
-[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
-[![Slack](https://img.shields.io/badge/slack-996icu-green.svg)](https://join.slack.com/t/996icu/shared_invite/enQtNTg4MjA3MzA1MzgxLWQyYzM5M2IyZmIyMTVjMzU5NTE5MGI5Y2Y2YjgwMmJiMWMxMWMzNGU3NDJmOTdhNmRlYjJlNjk5ZWZhNWIwZGM)
 
+![language](https://img.shields.io/badge/language-C-brightgreen.svg)
+![language](https://img.shields.io/badge/language-Python-ff69b4.svg)
+![language](https://img.shields.io/badge/language-C%23-blue.svg)
 ---
 
 | 硬件 | 描述 |
@@ -68,7 +69,7 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 ```
 
 
-- Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
+- 💻 🎮 Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
 
 
 ## 5、硬件结构
@@ -122,7 +123,7 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 
 
 
-#### 使用说明
+## 7、使用说明
 
 - set_vehicle_mode <parameter> 
 > 设置工作模式（auv/rov）

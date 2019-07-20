@@ -69,7 +69,7 @@ typedef struct
 		float Depth;  	   //深度
 		float Temperature; //水温
 		float PessureValue; 		 //压力值
-		uint32 Init_PessureValue; //初始化采集到得压力值
+		float Init_PessureValue; //初始化采集到得压力值
 }Depth_Sensor_Type;
 
 typedef struct 
@@ -114,8 +114,9 @@ typedef enum {
 #define Deg2Rad(Deg) (Deg * PI / 180.0f) //角度值转弧度制
 
 
-#define AUV_Mode  0// AUV标志
-#define ROV_Mode  1// ROV标志
+
+#define ROV_Mode  0// ROV标志
+#define AUV_Mode  1// AUV标志
 
 #define UNLOCK    1   //全局解锁【启动】  宏定义
 #define LOCK      2   //全局锁  【停止】
@@ -129,7 +130,7 @@ typedef enum {
 
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
-extern uint8 VehicleMode;   //【ROV_Mode】 or 【AUV_Mode】
+extern volatile uint8 VehicleMode;   //【ROV_Mode】 or 【AUV_Mode】
 
 extern Sensor_Type Sensor;
 

@@ -104,8 +104,8 @@ void JY901_Convert(JY901_Type * pArr)
 	
 		pArr->Euler.Roll = (float)stcAngle.angle[0]/8192*45;   //32768*180; 
 		pArr->Euler.Pitch = (float)stcAngle.angle[1]/8192*45;
-		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45 -90;//´Å³¡Æ¯ÒÆ ²¹³¥-20 deg
-		if(pArr->Euler.Yaw < -180)pArr->Euler.Yaw = Compass_Offset_Angle + pArr->Euler.Yaw;//´Å³¡Æ¯ÒÆ ²¹³¥-20 deg
+		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45 - 90;//ÎªÁË´Å³¡Æ¯ÒÆ¿ÉÒÔ²¹³¥ -90
+		if(pArr->Euler.Yaw < -180){pArr->Euler.Yaw += Compass_Offset_Angle;}//´Å³¡Æ¯ÒÆ ²¹³¥-20 deg
 		
 		pArr->Mag.x  = stcMag.h[0];
 		pArr->Mag.y	 = stcMag.h[1];

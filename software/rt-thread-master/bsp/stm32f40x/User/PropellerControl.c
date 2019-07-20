@@ -13,9 +13,11 @@
 #include <rtthread.h>
 #include "PID.h"
 #include "Return_Data.h"
-int32 Expect_Depth = 0;
+#include "Control.h"
 
+float Expect_Depth = 0.0f;
 
+extern int16 PowerPercent;
 
 
 /*******************************************
@@ -36,6 +38,7 @@ uint16 Output_Limit(int16 *PowerValue)
 }
 
 
+
 /*******************************************
 * 函 数 名：propeller_control
 * 功    能：水平轴推进器的控制
@@ -47,39 +50,14 @@ void Propeller_Control(void)
 {
 
 		if(UNLOCK == ControlCmd.All_Lock){ //解锁
-				switch(ControlCmd.Vertical){//有控制数据不定深度
-						case RiseUp: 
-							   Expect_Depth-- ; 
-								 if(Expect_Depth < 0) Expect_Depth= 0;//超过空气中的深度值，不再上升
-								 break;  //上升
-					
-						case Dive:   
-									if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
-											Expect_Depth++ ;
-									}
-									
-								 break;  //下潜
-						default:break/*定深度PID*/;
-				}
-
-				switch(ControlCmd.Rotate){
-						case  TurnLeft : 
-									if(Rocker.Force == 0){turnLeft();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
-									break;  //上升
-									
-						case  TurnRight: 
-									if(Rocker.Force == 0){turnRight();} //定义左摇杆优先级高：当左摇杆有数据时，右摇杆 左右旋转失效
-									break; //下潜
-						default:break;
-				}
 
 		}
 		else {
-				Propeller_Stop();		 //推进器数值清零
+				Propller_stop();		 //推进器数值清零
 		}
-		//Propeller_Output();  //推进器限幅输出
+		Propeller_Output();  //推进器限幅输出
 		
-		//ControlCmd.Vertical = 0x00;
+
 
 		
 
@@ -114,29 +92,30 @@ void Propeller_Output(void)
 
 
 /*******************************************
-* 函 数 名：robotForward
-* 功    能：机器人前进
+* 函 数 名：turnRight
+* 功    能：机器人右旋
 * 输入参数：none
 * 返 回 值：none
 * 注    意：none
 ********************************************/
-void turnRight(void)  //右旋
+void turnRight(uint16 power)  //右旋
 {
-		PropellerPower.leftUp =     PropellerDir.leftUp*(70) + PropellerError.leftUp;
+		power = ((PowerPercent) * ( power) )/70;
+		PropellerPower.leftUp =     PropellerDir.leftUp*(power) + PropellerError.leftUp;
 		PropellerPower.rightUp =    0 + PropellerError.rightUp;
-		PropellerPower.leftDown =   PropellerDir.leftDown*(70) + PropellerError.leftDown;
+		PropellerPower.leftDown =   PropellerDir.leftDown*(power) + PropellerError.leftDown;
 		PropellerPower.rightDown =  0 + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnRight,ag: turnRight);
 
 
-void turnLeft(void)  //左旋
+void turnLeft(uint16 power)  //左旋
 {
-
+		power = ((PowerPercent) * ( power) )/70;
 		PropellerPower.leftUp =    0 + PropellerError.leftUp;
-		PropellerPower.rightUp =   PropellerDir.rightUp*(70) + PropellerError.rightUp;
+		PropellerPower.rightUp =   PropellerDir.rightUp*(power) + PropellerError.rightUp;
 		PropellerPower.leftDown =  0 + PropellerError.leftDown;
-		PropellerPower.rightDown = PropellerDir.rightDown*(70) + PropellerError.rightDown;
+		PropellerPower.rightDown = PropellerDir.rightDown*(power) + PropellerError.rightDown;
 }
 MSH_CMD_EXPORT(turnLeft,ag: turnLeft);
 
@@ -148,8 +127,8 @@ void Propller_stop(void)  //推进器停转
 		PropellerPower.leftDown =  0 + PropellerError.leftDown;
 		PropellerPower.rightDown = 0 + PropellerError.rightDown;
 	
-		PropellerPower.leftMiddle = 0 + PropellerError.leftMiddle;
-		PropellerPower.rightMiddle = 0+ PropellerError.rightMiddle; 
+//		PropellerPower.leftMiddle = 0 + PropellerError.leftMiddle;
+//		PropellerPower.rightMiddle = 0+ PropellerError.rightMiddle; 
 }
 MSH_CMD_EXPORT(Propller_stop,ag: propller_stop);
 
@@ -165,19 +144,25 @@ void robot_upDown(float depth_output)
 {
 		//限幅 限制在推进器 设定的最大油门值-停转值(中值)
 	
-	
 		depth_output = depth_output < -(PropellerParameter.PowerMax - PropellerParameter.PowerMed ) ? -(PropellerParameter.PowerMax - PropellerParameter.PowerMed ):depth_output;
 		depth_output = depth_output >  (PropellerParameter.PowerMax - PropellerParameter.PowerMed ) ?  (PropellerParameter.PowerMax - PropellerParameter.PowerMed ):depth_output;
 		
-		PropellerPower.leftMiddle   = - depth_output + PropellerError.leftMiddle;//正反桨
-		PropellerPower.rightMiddle  =   depth_output + PropellerError.rightMiddle;
+		PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -depth_output + PropellerError.leftMiddle);//正反桨
+		PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -depth_output + PropellerError.rightMiddle);//输出为负值
 		
-	
-		if( PropellerPower.rightMiddle > 10){//当 正转时并推力超过10
-				PropellerPower.leftMiddle = PropellerPower.leftMiddle -10; //右上推进器 由于反向  需要进行特殊补偿
+		if(ROV_Mode == VehicleMode){ //这个是为了平衡两边推力(以为正反推进器，其特有推力不一致)
+				if( PropellerPower.rightMiddle > 10){//当 正转时并推力超过10
+						PropellerPower.leftMiddle = PropellerPower.leftMiddle -10; //右上推进器 由于反向  需要进行特殊补偿
+				}
+				else if( PropellerPower.leftMiddle < -10){//反转时
+						PropellerPower.rightMiddle = PropellerPower.rightMiddle - 10;
+				}
 		}
-		else if( PropellerPower.leftMiddle < -10){//反转时
-				PropellerPower.rightMiddle = PropellerPower.rightMiddle - 10;
+		
+		else if(AUV_Mode == VehicleMode) //这个是为了补偿推进器死区值
+		{
+//			  PropellerPower.leftMiddle  -= (PropellerDir.leftMiddle  * 20);//死区值 20
+//				PropellerPower.rightMiddle -= (PropellerDir.rightMiddle * 20);	
 		}
 }
 

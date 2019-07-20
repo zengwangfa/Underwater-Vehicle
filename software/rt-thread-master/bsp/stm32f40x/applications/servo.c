@@ -23,8 +23,6 @@
 #define RoboticArm_MedValue  1500
 #define YunTai_MedValue  		 2000
 
-uint8 RoboticArm_Speed = 5;
-uint8 Yuntai_Speed = 5;
 
 ServoType RoboticArm = {
 		 .MaxValue = 2000, 		//机械臂 正向最大值
@@ -47,15 +45,14 @@ extern struct rt_event init_event;/* ALL_init 事件控制块. */
 * 函 数 名：Servo_Output_Limit
 * 功    能：舵机输出限制
 * 输入参数：输入值：舵机结构体地址 
-* 返 回 值：限幅后的 舵机当前值 Servo->CurrentValue
+* 返 回 值：None
 * 注    意：
 ********************************************/
-uint16 Servo_Output_Limit(ServoType *Servo)
+void Servo_Output_Limit(ServoType *Servo)
 {
 		Servo->CurrentValue = Servo->CurrentValue  > Servo->MaxValue ? Servo->MaxValue : Servo->CurrentValue ;//正向限幅
 		Servo->CurrentValue = Servo->CurrentValue  < Servo->MinValue ? Servo->MinValue : Servo->CurrentValue ;//反向限幅
 	
-		return Servo->CurrentValue ;
 }
 
 
@@ -81,7 +78,7 @@ void RoboticArm_Control(uint8 *action)
 									break;
 				default:break;
 		}
-		RoboticArm.CurrentValue = Servo_Output_Limit(&RoboticArm);//机械臂舵机限幅
+		Servo_Output_Limit(&RoboticArm);//机械臂舵机限幅
 		TIM_SetCompare3(TIM4,RoboticArm.CurrentValue);
 		*action = 0x00; //清除控制字
 }
@@ -112,7 +109,7 @@ void YunTai_Control(uint8 *action)
 				case 0x03:YunTai.CurrentValue = YunTai.MedValue;break;   //归中
 				default: break;
 		}
-		YunTai.CurrentValue = Servo_Output_Limit(&YunTai);
+		Servo_Output_Limit(&YunTai);
 		TIM_SetCompare4(TIM4,YunTai.CurrentValue); 
 		*action = 0x00; //清除控制字
 }
