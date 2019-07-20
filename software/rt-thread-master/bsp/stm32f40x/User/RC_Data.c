@@ -94,7 +94,7 @@ void Control_Cmd_Get(ControlCmd_Type *cmd) //控制命令获取
 				cmd->Raspi          = RC_Control_Data[14]; //树莓派启动位
 				cmd->All_Lock       = RC_Control_Data[18];
 				Receive_Data_OK = 0x00;//清零标志位
-				Frame_EndFlag = 0;
+
 		}
 }
 

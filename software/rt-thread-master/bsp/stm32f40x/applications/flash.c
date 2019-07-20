@@ -82,7 +82,7 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊı×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 
 		/* ¡¾ÍÆ½øÆ÷·½Ïò¡¿ */
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightUp    ,&Normal_Parameter[PROPELLER_RIGHT_UP_DIR_e]  );// ÓÒÉÏ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿
-		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftUp     ,&Normal_Parameter[PROPELLER_LEFT_DOWN_DIR_e] );// ×óÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿	
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftDown   ,&Normal_Parameter[PROPELLER_LEFT_DOWN_DIR_e] );// ×óÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿	
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftUp     ,&Normal_Parameter[PROPELLER_LEFT_UP_DIR_e]   );// ×óÉÏ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿	
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightDown  ,&Normal_Parameter[PROPELLER_RIGHT_DOWN_DIR_e]);// ÓÒÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftMiddle ,&Normal_Parameter[PROPELLER_LEFT_MED_DIR_e]  );// ×óÖĞ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿
@@ -278,10 +278,10 @@ INIT_APP_EXPORT(PID_Paramter_Init_With_Flash);
 
 void Parameter_SelfCheck(uint32 *RealParameter,uint32 *TempParameter)
 {
-		if(*TempParameter != 0xFFFFFFFF)	//FlashÄÚÊı¾İÕı³£ £¨²»µÈÓÚ0xFFFFFFFF ¼´²»ÎªÎŞĞ§Êı¾İ£©
-		{
+//		if(*TempParameter != 0xFFFFFFFF)	//FlashÄÚÊı¾İÕı³£ £¨²»µÈÓÚ0xFFFFFFFF ¼´²»ÎªÎŞĞ§Êı¾İ£©
+//		{
 				*RealParameter = *TempParameter; //Flash Êı¾İÕıÈ·ÔòÌæ»»ÎªÕæÊµ±äÁ¿
-		}
+//		}
 }
 
 

@@ -186,26 +186,13 @@ void OLED_GyroscopePage(void)
 * 注    意：OLED第三页 
 ********************************************/
 void OLED_LockPage(void)
-<<<<<<< HEAD
 {		
-		static char str[100];
-	
-		sprintf(str,"Vol:%3.1fV  ",Sensor.PowerSource.Voltage);//当前电压
-		OLED_ShowString(56,4, (uint8 *)str,12);
-		sprintf(str,"%d",(uint8)(Sensor.PowerSource.Voltage*100/16));//当前电量
-		OLED_ShowString(56,16, (uint8 *)str,12);
-		OLED_ShowChar(80,16,'%',12,1);
-	
-		uint16 Voltage = Sensor.PowerSource.Voltage*12/16;
-		OLED_ShowPicture(106,4,bmp_battery[Voltage],10,16);//显示电量
-=======
-{
-		
+
 		static char str[50] = {0};
 		uint16 oled_voltage = 0;
 		
 		if(Sensor.PowerSource.Capacity != 0){ //判定非0
-				oled_voltage = Sensor.PowerSource.Voltage*12/Sensor.PowerSource.Capacity; //oled电量显示 = 真实电压值*12格/最大电池容量的电压
+				oled_voltage = (Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))*12/4; //oled电量显示 = 真实电压值*12格/最大电池容量的电压
 		}
 		else{ //如果未设定，提示设定电池容量参数
 				log_w("yet set battery capacity!");
@@ -217,14 +204,13 @@ void OLED_LockPage(void)
 				OLED_ShowPicture(0,28,raspberry_logo,28,33);//显示树莓派LOGO
 		}
 		
-		sprintf(str,"%d%%",(uint8)(Sensor.PowerSource.Voltage*100/16));//当前电量
-		OLED_ShowString(90,0, (uint8 *)str,12);
+		sprintf(str,"%d%%",(uint8)((Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))/4*100));//当前电量百分比
+		OLED_ShowString(85,0, (uint8 *)str,12);
 
 		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,0,(uint8 *)str,12); 
 
 		OLED_ShowPicture(107,0,bmp_battery[oled_voltage],10,16);//显示电量
->>>>>>> b1aae581cb760ad26bee18e22e49aafa48529e9d
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//锁屏
 		
 	  OLED_Refresh_Gram();//更新显示到OLED

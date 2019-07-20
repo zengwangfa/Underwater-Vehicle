@@ -207,7 +207,7 @@ static int propeller_dir_set(int argc, char **argv) //Ö»ÄÜÊÇ -1 or 1
 		if(abs(atoi(argv[1])) == 1 && abs(atoi(argv[2])) == 1  && abs(atoi(argv[3])) == 1  && \
 			 abs(atoi(argv[4])) == 1  && abs(atoi(argv[5])) == 1  && abs(atoi(argv[6])) == 1  ) {
 				 
-				PropellerDir.rightUp   = atoi(argv[1]);
+				PropellerDir.rightUp     = atoi(argv[1]);
 				PropellerDir.leftDown    = atoi(argv[2]);
 				PropellerDir.leftUp      = atoi(argv[3]);
 				PropellerDir.rightDown   = atoi(argv[4]);

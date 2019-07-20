@@ -28,10 +28,13 @@
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
+char ACC1 = 0,ACC2 = 0,ACC3 = 0,ACC4 = 0;
 
 
 extern int16 PowerPercent;
 extern uint8 Frame_EndFlag;
+
+#define ShutDown 1
 
 /**
   * @brief  highSpeed Devices_Control(高速设备控制)
@@ -41,16 +44,40 @@ extern uint8 Frame_EndFlag;
   */
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
-
+		static int16 LastRcX = 0 ,LastRcY = 0;
 		if(Frame_EndFlag){	
 				rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
 				rc->Y = ControlCmd.Translation - 128  ;//					  Y轴摇杆值 -127 ~ +127
 				rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
 				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
 		}
-																			
 
-
+		if(abs(abs(LastRcX) - abs(rc->X))>=ShutDown*4) //如果差值大于9，启动减速器
+		{
+				if(rc->X < LastRcX)														//判断前进还是后退
+				{
+					rc->X = LastRcX - ShutDown;									//减小加速度
+				}
+				else
+				{
+					rc->X = LastRcX + ShutDown;
+				}
+				LastRcX = rc->X;	
+		}
+		if(abs(abs(LastRcY) - abs(rc->Y))>=ShutDown*4)
+		{
+				if(rc->Y < LastRcY)
+				{
+					rc->Y = LastRcY - ShutDown;
+				}
+				else
+				{
+					rc->Y = LastRcY + ShutDown;
+				}
+				LastRcY = rc->Y;	
+		}
+		
+		
 		if(ROV_Mode == VehicleMode){
 				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
 				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
@@ -60,25 +87,20 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
 				   
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + PropellerError.leftDown ; 
-				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + PropellerError.rightDown;
+				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
+				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
+				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
 				
-				if(rc->Angle <= 180 && PropellerPower.rightUp> 10){//当 正转时并推力超过10
-						PropellerPower.rightUp = PropellerPower.rightUp -10; //右上推进器 由于反向  需要进行特殊补偿
-				}
-				else if(rc->Angle > 180 && PropellerPower.rightUp < -10){//反转时
-						PropellerPower.rightUp = PropellerPower.rightUp - 10;
-				}
+
 		}
 		
 		else if(AUV_Mode == VehicleMode){
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */ 
-				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
-				PropellerPower.rightUp =   (PropellerDir.rightUp   * ((PowerPercent) * ( rc->Y ) /70 )) + PropellerError.rightUp ;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-				PropellerPower.leftDown =  (PropellerDir.leftDown  * ((PowerPercent) * ( rc->X ) /70 )) + PropellerError.leftDown ; 
-				PropellerPower.rightDown = (PropellerDir.rightDown * ((PowerPercent) * ( rc->Y ) /70 )) + PropellerError.rightDown;
+				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 ))	+ ACC1 + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
+				PropellerPower.rightUp =   (PropellerDir.rightUp   * ((PowerPercent) * ( rc->Y ) /70 )) + ACC2 + PropellerError.rightUp ;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+				PropellerPower.leftDown =  (PropellerDir.leftDown  * ((PowerPercent) * ( rc->X ) /70 )) + ACC3 + PropellerError.leftDown ; 
+				PropellerPower.rightDown = (PropellerDir.rightDown * ((PowerPercent) * ( rc->Y ) /70 )) + ACC4 + PropellerError.rightDown;
 			
 		}
 }
