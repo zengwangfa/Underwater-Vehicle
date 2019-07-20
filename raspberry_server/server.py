@@ -6,6 +6,15 @@ import RPi.GPIO as GPIO
 import serial
 import threading
 
+ser = serial.Serial('/dev/ttyUSB0',115200,timeout = 0.1)
+
+raspberry_start_on_list =\
+[0xAA,0x55,0x10,  0x00,0x00,   0x00,0x00,0x00,0x00,0x00,   0x00,0x00,0x00,0x00,    0x01,        0x00,0x00,0x00,  0x02,       0x12]  
+	#包头          标志位           摇杆控制位              设备控制位      树莓派开机位        预留位        启动停止位 累加校验和
+      
+ser.write(raspberry_start_on_list) #向MCU发送 pi已经开机指示
+print("Pi Start on!") 
+
 HOST_IP = "192.168.137.219"
 HOST_PORT = 8888
 print("Starting socket: TCP...")
@@ -22,7 +31,9 @@ socket_con, (client_ip, client_port) = socket_tcp.accept()
 print("Connection accepted from %s." %client_ip)
 #socket_con.send("Welcome to RPi TCP server!".encode())
 
-ser = serial.Serial('/dev/ttyUSB0',115200,timeout = 0.1)
+
+
+
 
 close_flag = 0
 
@@ -50,6 +61,7 @@ thread_read.start()
 #GPIO.setwarnings(Flase)
 #GPIO.setmode(GPIO.BOARD)
 #GPIO.setup(11,GPIO.OUT)
+
 print("Receiving package...")
 while True:
     try:
