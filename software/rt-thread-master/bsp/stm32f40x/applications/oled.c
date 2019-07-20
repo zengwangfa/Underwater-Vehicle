@@ -187,9 +187,13 @@ void OLED_GyroscopePage(void)
 void OLED_LockPage(void)
 {
 		static char str[50] = {0};
-		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);
-		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
+		OLED_ShowPicture(49,28,bmp_lock[ControlCmd.All_Lock-1],30,30);
 		
+		if(is_raspi_start()){
+				Buzzer_Set(&Beep,3,1);
+				OLED_ShowPicture(0,28,raspberry_logo,28,33);//28*33
+		}
+		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,0,(uint8 *)str,12); 
 	  OLED_Refresh_Gram();//更新显示到OLED
 		

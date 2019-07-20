@@ -31,7 +31,7 @@ float Yaw = 0.0f;
 
 
 extern int16 PowerPercent;
-
+extern uint8 Frame_EndFlag;
 
 /**
   * @brief  highSpeed Devices_Control(高速设备控制)
@@ -49,11 +49,12 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 //				last_rc.Y = rc->Y;
 //				count = 0;
 //		}
-			
-		rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
-		rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
-		rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
-		rc->Yaw = ControlCmd.Rotate - 128;    //偏航
+		if(Frame_EndFlag){	
+				rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
+				rc->Y = ControlCmd.Translation- 128  ;//					  Y轴摇杆值 -127 ~ +127
+				rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
+				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
+		}
 																			 //当摇杆瞬间 拨到中间
 //		if(last_rc.X  > 15 && rc->X == 0 ){//当上一次的值比当前值大
 //				rc->X = last_rc.X - 5;
@@ -147,7 +148,7 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 				
 				AUV_Depth_Control(&Rocker);
 				ROV_Depth_Control(&Rocker);
-				ROV_Rotate_Control(&Rocker);
+				ROV_Rotate_Control(&Rocker); //ROV旋转控制
 				
 				Propeller_Control(); //推进器真实PWM输出
 
@@ -312,6 +313,7 @@ MSH_CMD_EXPORT(yaw,ag: yaw 100);
 static int unlock(int argc, char **argv) //只能是 0~3.0f
 {
 		ControlCmd.All_Lock = UNLOCK;
+		return 0;
 }
 MSH_CMD_EXPORT(unlock,unlock);
 
@@ -320,6 +322,7 @@ MSH_CMD_EXPORT(unlock,unlock);
 static int lock(int argc, char **argv) //只能是 0~3.0f
 {
 		ControlCmd.All_Lock = LOCK;
+		return 0;
 }
 MSH_CMD_EXPORT(lock,lock);
 

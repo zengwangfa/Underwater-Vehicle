@@ -64,14 +64,14 @@ void ROV_Depth_Control(Rocker_Type *rc){
 		if(ROV_Mode == VehicleMode)	 //ROV由 摇杆模拟量控制
 		{
 				if(rc->Z > 5){
-					 Expect_Depth -=( (float)rc->Z /80); 
+					 Expect_Depth -=( (float)rc->Z /100); 
 					 if(Expect_Depth < 0) {//超过空气中的深度值，期望值不再上升
 							Expect_Depth= 0;
 						}
 				}
 				else if(rc->Z < -5){
 						if(Total_Controller.High_Position_Control.Control_OutPut < 450){ //超过输出范围 停止累积
-								Expect_Depth += (fabs((float)rc->Z)/80);
+								Expect_Depth += (fabs((float)rc->Z)/100);
 						}
 				}
 		}

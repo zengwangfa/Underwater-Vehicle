@@ -1,9 +1,9 @@
 /*
- * servo.c
+ * focus.c
  *
  *  Created on: 2019年2月30日
  *      Author: zengwangfa
- *      Notes:  推进器设备
+ *      Notes:  变焦摄像头设备(控制通信)
  */
 
 #include "focus.h"
@@ -121,11 +121,4 @@ void focus_camera_add(void)
 		log_i("focus_camera_add ");
 }
 MSH_CMD_EXPORT(focus_camera_add,focus camera add);
-
-
-
-
-
-
-
 
