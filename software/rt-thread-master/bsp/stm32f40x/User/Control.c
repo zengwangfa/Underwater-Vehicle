@@ -44,13 +44,9 @@ extern uint8 Frame_EndFlag;
   */
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
-<<<<<<< HEAD
-
-		if(Frame_EndFlag){	//当获取当外部数据帧
-=======
 		static int16 LastRcX = 0 ,LastRcY = 0;
+	
 		if(Frame_EndFlag){	
->>>>>>> f2d2eaecf3b8863c2f9f72abe2101aa965a7a6d6
 				rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
 				rc->Y = ControlCmd.Translation - 128  ;//					  Y轴摇杆值 -127 ~ +127
 				rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
@@ -59,25 +55,21 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 
 		if(abs(abs(LastRcX) - abs(rc->X))>=ShutDown*4) //如果差值大于9，启动减速器
 		{
-				if(rc->X < LastRcX)														//判断前进还是后退
-				{
-					rc->X = LastRcX - ShutDown;									//减小加速度
+				if(rc->X < LastRcX){														//判断前进还是后退
+						rc->X = LastRcX - ShutDown;									//减小加速度
 				}
-				else
-				{
-					rc->X = LastRcX + ShutDown;
+				else{
+						rc->X = LastRcX + ShutDown;
 				}
 				LastRcX = rc->X;	
 		}
 		if(abs(abs(LastRcY) - abs(rc->Y))>=ShutDown*4)
 		{
-				if(rc->Y < LastRcY)
-				{
-					rc->Y = LastRcY - ShutDown;
+				if(rc->Y < LastRcY){
+						rc->Y = LastRcY - ShutDown;
 				}
-				else
-				{
-					rc->Y = LastRcY + ShutDown;
+				else{
+						rc->Y = LastRcY + ShutDown;
 				}
 				LastRcY = rc->Y;	
 		}
@@ -90,13 +82,19 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
 				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
 				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
-				   
+			
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
-				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
-				
+				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70  + PropellerError.leftUp;  //Power为推进器系数 0~300%
+				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70  + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70  + PropellerError.leftDown ; 
+				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70  + PropellerError.rightDown;
+								
+//				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
+//				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
+//				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+//				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
+//				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
+//				
 
 		}
 		
@@ -263,7 +261,7 @@ static int depth(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        rt_kprintf("Error! Proper Usage: RoboticArm_openvalue_set 1600");
+        rt_kprintf("Error! Proper Usage: RoboticArm_openvalue_set <value>");
 				result = -RT_ERROR;
         goto _exit;
     }

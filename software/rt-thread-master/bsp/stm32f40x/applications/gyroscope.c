@@ -147,7 +147,7 @@ static int set_compass_offset_angle(int argc, char **argv)
 {
     int result = 0;
     if (argc != 2){
-        log_e("Error! Proper Usage: RoboticArm_Speed 10");
+        log_e("Error! Proper Usage: RoboticArm_Speed <0~100>");
 				result = -RT_ERROR;
         goto _exit;
     }

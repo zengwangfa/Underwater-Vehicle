@@ -131,7 +131,7 @@ static int debug(int argc, char **argv)
     int result = 0;
 
     if (argc != 2){
-				log_e("Proper Usage: debug on /off");//用法:设置上位机工具
+				log_e("Proper Usage: debug <on/off>");//用法:设置上位机工具
 				result = -RT_ERROR; 
 				goto _exit;  
     }
@@ -144,7 +144,7 @@ static int debug(int argc, char **argv)
 				log_v("debug off\r\n");
 		}
 		else {
-				log_e("Proper Usage: debug on /off");//用法:设置上位机工具
+				log_e("Proper Usage: debug <on/off>");//用法:设置上位机工具
 		}
 
 _exit:
@@ -159,7 +159,7 @@ static int set_debug_tool(int argc,char **argv)
 {
 		int result = 0;
     if (argc != 2){
-				log_e("set_dubug_tool <vcan|ano|null>");//用法:设置上位机工具
+				log_e("set_dubug_tool <vcan/ano/null>");//用法:设置上位机工具
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -178,7 +178,7 @@ static int set_debug_tool(int argc,char **argv)
 				log_v("Debug Tool:NULL\r\n");
 		}
 		else {
-				log_e("set_dubug_tool <vcan|ano|null>");//用法:设置上位机工具
+				log_e("set_dubug_tool <vcan/ano/null>");//用法:设置上位机工具
 				goto _exit;
 		}
 		Flash_Update();
@@ -203,7 +203,7 @@ static int set_vehicle_mode(int argc,char **argv)
 {
 		int result = 0;
     if (argc != 2){
-				log_e("Proper Usage: set_vehicle_mode auv / rov");//用法:设置工作模式
+				log_e("Proper Usage: set_vehicle_mode <rov/auv>");//用法:设置工作模式
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -221,7 +221,7 @@ static int set_vehicle_mode(int argc,char **argv)
 
 
 		else {
-				log_e("Proper Usage: set_vehicle_mode auv / rov");
+				log_e("Proper Usage: set_vehicle_mode <rov/auv>");
 				goto _exit;
 		}
 _exit:

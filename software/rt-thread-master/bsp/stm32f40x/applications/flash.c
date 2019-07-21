@@ -95,7 +95,7 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		Parameter_SelfCheck( (uint32 *)&Sensor.DepthSensor.Type,&Normal_Parameter[DEPTH_SENSOR_TYPE_e] );//Éî¶È´«¸ÐÆ÷ MS5837/SPL1301
 		
 		/* ¡¾µç³ØÈÝÁ¿ÀàÐÍ¡¿  */
-		Parameter_SelfCheck( (uint32 *)&Sensor.PowerSource.Capacity,&Normal_Parameter[BATTERY_CAPACITY_e] );//3s/4s/6s
+		Parameter_SelfCheck( (uint32 *)&Sensor.PowerSource.Capacity,&Normal_Parameter[BATTERY_CAPACITY_e] );//µç³ØÈÝÁ¿²ÎÊý 3s/4s/6s
 }
 /*
 void test_env(void) {
@@ -148,7 +148,7 @@ void Flash_Update(void)
 		
 		ef_port_write(Nor_FLASH_ADDRESS+4*DEPTH_SENSOR_TYPE_e ,(uint32 *)&Sensor.DepthSensor.Type,4); //Éî¶È´«¸ÐÆ÷ ÀàÐÍ
 		
-		ef_port_write(Nor_FLASH_ADDRESS+4*BATTERY_CAPACITY_e ,(uint32 *)&Sensor.PowerSource.Capacity,4); //Éî¶È´«¸ÐÆ÷ ÀàÐÍ
+		ef_port_write(Nor_FLASH_ADDRESS+4*BATTERY_CAPACITY_e ,(uint32 *)&Sensor.PowerSource.Capacity,4); //µç³ØÈÝÁ¿²ÎÊý 3s/4s/6s
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
@@ -278,8 +278,8 @@ INIT_APP_EXPORT(PID_Paramter_Init_With_Flash);
 
 void Parameter_SelfCheck(uint32 *RealParameter,uint32 *TempParameter)
 {
-//		if(*TempParameter != 0xFFFFFFFF)	//FlashÄÚÊý¾ÝÕý³£ £¨²»µÈÓÚ0xFFFFFFFF ¼´²»ÎªÎÞÐ§Êý¾Ý£©
-//		{
+//	if(*TempParameter < 10000 )	//³õÂÔ¼ì²é µ±Êý¾ÝÐ¡ÓÚ10000Ê± ÎªÕý³£Êý¾Ý
+//	{
 				*RealParameter = *TempParameter; //Flash Êý¾ÝÕýÈ·ÔòÌæ»»ÎªÕæÊµ±äÁ¿
 //		}
 }

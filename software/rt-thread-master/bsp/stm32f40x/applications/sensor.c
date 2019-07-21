@@ -216,7 +216,7 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 {
     int result = 0;
     if (argc != 2){ //6个推进器
-        log_e("Error! Proper Usage: propeller_power_set <0~300> % ");
+        log_e("Error! Proper Usage: set_depth_sensor_type <ms5837/spl1301> % ");
 				result = -RT_ERROR;
         goto _exit;
     }
