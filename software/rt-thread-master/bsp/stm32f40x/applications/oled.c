@@ -186,6 +186,19 @@ void OLED_GyroscopePage(void)
 * 注    意：OLED第三页 
 ********************************************/
 void OLED_LockPage(void)
+<<<<<<< HEAD
+{		
+		static char str[100];
+	
+		sprintf(str,"Vol:%3.1fV  ",Sensor.PowerSource.Voltage);//当前电压
+		OLED_ShowString(56,4, (uint8 *)str,12);
+		sprintf(str,"%d",(uint8)(Sensor.PowerSource.Voltage*100/16));//当前电量
+		OLED_ShowString(56,16, (uint8 *)str,12);
+		OLED_ShowChar(80,16,'%',12,1);
+	
+		uint16 Voltage = Sensor.PowerSource.Voltage*12/16;
+		OLED_ShowPicture(106,4,bmp_battery[Voltage],10,16);//显示电量
+=======
 {
 		
 		static char str[50] = {0};
@@ -211,6 +224,7 @@ void OLED_LockPage(void)
 		OLED_ShowString(0,0,(uint8 *)str,12); 
 
 		OLED_ShowPicture(107,0,bmp_battery[oled_voltage],10,16);//显示电量
+>>>>>>> b1aae581cb760ad26bee18e22e49aafa48529e9d
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//锁屏
 		
 	  OLED_Refresh_Gram();//更新显示到OLED
