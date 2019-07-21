@@ -189,7 +189,7 @@ void OLED_LockPage(void)
 {		
 
 		static char str[50] = {0};
-		uint16 oled_voltage = 0;
+		uint16 oled_voltage = 0,VoltageNumber = 0;
 		
 		if(Sensor.PowerSource.Capacity != 0){ //判定非0
 				oled_voltage = (Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))*12/4; //oled电量显示 = 真实电压值*12格/最大电池容量的电压
@@ -203,14 +203,14 @@ void OLED_LockPage(void)
 				Buzzer_Set(&Beep,3,1);
 				OLED_ShowPicture(0,28,raspberry_logo,28,33);//显示树莓派LOGO
 		}
-		
-		sprintf(str,"%d%%",(uint8)((Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))/4*100));//当前电量百分比
+		VoltageNumber = (Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))/4*100;
+		sprintf(str,"%d%%",VoltageNumber<100?VoltageNumber:100);//当前电量百分比
 		OLED_ShowString(85,0, (uint8 *)str,12);
 
 		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,0,(uint8 *)str,12); 
 
-		OLED_ShowPicture(107,0,bmp_battery[oled_voltage],10,16);//显示电量
+		OLED_ShowPicture(107,0,bmp_battery[oled_voltage<12?oled_voltage:12],10,16);//显示电量
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//锁屏
 		
 	  OLED_Refresh_Gram();//更新显示到OLED
