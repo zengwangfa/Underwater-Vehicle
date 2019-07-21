@@ -60,7 +60,7 @@ void led_blink_task(void)
 		static rt_uint8_t status = 1;
 	  static rt_uint8_t cnt = 0;
 		cnt++;
-		if(boma_value_get() == System_NORMAL_STATUS && cnt >= 40 && Sensor.PowerSource.Voltage >= 9 ){
+		if(cnt >= 40 && Sensor.PowerSource.Voltage >= 9 ){
 				cnt = 0;
 				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
 				LED_OFF(LED_Red);			

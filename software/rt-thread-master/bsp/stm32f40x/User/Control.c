@@ -42,7 +42,7 @@ extern uint8 Frame_EndFlag;
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
 
-		if(Frame_EndFlag){	
+		if(Frame_EndFlag){	//当获取当外部数据帧
 				rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
 				rc->Y = ControlCmd.Translation - 128  ;//					  Y轴摇杆值 -127 ~ +127
 				rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快

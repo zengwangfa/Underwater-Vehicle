@@ -207,13 +207,13 @@ static int propeller_dir_set(int argc, char **argv) //只能是 -1 or 1
 		if(abs(atoi(argv[1])) == 1 && abs(atoi(argv[2])) == 1  && abs(atoi(argv[3])) == 1  && \
 			 abs(atoi(argv[4])) == 1  && abs(atoi(argv[5])) == 1  && abs(atoi(argv[6])) == 1  ) {
 				 
-				PropellerDir.rightUp   = atoi(argv[1]);
+				PropellerDir.rightUp     = atoi(argv[1]);
 				PropellerDir.leftDown    = atoi(argv[2]);
 				PropellerDir.leftUp      = atoi(argv[3]);
 				PropellerDir.rightDown   = atoi(argv[4]);
 				PropellerDir.leftMiddle  = atoi(argv[5]);
 				PropellerDir.rightMiddle = atoi(argv[6]);
-				 
+				
 				Flash_Update();
 				rt_kprintf("\n");
 				log_i("Propeller: rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle");   //其标志只能是 1  or  -1 

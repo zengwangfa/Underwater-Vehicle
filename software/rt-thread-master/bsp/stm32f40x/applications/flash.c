@@ -82,7 +82,7 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊı×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 
 		/* ¡¾ÍÆ½øÆ÷·½Ïò¡¿ */
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightUp    ,&Normal_Parameter[PROPELLER_RIGHT_UP_DIR_e]  );// ÓÒÉÏ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿
-		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftUp     ,&Normal_Parameter[PROPELLER_LEFT_DOWN_DIR_e] );// ×óÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿	
+		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftDown   ,&Normal_Parameter[PROPELLER_LEFT_DOWN_DIR_e] );// ×óÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿	
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftUp     ,&Normal_Parameter[PROPELLER_LEFT_UP_DIR_e]   );// ×óÉÏ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿	
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.rightDown  ,&Normal_Parameter[PROPELLER_RIGHT_DOWN_DIR_e]);// ÓÒÏÂ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿
 		Parameter_SelfCheck( (uint32 *)&PropellerDir.leftMiddle ,&Normal_Parameter[PROPELLER_LEFT_MED_DIR_e]  );// ×óÖĞ  ¡¾ÍÆ½øÆ÷·½Ïò ²ÎÊı¡¿
@@ -137,7 +137,7 @@ void Flash_Update(void)
 
 		ef_port_write(Nor_FLASH_ADDRESS+4*COMPASS_OFFSET_ANGLE_e,(uint32 *)&Compass_Offset_Angle,4); // µØÖ·
 
-		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_UP_DIR_e  ,(uint32 *)&PropellerDir.rightUp    ,4); // ÓÒÉÏ
+		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_UP_DIR_e  ,(uint32 *)&PropellerDir.rightUp    ,4); //ÓÒÉÏ
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_LEFT_DOWN_DIR_e ,(uint32 *)&PropellerDir.leftDown   ,4); //×óÏÂ
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_LEFT_UP_DIR_e   ,(uint32 *)&PropellerDir.leftUp     ,4); //×óÉÏ
 		ef_port_write(Nor_FLASH_ADDRESS+4*PROPELLER_RIGHT_DOWN_DIR_e,(uint32 *)&PropellerDir.rightDown  ,4); //ÓÒÏÂ
