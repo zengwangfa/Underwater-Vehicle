@@ -11,7 +11,7 @@
 #include <elog.h>
 #include "uart.h"
 #include "Return_Data.h"
-
+#include "Control.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
 
@@ -39,10 +39,10 @@ uint8 focus_data[10] = {0};
 void Focus_Zoom_Camera(uint8 *action)
 {
 		switch(*action){
-				case 0x01:rt_device_write(focus_uart_device, 0,addFocus_Data,   6); break;
-				case 0x02:rt_device_write(focus_uart_device, 0,minFocus_Data,   6); break;
-				case 0x11:rt_device_write(focus_uart_device, 0,addZoom_Data,    6); break;
-				case 0x12:rt_device_write(focus_uart_device, 0,minZoom_Data,    6); break;
+				case 0x01:ACC1++;break;//rt_device_write(focus_uart_device, 0,addFocus_Data,   6); break;
+				case 0x02:ACC2++;break;//rt_device_write(focus_uart_device, 0,minFocus_Data,   6); break;
+				case 0x11:ACC3++;break;//rt_device_write(focus_uart_device, 0,addZoom_Data,    6); break;
+				case 0x12:ACC4++;break;//rt_device_write(focus_uart_device, 0,minZoom_Data,    6); break;
 				case 0x88:rt_device_write(focus_uart_device, 0,Camera_Clear_Data,    6); break; //恢复初始值
 				default  :break; //可能为错误命令 停止控制
 		}

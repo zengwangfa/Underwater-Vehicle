@@ -705,12 +705,12 @@ void ANO_SEND_StateMachine(void)
 												0,
 												0,
 												0,
-												(float)PropellerDir.rightUp,
-												(float)PropellerDir.leftDown,
-												(float)PropellerDir.leftUp,
-												(float)PropellerDir.rightDown,
-												(float)PropellerDir.leftMiddle,
-												(float)PropellerDir.rightMiddle);
+												0,
+												0,
+												0,
+												0,
+												0,
+												0);
 				ANO_Send_PID_Flag[5]=0;
 				ANO_Cnt=0;
 				log_v("PID_Flash_Read -> success!");

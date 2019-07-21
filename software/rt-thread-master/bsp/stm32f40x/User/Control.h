@@ -4,7 +4,7 @@
 #include "DataType.h"
 
 
-
+extern char ACC1,ACC2,ACC3,ACC4 ;
 
 void Angle_Control(void);
 void Depth_PID_Control(float expect_depth,float sensor_depth);

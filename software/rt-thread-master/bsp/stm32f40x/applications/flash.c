@@ -278,10 +278,10 @@ INIT_APP_EXPORT(PID_Paramter_Init_With_Flash);
 
 void Parameter_SelfCheck(uint32 *RealParameter,uint32 *TempParameter)
 {
-		if(*TempParameter != 0xFFFFFFFF)	//Flash内数据正常 （不等于0xFFFFFFFF 即不为无效数据）
-		{
+//		if(*TempParameter != 0xFFFFFFFF)	//Flash内数据正常 （不等于0xFFFFFFFF 即不为无效数据）
+//		{
 				*RealParameter = *TempParameter; //Flash 数据正确则替换为真实变量
-		}
+//		}
 }
 
 
