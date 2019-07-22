@@ -151,12 +151,8 @@ void robot_upDown(float depth_output)
 		PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -depth_output + PropellerError.rightMiddle);//输出为负值
 		
 		if(ROV_Mode == VehicleMode){ //这个是为了平衡两边推力(以为正反推进器，其特有推力不一致)
-				if( PropellerPower.rightMiddle > 10){//当 正转时并推力超过10
-						PropellerPower.leftMiddle = PropellerPower.leftMiddle -10; //右上推进器 由于反向  需要进行特殊补偿
-				}
-				else if( PropellerPower.leftMiddle < -10){//反转时
-						PropellerPower.rightMiddle = PropellerPower.rightMiddle - 10;
-				}
+
+				
 		}
 		
 		else if(AUV_Mode == VehicleMode) //这个是为了补偿推进器死区值

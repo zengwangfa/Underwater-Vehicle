@@ -22,7 +22,7 @@ void return_computer_thread_entry(void* parameter)
 {
 		static uint8 begin_buff[3] = {0xAA,0x55,0x00};
 		
-		rt_thread_mdelay(3000);//等待 设备初始化完成后开始发送
+		rt_thread_mdelay(5000);//等待5s 设备初始化完成后开始发送
 		
 		while(uart_startup_flag){ //当debug_uart初始化完毕后 才进行上位机通信
 			

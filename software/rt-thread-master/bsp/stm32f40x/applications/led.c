@@ -189,25 +189,25 @@ void Bling_Set(Bling_Light *Light,
 ****************************************************/
 void Bling_Process(Bling_Light *Light)//闪烁运行线程 Cnt 
 {
-  if(Light->Bling_Contiune_Time>=1) { 
-			Light->Bling_Contiune_Time--;
-	}
-  else {LED_ON(Light->Pin);}//亮
-  if(Light->Bling_Contiune_Time != 0//总时间未清0
-			||Light->Endless_Flag==1)//判断无尽模式是否开启
-  {
-			Light->Bling_Cnt++;
-			if(5*Light->Bling_Cnt>=Light->Bling_Period){
-					Light->Bling_Cnt=0;//计满清零
-			}
-			if(5*Light->Bling_Cnt <= Light->Bling_Period * Light->Bling_Percent){	
-					LED_ON(Light->Pin);   //亮
-			}
-			else {LED_OFF(Light->Pin);}//灭
-  }
-	else {	
-			LED_OFF(Light->Pin);		//高电平 【熄灭】		
-	}
+		if(Light->Bling_Contiune_Time>=1) { 
+				Light->Bling_Contiune_Time--;
+		}
+		else {LED_ON(Light->Pin);}//亮
+		if(Light->Bling_Contiune_Time != 0//总时间未清0
+				||Light->Endless_Flag==1)//判断无尽模式是否开启
+		{
+				Light->Bling_Cnt++;
+				if(5*Light->Bling_Cnt>=Light->Bling_Period){
+						Light->Bling_Cnt=0;//计满清零
+				}
+				if(5*Light->Bling_Cnt <= Light->Bling_Period * Light->Bling_Percent){	
+						LED_ON(Light->Pin);   //亮
+				}
+				else {LED_OFF(Light->Pin);}//灭
+		}
+		else {	
+				LED_OFF(Light->Pin);		//高电平 【熄灭】		
+		}
 }
 
 

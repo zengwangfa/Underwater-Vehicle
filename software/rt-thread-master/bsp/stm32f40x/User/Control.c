@@ -34,7 +34,7 @@ char ACC1 = 0,ACC2 = 0,ACC3 = 0,ACC4 = 0;
 extern int16 PowerPercent;
 extern uint8 Frame_EndFlag;
 
-#define ShutDown 1
+#define SHUTDOWN_VALUE 1
 
 /**
   * @brief  highSpeed Devices_Control(高速设备控制)
@@ -53,23 +53,21 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
 		}
 
-		if(abs(abs(LastRcX) - abs(rc->X))>=ShutDown*4) //如果差值大于9，启动减速器
-		{
+		if(abs(abs(LastRcX) - abs(rc->X))>=SHUTDOWN_VALUE*4){ //如果差值大于9，启动减速器
 				if(rc->X < LastRcX){														//判断前进还是后退
-						rc->X = LastRcX - ShutDown;									//减小加速度
+						rc->X = LastRcX - SHUTDOWN_VALUE;									//减小加速度
 				}
 				else{
-						rc->X = LastRcX + ShutDown;
+						rc->X = LastRcX + SHUTDOWN_VALUE;
 				}
 				LastRcX = rc->X;	
 		}
-		if(abs(abs(LastRcY) - abs(rc->Y))>=ShutDown*4)
-		{
+		if(abs(abs(LastRcY) - abs(rc->Y))>=SHUTDOWN_VALUE*4){
 				if(rc->Y < LastRcY){
-						rc->Y = LastRcY - ShutDown;
+						rc->Y = LastRcY - SHUTDOWN_VALUE;
 				}
 				else{
-						rc->Y = LastRcY + ShutDown;
+						rc->Y = LastRcY + SHUTDOWN_VALUE;
 				}
 				LastRcY = rc->Y;	
 		}

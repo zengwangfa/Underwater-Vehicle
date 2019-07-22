@@ -37,14 +37,17 @@ Sensor_Type Sensor;//传感器参数
 void sensor_lowSpeed_thread_entry(void* parameter)
 {
 		uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
-		rt_thread_mdelay(3000);//等待1.5s系统稳定再获取数据
+		rt_thread_mdelay(3000);//等待3s系统稳定再获取数据
 
 		while(1)
 		{
 			
 				Sensor.CPU.Temperature = get_cpu_temp();           //获取CPU温度
 				Sensor.PowerSource.Voltage = get_voltage_value();  //获取电源电压值
-			  Sensor.PowerSource.Current = get_current_value();//获取INA169电流值
+			  Sensor.PowerSource.Current = get_current_value();  //获取INA169电流值
+			
+				Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);//电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较小】
+			
 				cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
 				Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
 			
@@ -190,7 +193,7 @@ void print_sensor_info(void)
 	
 		log_i("--------------------|-----------");
 		log_i("     Voltage        |  %0.3f",Sensor.PowerSource.Voltage); //电压
-		log_i("     Current        |  %d",Sensor.PowerSource.Current);    //电流
+		log_i("     Current        |  %0.3f",Sensor.PowerSource.Current); //电流
 		log_i("--------------------|-----------");
 		log_i("  Depth Sensor Type |  %s",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
 		log_i(" Water Temperature  |  %0.3f",Sensor.DepthSensor.Temperature);    //水温

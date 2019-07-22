@@ -40,7 +40,7 @@ r参数调滤波后的曲线平滑程度，r越大越平滑。
 float KalmanFilter(float *Original_Data) 
 {
   static float prevData=0; 
-  static float p=10, q=0.0001, r=0.05, kGain=0;
+  static float p=10, q=0.0001, r=0.001, kGain=0;
 	
 	p = p+q; 
 	kGain = p/(p+r);

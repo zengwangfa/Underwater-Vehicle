@@ -62,6 +62,47 @@ void PWM_Update(PropellerPower_Type* propeller)
 
 }
 
+PropellerPower_Type power_test_msh; //调试用的变量
+/*【推进器】 修改 【正向最大值】MSH方法 */
+static int Propoller_Test(int argc, char **argv)
+{
+
+    int result = 0;
+    if (argc != 2){
+        log_e("Error! Proper Usage: Propoller_Test <0~100>");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		if(atoi(argv[1]) <= 100){
+				if(1 == Propeller_Init_Flag){
+
+						power_test_msh.rightUp     = Propeller_MedValue + atoi(argv[1]);
+						power_test_msh.leftDown    = Propeller_MedValue + atoi(argv[1]);
+						power_test_msh.leftUp      = Propeller_MedValue + atoi(argv[1]);
+						power_test_msh.rightDown   = Propeller_MedValue + atoi(argv[1]);
+						
+						power_test_msh.leftMiddle  = Propeller_MedValue + atoi(argv[1]);
+						power_test_msh.rightMiddle = Propeller_MedValue + atoi(argv[1]);
+					
+						TIM_SetCompare1(TIM1,power_test_msh.rightUp);     //右上	 E9	
+						TIM_SetCompare2(TIM1,power_test_msh.leftDown);    //左下	 E11
+						TIM_SetCompare3(TIM1,power_test_msh.leftUp); 	    //左上   E13
+						TIM_SetCompare4(TIM1,power_test_msh.rightDown);   //右下   E14
+					
+						TIM_SetCompare1(TIM4,power_test_msh.leftMiddle);  //左中   D12
+						TIM_SetCompare2(TIM4,power_test_msh.rightMiddle); //右中   D13
+				}
+				log_i("Current propeller power:  %d",atoi(argv[1]) );
+		}
+		
+		else {
+				log_e("Error! The value is out of range!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(Propoller_Test,ag: Propoller_Test <0~100>);
+
 
 
 /*******************************************

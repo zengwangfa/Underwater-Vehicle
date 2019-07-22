@@ -142,9 +142,12 @@ void OLED_StatusPage(void)
 		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get()); //获取本机为ROV or AUV
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
-		sprintf(str,"Voltage:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
+		sprintf(str,"Vol:%.2fV  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,16,(uint8 *)str,12); 
-	
+		
+		sprintf(str,"Cur:%.2f A  \r\n",Sensor.PowerSource.Current);//电流
+		OLED_ShowString(70,16,(uint8 *)str,12); 	
+		
 	  sprintf(str,"CPU Usage:%.2f %% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
 		OLED_ShowString(0,32,(uint8 *)str,12); 
 		
@@ -195,7 +198,7 @@ void OLED_LockPage(void)
 				oled_voltage = (Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))*12/4; //oled电量显示 = 真实电压值*12格/最大电池容量的电压
 		}
 		else{ //如果未设定，提示设定电池容量参数
-				log_w("yet set battery capacity!");
+				log_w("not yet set_battery_capacity parameter!");
 				rt_thread_mdelay(5000);//5s
 		}
 		
@@ -207,9 +210,12 @@ void OLED_LockPage(void)
 		sprintf(str,"%d%%",(uint8)((Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))/4*100));//当前电量百分比
 		OLED_ShowString(85,0, (uint8 *)str,12);
 
-		sprintf(str,"Vol:%.2f v  \r\n",Sensor.PowerSource.Voltage);//电压
+		sprintf(str,"Vol:%.2f V  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,0,(uint8 *)str,12); 
-
+		
+		sprintf(str,"Cur:%.2f A  \r\n",Sensor.PowerSource.Current);//电流
+		OLED_ShowString(0,12,(uint8 *)str,12); 	
+		
 		OLED_ShowPicture(107,0,bmp_battery[oled_voltage],10,16);//显示电量
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//锁屏
 		
