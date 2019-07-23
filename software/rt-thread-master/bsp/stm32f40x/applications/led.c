@@ -55,11 +55,11 @@ void led_voltage_task(void)
 {
 
 		if(Sensor.PowerSource.Voltage >= Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE ){ //当电压大于 锂电池标准电压时
-					Bling_Set(&Light_Red,300,200,0.5,0,78,0);
+				Bling_Set(&Light_Green,300,1100-10*Sensor.PowerSource.Percent,0.5,0,78,0); //电量越小，闪烁越慢
 		}
 		else if(Sensor.PowerSource.Voltage < Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE) //当电压小于9V时，亮红灯
 		{
-					Bling_Set(&Light_Green,300,200,0.5,0,77,0);
+				Bling_Set(&Light_Red,300,200,0.5,0,77,0);
 		}
 		
 }
@@ -145,7 +145,6 @@ uint32_t Continue_time,//持续时间
 uint16_t Period,//周期100ms~1000ms
 float Percent,//0~100%
 uint16_t  Cnt,
-GPIO_TypeDef* Port,
 uint16_t Pin
 ,uint8_t Flag)
 说明:	状态指示灯设置函数

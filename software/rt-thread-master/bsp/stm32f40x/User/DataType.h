@@ -84,9 +84,11 @@ typedef struct
 
 typedef struct 
 {
-		float Current; //水温
-		float Voltage;
+		uint8 Percent; //电量百分比
+		float Current; //电流
+		float Voltage; //电压
 		float Capacity;//电池容量
+
 }PowerSource_Type;
 
 

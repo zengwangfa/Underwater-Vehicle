@@ -209,6 +209,8 @@ void OLED_LockPage(void)
 				vol_box = vol_box <= 0  ? 0  : vol_box;
 				vol_percent = vol_percent > 100 ? 100 : vol_percent;//电压百分比限幅
 				vol_percent = vol_percent <= 0   ? 0   : vol_percent;
+			
+				Sensor.PowerSource.Percent = vol_percent;
 		}		
 		else{ //如果未设定,则不计算 <电压框格子数> 和 <电量百分比> ,并提示设定电池容量参数 
 				log_w("not yet set_battery_capacity parameter!");
