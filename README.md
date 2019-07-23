@@ -44,6 +44,8 @@
 |            ├──rt-thread-master
 |                 └──bsp
 |                    └──stm32f40x 【主要系统控制程序】
+|--------+ graphic_model:【机械模型】
+|--------+ raspberry_server:【树莓派服务】
 |--------+ README.md
 ```
 

@@ -22,8 +22,8 @@
 #define WIFI_RELOAD_PIN     68 	 //PE15   WIFI复位IO
 
 #define BOMA3_PIN 					13	 //PF3   拨码开关IO
-#define BOMA2_PIN	  				14	 //PF4
-#define BOMA1_PIN 					15	 //PF5  
+#define BOMA2_PIN	  				15	 //PF5
+#define BOMA1_PIN 					14	 //PF4  
 
 #define Buzzer_PIN 					59   //PE8   蜂鸣器IO
 
@@ -48,9 +48,9 @@ void ioDevices_thread_entry(void* parameter)// --- KEY   BOMA ---
     while (1)
     {
 				Buzzer_Process(&Beep); //蜂鸣器控制任务
-				if(boma_value != boma_value_get()){ //若拨码开关 波动，蜂鸣器响一声
+				if(boma_value != get_boma_value()){ //若拨码开关 波动，蜂鸣器响一声
 						Buzzer_Set(&Beep,1,1);	
-						boma_value = boma_value_get();	
+						boma_value = get_boma_value();	
 						log_i("\nCurrent Change: BOMA_Value = %d", boma_value);
 				}
 				rt_thread_mdelay(10);
@@ -59,11 +59,11 @@ void ioDevices_thread_entry(void* parameter)// --- KEY   BOMA ---
 
 
 /* get 2位拨码值 */
-uint8 boma_value_get(void)
+uint8 get_boma_value(void)
 {
     uint8 val; //reserve(存储)
     
-		val = boma1_read *2 + boma2_read *1 + 1; //得到四种状态
+		val = boma1_read *1 + boma2_read *2 + boma3_read *4 + 1; //得到8种状态(1~8)
     return val;
 }
 
@@ -141,7 +141,7 @@ int ioDevices_thread_init(void)
 				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
 			
 
-				boma_value = boma_value_get();	//初始化得到当前拨码状态 --> VehicleStatus
+				boma_value = get_boma_value();	//初始化得到当前拨码状态 --> VehicleStatus
 				log_i("IoDev_Init()");
 				rt_thread_startup(ioDecices_tid);
 		}

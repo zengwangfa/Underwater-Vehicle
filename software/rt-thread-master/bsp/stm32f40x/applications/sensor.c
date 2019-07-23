@@ -44,10 +44,10 @@ void sensor_lowSpeed_thread_entry(void* parameter)
 			
 				Sensor.CPU.Temperature = get_cpu_temp();           //获取CPU温度
 				Sensor.PowerSource.Voltage = get_voltage_value();  //获取电源电压值
-			  Sensor.PowerSource.Current = get_current_value();  //获取INA169电流值
-			
-				Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);//电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较小】
-			
+				if(Sensor.PowerSource.Voltage > 6.0f ){							//当未接入电源时，不检测电流值
+						Sensor.PowerSource.Current = get_current_value();  //获取INA169电流值
+						Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);//电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较小】
+				}
 				cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
 				Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
 			

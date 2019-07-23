@@ -9,7 +9,7 @@ typedef struct
 		uint8 number;	
 }Buzzer_Type;
 
-uint8 boma_value_get(void);
+uint8 get_boma_value(void);
 uint8 is_wifi_connect(void);
 
 

@@ -77,16 +77,18 @@ Oled_Type oled = {
 void menu_define(void) //菜单定义
 {
 	if(oled.pagenum >= OLED_Page_MAX || oled.pagenum < StatusPage) oled.pagenum = StatusPage; //超出页面范围 则为第一页
-	if(oled.pagechange != oled.pagenum){
+	if(oled.pagechange != oled.pagenum){ //当页码改变
 			Buzzer_Set(&Beep,1,1);
 			rt_kprintf("Current Menu_Page: %s \n",oled.pagename[oled.pagenum-1]);
-			OLED_Clear();
+			OLED_Clear(); //清屏
 			oled.pagechange_flag = 1;
 	}
 	else {oled.pagechange_flag = 0;}
 	oled.pagechange = oled.pagenum;
 	
-	if(ControlCmd.All_Lock == LOCK){oled.pagenum = LockPage;}
+	if(ControlCmd.All_Lock == LOCK){// 当拨码不是强制解锁 锁定页面
+			oled.pagenum = LockPage;
+	}
 	switch(oled.pagenum){
 			case 1:{
 					MENU = StatusPage;	 OLED_StatusPage();		break;
@@ -139,7 +141,7 @@ void OLED_StatusPage(void)
 				OLED_ShowMyChar(119,0,1,16,1);} //Wifi图标1
 		else {OLED_ShowMyChar(119,0,2,16,1);} //清空图标0
 	
-		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],boma_value_get()); //获取本机为ROV or AUV
+		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],get_boma_value()); //获取本机为ROV or AUV
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
 		sprintf(str,"Vol:%.2fV  \r\n",Sensor.PowerSource.Voltage);//电压
@@ -202,7 +204,7 @@ void OLED_LockPage(void)
 				rt_thread_mdelay(5000);//5s
 		}
 		
-		if(is_raspi_start()){
+		if(is_raspi_start()){ //树莓派是否启动服务器程序
 				Buzzer_Set(&Beep,3,1);
 				OLED_ShowPicture(0,28,raspberry_logo,28,33);//显示树莓派LOGO
 		}
@@ -221,10 +223,7 @@ void OLED_LockPage(void)
 		
 	  OLED_Refresh_Gram();//更新显示到OLED
 		
-		if(UNLOCK == ControlCmd.All_Lock){	//如果解锁则跳转至状态页面
-				rt_thread_mdelay(1000); //延时1s
-				oled.pagenum = StatusPage;
-		}
+
 				
 
 }

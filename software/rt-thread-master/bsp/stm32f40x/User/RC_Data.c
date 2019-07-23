@@ -98,10 +98,29 @@ void Control_Cmd_Get(ControlCmd_Type *cmd) //控制命令获取
 		}
 }
 
-//控制字清空
+/* 
+	 【注意】这里仅清空控制数据指令，不能清除 控制状态指令
+		因此，不在采用meset直接填充结构体为0
+*/
 void Control_Cmd_Clear(ControlCmd_Type *cmd) //memset(&addr,0,sizeof(addr));
 {
-		memset(cmd,0,sizeof(*cmd));//内存块内填充0
+		//cmd->All_Lock       = 0; 
+		//cmd->Depth_Lock     = 0; //深度锁定
+		//cmd->Direction_Lock = 0; //方向锁定
+	
+		cmd->Move					  = 0; //前后
+		cmd->Translation	  = 0; //左右平移
+		cmd->Vertical 			= 0; //垂直
+		cmd->Rotate 				= 0; //旋转
+		
+		cmd->Power 				  = 0;  //动力控制  推进器动力系数
+		cmd->Light 				  = 0; //灯光控制
+		cmd->Focus 				  = 0; //变焦摄像头控制
+		cmd->Yuntai 				= 0; //云台控制
+		cmd->Arm						= 0; //机械臂控制
+		cmd->Raspi          = 0; //树莓派启动位
+
+		//memset(cmd,0,sizeof(*cmd));//内存块内填充0 【不适用】
 }
 
 

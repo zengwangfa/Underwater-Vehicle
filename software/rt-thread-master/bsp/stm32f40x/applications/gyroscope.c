@@ -104,8 +104,14 @@ void JY901_Convert(JY901_Type * pArr)
 	
 		pArr->Euler.Roll = (float)stcAngle.angle[0]/8192*45;   //32768*180; 
 		pArr->Euler.Pitch = (float)stcAngle.angle[1]/8192*45;
-		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45 - 90;//为了磁场漂移可以补偿 -90
-		if(pArr->Euler.Yaw < -180){pArr->Euler.Yaw += Compass_Offset_Angle;}//磁场漂移 补偿-20 deg
+		pArr->Euler.Yaw = (float)stcAngle.angle[2]/8192*45;//为了磁场漂移可以补偿
+	
+		/* 偏移角度 等于当指向 正北时的角度(-360 ~ +360 )*/
+		if(Compass_Offset_Angle != 0){//如果未设置补偿角度，则不进行 角度补偿【补偿为 正角度】
+				pArr->Euler.Yaw -= Compass_Offset_Angle;//减去补偿角度
+				if(pArr->Euler.Yaw < -180){pArr->Euler.Yaw += 360;}//角度反向补偿
+				if(pArr->Euler.Yaw >  180){pArr->Euler.Yaw -= 360;}//角度反向补偿
+		}
 		
 		pArr->Mag.x  = stcMag.h[0];
 		pArr->Mag.y	 = stcMag.h[1];

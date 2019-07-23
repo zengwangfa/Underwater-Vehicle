@@ -41,13 +41,14 @@ float get_voltage_value(void)
 		voltage = Bubble_Filter(adc_value) * REFER_VOLTAGE / CONVERT_BITS * Voltge_Parameter;	//电压计算公式：voltage = adc采样值 * 采样精度(3.3V/4096) *分压系数
 		return voltage;
 } 
-uint32 adc_value[10] = {0};
-float voltage = 0.0f,current = 0.0f;
+
+
 /* 冒泡 get电流 */
-float get_current_value(void)s
+float get_current_value(void)
 {
 		static uint8 i = 0;
-
+		static uint32 adc_value[10] = {0};
+		static float voltage = 0.0f,current = 0.0f;
 		for(i = 0;i < 10;i++){
 				rt_thread_mdelay(10);
 				adc_value[i] = get_adc(ADC_Channel_11);//采样
