@@ -3,7 +3,7 @@
 
 #include "DataType.h"
 
-
+extern Direction_Type Direction;
 extern char ACC1,ACC2,ACC3,ACC4 ;
 
 void Angle_Control(void);

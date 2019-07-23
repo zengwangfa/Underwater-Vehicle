@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include "sys.h"
 
+#include "led.h"
 #include "RC_Data.h"
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
@@ -194,23 +195,54 @@ void OLED_LockPage(void)
 {		
 
 		static char str[50] = {0};
-		uint16 oled_voltage = 0;
+		int16 oled_voltage = 0,VoltageNumber = 0;
 		
 		if(Sensor.PowerSource.Capacity != 0){ //判定非0
-				oled_voltage = (Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))*12/4; //oled电量显示 = 真实电压值*12格/最大电池容量的电压
-		}
+				oled_voltage = (Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity*STANDARD_VOLTAGE/FULL_VOLTAGE))*12
+			    /(Sensor.PowerSource.Capacity/(2*FULL_VOLTAGE)); //oled电量显示 = 真实电压值*12格/最大电池容量的电压
+		}		
 		else{ //如果未设定，提示设定电池容量参数
 				log_w("not yet set_battery_capacity parameter!");
 				rt_thread_mdelay(5000);//5s
 		}
 		
+<<<<<<< HEAD
 		if(is_raspi_start()){ //树莓派是否启动服务器程序
+=======
+		if(oled_voltage < 0)					//	如果电量小于零，则报警和RGB快
+		{
+			Bling_Set(&Light_1,300,50,0.5,0,77,0);
+			Buzzer_Set(&Beep,1,1);	
+		}
+		
+		if(oled_voltage>12)
+		{
+			oled_voltage = 12;
+		}
+		else if(oled_voltage < 0)
+		{
+			oled_voltage = 0;
+		}
+
+		if(is_raspi_start()){
+>>>>>>> d7be8108aa196336e709695979ebaca59562c13a
 				Buzzer_Set(&Beep,3,1);
 				OLED_ShowPicture(0,28,raspberry_logo,28,33);//显示树莓派LOGO
 		}
+		VoltageNumber = (Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity*STANDARD_VOLTAGE/FULL_VOLTAGE))
+						/(Sensor.PowerSource.Capacity/(2*FULL_VOLTAGE))*100;  //电量百分比 = （真实电压值-安全电压值）*100%
+		if(VoltageNumber>100)
+		{
+			VoltageNumber = 100;
+		}
+		else if(VoltageNumber < 0)
+		{
+			VoltageNumber = 0;
+		}
 		
-		sprintf(str,"%d%%",(uint8)((Sensor.PowerSource.Voltage-(Sensor.PowerSource.Capacity-4))/4*100));//当前电量百分比
+		sprintf(str,"%d%%",VoltageNumber);//当前电量百分比
 		OLED_ShowString(85,0, (uint8 *)str,12);
+<<<<<<< HEAD
 
 		sprintf(str,"Vol:%.2f V  \r\n",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,0,(uint8 *)str,12); 
@@ -218,12 +250,27 @@ void OLED_LockPage(void)
 		sprintf(str,"Cur:%.2f A  \r\n",Sensor.PowerSource.Current);//电流
 		OLED_ShowString(0,12,(uint8 *)str,12); 	
 		
+=======
+		sprintf(str,"Vol:%.2fV  \r\n",Sensor.PowerSource.Voltage);//电压
+		OLED_ShowString(0,0, (uint8 *)str,12);
+		
+
+>>>>>>> d7be8108aa196336e709695979ebaca59562c13a
 		OLED_ShowPicture(107,0,bmp_battery[oled_voltage],10,16);//显示电量
 		OLED_ShowPicture(49,43-15,bmp_lock[ControlCmd.All_Lock-1],30,30);//锁屏
 		
-	  OLED_Refresh_Gram();//更新显示到OLED
+		OLED_Refresh_Gram();//更新显示到OLED
 		
+<<<<<<< HEAD
 
+=======
+		if(UNLOCK == ControlCmd.All_Lock){	//如果解锁则跳转至状态页面
+				rt_thread_mdelay(1000); //延时1s
+				oled.pagenum = StatusPage;
+		}
+		
+		
+>>>>>>> d7be8108aa196336e709695979ebaca59562c13a
 				
 
 }

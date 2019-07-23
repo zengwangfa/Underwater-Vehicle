@@ -16,9 +16,12 @@ extern ServoType RoboticArm ;//»úÐµ±Û
 
 extern ServoType YunTai; //ÔÆÌ¨
 
+extern int DirectionMode;
+
 void RoboticArm_Control(uint8 *action);
 
 void YunTai_Control(uint8 *action);
+void DirectionProportion(int Mode);
 
 
 

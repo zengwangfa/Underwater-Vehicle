@@ -14,6 +14,7 @@
 #include <elog.h>
 
 #include "oled.h"
+#include "Control.h"
 #include "PID.h"
 #include "debug.h"
 #include "flash.h"
@@ -70,12 +71,12 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.MaxValue,&Normal_Parameter[ROBOTIC_ARM_MAX_VALUE_e] );//»úÐµ±Û²ÎÊý
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.MinValue,&Normal_Parameter[ROBOTIC_ARM_MIN_VALUE_e] );
-    Parameter_SelfCheck( (uint32 *)&RoboticArm.MedValue,&Normal_Parameter[ROBOTIC_ARM_MED_VALUE_e] );
+		Parameter_SelfCheck( (uint32 *)&RoboticArm.MedValue,&Normal_Parameter[ROBOTIC_ARM_MED_VALUE_e] );
 		Parameter_SelfCheck( (uint32 *)&RoboticArm.Speed   ,&Normal_Parameter[ROBOTIC_ARM_SPEED_e] );	
 	
 		Parameter_SelfCheck( (uint32 *)&YunTai.MaxValue,&Normal_Parameter[YUNTAI_MAX_VALUE_e] );//ÔÆÌ¨²ÎÊý
 		Parameter_SelfCheck( (uint32 *)&YunTai.MinValue,&Normal_Parameter[YUNTAI_MIN_VALUE_e] );	
-    Parameter_SelfCheck( (uint32 *)&YunTai.MedValue,&Normal_Parameter[YUNTAI_MED_VALUE_e] );  
+		Parameter_SelfCheck( (uint32 *)&YunTai.MedValue,&Normal_Parameter[YUNTAI_MED_VALUE_e] );  
 		Parameter_SelfCheck( (uint32 *)&YunTai.Speed   ,&Normal_Parameter[YUNTAI_SPEED_e] );	
 	
 		Parameter_SelfCheck( (uint32 *)&Compass_Offset_Angle,&Normal_Parameter[COMPASS_OFFSET_ANGLE_e] );//Ö¸ÄÏÕë²¹³¥½Ç¶È
@@ -95,7 +96,20 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊý×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		Parameter_SelfCheck( (uint32 *)&Sensor.DepthSensor.Type,&Normal_Parameter[DEPTH_SENSOR_TYPE_e] );//Éî¶È´«¸ÐÆ÷ MS5837/SPL1301
 		
 		/* ¡¾µç³ØÈÝÁ¿ÀàÐÍ¡¿  */
+<<<<<<< HEAD
 		Parameter_SelfCheck( (uint32 *)&Sensor.PowerSource.Capacity,&Normal_Parameter[BATTERY_CAPACITY_e] );//3s/4s/6s
+=======
+		Parameter_SelfCheck( (uint32 *)&Sensor.PowerSource.Capacity,&Normal_Parameter[BATTERY_CAPACITY_e] );//µç³ØÈÝÁ¿²ÎÊý 3s/4s/6s
+		
+		/* ¡¾ÍÆ½øÆ÷µ÷Õû·½ÏòÏµÊý¡¿*/
+//		Parameter_SelfCheck( (uint32 *)&Direction.UP_P1,  &Normal_Parameter[DIRECTION_UP_P1_e] );		//×ó±êÖ¾Î»Ç°½øÏµÊý
+//		Parameter_SelfCheck( (uint32 *)&Direction.UP_P2,  &Normal_Parameter[DIRECTION_UP_P2_e] );		//ÓÒ±êÖ¾Î»Ç°½øÏµÊý
+//		Parameter_SelfCheck( (uint32 *)&Direction.DOWN_P1,&Normal_Parameter[DIRECTION_DOWN_P1_e] );		//×ó±êÖ¾Î»ºóÍËÏµÊý
+//		Parameter_SelfCheck( (uint32 *)&Direction.DOWN_P2,&Normal_Parameter[DIRECTION_DOWN_P2_e] );		//ÓÒ±êÖ¾Î»ºóÍËÏµÊý
+//		Parameter_SelfCheck( (uint32 *)&Direction.LEFT_P, &Normal_Parameter[DIRECTION_LEFT_P1_e] );		//Ïò×óÏµÊý
+//		Parameter_SelfCheck( (uint32 *)&Direction.RIGHT_P,&Normal_Parameter[DIRECTION_RIGHT_P1_e] );	//ÏòÓÒÏµÊý
+//		
+>>>>>>> d7be8108aa196336e709695979ebaca59562c13a
 }
 /*
 void test_env(void) {
@@ -148,7 +162,19 @@ void Flash_Update(void)
 		
 		ef_port_write(Nor_FLASH_ADDRESS+4*DEPTH_SENSOR_TYPE_e ,(uint32 *)&Sensor.DepthSensor.Type,4); //Éî¶È´«¸ÐÆ÷ ÀàÐÍ
 		
+<<<<<<< HEAD
 		ef_port_write(Nor_FLASH_ADDRESS+4*BATTERY_CAPACITY_e ,(uint32 *)&Sensor.PowerSource.Capacity,4); //Éî¶È´«¸ÐÆ÷ ÀàÐÍ
+=======
+		ef_port_write(Nor_FLASH_ADDRESS+4*BATTERY_CAPACITY_e ,(uint32 *)&Sensor.PowerSource.Capacity,4); //µç³ØÈÝÁ¿²ÎÊý 3s/4s/6s
+		
+		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_UP_P1_e ,   (uint32 *)&Direction.UP_P1,4);		//×ó±êÖ¾Î»Ç°½øÏµÊý
+		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_UP_P2_e ,   (uint32 *)&Direction.UP_P2,4);		//ÓÒ±êÖ¾Î»Ç°½øÏµÊý
+		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_DOWN_P1_e , (uint32 *)&Direction.DOWN_P1,4);	//×ó±êÖ¾Î»ºóÍËÏµÊý
+		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_DOWN_P2_e , (uint32 *)&Direction.DOWN_P2,4);	//ÓÒ±êÖ¾Î»ºóÍËÏµÊý
+		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_LEFT_P1_e , (uint32 *)&Direction.LEFT_P,4);		//Ïò×óÏµÊý
+		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_RIGHT_P1_e ,(uint32 *)&Direction.RIGHT_P,4);	//ÏòÓÒÏµÊý
+		
+>>>>>>> d7be8108aa196336e709695979ebaca59562c13a
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 

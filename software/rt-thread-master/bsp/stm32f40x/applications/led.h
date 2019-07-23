@@ -5,7 +5,7 @@
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGBµÆÒý½ÅºÅ
 #define LED_Red 		77 // PD8
-#define LED_Green 	78 // PD9
+#define LED_Green 	    78 // PD9
 #define LED_Blue 		79 // PD10
 
 //OV Camera ÉÁ¹âµÆ
