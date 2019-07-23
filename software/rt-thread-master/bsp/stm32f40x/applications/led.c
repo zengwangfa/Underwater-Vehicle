@@ -22,7 +22,7 @@
 extern struct rt_event init_event;
 extern uint8 VehicleStatus;
 
-Bling_Light Light_1,Light_2,Light_3;
+Bling_Light Light_Red,Light_Green,Light_Blue;
 
 uint8 Bling_Mode = 0;
 /*----------------------- Function Implement --------------------------------*/
@@ -45,33 +45,21 @@ void led_thread_entry(void *parameter)
 				/* FLASH保存 或者 复位PID参数 */
 				Save_Or_Reset_PID_Parameter();  
 				Bling_Working(0);
-				led_blink_task();
+				led_voltage_task();
 				rt_thread_mdelay(10); //10ms
-			
-
-
-
     }
 }
 
-/* led闪烁任务【系统正常运行指示灯】 */
-void led_blink_task(void)
+/* led 电压指示灯  */
+void led_voltage_task(void)
 {
-		static rt_uint8_t status = 1;
-	  static rt_uint8_t cnt = 0;
-		cnt++;
-		if(cnt >= 40 && Sensor.PowerSource.Voltage >= 9 ){
-				cnt = 0;
-				LED_Turn(LED_Green,status);	//初始化为高电平 【熄灭】
-				LED_OFF(LED_Red);			
-				LED_OFF(LED_Blue);	
+
+		if(Sensor.PowerSource.Voltage >= Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE ){ //当电压大于 锂电池标准电压时
+					Bling_Set(&Light_Red,300,200,0.5,0,78,0);
 		}
-		else if(Sensor.PowerSource.Voltage < 9 && cnt >= 40) //当电压小于9V时，亮红灯
+		else if(Sensor.PowerSource.Voltage < Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE) //当电压小于9V时，亮红灯
 		{
-				cnt = 0;
-				LED_Turn(LED_Red,status);	//初始化为高电平 【熄灭】		
-				LED_OFF(LED_Green);			
-				LED_OFF(LED_Blue);			
+					Bling_Set(&Light_Green,300,200,0.5,0,77,0);
 		}
 		
 }
@@ -223,22 +211,21 @@ void Bling_Working(uint8 bling_mode)
 {
 		if(0 == bling_mode)
 		{
-				Bling_Process(&Light_1);
-				Bling_Process(&Light_2);
-				Bling_Process(&Light_3);
+				Bling_Process(&Light_Red);
+				Bling_Process(&Light_Green);
+				Bling_Process(&Light_Blue);
 		}
 		else if(1 == bling_mode)//
 		{
-				Bling_Process(&Light_1);
-
+				Bling_Process(&Light_Red);
 		}
 		else if(2 == bling_mode)//
 		{
-				Bling_Process(&Light_2);
+				Bling_Process(&Light_Green);
 		}
 		else if(3 == bling_mode)//全灭
 		{
-				Bling_Process(&Light_3);
+				Bling_Process(&Light_Blue);
 		}
 		 
 }

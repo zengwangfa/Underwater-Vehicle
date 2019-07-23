@@ -160,8 +160,8 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 						ANO_Send_PID_Flag[4]=1;
 						ANO_Send_PID_Flag[5]=1;
 				
-						Bling_Set(&Light_1,300,50,0.5,0,77,0);
-						Bling_Set(&Light_2,300,100,0.5,0,78,0);
+						Bling_Set(&Light_Red,300,50,0.5,0,77,0);
+						Bling_Set(&Light_Green,300,100,0.5,0,78,0);
 				}
 				if(*(data_buf+4)==0x02)//读取飞行模式设置请求
 				{
@@ -174,8 +174,8 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 				if(*(data_buf+4)==0xA1)//恢复默认参数
 				{
 						Sort_PID_Flag = 2;	
-						Bling_Set(&Light_2,300,50,0.5,0,78,0);
-						Bling_Set(&Light_3,300,100,0.5,0,79,0);
+						Bling_Set(&Light_Green,300,50,0.5,0,78,0);
+						Bling_Set(&Light_Blue,300,100,0.5,0,79,0);
 				}
 		}
 		
@@ -231,8 +231,8 @@ void ANO_DT_Data_Receive_Anl(uint8 *data_buf,uint8 num)
 				ANO_DT_Send_Check(*(data_buf+2),sum);
 				Sort_PID_Cnt++;
 				Sort_PID_Flag=1;
-				Bling_Set(&Light_1,300,50,0.5,0,77,0);
-				Bling_Set(&Light_3,300,100,0.5,0,79,0);
+				Bling_Set(&Light_Red,300,50,0.5,0,77,0);
+				Bling_Set(&Light_Blue,300,100,0.5,0,79,0);
 		}
 }
 

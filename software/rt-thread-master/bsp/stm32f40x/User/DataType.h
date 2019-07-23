@@ -134,6 +134,7 @@ typedef enum
 #define PI 3.141592f  //大写标明其为常量
 #define Rad2Deg(Rad) (Rad * 180.0f / PI) //弧度制转角度值
 #define Deg2Rad(Deg) (Deg * PI / 180.0f) //角度值转弧度制
+
 #define STANDARD_VOLTAGE 3.7f			 //锂电池标准电压
 #define FULL_VOLTAGE     4.2f		     //锂电池满电压
 

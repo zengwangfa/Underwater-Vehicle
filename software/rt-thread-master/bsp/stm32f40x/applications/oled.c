@@ -209,11 +209,6 @@ void OLED_LockPage(void)
 				vol_box = vol_box <= 0  ? 0  : vol_box;
 				vol_percent = vol_percent > 100 ? 100 : vol_percent;//电压百分比限幅
 				vol_percent = vol_percent <= 0   ? 0   : vol_percent;
-			
-				if(0 == vol_percent){	//如果电量小于零，则报警和RGB快闪
-						Bling_Set(&Light_1,300,50,0.5,0,77,0);
-						Buzzer_Set(&Beep,1,1);	
-				}
 		}		
 		else{ //如果未设定,则不计算 <电压框格子数> 和 <电量百分比> ,并提示设定电池容量参数 
 				log_w("not yet set_battery_capacity parameter!");

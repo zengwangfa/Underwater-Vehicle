@@ -93,6 +93,7 @@ void Control_Cmd_Get(ControlCmd_Type *cmd) //控制命令获取
 				cmd->Arm						= RC_Control_Data[13]; //机械臂控制
 				cmd->Raspi          = RC_Control_Data[14]; //树莓派启动位
 				cmd->All_Lock       = RC_Control_Data[18];
+			
 				Receive_Data_OK = 0x00;//清零标志位
 
 		}
@@ -107,6 +108,7 @@ void Control_Cmd_Clear(ControlCmd_Type *cmd) //memset(&addr,0,sizeof(addr));
 		//cmd->All_Lock       = 0; 
 		//cmd->Depth_Lock     = 0; //深度锁定
 		//cmd->Direction_Lock = 0; //方向锁定
+		//cmd->Raspi          = 0; //树莓派启动位
 	
 		cmd->Move					  = 0; //前后
 		cmd->Translation	  = 0; //左右平移
@@ -118,7 +120,6 @@ void Control_Cmd_Clear(ControlCmd_Type *cmd) //memset(&addr,0,sizeof(addr));
 		cmd->Focus 				  = 0; //变焦摄像头控制
 		cmd->Yuntai 				= 0; //云台控制
 		cmd->Arm						= 0; //机械臂控制
-		cmd->Raspi          = 0; //树莓派启动位
 
 		//memset(cmd,0,sizeof(*cmd));//内存块内填充0 【不适用】
 }

@@ -5,7 +5,7 @@
 /*---------------------- Constant / Macro Definitions -----------------------*/
 //RGBµÆÒý½ÅºÅ
 #define LED_Red 		77 // PD8
-#define LED_Green 	    78 // PD9
+#define LED_Green   78 // PD9
 #define LED_Blue 		79 // PD10
 
 //OV Camera ÉÁ¹âµÆ
@@ -38,7 +38,7 @@ typedef struct
 
 
 
-void led_blink_task(void);
+void led_voltage_task(void);
 void system_led_blink(uint8 InputData);
 
 void Bling_Set(Bling_Light *Light,
@@ -57,7 +57,7 @@ void Bling_Working(uint8 bling_mode);
 void ErrorStatus_LED(void);					 
 void Light_Control(uint8 *action);							 
 
-extern Bling_Light Light_1,Light_2,Light_3,Light_4;
+extern Bling_Light Light_Red,Light_Green,Light_Blue;
 extern uint8 Bling_Mode;
 						 
 							 
