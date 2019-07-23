@@ -8,10 +8,8 @@
 
 
 ### 简介
-[![Badge](https://img.shields.io/badge/link-996.icu-%23FF4D5B.svg)](https://996.icu/#/en_US)
-
-![language](https://img.shields.io/badge/language-C-brightgreen.svg)
-![language](https://img.shields.io/badge/language-Python-ff69b4.svg)
+![language](https://img.shields.io/badge/language-C-brightgreen.svg) | 
+![language](https://img.shields.io/badge/language-Python-ff69b4.svg) | 
 ![language](https://img.shields.io/badge/language-C%23-blue.svg)
 ---
 
