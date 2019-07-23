@@ -61,7 +61,7 @@ void ioDevices_thread_entry(void* parameter)// --- KEY   BOMA ---
 /* get 2位拨码值 */
 uint8 get_boma_value(void)
 {
-    uint8 val; //reserve(存储)
+    static uint8 val = 0; //reserve(存储)
     
 		val = boma1_read *1 + boma2_read *2 + boma3_read *4 + 1; //得到8种状态(1~8)
     return val;

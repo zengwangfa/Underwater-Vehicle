@@ -83,7 +83,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		}
 		
 		
-<<<<<<< HEAD
+
 		if(ROV_Mode == VehicleMode){
 				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
 				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
@@ -100,7 +100,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				
 
 		}
-=======
+
 //		if(ROV_Mode == VehicleMode){
 //				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
 //				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
@@ -123,7 +123,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 ////				
 
 //		}
->>>>>>> d7be8108aa196336e709695979ebaca59562c13a
+
 		
 		else if(AUV_Mode == VehicleMode){
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */ 
@@ -134,52 +134,51 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 			
 		}
 }
-int16 LeftFlag = 0,RightFlag = 0 ;
-float X_FLAG1 = 0,X_FLAG2 = 0,Y_FLAG1 = 0 ,Y_FLAG2 = 0;
+
+int16 LeftFlag = 0,RightFlag = 0 ;	//	最终推进器的拟合系数
+float X_FLAG1 = 0,X_FLAG2 = 0,Y_FLAG1 = 0 ,Y_FLAG2 = 0;//  转弯加速减速比例系数
 float TurnFlag = 0;
+
 void FourtAxis_RovControl(Rocker_Type *rc)
 {
 	
-						//	最终推进器的拟合系数
-	//  转弯加速减速比例系数
-
-	if(rc->X>=0)					//如果遥感X大于等于0，判断为前进,并将前进系数赋给推进器X方向的拟合系数
-	{
-		X_FLAG1 =1;//Direction.UP_P1;			
-		X_FLAG2 = 1;//Direction.UP_P2;
-	}
-	else							//如果要搞X小于0，判断为后退，并将后退系数赋给推进器X方向的拟合系数
-	{
-		X_FLAG1 = 1;//Direction.DOWN_P1;
-		X_FLAG2 =1;// Direction.DOWN_P2;
-	}
-	if(abs(abs(rc->Y)-abs(rc->X))>=50&&abs(rc->X <= 50))   //如果遥感X轴较小并且Y轴远大于X，则启用Y方向系数,不启用转向系数
-	{
-		if(rc->Y >= 0 )					
+		if(rc->X>=0)					//如果遥感X大于等于0，判断为前进,并将前进系数赋给推进器X方向的拟合系数
 		{
-			Y_FLAG1  = 1;//Direction.LEFT_P;		//如果遥感Y大于等于0，判断为右转,并将右转系数赋给推进器Y方向的拟合系数
-			Y_FLAG2  = 0;
-			TurnFlag = 0;
+				X_FLAG1 =1;//Direction.UP_P1;			
+				X_FLAG2 = 1;//Direction.UP_P2;
 		}
-		else						//如果遥感Y小于0，判断为左转,并将左转系数赋给推进器Y方向的拟合系数
+		else							//如果要搞X小于0，判断为后退，并将后退系数赋给推进器X方向的拟合系数
 		{
-			Y_FLAG1  = 0;
-			Y_FLAG2  = -1;//Direction.RIGHT_P;
-			TurnFlag = 0;
+				X_FLAG1 = 1;//Direction.DOWN_P1;
+				X_FLAG2 =1;// Direction.DOWN_P2;
 		}
-	}
-	else							//X,Y差值较小或转向系数较大，启用转向系数，关闭方向系数。		
-	{
-		Y_FLAG1   = 0;
-		Y_FLAG2   = 0;
-		TurnFlag  = (float)rc->X / 128;
-	}
-	
-	LeftFlag  = X_FLAG1 * rc->X + ( TurnFlag * rc->Y /1.3f ) + Y_FLAG1 * rc->Y;		//最终推进器拟合系数：X轴速度+转向系数*Y+Y轴方向系数*Y
-	RightFlag = X_FLAG2 * rc->X - ( TurnFlag * rc->Y /1.3f ) + Y_FLAG2 * rc->Y;
-	PropellerPower.leftDown = PropellerDir.leftDown*LeftFlag; 
-	PropellerPower.rightDown = PropellerDir.rightDown*RightFlag;
-	
+		if(abs(abs(rc->Y)-abs(rc->X))>=50&&abs(rc->X <= 50))   //如果遥感X轴较小并且Y轴远大于X，则启用Y方向系数,不启用转向系数
+		{
+				if(rc->Y >= 0 )					
+				{
+						Y_FLAG1  = 1;//Direction.LEFT_P;		//如果遥感Y大于等于0，判断为右转,并将右转系数赋给推进器Y方向的拟合系数
+						Y_FLAG2  = 0;
+						TurnFlag = 0;
+				}
+				else						//如果遥感Y小于0，判断为左转,并将左转系数赋给推进器Y方向的拟合系数
+				{
+						Y_FLAG1  = 0;
+						Y_FLAG2  = -1;//Direction.RIGHT_P;
+						TurnFlag = 0;
+				}
+		}
+		else							//X,Y差值较小或转向系数较大，启用转向系数，关闭方向系数。		
+		{
+				Y_FLAG1   = 0;
+				Y_FLAG2   = 0;
+				TurnFlag  = (float)rc->X / 128;
+		}
+		
+		LeftFlag  = X_FLAG1 * rc->X + ( TurnFlag * rc->Y /1.3f ) + Y_FLAG1 * rc->Y;		//最终推进器拟合系数：X轴速度+转向系数*Y+Y轴方向系数*Y
+		RightFlag = X_FLAG2 * rc->X - ( TurnFlag * rc->Y /1.3f ) + Y_FLAG2 * rc->Y;
+		PropellerPower.leftDown = PropellerDir.leftDown*LeftFlag; 
+		PropellerPower.rightDown = PropellerDir.rightDown*RightFlag;
+		
 }
 
 
@@ -209,15 +208,10 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
 			
 				}
-<<<<<<< HEAD
-				
-				AUV_Depth_Control(&Rocker);  //AUV深度控制
-				ROV_Depth_Control(&Rocker);  //ROV深度控制
-=======
 				FourtAxis_RovControl(&Rocker);
+				
 				AUV_Depth_Control(&Rocker);
 				ROV_Depth_Control(&Rocker);
->>>>>>> d7be8108aa196336e709695979ebaca59562c13a
 				ROV_Rotate_Control(&Rocker); //ROV旋转控制
 				
 				Propeller_Control(); //推进器真实PWM输出

@@ -96,11 +96,9 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊı×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 		Parameter_SelfCheck( (uint32 *)&Sensor.DepthSensor.Type,&Normal_Parameter[DEPTH_SENSOR_TYPE_e] );//Éî¶È´«¸ĞÆ÷ MS5837/SPL1301
 		
 		/* ¡¾µç³ØÈİÁ¿ÀàĞÍ¡¿  */
-<<<<<<< HEAD
-		Parameter_SelfCheck( (uint32 *)&Sensor.PowerSource.Capacity,&Normal_Parameter[BATTERY_CAPACITY_e] );//3s/4s/6s
-=======
 		Parameter_SelfCheck( (uint32 *)&Sensor.PowerSource.Capacity,&Normal_Parameter[BATTERY_CAPACITY_e] );//µç³ØÈİÁ¿²ÎÊı 3s/4s/6s
 		
+
 		/* ¡¾ÍÆ½øÆ÷µ÷Õû·½ÏòÏµÊı¡¿*/
 //		Parameter_SelfCheck( (uint32 *)&Direction.UP_P1,  &Normal_Parameter[DIRECTION_UP_P1_e] );		//×ó±êÖ¾Î»Ç°½øÏµÊı
 //		Parameter_SelfCheck( (uint32 *)&Direction.UP_P2,  &Normal_Parameter[DIRECTION_UP_P2_e] );		//ÓÒ±êÖ¾Î»Ç°½øÏµÊı
@@ -109,7 +107,7 @@ void Normal_Parameter_SelfCheck_With_Flash(void) //Flash²ÎÊı×Ô¼ì ÈôÎª 0 ÔòÎª ·ÇÕ
 //		Parameter_SelfCheck( (uint32 *)&Direction.LEFT_P, &Normal_Parameter[DIRECTION_LEFT_P1_e] );		//Ïò×óÏµÊı
 //		Parameter_SelfCheck( (uint32 *)&Direction.RIGHT_P,&Normal_Parameter[DIRECTION_RIGHT_P1_e] );	//ÏòÓÒÏµÊı
 //		
->>>>>>> d7be8108aa196336e709695979ebaca59562c13a
+
 }
 /*
 void test_env(void) {
@@ -162,9 +160,6 @@ void Flash_Update(void)
 		
 		ef_port_write(Nor_FLASH_ADDRESS+4*DEPTH_SENSOR_TYPE_e ,(uint32 *)&Sensor.DepthSensor.Type,4); //Éî¶È´«¸ĞÆ÷ ÀàĞÍ
 		
-<<<<<<< HEAD
-		ef_port_write(Nor_FLASH_ADDRESS+4*BATTERY_CAPACITY_e ,(uint32 *)&Sensor.PowerSource.Capacity,4); //Éî¶È´«¸ĞÆ÷ ÀàĞÍ
-=======
 		ef_port_write(Nor_FLASH_ADDRESS+4*BATTERY_CAPACITY_e ,(uint32 *)&Sensor.PowerSource.Capacity,4); //µç³ØÈİÁ¿²ÎÊı 3s/4s/6s
 		
 		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_UP_P1_e ,   (uint32 *)&Direction.UP_P1,4);		//×ó±êÖ¾Î»Ç°½øÏµÊı
@@ -174,7 +169,7 @@ void Flash_Update(void)
 		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_LEFT_P1_e , (uint32 *)&Direction.LEFT_P,4);		//Ïò×óÏµÊı
 		ef_port_write(Nor_FLASH_ADDRESS+4*DIRECTION_RIGHT_P1_e ,(uint32 *)&Direction.RIGHT_P,4);	//ÏòÓÒÏµÊı
 		
->>>>>>> d7be8108aa196336e709695979ebaca59562c13a
+
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 
@@ -213,7 +208,7 @@ void list_value(void)
 		log_i("rightMiddle_Dir           %d",PropellerDir.rightMiddle);
 		log_i("Propeller_Power           %d",PowerPercent);//ÍÆ½øÆ÷¶¯Á¦°Ù·Ö±È
 		log_i("----------------------   ---------");
-		log_i("Battery Capacity          %d",Sensor.PowerSource.Capacity);//µç³ØÈİÁ¿²ÎÊı
+		log_i("Battery Capacity          %f",Sensor.PowerSource.Capacity);//µç³ØÈİÁ¿²ÎÊı
 		
     rt_kprintf("\n");
 }
@@ -302,10 +297,11 @@ int PID_Paramter_Init_With_Flash(void)//³õÊ¼»¯¶ÁÈ¡PID²ÎÊı
 INIT_APP_EXPORT(PID_Paramter_Init_With_Flash);
 
 
+
 void Parameter_SelfCheck(uint32 *RealParameter,uint32 *TempParameter)
 {
-		if(*TempParameter <10000 && (int)*TempParameter > -500)	//´Ö²ÚÅĞ¶Ï,¼ì²âflashÖµÎª´óÖÂÕıÈ·Öµ
-		{
+		//int isnan(x)º¯Êı µ±xÊ±nan·µ»Ø1£¬ÆäËü·µ»Ø0
+		if( isnan(*TempParameter) == 0 ) {//Èç¹û²»ÊÇÎŞĞ§Êı×Ö not a number,ÔòÅĞ¶¨ÎªÕıÈ·
 				*RealParameter = *TempParameter; //Flash Êı¾İÕıÈ·ÔòÌæ»»ÎªÕæÊµ±äÁ¿
 		}
 }
