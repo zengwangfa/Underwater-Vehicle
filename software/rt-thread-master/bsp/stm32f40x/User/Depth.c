@@ -43,7 +43,7 @@ void AUV_Depth_Control(Rocker_Type *rc)
 								 break;  //下潜
 						default:break/*定深度PID*/;
 				}
-				ControlCmd.Vertical = 0x00;
+				//ControlCmd.Vertical = 0x00;
 		}
 
 	
@@ -74,6 +74,7 @@ void ROV_Depth_Control(Rocker_Type *rc){
 								Expect_Depth += (fabs((float)rc->Z)/100);
 						}
 				}
+				//ControlCmd.Vertical = 0x00;
 		}
 		Depth_PID_Control(Expect_Depth,Sensor.DepthSensor.Depth);//深度控制 不受【解锁】字节控制
 }

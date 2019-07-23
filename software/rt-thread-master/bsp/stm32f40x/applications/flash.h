@@ -6,6 +6,8 @@
 
 #include "DataType.h"
 
+extern float Adjust1,Adjust2;
+
 typedef struct
 {
 		uint8 No_0xFF[PID_USE_NUM];
@@ -50,6 +52,13 @@ typedef enum  // _e 表示枚举
 		DEPTH_SENSOR_TYPE_e,  //深度传感器 类型
 	
 		BATTERY_CAPACITY_e, //电池电量参数 3s/4s/6s
+		
+		DIRECTION_UP_P1_e,			//
+		DIRECTION_UP_P2_e,
+		DIRECTION_DOWN_P1_e,
+		DIRECTION_DOWN_P2_e,
+		DIRECTION_LEFT_P1_e,
+		DIRECTION_RIGHT_P1_e,
 		
 	/******************************************/
 		PARAMEMER_MAX_NUMBER_e,    //最大参数值

@@ -47,6 +47,16 @@ typedef struct
 		float Yaw;     //z
 }Euler3f;//欧拉角3轴向量 short型 16为短整型
 
+typedef struct
+{
+		float UP_P1;		//左标志位前进系数
+		float UP_P2;		//右标志位前进系数
+		float DOWN_P1;		//左标志位后退系数
+		float DOWN_P2;		//有标志位后退系数
+		float LEFT_P;		//左标志系数
+		float RIGHT_P;		//右标志系数
+}Direction_Type;//方向系数
+
 typedef struct 
 {
 		Vector3f Acc; 		//加速度
@@ -76,7 +86,7 @@ typedef struct
 {
 		float Current; //水温
 		float Voltage;
-		uint8 Capacity;//电池容量
+		float Capacity;//电池容量
 }PowerSource_Type;
 
 
@@ -97,6 +107,17 @@ typedef enum {
 		System_ERROR_STATUS,
 }VehicleStatus_Enum;  //枚举系统状态
 
+typedef enum
+{
+		DirectionUp = 1,
+		DirectionDown ,
+		DirectionLeft ,
+		DirectionRight ,
+	
+		DirectionMode_MAX,
+		
+}DirectionMode_Eunm;//枚举方向系数模式
+
 
 
 /* ------------------------【重要定义】---------------------------------*/
@@ -113,6 +134,8 @@ typedef enum {
 #define PI 3.141592f  //大写标明其为常量
 #define Rad2Deg(Rad) (Rad * 180.0f / PI) //弧度制转角度值
 #define Deg2Rad(Deg) (Deg * PI / 180.0f) //角度值转弧度制
+#define STANDARD_VOLTAGE 3.7			 //锂电池标准电压
+#define FULL_VOLTAGE     4.2		     //锂电池满电压
 
 
 

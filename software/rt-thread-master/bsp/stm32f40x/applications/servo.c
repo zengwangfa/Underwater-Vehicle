@@ -13,6 +13,9 @@
 
 #include "sys.h"
 
+#include "DataType.h"
+#include "Control.h"
+#include "ioDevices.h"
 #include "servo.h"
 #include "propeller.h"
 #include "flash.h"
@@ -37,9 +40,9 @@ ServoType  YunTai = {
 	   .Speed  = 10//云台转动速度
 };      //云台
 
-
 uint16 propeller_power = 1500;
 
+extern float Adjust1,Adjust2 ;
 extern struct rt_event init_event;/* ALL_init 事件控制块. */
 /*******************************************
 * 函 数 名：Servo_Output_Limit
@@ -90,29 +93,68 @@ void RoboticArm_Control(uint8 *action)
   * @retval None
   * @notice 
   */
+
 void YunTai_Control(uint8 *action)
-{
+{		
+		static int DirectionMode = 1;
+		
 		switch(*action)
 		{
-				case 0x01:YunTai.CurrentValue += YunTai.Speed;  //向上
-						if(YunTai.CurrentValue <= YunTai.MaxValue){device_hint_flag |= 0x02;}//云台到头标志
-						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-
+				case 0x01:DirectionMode++;
+						  DirectionMode = DirectionMode<=DirectionMode_MAX?DirectionMode:1;	
+						  Buzzer_Set(&Beep,1,1);			
 						break;  
 						
-				case 0x02:YunTai.CurrentValue -= YunTai.Speed; //向下
-						if(YunTai.CurrentValue >= YunTai.MinValue){device_hint_flag |= 0x02;}//云台到头标志
-						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-
+				case 0x02:DirectionProportion(DirectionMode);
 						break;  
 
-				case 0x03:YunTai.CurrentValue = YunTai.MedValue;break;   //归中
+				case 0x03:DirectionMode = 0;break;   //归中
 				default: break;
 		}
 		Servo_Output_Limit(&YunTai);
 		TIM_SetCompare4(TIM4,YunTai.CurrentValue); 
 		*action = 0x00; //清除控制字
 }
+
+void DirectionProportion(int Mode)
+{
+	switch(Mode)
+	{
+		case DirectionUp   :Direction.UP_P1 = Adjust1;
+							Direction.UP_P2 = Adjust2;	
+							break;
+		case DirectionDown :Direction.DOWN_P1 = Adjust1;
+						    Direction.DOWN_P2 = Adjust2;
+							break;
+		case DirectionLeft :Direction.LEFT_P = Adjust1;
+		case DirectionRight:Direction.RIGHT_P = Adjust1;
+		default: break;
+	}
+}
+
+//void YunTai_Control(uint8 *action)
+//{
+//		switch(*action)
+//		{
+//				case 0x01:YunTai.CurrentValue += YunTai.Speed;  //向上
+//						if(YunTai.CurrentValue <= YunTai.MaxValue){device_hint_flag |= 0x02;}//云台到头标志
+//						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
+
+//						break;  
+//						
+//				case 0x02:YunTai.CurrentValue -= YunTai.Speed; //向下
+//						if(YunTai.CurrentValue >= YunTai.MinValue){device_hint_flag |= 0x02;}//云台到头标志
+//						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
+
+//						break;  
+
+//				case 0x03:YunTai.CurrentValue = YunTai.MedValue;break;   //归中
+//				default: break;
+//		}
+//		Servo_Output_Limit(&YunTai);
+//		TIM_SetCompare4(TIM4,YunTai.CurrentValue); 
+//		*action = 0x00; //清除控制字
+//}
 
 
 
