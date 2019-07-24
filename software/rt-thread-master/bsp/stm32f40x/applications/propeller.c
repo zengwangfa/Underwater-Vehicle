@@ -141,8 +141,8 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 		TIM_SetCompare1(TIM4, 1500);		  //停转信号
 		TIM_SetCompare2(TIM4, 1500);		  //停转信号
 
-		TIM_SetCompare3(TIM4, 1900);		//中值
-		//TIM_SetCompare4(TIM4, 1000);		//向下
+		TIM_SetCompare3(TIM4, 1500);		//机械臂中值
+		TIM_SetCompare4(TIM4, 2000);		//云台中值
 		rt_thread_mdelay(1000);  //1s
 		
 	  log_i("Propeller_Init()");

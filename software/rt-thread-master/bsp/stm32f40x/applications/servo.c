@@ -29,14 +29,14 @@
 
 ServoType RoboticArm = {
 		 .MaxValue = 2000, 		//机械臂 正向最大值
-		 .MinValue = 1500,	  //机械臂 反向
-		 .MedValue = 1900,
+		 .MinValue = 1000,	  //机械臂 反向
+		 .MedValue = 1500,
 	   .Speed  = 5//机械臂当前值
 };  //机械臂
 ServoType  YunTai = {
-		 .MaxValue = 1700, 		//机械臂 正向最大值
-		 .MinValue = 1000,	  //机械臂 反向
-		 .MedValue = 1300,
+		 .MaxValue = 2500, 		//机械臂 正向最大值
+		 .MinValue = 1500,	  //机械臂 反向
+		 .MedValue = 2000,
 	   .Speed  = 10//云台转动速度
 };      //云台
 
@@ -205,7 +205,30 @@ INIT_APP_EXPORT(servo_thread_init);
 
 
 
+/*【云台】舵机 修改 【当前】 MSH方法 */
+static int robotic_arm_currentValue_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        log_e("Error! Proper Usage: robotic_arm_currentValue_set <0~3000>");
+				result = -RT_ERROR;
+        goto _exit;
+    }
 
+		if(atoi(argv[1]) <= 3000 ){		
+				RoboticArm.CurrentValue = atoi(argv[1]);
+				log_i(" Value:  %d",RoboticArm.CurrentValue);
+				TIM_SetCompare3(TIM4,RoboticArm.CurrentValue);
+
+
+		}
+		else {
+				log_e("Error! The value is out of range!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(robotic_arm_currentValue_set,ag: robotic_arm_currentValue_set <0~3000>);
 
 
 
