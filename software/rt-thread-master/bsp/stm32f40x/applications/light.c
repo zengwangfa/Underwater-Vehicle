@@ -9,17 +9,17 @@
 int light_value = 0;
 
 /*******************************************
-* 函 数 名：Servo_Output_Limit
-* 功    能：舵机输出限制
+* 函 数 名：Light_Output_Limit
+* 功    能：灯光亮度输出限制
 * 输入参数：输入值：舵机结构体地址 
 * 返 回 值：None
 * 注    意：
 ********************************************/
-void Light_Output_Limit(int vlaue)
+int Light_Output_Limit(int *value)
 {
-		vlaue = vlaue  > 100 ? 100 : vlaue ;//限幅
-		vlaue = vlaue  < 0   ? 0   : vlaue ;//限幅
-	
+		*value = *value  > 100 ? 100 : *value ;//限幅
+		*value = *value  < 0   ? 0   : *value ;//限幅
+		return *value;
 }
 
 
@@ -27,7 +27,7 @@ void Light_Output_Limit(int vlaue)
 static int light(int argc, char **argv)
 {
     int result = 0;
-    if (argc > 1){
+    if (argc != 2){
         log_e("Error! Proper Usage: YunTai_medvalue_set 2000");
 				result = -RT_ERROR;
         goto _exit;
@@ -56,22 +56,18 @@ MSH_CMD_EXPORT(light,ag: light <0~100>);
 void explore_light_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
 {
 
-//		TIM10_PWM_Init(99,7);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
-//		TIM11_PWM_Init(99,7);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
-//		TIM_Cmd(TIM10, ENABLE);  //使能TIM1
-//		TIM_Cmd(TIM11, ENABLE);  //使能TIM4
-		rt_pin_mode (18, PIN_MODE_OUTPUT);  //输出模式
-		rt_pin_mode (19, PIN_MODE_OUTPUT);  //输出模式
-		rt_pin_write(18, PIN_LOW);
-		rt_pin_write(19, PIN_LOW);
+		TIM10_PWM_Init(100-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
+		TIM11_PWM_Init(100-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
+		TIM_Cmd(TIM10, ENABLE);  //使能TIM10
+		TIM_Cmd(TIM11, ENABLE);  //使能TIM11
+
 		rt_thread_mdelay(1000);
 		while(1)
 		{
-//				TIM_SetCompare1(TIM10,light_value);
-//				TIM_SetCompare1(TIM11,light_value);
+				light_value = Light_Output_Limit(&light_value);
+				TIM_SetCompare1(TIM10,light_value);
+				TIM_SetCompare1(TIM11,light_value);
 			
-//				rt_pin_write(18, PIN_LOW);
-//				rt_pin_write(19, PIN_LOW);
 				rt_thread_mdelay(10);
 		}
 	

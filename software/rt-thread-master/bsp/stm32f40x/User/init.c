@@ -53,7 +53,7 @@ void thread_entry_sys_monitor(void* parameter)
 {
     while (1)
     {
-        IWDG_Feed(); //喂狗,放置系统异常卡死
+        IWDG_Feed(); //喂狗,防止系统异常卡死
 				rt_thread_mdelay(500);
     }
 }
@@ -83,7 +83,7 @@ void sys_init_thread(void* parameter){
         log_e("init event failed.\n");
 		}
 		Normal_Parameter_Init_With_Flash(); //Flash参数初始化读取
-		rt_kprintf("file:%s,function:%s,line:%d\n",__FILE__,__FUNCTION__,__LINE__); //打印所在 文件、函数名、行号
+		//rt_kprintf("file:%s,function:%s,line:%d\n",__FILE__,__FUNCTION__,__LINE__); //打印所在 文件、函数名、行号
 }
 
 

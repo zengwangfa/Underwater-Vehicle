@@ -127,8 +127,6 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 		TIM_SetCompare1(TIM4, 2000); 	 	//最高转速信号  	垂直推进器1号
 		TIM_SetCompare2(TIM4, 2000);	  //最高转速信号  	垂直推进器2号
 
-		//TIM_SetCompare3(TIM4, 1900);		//中值
-		//TIM_SetCompare4(TIM4, 1700);		//向上	
 
 		rt_thread_mdelay(2000);  //2s
 
@@ -148,15 +146,6 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 	  log_i("Propeller_Init()");
 		Propeller_Init_Flag = 1;
 }
-
-
-/*【推进器】 【Stop】MSH方法 */
-void Propeller_Stop(void)
-{
-		memset(&PropellerPower,0,sizeof(PropellerPower));
-
-}
-MSH_CMD_EXPORT(Propeller_Stop,ag: Propeller Stop);
 
 
 

@@ -159,7 +159,7 @@ void TIM10_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F6
 		TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 		TIM_OCInitTypeDef  TIM_OCInitStructure;
 
-		RCC_APB1PeriphClockCmd(RCC_APB2Periph_TIM10,ENABLE);  	//TIM10时钟使能    
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM10,ENABLE);  	//TIM10时钟使能    
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE); 	//使能PORTF时钟	
 		
 		GPIO_PinAFConfig(GPIOF,GPIO_PinSource6,GPIO_AF_TIM10);
@@ -208,7 +208,7 @@ void TIM11_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F7
 		TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 		TIM_OCInitTypeDef  TIM_OCInitStructure;
 
-		RCC_APB1PeriphClockCmd(RCC_APB2Periph_TIM11,ENABLE);  	//TIM10时钟使能    
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM11,ENABLE);  	//TIM10时钟使能    
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE); 	//使能PORTF时钟	
 		
 		GPIO_PinAFConfig(GPIOF,GPIO_PinSource7,GPIO_AF_TIM11);
@@ -228,7 +228,7 @@ void TIM11_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F7
 		
 		TIM_TimeBaseInit(TIM11,&TIM_TimeBaseStructure);//初始化定时器4
 		
-		//初始化TIM4 Channel PWM模式	 
+		//初始化TIM11 Channel PWM模式	 
 		TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //选择定时器模式:TIM脉冲宽度调制模式2
 		TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //比较输出使能
 		TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;

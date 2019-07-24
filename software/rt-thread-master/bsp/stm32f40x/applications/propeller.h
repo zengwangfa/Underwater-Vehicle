@@ -73,7 +73,6 @@ extern ActionType_Enum      Posture_Flag; //机器人姿态标志位
 extern PropellerPower_Type  PropellerPower; //推进器推理控制器
 extern PropellerError_Type  PropellerError; //推进器偏差值
 
-void Propeller_Stop(void); //推进器数值清零
 void Propeller_Init(void);
 
 void PWM_Update(PropellerPower_Type* power);//推进器PWM 更新
