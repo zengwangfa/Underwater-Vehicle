@@ -58,7 +58,6 @@ int propeller_thread_init(void)
 				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
 				TIM3_PWM_Init(20000-1,84-1);  //吸取器
 
-
 				rt_thread_startup(servo_tid);
 
 		}
@@ -82,7 +81,7 @@ void PWM_Update(PropellerPower_Type* propeller)
 				
 				TIM1_PWM_CH1_E9 (power_test.rightUp);     //右上	 E9	
 				TIM1_PWM_CH2_E11(power_test.leftDown);    //左下	 E11
-				TIM1_PWM_CH3_E13(power_test.leftUp); 	   //左上   E13
+				TIM1_PWM_CH3_E13(power_test.leftUp); 	    //左上   E13
 				TIM1_PWM_CH4_E14(power_test.rightDown);   //右下   E14
 			
 				TIM4_PWM_CH1_D12(power_test.leftMiddle);  //左中   D12
@@ -161,16 +160,17 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 
 		rt_thread_mdelay(2000);  //2s
 
-		TIM_SetCompare1(TIM1, PropellerPower_Med);			//停转信号
-		TIM_SetCompare2(TIM1, PropellerPower_Med);			//停转信号
-		TIM_SetCompare3(TIM1, PropellerPower_Med);			//停转信号
-		TIM_SetCompare4(TIM1, PropellerPower_Med);			//停转信号
+		TIM1_PWM_CH1_E9 (PropellerPower_Med);			//停转信号
+		TIM1_PWM_CH2_E11(PropellerPower_Med);			//停转信号
+		TIM1_PWM_CH3_E13(PropellerPower_Med);			//停转信号
+		TIM1_PWM_CH4_E14(PropellerPower_Med);			//停转信号
 	
-		TIM_SetCompare1(TIM4, PropellerPower_Med);		  //停转信号
-		TIM_SetCompare2(TIM4, PropellerPower_Med);		  //停转信号
+		TIM4_PWM_CH1_D12(PropellerPower_Med);		  //停转信号
+		TIM4_PWM_CH2_D13(PropellerPower_Med);		  //停转信号
 
-		TIM_SetCompare3(TIM4, 1500);		//机械臂中值 1000~2000
-		TIM_SetCompare4(TIM4, 2000);		//云台中值
+		TIM4_PWM_CH3_D14(1500);		//机械臂中值 1000~2000
+		TIM4_PWM_CH4_D15(2000);		//云台中值
+		
 		rt_thread_mdelay(1000);  //1s
 		
 		Propeller_Init_Flag = 1;

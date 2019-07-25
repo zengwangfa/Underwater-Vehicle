@@ -196,8 +196,9 @@ void TIM3_PWM_Init(uint32 arr,uint32 psc)//吸取器
 		TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
 		TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 		
-		TIM_OC1Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM3 4OC1
-		
+		TIM_OC3Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM3 3OC1
+		TIM_OC4Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM3 4OC1
+				
 		TIM_CtrlPWMOutputs(TIM3,ENABLE);		  
 		
 		TIM_Cmd(TIM3, ENABLE);  //使能TIM3

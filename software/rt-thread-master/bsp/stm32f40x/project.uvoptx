@@ -153,22 +153,7 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>&amp;Sensor.PowerSource.Capacity</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>(uint32 *)&amp;Sensor.PowerSource.Capacity,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>(float)(uint32 *)&amp;Sensor.PowerSource.Capacity,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>(float)((uint32 *)&amp;Sensor.PowerSource.Capacity)</ItemText>
+          <ItemText>power_test,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

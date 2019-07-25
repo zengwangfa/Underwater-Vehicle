@@ -76,7 +76,7 @@ int Normal_Parameter_Init_With_Flash(void)
 {
 		uint8 i = 0;
 		for(i = 0;i < PARAMEMER_MAX_NUMBER_e;i++ ){
-				ef_port_read(Nor_FLASH_ADDRESS+4*i,(Normal_Parameter+i),4);		 //ef_set_env
+				ef_port_read(Nor_FLASH_ADDRESS+4*i,(Normal_Parameter+i),4);		 //Flash读取
 		}
 		Normal_Parameter_SelfCheck_With_Flash();//Flash参数自检 若为 0 则为 非正常数据，则不传递给真实数据 
 
