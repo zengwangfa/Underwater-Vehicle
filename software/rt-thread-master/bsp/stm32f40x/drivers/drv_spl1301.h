@@ -36,14 +36,14 @@ struct spl1301_t {
 };
 
 
-void spl1301_init(void);
+int spl1301_init(void); //初始化调用
 void spl1301_rateset(uint8 iSensor, uint8 u8OverSmpl, uint8 u8SmplRate);
 void spl1301_start_temperature(void);
 void spl1301_start_pressure(void);
 void spl1301_start_continuous(uint8 mode);
 void spl1301_get_raw_temp(void);
-void spl1301_get_raw_pressure(void);
-float get_spl1301_temperature(void);
+void spl1301_get_raw_pressure(void); //调用该句转换数据
+float get_spl1301_temperature(void); 
 float get_spl1301_pressure(void);
 
 

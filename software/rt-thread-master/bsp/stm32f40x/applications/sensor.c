@@ -50,8 +50,8 @@ void sensor_lowSpeed_thread_entry(void* parameter)
 						Sensor.PowerSource.Current = get_current_value();  //获取INA169电流值
 						Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);//电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较小】
 				}
-				//cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
-				//Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
+			cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
+			Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
 			
 
 				rt_thread_mdelay(1000);
@@ -100,18 +100,18 @@ int sensor_thread_init(void)
                     sensor_highSpeed_thread_entry,		 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
-                    15,										 	 //线程优先级【priority】
+                    20,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (sensor_lowSpeed_tid != RT_NULL && sensor_highSpeed_tid != RT_NULL){
 			
 				if(MS5837 == Sensor.DepthSensor.Type){ //深度传感器类型判定
 						if(MS5837_Init()){log_i("MS5837_Init()");}
-						else {log_e("MS5837_Init_Failed!");}
+						else {log_e("MS5837 Init Failed!");}
 				}
 				else if(SPL1301 == Sensor.DepthSensor.Type){
-						spl1301_init();        
-						log_i("SPL1301_init()");
+						if(spl1301_init()){log_i("SPL1301_Init()");}
+						else {log_e("SPL1301 Init Failed!");}
 				}
 
 				if(adc_init()){ log_i("Adc_Init()");}//ADC电压采集初始化

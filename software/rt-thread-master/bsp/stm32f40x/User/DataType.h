@@ -122,6 +122,7 @@ typedef enum
 
 
 /* ------------------------【重要定义】---------------------------------*/
+
 #define LED_EVENT 			(1 << 0)  //LED事件标志位
 #define KEY_EVENT 			(1 << 1)  //KEY事件标志位
 #define BUZZ_EVENT 			(1 << 2)  //BUZZER事件标志位
@@ -136,19 +137,27 @@ typedef enum
 #define Rad2Deg(Rad) (Rad * 180.0f / PI) //弧度制转角度值
 #define Deg2Rad(Deg) (Deg * PI / 180.0f) //角度值转弧度制
 
+/* --------------【电池 参数】-----------------*/
+
 #define STANDARD_VOLTAGE 3.7f			 //锂电池标准电压
-#define FULL_VOLTAGE     4.2f		     //锂电池满电压
+#define FULL_VOLTAGE     4.2f		   //锂电池满电压
 
+/* ----------【航行器 总推进器数量】-----------*/
 
+#define FourAxis  0// ROV标志
+#define SixAxis   1// AUV标志
 
-#define ROV_Mode  0// ROV标志
-#define AUV_Mode  1// AUV标志
+/* -----------【解锁、锁定 标志】--------------*/
 
 #define UNLOCK    1   //全局解锁【启动】  宏定义
 #define LOCK      2   //全局锁  【停止】
 
+/* -----------【深度传感器类型 标志】-----------*/
+
 #define MS5837    0   //深度传感器：MS5837
 #define SPL1301   1   //深度传感器：SPL1301
+
+/* ---------------【推进器 参数】--------------*/
 
 #define PropellerPower_Med  1500
 #define PropellerPower_Min  1000
@@ -156,7 +165,7 @@ typedef enum
 
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
-extern volatile uint8 VehicleMode;   //【ROV_Mode】 or 【AUV_Mode】
+extern volatile uint8 VehicleMode;   //【FourAxis】 or 【SixAxis】
 
 extern Sensor_Type Sensor;
 

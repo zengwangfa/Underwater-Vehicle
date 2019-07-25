@@ -198,35 +198,32 @@ void get_memory_situation(void)
 MSH_CMD_EXPORT(get_memory_situation,get memory situation);
 
 
-/*  设置机器工作模式 */
-static int set_vehicle_mode(int argc,char **argv)
+/*  设置机器工作模式 (几轴：几自由度) */
+static int set_vehicle_axis(int argc,char **argv)
 {
 		int result = 0;
     if (argc != 2){
-				log_e("Proper Usage: set_vehicle_mode <rov/auv>");//用法:设置工作模式
+				log_e("Proper Usage: set_vehicle_mode <4/6>");//用法:设置工作模式
 				result = -RT_ERROR;
-        goto _exit;
+        return result;
     }
 		
-		if( !strcmp(argv[1],"rov") ){ //设置为 ROV
-				VehicleMode = ROV_Mode;
+		if( !strcmp(argv[1],"4") ){ //设置为 ROV
+				VehicleMode = FourAxis;
 				Flash_Update();
 				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
 		}
-		else if( !strcmp(argv[1],"auv") ){ //设置为工作模式 strcmp 检验两边相等 返回0
-				VehicleMode = AUV_Mode;
+		else if( !strcmp(argv[1],"6") ){ //设置为工作模式 strcmp 检验两边相等 返回0
+				VehicleMode = SixAxis;
 				Flash_Update();
 				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
 		}
-
-
 		else {
-				log_e("Proper Usage: set_vehicle_mode <rov/auv>");
-				goto _exit;
+				log_e("Proper Usage: set_vehicle_mode <4/6>");
 		}
-_exit:
+
     return result;
 }
-MSH_CMD_EXPORT(set_vehicle_mode,set_vehicle_mode auv / rov);
+MSH_CMD_EXPORT(set_vehicle_axis,set_vehicle_mode <4/6>);
 
 

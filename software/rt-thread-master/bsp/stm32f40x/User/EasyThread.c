@@ -39,7 +39,7 @@ void ioDevices_thread_entry(void* parameter)// --- 按键、拨码 ---
 {
 		uint8 boma_value = get_boma_value();	//初始化得到当前拨码状态;	//暂存拨码状态 判断拨码状态是否改变
 	
-		if(VehicleMode == ROV_Mode || VehicleMode == AUV_Mode){
+		if(VehicleMode == FourAxis || VehicleMode == SixAxis){
 				Buzzer_Set(&Beep,1,1);
 		}
 		

@@ -30,7 +30,7 @@ extern int16 PowerPercent;
 void AUV_Depth_Control(Rocker_Type *rc)
 {
 		
-		if(AUV_Mode == VehicleMode){	 //AUV深度控制位数字量
+		if(SixAxis == VehicleMode){	 //AUV深度控制位数字量
 				switch(ControlCmd.Vertical){//有控制数据不定深度
 						case RiseUp: 
 								 Expect_Depth-=3 ; 
@@ -62,7 +62,7 @@ void AUV_Depth_Control(Rocker_Type *rc)
 void ROV_Depth_Control(Rocker_Type *rc){
 
 			/* 垂直控制 */
-		if(ROV_Mode == VehicleMode)	 //ROV由 摇杆模拟量控制
+		if(FourAxis == VehicleMode)	 //ROV由 摇杆模拟量控制
 		{
 				if(rc->Z > 5){
 					 Expect_Depth -=( (float)rc->Z /100); 
@@ -90,7 +90,7 @@ void ROV_Depth_Control(Rocker_Type *rc){
 void ROV_Rotate_Control(Rocker_Type *rc){
 
 			/* 垂直控制 */
-		if(ROV_Mode == VehicleMode)	 //ROV由 摇杆模拟量控制
+		if(FourAxis == VehicleMode)	 //ROV由 摇杆模拟量控制
 		{
 				if((rc->Force)< 5){ //右摇杆优先级大于 左摇杆 优先级
 						if(rc->Yaw > 5){
@@ -235,12 +235,12 @@ void robot_upDown(float depth_output)
 		PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -depth_output + PropellerError.leftMiddle);//正反桨
 		PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -depth_output + PropellerError.rightMiddle);//输出为负值
 		
-		if(ROV_Mode == VehicleMode){ //这个是为了平衡两边推力(以为正反推进器，其特有推力不一致)
+		if(FourAxis == VehicleMode){ //这个是为了平衡两边推力(以为正反推进器，其特有推力不一致)
 
 				
 		}
 		
-		else if(AUV_Mode == VehicleMode) //这个是为了补偿推进器死区值
+		else if(SixAxis == VehicleMode) //这个是为了补偿推进器死区值
 		{
 //			  PropellerPower.leftMiddle  -= (PropellerDir.leftMiddle  * 20);//死区值 20
 //				PropellerPower.rightMiddle -= (PropellerDir.rightMiddle * 20);	

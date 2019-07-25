@@ -36,7 +36,7 @@
 #include "DataType.h" //自定义数据类型 头文件【重要】
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
-volatile uint8 VehicleMode = ROV_Mode;   //【ROV_Mode】 or 【AUV_Mode】
+volatile uint8 VehicleMode = FourAxis;   //【FourAxis】 or 【SixAxis】
 //volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接在其内存中读值。
 /**
  * @addtogroup STM32

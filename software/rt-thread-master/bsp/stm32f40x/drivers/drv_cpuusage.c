@@ -66,7 +66,7 @@ void cpu_usage_get(rt_uint8_t *major, rt_uint8_t *minor)
 void cpu_usage_init()
 {
     /* set idle thread hook */
-    //rt_thread_idle_sethook(cpu_usage_idle_hook);
+    rt_thread_idle_sethook(cpu_usage_idle_hook);
 }
 
 

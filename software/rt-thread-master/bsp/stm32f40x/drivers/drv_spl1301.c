@@ -66,11 +66,11 @@ uint8 spl1301_read(uint8 hwadr, uint8 regadr)
  Description: initialization
  Input: void             
  Output: 
- Return: void 
+ Return: 1初始化成功,0初始化失败
  Calls: 
  Called By: 
 *****************************************************************************/
-void spl1301_init(void)
+int spl1301_init(void)
 {
 		IIC_Init();	
     p_spl1301 = &spl1301; /* read Chip Id */
@@ -83,8 +83,12 @@ void spl1301_init(void)
     // sampling rate = 1Hz; Temperature oversample = 1; 
     spl1301_rateset(TEMPERATURE_SENSOR,32, 8);
     //Start background measurement
-		spl1301_start_continuous(CONTINUOUS_P_AND_T);
-    
+		spl1301_start_continuous(CONTINUOUS_P_AND_T);//后台模式(开启转换 气压 及 温度)
+
+		if(-1 == spl1301.calib_param.c0){//当为-1时，初始化失败(为接入SPL1301 or 接入不是SPL1301)
+				return 0;
+		}
+		return 1;
 }
 
 
@@ -247,6 +251,7 @@ void spl1301_get_calib_param(void)
     h =  spl1301_read(HW_ADR, 0x20);
     l  =  spl1301_read(HW_ADR, 0x21);
     p_spl1301->calib_param.c30 = (int16)h<<8 | l;
+		
 }
 
 

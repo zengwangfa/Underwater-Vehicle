@@ -60,11 +60,11 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		{
 				if(rc->X < LastRcX)														//判断前进还是后退
 				{
-					rc->X = LastRcX - ShutDown;									//减小加速度
+						rc->X = LastRcX - ShutDown;									//减小加速度
 				}
 				else
 				{
-					rc->X = LastRcX + ShutDown;
+						rc->X = LastRcX + ShutDown;
 				}
 				LastRcX = rc->X;	
 		}
@@ -72,18 +72,18 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 		{
 				if(rc->Y < LastRcY)
 				{
-					rc->Y = LastRcY - ShutDown;
+						rc->Y = LastRcY - ShutDown;
 				}
 				else
 				{
-					rc->Y = LastRcY + ShutDown;
+						rc->Y = LastRcY + ShutDown;
 				}
 				LastRcY = rc->Y;	
 		}
 		
 		
 
-		if(ROV_Mode == VehicleMode){
+		if(FourAxis == VehicleMode){
 				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
 				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
 																				
@@ -100,7 +100,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 
 		}
 
-		else if(AUV_Mode == VehicleMode){
+		else if(SixAxis == VehicleMode){
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */ 
 				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 ))	+ ACC1 + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
 				PropellerPower.rightUp =   (PropellerDir.rightUp   * ((PowerPercent) * ( rc->Y ) /70 )) + ACC2 + PropellerError.rightUp ;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)

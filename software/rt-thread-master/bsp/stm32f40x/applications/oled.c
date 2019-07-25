@@ -48,7 +48,7 @@ static uint32 total_mem,used_mem,max_used_mem;
 
 /*--------------------------- Variable Declarations --------------------------------*/
 
-char *VehicleModeName[2] = {"ROV","AUV"}; //定义用于显示的 模式字符 0->AUV  1->ROV
+char *VehicleModeName[2] = {"FourAxis","SixAxis"}; //定义用于显示的 模式字符 0->AUV  1->ROV
 volatile MENU_LIST_Enum MENU = StatusPage;//OLED初始页面为 状态页. volatile是一种类型修饰符。
 																				  //volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接在其内存中读值。
 
@@ -79,7 +79,7 @@ int oled_thread_init(void)
                     oled_thread_entry,	//线程入口函数【entry】
                     RT_NULL,				    //线程入口函数参数【parameter】
                     2048,							  //线程栈大小，单位是字节【byte】
-                    20,								  //线程优先级【priority】
+                    15,								  //线程优先级【priority】
                     10);							  //线程的时间片大小【tick】= 100ms
 
     if (oled_tid != RT_NULL){
@@ -154,16 +154,19 @@ void OLED_StatusPage(void)
 		sprintf(str,"Mode:[%s-NO.%d]",VehicleModeName[VehicleMode],get_boma_value()); //获取本机为ROV or AUV
 		OLED_ShowString(0,0, (uint8 *)str,12); 
 	
-		sprintf(str,"Vol:%.2fV  \r\n",Sensor.PowerSource.Voltage);//电压
+		sprintf(str,"Vol:%.2fV",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,16,(uint8 *)str,12); 
 		
-		sprintf(str,"Cur:%.2f A  \r\n",Sensor.PowerSource.Current);//电流
+		sprintf(str,"Cur:%.2fA",Sensor.PowerSource.Current);//电流
 		OLED_ShowString(70,16,(uint8 *)str,12); 	
 		
-	  sprintf(str,"CPU Usage:%.2f %% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
+	  sprintf(str,"CPU:%.2f%% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则
 		OLED_ShowString(0,32,(uint8 *)str,12); 
 		
-		sprintf(str,"Temperature:%.2f C \r\n",Sensor.CPU.Temperature);//显示的温度
+		sprintf(str,"Temp:%.1fC ",Sensor.CPU.Temperature);//显示的温度
+		OLED_ShowString(70,32,(uint8 *)str,12);
+		
+		sprintf(str,"Depth:%.2f cm      ",Sensor.DepthSensor.Depth);//显示的温度
 		OLED_ShowString(0,48,(uint8 *)str,12);
 		OLED_Refresh_Gram();//更新显示到OLED
 }
