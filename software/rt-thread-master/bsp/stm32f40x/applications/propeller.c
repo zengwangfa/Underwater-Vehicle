@@ -17,7 +17,7 @@
 
 #include "flash.h"
 #include "RC_Data.h"
-
+#include "drv_pwm.h"
 #define Propeller_MedValue 1500
 
 extern int16 PowerPercent;
@@ -51,13 +51,13 @@ void PWM_Update(PropellerPower_Type* propeller)
 	
 		if(1 == Propeller_Init_Flag){
 				
-				TIM_SetCompare1(TIM1,power_test.rightUp);     //右上	 E9	
-				TIM_SetCompare2(TIM1,power_test.leftDown);    //左下	 E11
-				TIM_SetCompare3(TIM1,power_test.leftUp); 	    //左上   E13
-				TIM_SetCompare4(TIM1,power_test.rightDown);   //右下   E14
+				TIM1_PWM_CH1_E9 (&power_test.rightUp);     //右上	 E9	
+				TIM1_PWM_CH2_E11(&power_test.leftDown);    //左下	 E11
+				TIM1_PWM_CH3_E13(&power_test.leftUp); 	   //左上   E13
+				TIM1_PWM_CH4_E14(&power_test.rightDown);   //右下   E14
 			
-				TIM_SetCompare1(TIM4,power_test.leftMiddle);  //左中   D12
-				TIM_SetCompare2(TIM4,power_test.rightMiddle); //右中   D13
+				TIM4_PWM_CH1_D12(&power_test.leftMiddle);  //左中   D12
+				TIM4_PWM_CH2_D13(&power_test.rightMiddle); //右中   D13
 		}
 
 }
@@ -84,13 +84,13 @@ static int Propoller_Test(int argc, char **argv)
 						power_test_msh.leftMiddle  = Propeller_MedValue + atoi(argv[1]);
 						power_test_msh.rightMiddle = Propeller_MedValue + atoi(argv[1]);
 					
-						TIM_SetCompare1(TIM1,power_test_msh.rightUp);     //右上	 E9	
-						TIM_SetCompare2(TIM1,power_test_msh.leftDown);    //左下	 E11
-						TIM_SetCompare3(TIM1,power_test_msh.leftUp); 	    //左上   E13
-						TIM_SetCompare4(TIM1,power_test_msh.rightDown);   //右下   E14
+						TIM1_PWM_CH1_E9 (&power_test_msh.rightUp);      //右上	 E9	
+						TIM1_PWM_CH2_E11(&power_test_msh.leftDown);    //左下	 E11
+						TIM1_PWM_CH3_E13(&power_test_msh.leftUp); 	   //左上   E13
+						TIM1_PWM_CH4_E14(&power_test_msh.rightDown);   //右下   E14
 					
-						TIM_SetCompare1(TIM4,power_test_msh.leftMiddle);  //左中   D12
-						TIM_SetCompare2(TIM4,power_test_msh.rightMiddle); //右中   D13
+						TIM4_PWM_CH1_D12(&power_test_msh.leftMiddle);  //左中   D12
+						TIM4_PWM_CH2_D13(&power_test_msh.rightMiddle); //右中   D13
 				}
 				log_i("Current propeller power:  %d",atoi(argv[1]) );
 		}

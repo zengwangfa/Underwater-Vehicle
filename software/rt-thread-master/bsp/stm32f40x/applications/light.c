@@ -6,19 +6,20 @@
 #include "drv_pwm.h"
 
 #include <drivers/pin.h>
-int light_value = 0;
+
+short light_value = 0;
 
 /*******************************************
 * 函 数 名：Light_Output_Limit
 * 功    能：灯光亮度输出限制
-* 输入参数：输入值：舵机结构体地址 
+* 输入参数：灯光亮度值 0~100%
 * 返 回 值：None
 * 注    意：
 ********************************************/
-int Light_Output_Limit(int *value)
+int Light_Output_Limit(short *value)
 {
-		*value = *value  > 100 ? 100 : *value ;//限幅
-		*value = *value  < 0   ? 0   : *value ;//限幅
+		*value = *value >  100 ? 100 : *value ;//限幅
+		*value = *value <= 0   ? 0   : *value ;//限幅
 		return *value;
 }
 
@@ -64,9 +65,10 @@ void explore_light_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比
 		rt_thread_mdelay(1000);
 		while(1)
 		{
+			
 				light_value = Light_Output_Limit(&light_value);
-				TIM_SetCompare1(TIM10,light_value);
-				TIM_SetCompare1(TIM11,light_value);
+				TIM10_PWM_CH1_F6(&light_value);
+				TIM11_PWM_CH1_F7(&light_value);
 			
 				rt_thread_mdelay(10);
 		}

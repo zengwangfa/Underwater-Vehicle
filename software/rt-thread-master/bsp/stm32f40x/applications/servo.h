@@ -5,18 +5,14 @@
 
 typedef struct  /*  */
 {
-		uint16 MaxValue;		//机械臂 正向最大值
-		uint16 MinValue;	  //机械臂 反向
-		uint16 MedValue;
-		uint16 CurrentValue; //机械臂当前值
-		uint8  Speed; //机械臂当前值
+		short MaxValue;		//舵机 正向最大值
+		short MinValue;	  //舵机 反向
+		short MedValue;   //舵机 中值
+		short CurrentValue; //舵机当前值
+		uint8 Speed;		  //舵机速度值
 }ServoType;
 
-extern ServoType RoboticArm ;//机械臂
 
-extern ServoType YunTai; //云台
-
-extern int DirectionMode;
 
 void RoboticArm_Control(uint8 *action);
 
@@ -24,7 +20,11 @@ void YunTai_Control(uint8 *action);
 void DirectionProportion(int Mode);
 
 
+extern ServoType RoboticArm ;//机械臂
 
+extern ServoType YunTai; //云台
+
+extern int DirectionMode;
 
 
 #endif

@@ -53,8 +53,8 @@ extern struct rt_event init_event;/* ALL_init 事件控制块. */
 ********************************************/
 void Servo_Output_Limit(ServoType *Servo)
 {
-		Servo->CurrentValue = Servo->CurrentValue  > Servo->MaxValue ? Servo->MaxValue : Servo->CurrentValue ;//正向限幅
-		Servo->CurrentValue = Servo->CurrentValue  < Servo->MinValue ? Servo->MinValue : Servo->CurrentValue ;//反向限幅
+		Servo->CurrentValue = Servo->CurrentValue > Servo->MaxValue ? Servo->MaxValue : Servo->CurrentValue ;//正向限幅
+		Servo->CurrentValue = Servo->CurrentValue < Servo->MinValue ? Servo->MinValue : Servo->CurrentValue ;//反向限幅
 	
 }
 
@@ -82,7 +82,7 @@ void RoboticArm_Control(uint8 *action)
 				default:break;
 		}
 		Servo_Output_Limit(&RoboticArm);//机械臂舵机限幅
-		TIM_SetCompare3(TIM4,RoboticArm.CurrentValue);
+		TIM4_PWM_CH3_D14(&RoboticArm.CurrentValue);
 		*action = 0x00; //清除控制字
 }
 
@@ -112,7 +112,7 @@ void YunTai_Control(uint8 *action)
 				default: break;
 		}
 		Servo_Output_Limit(&YunTai);
-		TIM_SetCompare4(TIM4,YunTai.CurrentValue); 
+		TIM4_PWM_CH4_D15(&YunTai.CurrentValue); 
 		*action = 0x00; //清除控制字
 }
 
@@ -167,10 +167,14 @@ void DirectionProportion(int Mode)
 void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
 {
 		TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
+		TIM3_PWM_Init(20000-1,84-1);
 		TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
-		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
-		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
+
 	
+		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
+		TIM_Cmd(TIM3, ENABLE);  //使能TIM3
+		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
+
 		Propeller_Init();       //推进器初始化
 	
 		rt_thread_mdelay(100);

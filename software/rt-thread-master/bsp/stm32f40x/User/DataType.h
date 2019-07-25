@@ -95,11 +95,10 @@ typedef struct
 /***********************传感器数据 句柄******************************/
 typedef  struct{
 	
-
 		CPU_Type CPU;    //CPU【温度】【使用率】
 		JY901_Type JY901;//【欧拉角】【速度】
 		Depth_Sensor_Type DepthSensor;//水【温度】【深度】
- 		PowerSource_Type PowerSource;  //电源
+ 		PowerSource_Type PowerSource; //电源
 }Sensor_Type;
 
 

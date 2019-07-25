@@ -6,21 +6,21 @@
 
 typedef struct //推进器中值、最大值、最小值
 {
-		uint16 PowerMax;		
-		uint16 PowerMed;
-		uint16 PowerMin;	
-	  uint16 PowerDeadband;	//死区值
+		int16 PowerMax;		
+		int16 PowerMed;
+		int16 PowerMin;	
+	  int16 PowerDeadband;	//死区值
 	
 }PropellerParameter_Type;//推进器参数结构体
 
 typedef struct //推进器方向
 {
-		int16 leftUp;  //左上
-		int16 rightUp;
-		int16 leftDown; //左下
-		int16 rightDown;
-		int16 leftMiddle; //左中
-		int16 rightMiddle;		
+		char leftUp;  //左上
+		char rightUp;
+		char leftDown; //左下
+		char rightDown;
+		char leftMiddle; //左中
+		char rightMiddle;		
 
 }PropellerDir_Type;
 
