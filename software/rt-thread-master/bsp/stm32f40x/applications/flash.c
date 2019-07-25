@@ -24,21 +24,48 @@
 #include "propeller.h"
 #include "PropellerControl.h"
 #include "gyroscope.h"
+#include "EasyThread.h"
+
+/*---------------------- Constant / Macro Definitions -----------------------*/
+
 //FLASH起始地址   W25Q128 16M 的容量分为 256 个块（Block）
 #define Nor_FLASH_ADDRESS    (0x0000) 	//W25Q128 FLASH的 普通起始地址   【第个扇区】
 
 #define IMP_FLASH_ADDRESS    (0x1000) 	//W25Q128 FLASH的 重要参数起始地址 【第个扇区】
 
-
+/*----------------------- Variable Declarations -----------------------------*/
 
 int16 PowerPercent = 0;
+
 PID_Parameter_Flag  PID_Parameter_Read_Flag;
 
 uint32 Normal_Parameter[PARAMEMER_MAX_NUMBER_e]={0};
 
+/*----------------------- Function Implement --------------------------------*/
+
+int flash_thread_init(void)
+{
+    rt_thread_t flash_tid;
+		/*创建动态线程*/
+    flash_tid = rt_thread_create("flash",//线程名称
+                    flash_thread_entry,				 //线程入口函数【entry】
+                    RT_NULL,							   //线程入口函数参数【parameter】
+                    1024,										 //线程栈大小，单位是字节【byte】
+                    15,										 	 //线程优先级【priority】
+                    10);										 //线程的时间片大小【tick】= 100ms
+
+    if (flash_tid != RT_NULL){
+
+				rt_thread_startup(flash_tid);
+		}
+		return 0;
+}
+INIT_APP_EXPORT(flash_thread_init);
+
+
 /*******************************************
 * 函 数 名：Normal_Parameter_Init_With_Flash
-* 功    能：读取Flash普通参数【也非常重要】
+* 功    能：读取Flash普通参数【非常重要】
 * 输入参数：none
 * 返 回 值：none
 * 注    意：NORMAL_PARAMETER_TABLE 枚举表 中添加自身需要的的参数的 枚举值
@@ -216,7 +243,7 @@ MSH_CMD_EXPORT(list_value,list some important values);
 
 
 
-void Save_PID_Parameter(void)
+void Save_PID_Parameter(void)//保存PID参数
 {
 		uint8 i = 0;
 		

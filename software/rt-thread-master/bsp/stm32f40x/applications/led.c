@@ -16,6 +16,10 @@
 #include <drivers/pin.h>
 #include <easyflash.h>
 #include "sensor.h"
+#include "EasyThread.h"
+/*---------------------- Constant / Macro Definitions -----------------------*/
+
+const uint8 inputdata[8] = {0x00,0x04,0x02,0x01,0x03,0x05,0x06,0x07};
 
 /*----------------------- Variable Declarations -----------------------------*/
 /* ALL_init 事件控制块. */
@@ -26,62 +30,6 @@ Bling_Light Light_Red,Light_Green,Light_Blue;
 
 uint8 Bling_Mode = 0;
 /*----------------------- Function Implement --------------------------------*/
-void led_thread_entry(void *parameter)
-{	
-
-	  uint8 i=0;/*颜色节拍表> 空   红   绿   蓝   青   粉   黄   白 */
-		uint8 inputdata[8] = {0x00,0x04,0x02,0x01,0x03,0x05,0x06,0x07};
-		
-		while(i <= 7){
-				system_led_blink(inputdata[i++]);}
-		
-		LED_OFF(LED_Red);			//初始化为高电平 【熄灭】
-		LED_OFF(LED_Green);			
-		LED_OFF(LED_Blue);
-				
-		rt_thread_mdelay(1000);		
-    while (1)
-    {			
-				/* FLASH保存 或者 复位PID参数 */
-				Save_Or_Reset_PID_Parameter();  
-				Bling_Working(0);
-				led_voltage_task();
-				rt_thread_mdelay(10); //10ms
-    }
-}
-
-/* led 电压指示灯  */
-void led_voltage_task(void)
-{
-
-		if(Sensor.PowerSource.Voltage >= Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE ){ //当电压大于 锂电池标准电压时
-				Bling_Set(&Light_Green,300,1100-10*Sensor.PowerSource.Percent,0.5,0,78,0); //电量越小，闪烁越慢
-		}
-		else if(Sensor.PowerSource.Voltage < Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE) //当电压小于9V时，亮红灯
-		{
-				Bling_Set(&Light_Red,300,200,0.5,0,77,0);
-		}
-		
-}
-	
-
-/* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白] */
-void system_led_blink(uint8 InputData)
-{
-    if(InputData & 0x04){	
-						LED_ON(LED_Red); }
-		else{ 	LED_OFF(LED_Red);}
-		
-	  if(InputData & 0x02){	
-					LED_ON(LED_Green); }
-		else{ LED_OFF(LED_Green);}
-		
-		if(InputData & 0x01){	
-					 LED_ON(LED_Blue); }
-		else{  LED_OFF(LED_Blue);}
-		rt_thread_mdelay(300);//等待系统初始化  完毕，系统稳定后，在读取数据
-}
-
 
 int led_thread_init(void)
 {
@@ -109,6 +57,48 @@ int led_thread_init(void)
 		return 0;
 }
 INIT_APP_EXPORT(led_thread_init);
+
+
+
+/* led 电压指示灯  */
+void led_voltage_task(void)
+{
+
+		if(Sensor.PowerSource.Voltage >= Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE ){ //当电压大于 锂电池标准电压时
+				Bling_Set(&Light_Green,300,1100-10*Sensor.PowerSource.Percent,0.5,0,78,0); //电量越小，闪烁越慢
+		}
+		else if(Sensor.PowerSource.Voltage < Sensor.PowerSource.Capacity/FULL_VOLTAGE*STANDARD_VOLTAGE) //当电压小于9V时，亮红灯
+		{
+				Bling_Set(&Light_Red,300,200,0.5,0,77,0);
+		}
+		
+}
+	
+
+/* 系统初始化led闪烁状态【显示7种颜色】 -->[颜色节拍表> 空  红  绿  蓝  青  粉  黄  白] */
+void system_init_led_blink(void)
+{
+		static uint8 i=0;/*颜色节拍表> 空   红   绿   蓝   青   粉   黄   白 */
+
+		do{
+				if(inputdata[i] & 0x04){	
+								LED_ON(LED_Red); }
+				else{ 	LED_OFF(LED_Red);}
+				
+				if(inputdata[i] & 0x02){	
+							LED_ON(LED_Green); }
+				else{ LED_OFF(LED_Green);}
+				
+				if(inputdata[i] & 0x01){	
+							 LED_ON(LED_Blue); }
+				else{  LED_OFF(LED_Blue);}
+				rt_thread_mdelay(300);//等待系统初始化  完毕，系统稳定后，在读取数据
+		}while((i++) <= 7);//闪烁8中颜色
+		
+		ALL_LED_OFF();//关闭RGB
+}
+
+
 
 
 void Light_Control(uint8 *action)//探照灯
@@ -282,13 +272,16 @@ _exit:
 MSH_CMD_EXPORT(led_off,ag:led_off r);
 
 
-
-
-
 void ErrorStatus_LED(void)
 {
-		rt_pin_write(LED_Red  ,PIN_LOW  );//红灯亮
-		rt_pin_write(LED_Green,PIN_HIGH );//其余灯灭
-		rt_pin_write(LED_Blue ,PIN_HIGH );
+		LED_ON(LED_Red);			//初始化为高电平 【熄灭】
+		LED_OFF(LED_Green);			
+		LED_OFF(LED_Blue);
 }
 
+void ALL_LED_OFF(void)
+{
+		LED_OFF(LED_Red);			//初始化为高电平 【熄灭】
+		LED_OFF(LED_Green);			
+		LED_OFF(LED_Blue);
+}

@@ -12,6 +12,7 @@ typedef struct
 uint8 get_boma_value(void);
 uint8 is_wifi_connect(void);
 
+void key_down(void *args);
 
 void Buzzer_Init(void);
 	

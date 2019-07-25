@@ -518,6 +518,11 @@
               <FileType>1</FileType>
               <FilePath>User\notes.c</FilePath>
             </File>
+            <File>
+              <FileName>EasyThread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\EasyThread.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

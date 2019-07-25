@@ -14,7 +14,7 @@
 #include <elog.h>
 #include "ioDevices.h"
 #include "oled.h"
-
+#include "EasyThread.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 #define KEY_PIN  						88 	 //PDG3   按键IO
 
@@ -37,25 +37,38 @@
 extern struct rt_event init_event;
 
 Buzzer_Type Beep;  //蜂鸣器控制器
-static uint8 boma_value = 0;	//暂存拨码状态 判断拨码状态是否改变
+
 
 /*----------------------- Function Implement --------------------------------*/
 
-void ioDevices_thread_entry(void* parameter)// --- KEY   BOMA ---
+
+int ioDevices_thread_init(void)
 {
-		if(VehicleMode == ROV_Mode || VehicleMode == AUV_Mode){
-				Buzzer_Set(&Beep,1,1);}
-    while (1)
-    {
-				Buzzer_Process(&Beep); //蜂鸣器控制任务
-				if(boma_value != get_boma_value()){ //若拨码开关 波动，蜂鸣器响一声
-						Buzzer_Set(&Beep,1,1);	
-						boma_value = get_boma_value();	
-						log_i("\nCurrent Change: BOMA_Value = %d", boma_value);
-				}
-				rt_thread_mdelay(10);
-    }
+   rt_thread_t ioDecices_tid;
+
+    ioDecices_tid = rt_thread_create("ioDev",ioDevices_thread_entry, RT_NULL,512,25, 10);
+
+    if (ioDecices_tid != RT_NULL){			
+				rt_pin_mode(KEY_PIN , PIN_MODE_INPUT_PULLUP);    //功能按键、拨码开关  上拉输入
+				rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
+				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
+				rt_pin_mode(BOMA3_PIN, PIN_MODE_INPUT_PULLUP);  
+	
+				rt_pin_mode(WIFI_RELOAD_PIN, PIN_MODE_OUTPUT);  //WIFI 连接IO检测
+				rt_pin_write(WIFI_RELOAD_PIN ,PIN_HIGH);
+			
+				rt_pin_mode (Buzzer_PIN, PIN_MODE_OUTPUT);  //输出模式
+				rt_pin_write(Buzzer_PIN, PIN_LOW);
+			
+				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为key_down */
+				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
+			
+				log_i("IoDev_Init()");
+				rt_thread_startup(ioDecices_tid);
+		}
+		return 0;
 }
+INIT_APP_EXPORT(ioDevices_thread_init);
 
 
 /* get 2位拨码值 */
@@ -119,35 +132,7 @@ void Buzzer_Process(Buzzer_Type * buzzer)
 
 
 
-int ioDevices_thread_init(void)
-{
-   rt_thread_t ioDecices_tid;
 
-    ioDecices_tid = rt_thread_create("ioDev",ioDevices_thread_entry, RT_NULL,512,25, 10);
-
-    if (ioDecices_tid != RT_NULL){			
-				rt_pin_mode(KEY_PIN , PIN_MODE_INPUT_PULLUP);    //功能按键、拨码开关  上拉输入
-				rt_pin_mode(BOMA1_PIN, PIN_MODE_INPUT_PULLUP);  //拨码开关  上拉输入
-				rt_pin_mode(BOMA2_PIN, PIN_MODE_INPUT_PULLUP);  
-				rt_pin_mode(BOMA3_PIN, PIN_MODE_INPUT_PULLUP);  
-	
-				rt_pin_mode(WIFI_RELOAD_PIN, PIN_MODE_OUTPUT);  //WIFI 连接IO检测
-				rt_pin_write(WIFI_RELOAD_PIN ,PIN_HIGH);
-			
-				rt_pin_mode (Buzzer_PIN, PIN_MODE_OUTPUT);  //输出模式
-				rt_pin_write(Buzzer_PIN, PIN_LOW);
-			
-				rt_pin_attach_irq(KEY_PIN, PIN_IRQ_MODE_FALLING, key_down, RT_NULL);/* 绑定中断，上升沿模式，回调函数名为key_down */
-				rt_pin_irq_enable(KEY_PIN, PIN_IRQ_ENABLE);/* 使能中断 */
-			
-
-				boma_value = get_boma_value();	//初始化得到当前拨码状态 --> VehicleStatus
-				log_i("IoDev_Init()");
-				rt_thread_startup(ioDecices_tid);
-		}
-		return 0;
-}
-INIT_APP_EXPORT(ioDevices_thread_init);
 
 /*【WIFI】重启MSH命令 */
 int wifi_reload(void)

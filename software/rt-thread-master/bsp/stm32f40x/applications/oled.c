@@ -27,6 +27,8 @@
 #include "gyroscope.h"
 #include "sensor.h"
 #include "filter.h"
+
+#include "EasyThread.h"
 /* 自定义OLED 坐标系如下: 
 
 	127 ↑y
@@ -68,6 +70,29 @@ Oled_Type oled = {
 };
 /*----------------------- Function Implement --------------------------------*/
 
+/* OLED 线程初始化 */
+int oled_thread_init(void)
+{
+    rt_thread_t oled_tid;
+		/*创建动态线程*/
+    oled_tid = rt_thread_create("oled", //线程名称
+                    oled_thread_entry,	//线程入口函数【entry】
+                    RT_NULL,				    //线程入口函数参数【parameter】
+                    2048,							  //线程栈大小，单位是字节【byte】
+                    20,								  //线程优先级【priority】
+                    10);							  //线程的时间片大小【tick】= 100ms
+
+    if (oled_tid != RT_NULL){
+				OLED_Init();
+				log_i("OLED_Init()");
+				rt_thread_startup(oled_tid);
+				//rt_event_send(&init_event, OLED_EVENT);
+				oled.pagechange = oled.pagenum;  //初始化暂存页面
+		}
+		return 0;
+}
+INIT_APP_EXPORT(oled_thread_init);
+
 /*******************************************
 * 函 数 名：menu_define
 * 功    能：菜单选择
@@ -106,22 +131,6 @@ void menu_define(void) //菜单定义
 	}
 }
 
-/*******************************************
-* 函 数 名：oled_thread_entry
-* 功    能：OLED线程任务
-* 输入参数：none
-* 返 回 值：none
-* 注    意：菜单号越大 刷新速率越大
-********************************************/
-void oled_thread_entry(void* parameter)
-{
-		Boot_Animation();	//开机动画
-		OLED_Clear();
-		while(1){	
-				menu_define();//菜单定义选择
-				rt_thread_mdelay(1000/pow(MENU+2,3)); //菜单号越大 刷新速率越大
-		}
-}
 
 /*******************************************
 * 函 数 名：OLED_StatusPage
@@ -435,28 +444,6 @@ void draw_line(uint8 x0,uint8 y0,float k,uint8 dot) //过固定点(x0,y0),斜率k   do
 		}
 
 }
-/* OLED 线程初始化 */
-int oled_thread_init(void)
-{
-    rt_thread_t oled_tid;
-		/*创建动态线程*/
-    oled_tid = rt_thread_create("oled", //线程名称
-                    oled_thread_entry,	//线程入口函数【entry】
-                    RT_NULL,				    //线程入口函数参数【parameter】
-                    2048,							  //线程栈大小，单位是字节【byte】
-                    20,								  //线程优先级【priority】
-                    10);							  //线程的时间片大小【tick】= 100ms
-
-    if (oled_tid != RT_NULL){
-				OLED_Init();
-				log_i("OLED_Init()");
-				rt_thread_startup(oled_tid);
-				//rt_event_send(&init_event, OLED_EVENT);
-				oled.pagechange = oled.pagenum;  //初始化暂存页面
-		}
-		return 0;
-}
-INIT_APP_EXPORT(oled_thread_init);
 
 
 

@@ -39,7 +39,7 @@ typedef struct
 
 
 void led_voltage_task(void);
-void system_led_blink(uint8 InputData);
+void system_init_led_blink(void);
 
 void Bling_Set(Bling_Light *Light,
                uint32 Continue_time,//持续时间
@@ -54,7 +54,8 @@ void Bling_Set(Bling_Light *Light,
 void Bling_Process(Bling_Light *Light);
 void Bling_Working(uint8 bling_mode);
 							 
-void ErrorStatus_LED(void);					 
+void ErrorStatus_LED(void);
+void ALL_LED_OFF(void);							 
 void Light_Control(uint8 *action);							 
 
 extern Bling_Light Light_Red,Light_Green,Light_Blue;

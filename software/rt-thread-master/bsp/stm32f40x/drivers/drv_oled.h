@@ -1,6 +1,6 @@
 #ifndef __DRV_OLED_H
 #define __DRV_OLED_H			  	 
-#include "stdlib.h"	  
+
 #include "DataType.h"
 #include "oledfont.h" 	 
 //////////////////////////////////////////////////////////////////////////////////	 

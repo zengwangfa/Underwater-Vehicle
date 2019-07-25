@@ -13,8 +13,7 @@ void draw_circle(uint8 x,uint8 y,uint8 r); //圆心(x,y),半径r
 void draw_line(uint8 x0,uint8 y0,float k,uint8 dot); //过固定点(x0,y0),斜率k  dot:0,清空;   1,填充	  
 void draw_fill_circle(uint8 x0,uint8 y0,uint8 r,uint8 dot);//写画实心圆心(x0,y0),半径r
 
-
-
+void OLED_Clear(void);
 
 typedef struct {
 		uint8 pagenum;  				//页码
@@ -33,12 +32,11 @@ typedef enum
 	
 		OLED_Page_MAX   //页码最大值
 	
-}
-MENU_LIST_Enum; //菜单枚举
+}MENU_LIST_Enum; //菜单枚举
 
 extern char *VehicleModeName[2];
 extern Oled_Type oled;
-
+extern volatile MENU_LIST_Enum MENU;
 
 #endif
 
