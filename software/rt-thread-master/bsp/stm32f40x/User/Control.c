@@ -23,7 +23,6 @@
 #include "PropellerControl.h"
 #include "propeller.h"
 #include "sensor.h"
-#include "Depth.h"
 
 
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
@@ -40,8 +39,8 @@ extern uint8 Frame_EndFlag;
 #define ShutDown 1
 
 /**
-  * @brief  highSpeed Devices_Control(高速设备控制)
-  * @param  None
+  * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
+  * @param  摇杆数据结构体指针
   * @retval None
   * @notice 
   */
@@ -101,30 +100,6 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 
 		}
 
-//		if(ROV_Mode == VehicleMode){
-//				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
-//				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
-//																				
-//				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
-//				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
-//				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
-//			
-//				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-//				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70  + PropellerError.leftUp;  //Power为推进器系数 0~300%
-//				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70  + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-//				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70  + PropellerError.leftDown ; 
-//				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70  + PropellerError.rightDown;
-//								
-////				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-////				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-////				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-////				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
-////				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
-////				
-
-//		}
-
-		
 		else if(AUV_Mode == VehicleMode){
 				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */ 
 				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 ))	+ ACC1 + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
@@ -192,7 +167,7 @@ void control_highSpeed_thread_entry(void *parameter)//高速控制线程
 {
 		
 		rt_thread_mdelay(5000);//等待外部设备初始化成功
-		print_sensor_info();   //打印传感器数据信息
+
 		while(1)
 		{
 				Control_Cmd_Get(&ControlCmd); //控制命令获取 所有上位控制命令都来自于此【Important】

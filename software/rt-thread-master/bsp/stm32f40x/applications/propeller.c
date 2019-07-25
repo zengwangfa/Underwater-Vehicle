@@ -20,9 +20,10 @@
 #include "drv_pwm.h"
 #include "DeviceThread.h"
 
-extern int16 PowerPercent;
+/*----------------------- Variable Declarations -----------------------------*/
 
 uint8 Propeller_Init_Flag = 0;
+
 PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
 		 .PowerMax = 2000,//正向最大值
 		 .PowerMed = 1500,//中值
@@ -36,6 +37,10 @@ PropellerPower_Type  PropellerPower = {0,0,0,0,0,0,0}; //推进器推力控制器
 PropellerError_Type  PropellerError = {0,0,0,0,0,0};   //推进器偏差值
 
 PropellerPower_Type power_test; //调试用的变量
+
+extern int16 PowerPercent;
+
+/*----------------------- Function Implement --------------------------------*/
 
 int propeller_thread_init(void)
 {
@@ -53,8 +58,7 @@ int propeller_thread_init(void)
 				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
 				TIM3_PWM_Init(20000-1,84-1);  //吸取器
 
-				Propeller_Init();       //推进器初始化
-				log_i("Propoller_init()");
+
 				rt_thread_startup(servo_tid);
 
 		}
@@ -87,7 +91,9 @@ void PWM_Update(PropellerPower_Type* propeller)
 
 }
 
+
 PropellerPower_Type power_test_msh; //调试用的变量
+
 /*【推进器】 修改 【正向最大值】MSH方法 */
 static int Propoller_Test(int argc, char **argv)
 {
@@ -168,6 +174,7 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 		rt_thread_mdelay(1000);  //1s
 		
 		Propeller_Init_Flag = 1;
+		log_i("Propoller_init()");
 }
 
 

@@ -5,8 +5,12 @@
  *      Author: 
  *      Notes:  PID¿ØÖÆÆ÷
  */
+#define LOG_TAG    "PID"
+ 
 #include "PID.h"
 #include <math.h>
+
+/*----------------------- Variable Declarations -----------------------------*/
 
 AllControler Total_Controller; //×Ü¿ØÖÆÆ÷PID
 Butter_Parameter Control_Device_Div_LPF_Parameter;

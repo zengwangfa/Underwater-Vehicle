@@ -499,11 +499,6 @@
               <FilePath>User\PropellerControl.c</FilePath>
             </File>
             <File>
-              <FileName>Depth.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\Depth.c</FilePath>
-            </File>
-            <File>
               <FileName>EasyThread.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\EasyThread.c</FilePath>
@@ -523,6 +518,16 @@
         <Group>
           <GroupName>Applications</GroupName>
           <Files>
+            <File>
+              <FileName>rc_data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\rc_data.c</FilePath>
+            </File>
+            <File>
+              <FileName>ret_data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\ret_data.c</FilePath>
+            </File>
             <File>
               <FileName>PID.c</FileName>
               <FileType>1</FileType>
@@ -592,16 +597,6 @@
               <FileName>light.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\light.c</FilePath>
-            </File>
-            <File>
-              <FileName>rc_data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\rc_data.c</FilePath>
-            </File>
-            <File>
-              <FileName>ret_data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\ret_data.c</FilePath>
             </File>
           </Files>
         </Group>

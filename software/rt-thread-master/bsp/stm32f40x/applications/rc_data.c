@@ -5,11 +5,18 @@
  *      Author: zengwangfa
  *      Notes:  遥控器数据解析 Remote Control Receiving Data
  */
+#define LOG_TAG    "rc_data"
+
 #include "rc_data.h"
 #include "led.h"
 #include "PropellerControl.h"
 #include <string.h>
+
+/*---------------------- Constant / Macro Definitions -----------------------*/
+
 #define MAX_DATA_LENS 16  //有效数据包长度【不包含 包头、长度位、校验位】
+
+/*----------------------- Variable Declarations -----------------------------*/
 
 ReceiveData_Type ReceiveData = {
 		.THR = 1500,
@@ -31,6 +38,8 @@ uint8 RC_Control_Data[30] = {0};
 uint8 Receive_Data_OK = 0;
 uint8 Control_RxCheck = 0;	  //尾校验字
 uint8 Control_RxCount = 0;	  //接收计数
+
+/*----------------------- Function Implement --------------------------------*/
 /**
   * @brief  Remote_Control_Data_Analysis(控制数据解析)
   * @param  控制字符数据 uint8 Data

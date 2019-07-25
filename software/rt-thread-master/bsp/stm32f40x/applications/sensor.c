@@ -22,12 +22,14 @@
 #include "filter.h"
 #include "drv_spl1301.h"
 
+/*----------------------- Variable Declarations -----------------------------*/
 char *Depth_Sensor_Name[2] = {"MS5837","SPL1301"};
 
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
 Sensor_Type Sensor;//传感器参数
 
+/*----------------------- Function Implement --------------------------------*/
 /**
   * @brief  sensor_lowSpeed_thread_entry(低速获取传感器任务函数)
   * @param  void* parameter

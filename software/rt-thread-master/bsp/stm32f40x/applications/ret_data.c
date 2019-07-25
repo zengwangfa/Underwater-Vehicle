@@ -5,6 +5,7 @@
  *      Author: zengwangfa
  *      Notes:  返回数据包 Return Data
  */
+#define LOG_TAG    "ret_data"
 
 #include "ret_data.h"
 #include "sensor.h"
@@ -12,12 +13,12 @@
 #include "uart.h"
 #include "gyroscope.h"
 
+/*----------------------- Variable Declarations -----------------------------*/
+
 uint8 Return_Data[22] = {0};
 uint8 device_hint_flag;		//设备提示字符
 
-
-extern struct SAngle 	stcAngle;
-
+/*----------------------- Function Implement --------------------------------*/
 void return_computer_thread_entry(void* parameter)
 {
 		static uint8 begin_buff[3] = {0xAA,0x55,0x00};

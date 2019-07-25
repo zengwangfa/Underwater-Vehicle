@@ -1,3 +1,5 @@
+#define LOG_TAG    "light"
+
 #include "light.h"
 #include <rtthread.h>
 #include <elog.h>

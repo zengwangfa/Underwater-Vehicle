@@ -10,7 +10,7 @@
  *【统一接口】发送只需要调用 -> ANO_SEND_StateMachine(void);
  *            保存参数需调用 -> void Save_Or_Reset_PID_Parameter(void);
  */
- #include <rtdevice.h>
+#include <rtdevice.h>
 #include <elog.h>
 #include "drv_ano.h"
 #include "sys.h"
@@ -18,10 +18,9 @@
 #include "led.h"
 #include "flash.h"
 #include "gyroscope.h"
-
-#include "drv_MS5837.h"
 #include "rc_data.h"
-#include "PropellerControl.h"
+#include "propeller.h"
+
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp) + 0) )
@@ -614,7 +613,7 @@ void ANO_SEND_StateMachine(void)
 		
 		else if(ANO_Cnt == 5) //发送高度数据 (气压计高度、超声波高低)  【第七组】
 		{
-				ANO_DT_Send_High(MS5837_Pressure,0); //发送高度数据 (气压计高度、超声波高低)
+				ANO_DT_Send_High(Sensor.DepthSensor.PessureValue,0); //发送高度数据 (气压计高度、超声波高低)
 		}
 
 		else if(ANO_Cnt == 6 //发送PID数据

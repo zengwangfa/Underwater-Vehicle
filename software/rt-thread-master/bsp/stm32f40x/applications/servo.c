@@ -24,10 +24,12 @@
 #include "focus.h"
 #include "DeviceThread.h"
 
+/*---------------------- Constant / Macro Definitions -----------------------*/
 
 #define RoboticArm_MedValue  1500
 #define YunTai_MedValue  		 2000
 
+/*----------------------- Variable Declarations -----------------------------*/
 
 ServoType RoboticArm = {
 		 .MaxValue = 2000, 		//机械臂 正向最大值
@@ -46,6 +48,7 @@ uint16 propeller_power = 1500;
 short _test_value = 0;
 extern float Adjust1,Adjust2 ;
 
+/*----------------------- Function Implement --------------------------------*/
 int servo_thread_init(void)
 {
     rt_thread_t servo_tid;

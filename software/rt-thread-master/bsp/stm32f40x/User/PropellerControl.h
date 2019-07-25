@@ -2,8 +2,13 @@
 #define __PROPELLERCONTROL_H
 
 #include "DataType.h"
-#include "propeller.h"
 #include "rc_data.h"
+
+void AUV_Depth_Control(Rocker_Type *rc);
+
+void ROV_Depth_Control(Rocker_Type *rc);
+
+void ROV_Rotate_Control(Rocker_Type *rc);
 
 void Propeller_Control(void);
 void Propeller_Output(void);
