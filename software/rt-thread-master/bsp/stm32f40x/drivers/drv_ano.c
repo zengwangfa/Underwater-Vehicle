@@ -20,7 +20,7 @@
 #include "gyroscope.h"
 
 #include "drv_MS5837.h"
-#include "RC_Data.h"
+#include "rc_data.h"
 #include "PropellerControl.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 

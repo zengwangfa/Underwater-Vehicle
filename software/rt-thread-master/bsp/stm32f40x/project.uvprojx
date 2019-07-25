@@ -499,29 +499,24 @@
               <FilePath>User\PropellerControl.c</FilePath>
             </File>
             <File>
-              <FileName>RC_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\RC_Data.c</FilePath>
-            </File>
-            <File>
-              <FileName>Return_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\Return_Data.c</FilePath>
-            </File>
-            <File>
               <FileName>Depth.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\Depth.c</FilePath>
             </File>
             <File>
-              <FileName>notes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>User\notes.c</FilePath>
-            </File>
-            <File>
               <FileName>EasyThread.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\EasyThread.c</FilePath>
+            </File>
+            <File>
+              <FileName>DeviceThread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\DeviceThread.c</FilePath>
+            </File>
+            <File>
+              <FileName>notes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>User\notes.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -597,6 +592,16 @@
               <FileName>light.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\light.c</FilePath>
+            </File>
+            <File>
+              <FileName>rc_data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\rc_data.c</FilePath>
+            </File>
+            <File>
+              <FileName>ret_data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\ret_data.c</FilePath>
             </File>
           </Files>
         </Group>

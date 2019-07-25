@@ -15,7 +15,7 @@
 
 #include "Control.h"
 #include "PID.h"
-#include "RC_Data.h"
+#include "rc_data.h"
 
 #include "focus.h"
 #include "led.h"
@@ -180,12 +180,6 @@ void FourtAxis_RovControl(Rocker_Type *rc)
 		PropellerPower.rightDown = PropellerDir.rightDown*RightFlag;
 		
 }
-
-
-
-
-
-
 
 
 /**

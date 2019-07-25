@@ -59,16 +59,15 @@ void explore_light_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比
 
 		TIM10_PWM_Init(100-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
 		TIM11_PWM_Init(100-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
-		TIM_Cmd(TIM10, ENABLE);  //使能TIM10
-		TIM_Cmd(TIM11, ENABLE);  //使能TIM11
 
 		rt_thread_mdelay(1000);
+	
 		while(1)
 		{
 			
 				light_value = Light_Output_Limit(&light_value);
-				TIM10_PWM_CH1_F6(&light_value);
-				TIM11_PWM_CH1_F7(&light_value);
+				TIM10_PWM_CH1_F6(light_value);
+				TIM11_PWM_CH1_F7(light_value);
 			
 				rt_thread_mdelay(10);
 		}

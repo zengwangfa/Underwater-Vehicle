@@ -211,9 +211,6 @@ MSH_CMD_EXPORT(print_sensor_info, printf gysocope & PowerSource & pressure);
 
 
 
-
-
-
 /*【深度传感器】 修改 【类型】MSH方法 */
 static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 {
@@ -230,6 +227,7 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 				Flash_Update();
 	
 				log_i("Sensor.DepthSensor.Type :%s",Depth_Sensor_Name[Sensor.DepthSensor.Type]);
+				log_i("Please reboot now");		
 		}
 	  else if( !strcmp(argv[1],"spl1301") ) {
 				 
@@ -237,6 +235,7 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 				Flash_Update();
 
 				log_i("Sensor.DepthSensor.Type :%s",Depth_Sensor_Name[Sensor.DepthSensor.Type]);
+				log_i("Please reboot now");				
 		}		
 		else {
 				log_e("Error! Input Error!");

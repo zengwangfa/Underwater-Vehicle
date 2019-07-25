@@ -1,11 +1,11 @@
 /*
- * RC_Data.c
+ * rc_data.c
  *
  *  Created on: 2019年4月5日
  *      Author: zengwangfa
- *      Notes:  遥控器数据解析 Remote Control receiving Data
+ *      Notes:  遥控器数据解析 Remote Control Receiving Data
  */
-#include "RC_Data.h"
+#include "rc_data.h"
 #include "led.h"
 #include "PropellerControl.h"
 #include <string.h>

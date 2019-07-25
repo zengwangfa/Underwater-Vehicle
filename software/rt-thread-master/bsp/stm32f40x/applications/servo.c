@@ -19,9 +19,11 @@
 #include "servo.h"
 #include "propeller.h"
 #include "flash.h"
-#include "Return_Data.h"
-#include "RC_Data.h"
+#include "ret_data.h"
+#include "rc_data.h"
 #include "focus.h"
+#include "DeviceThread.h"
+
 
 #define RoboticArm_MedValue  1500
 #define YunTai_MedValue  		 2000
@@ -41,9 +43,33 @@ ServoType  YunTai = {
 };      //云台
 
 uint16 propeller_power = 1500;
-
+short _test_value = 0;
 extern float Adjust1,Adjust2 ;
-extern struct rt_event init_event;/* ALL_init 事件控制块. */
+
+int servo_thread_init(void)
+{
+    rt_thread_t servo_tid;
+		/*创建动态线程*/
+    servo_tid = rt_thread_create("servo",//线程名称
+                    servo_thread_entry,			 //线程入口函数【entry】
+                    RT_NULL,							   //线程入口函数参数【parameter】
+                    1024,										 //线程栈大小，单位是字节【byte】
+                    15,										 	 //线程优先级【priority】
+                    10);										 //线程的时间片大小【tick】= 100ms
+
+    if (servo_tid != RT_NULL){
+
+				TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
+
+				log_i("Servo_init()");
+				rt_thread_startup(servo_tid);
+				//rt_event_send(&init_event, PWM_EVENT); //发送事件  表示初始化完成
+		}
+
+		return 0;
+}
+INIT_APP_EXPORT(servo_thread_init);
+
 /*******************************************
 * 函 数 名：Servo_Output_Limit
 * 功    能：舵机输出限制
@@ -82,7 +108,7 @@ void RoboticArm_Control(uint8 *action)
 				default:break;
 		}
 		Servo_Output_Limit(&RoboticArm);//机械臂舵机限幅
-		TIM4_PWM_CH3_D14(&RoboticArm.CurrentValue);
+		TIM4_PWM_CH3_D14(RoboticArm.CurrentValue);
 		*action = 0x00; //清除控制字
 }
 
@@ -112,7 +138,7 @@ void YunTai_Control(uint8 *action)
 				default: break;
 		}
 		Servo_Output_Limit(&YunTai);
-		TIM4_PWM_CH4_D15(&YunTai.CurrentValue); 
+		TIM4_PWM_CH4_D15(YunTai.CurrentValue); 
 		*action = 0x00; //清除控制字
 }
 
@@ -158,52 +184,33 @@ void DirectionProportion(int Mode)
 
 
 
-/**
-  * @brief  servo_thread_entry(舵机初始化任务函数)
-  * @param  void* parameter
-  * @retval None
-  * @notice 
-  */
-void servo_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
+
+
+
+
+
+/*【吸取器】 修改 【测试】 MSH方法 */
+static int xiquqi_value_set(int argc, char **argv)
 {
-		TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
-		TIM3_PWM_Init(20000-1,84-1);
-		TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
+    int result = 0;
+    if (argc != 2){
+        log_e("Error! Proper Usage: robotic_arm_currentValue_set <0~3000>");
+				result = -RT_ERROR;
+        goto _exit;
+    }
 
-	
-		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
-		TIM_Cmd(TIM3, ENABLE);  //使能TIM3
-		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
-
-		Propeller_Init();       //推进器初始化
-	
-		rt_thread_mdelay(100);
-	
-}
-
-
-int servo_thread_init(void)
-{
-    rt_thread_t servo_tid;
-		/*创建动态线程*/
-    servo_tid = rt_thread_create("servo",//线程名称
-                    servo_thread_entry,			 //线程入口函数【entry】
-                    RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
-                    15,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
-
-    if (servo_tid != RT_NULL){
-
-				log_i("Servo_init()");
-			
-				rt_thread_startup(servo_tid);
-				//rt_event_send(&init_event, PWM_EVENT); //发送事件  表示初始化完成
+		if(atoi(argv[1]) <= 3000 ){		
+				_test_value = atoi(argv[1]);
+				log_i(" Value:  %d",_test_value);
+				TIM3_PWM_CH3_B0(_test_value);
 		}
-
-		return 0;
+		else {
+				log_e("Error! The value is out of range!");
+		}
+_exit:
+    return result;
 }
-INIT_APP_EXPORT(servo_thread_init);
+MSH_CMD_EXPORT(xiquqi_value_set,ag: xiquqi_value_set <0~3000>);
 
 
 

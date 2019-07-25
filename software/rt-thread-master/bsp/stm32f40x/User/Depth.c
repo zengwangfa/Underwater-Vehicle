@@ -12,7 +12,7 @@
 #include <math.h>
 #include "propeller.h"
 #include "PropellerControl.h"
-#include "RC_Data.h"
+#include "rc_data.h"
 #include "drv_pwm.h"
 #include "PID.h"
 #include "Control.h"

@@ -23,71 +23,71 @@
 
 /*------------- TIM1 推进器---------------*/
 
-void TIM1_PWM_CH1_E9(short *duty)
+void TIM1_PWM_CH1_E9(short duty)
 {
-		TIM_SetCompare1(TIM1,*duty);     //右上	 E9	
+		TIM_SetCompare1(TIM1,duty);     //右上	 E9	
 }
 
-void TIM1_PWM_CH2_E11(short *duty)
+void TIM1_PWM_CH2_E11(short duty)
 {
-		TIM_SetCompare2(TIM1,*duty);    //左下	 E11
+		TIM_SetCompare2(TIM1,duty);    //左下	 E11
 }
 
-void TIM1_PWM_CH3_E13(short *duty)
+void TIM1_PWM_CH3_E13(short duty)
 {
-		TIM_SetCompare3(TIM1,*duty); 	    //左上   E13
+		TIM_SetCompare3(TIM1,duty); 	    //左上   E13
 }
 
-void TIM1_PWM_CH4_E14(short *duty)
+void TIM1_PWM_CH4_E14(short duty)
 {
-		TIM_SetCompare4(TIM1,*duty);   //右下   E14
+		TIM_SetCompare4(TIM1,duty);   //右下   E14
 }
 
 /*------------- TIM3 吸取器---------------*/
 
-void TIM3_PWM_CH3_B0(short *duty)
+void TIM3_PWM_CH3_B0(short duty)
 {
-		TIM_SetCompare3(TIM3,*duty);
+		TIM_SetCompare3(TIM3,duty);
 }
 
-void TIM3_PWM_CH4_B1(short *duty)
+void TIM3_PWM_CH4_B1(short duty)
 {
-		TIM_SetCompare4(TIM3,*duty);	
+		TIM_SetCompare4(TIM3,duty);	
 }
 
 
 /*------------- TIM4 推进器、云台、机械臂 ---------------*/
-void TIM4_PWM_CH1_D12(short *duty)
+void TIM4_PWM_CH1_D12(short duty)
 {
 
-		TIM_SetCompare1(TIM4,*duty);  //左中   D12
+		TIM_SetCompare1(TIM4,duty);  //左中   D12
 }
 
-void TIM4_PWM_CH2_D13(short *duty)
+void TIM4_PWM_CH2_D13(short duty)
 {
-		TIM_SetCompare2(TIM4,*duty); //右中   D13
+		TIM_SetCompare2(TIM4,duty); //右中   D13
 }
 
-void TIM4_PWM_CH3_D14(short *duty)
+void TIM4_PWM_CH3_D14(short duty)
 {
-		TIM_SetCompare3(TIM4,*duty);
+		TIM_SetCompare3(TIM4,duty);
 }
 
-void TIM4_PWM_CH4_D15(short *duty)
+void TIM4_PWM_CH4_D15(short duty)
 {
-		TIM_SetCompare4(TIM4,*duty);
+		TIM_SetCompare4(TIM4,duty);
 }
 
 /*------------- TIM10 探照灯---------------*/
-void TIM10_PWM_CH1_F6(short *duty)
+void TIM10_PWM_CH1_F6(short duty)
 {
-			TIM_SetCompare1(TIM10,*duty);
+			TIM_SetCompare1(TIM10,duty);
 		
 }
 /*------------- TIM11 ---------------*/
-void TIM11_PWM_CH1_F7(short *duty)
+void TIM11_PWM_CH1_F7(short duty)
 {
-			TIM_SetCompare1(TIM11,*duty);
+			TIM_SetCompare1(TIM11,duty);
 }
 /*
 （1）当APB1和APB2分频数为1的时候，TIM1、TIM8~TIM11的时钟为APB2的时钟，TIM2~TIM7、TIM12~TIM14的时钟为APB1的时钟；
@@ -149,7 +149,9 @@ void TIM1_PWM_Init(uint32 arr,uint32 psc)
 		TIM_OC4Init(TIM1, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 		
 		TIM_CtrlPWMOutputs(TIM1,ENABLE);
-
+		
+		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
+				
 }  
 
 //TIM3 PWM部分初始化 
@@ -175,7 +177,7 @@ void TIM3_PWM_Init(uint32 arr,uint32 psc)//吸取器
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;	//速度100MHz
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;      //推挽复用输出
 		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;        //上拉
-		GPIO_Init(GPIOF,&GPIO_InitStructure);               //初始化PF7
+		GPIO_Init(GPIOB,&GPIO_InitStructure);               //初始化PF7
 			
 		TIM_TimeBaseStructure.TIM_Prescaler=psc;  //定时器分频
 		TIM_TimeBaseStructure.TIM_CounterMode=TIM_CounterMode_Up; //向上计数模式
@@ -197,6 +199,9 @@ void TIM3_PWM_Init(uint32 arr,uint32 psc)//吸取器
 		TIM_OC1Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM3 4OC1
 		
 		TIM_CtrlPWMOutputs(TIM3,ENABLE);		  
+		
+		TIM_Cmd(TIM3, ENABLE);  //使能TIM3
+				
 } 
 
 //TIM4 PWM部分初始化 
@@ -250,8 +255,7 @@ void TIM4_PWM_Init(uint32 arr,uint32 psc)
 		
 		TIM_CtrlPWMOutputs(TIM4,ENABLE);
 		
-
- 							  
+		TIM_Cmd(TIM4, ENABLE);  //使能TIM4						  
 } 
 
 
@@ -300,7 +304,8 @@ void TIM10_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F6
 		TIM_OC1Init(TIM10, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM4 4OC1
 		
 		TIM_CtrlPWMOutputs(TIM10,ENABLE);
-					  
+		
+		TIM_Cmd(TIM10, ENABLE);  //使能TIM10					  
 } 
 
 
@@ -349,5 +354,7 @@ void TIM11_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F7
 		TIM_OC1Init(TIM11, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM4 4OC1
 		
 		TIM_CtrlPWMOutputs(TIM11,ENABLE);		  
+		
+		TIM_Cmd(TIM11, ENABLE);  //使能TIM10		
 } 
 

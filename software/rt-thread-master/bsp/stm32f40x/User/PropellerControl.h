@@ -3,7 +3,7 @@
 
 #include "DataType.h"
 #include "propeller.h"
-#include "RC_Data.h"
+#include "rc_data.h"
 
 void Propeller_Control(void);
 void Propeller_Output(void);

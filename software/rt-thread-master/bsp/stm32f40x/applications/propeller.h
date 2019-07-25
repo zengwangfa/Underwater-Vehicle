@@ -69,7 +69,6 @@ typedef enum
 
 extern PropellerDir_Type PropellerDir;
 extern PropellerParameter_Type PropellerParameter; 
-extern ActionType_Enum      Posture_Flag; //机器人姿态标志位
 extern PropellerPower_Type  PropellerPower; //推进器推理控制器
 extern PropellerError_Type  PropellerError; //推进器偏差值
 

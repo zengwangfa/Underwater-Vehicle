@@ -14,7 +14,7 @@
 #include <rtdevice.h>
 #include "drv_ano.h"
 #include "uart.h"
-#include "RC_Data.h"
+#include "rc_data.h"
 #include "focus.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/
 

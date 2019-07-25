@@ -15,7 +15,7 @@
 #include "sys.h"
 
 #include "led.h"
-#include "RC_Data.h"
+#include "rc_data.h"
 #include "drv_cpu_temp.h"
 #include "drv_cpuusage.h"
 #include "drv_oled.h"
