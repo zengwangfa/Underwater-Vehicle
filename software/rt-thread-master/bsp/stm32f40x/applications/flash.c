@@ -90,7 +90,6 @@ int Normal_Parameter_Init_With_Flash(void)
 }
 
 
-
 void Normal_Parameter_SelfCheck_With_Flash(void) //Flash参数自检 若为 0 则为 非正常数据 
 {
 		Parameter_SelfCheck( (uint32 *)&VehicleMode,&Normal_Parameter[VEHICLE_MODE_e] );//航行器模式  rov/auv

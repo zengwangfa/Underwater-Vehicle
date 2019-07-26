@@ -209,12 +209,12 @@ static int set_vehicle_axis(int argc,char **argv)
     }
 		
 		if( !strcmp(argv[1],"4") ){ //设置为 ROV
-				VehicleMode = FourAxis;
+				VehicleMode = FOUR_AXIS;
 				Flash_Update();
 				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
 		}
 		else if( !strcmp(argv[1],"6") ){ //设置为工作模式 strcmp 检验两边相等 返回0
-				VehicleMode = SixAxis;
+				VehicleMode = SIX_AXIS;
 				Flash_Update();
 				log_i("Current Mode:%s\r\n",VehicleModeName[VehicleMode]);
 		}

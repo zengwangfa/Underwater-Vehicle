@@ -36,8 +36,129 @@ extern uint8 Frame_EndFlag;
 
 
 
-#define ShutDown 1
+#define STEP_VLAUE  1 
 
+/*******************************************
+* 函 数 名：void BufferMember(int BufferMember,int BufferRange)
+* 功    能：速度缓冲器
+* 输入参数：1.待缓冲成员（BufferMenber） 2.触发值（BufferRange）     
+* 返 回 值：none
+* 注    意：步进值为 宏STEP_VALUE
+********************************************/
+void Speed_Buffer(int BufferMember,int BufferRange)
+{		
+		static int LastMember = 0 ;
+		if(abs(abs(LastMember) - abs(BufferMember))>=BufferRange)
+		{
+				if(BufferMember < LastMember)
+				{
+						BufferMember = LastMember - STEP_VLAUE;
+				}
+				else
+				{
+						BufferMember = LastMember + STEP_VLAUE;
+				}
+						LastMember = BufferMember;	
+		}
+}
+
+
+
+/**
+  * @brief  FourtAxis_Control(四推进器水平控制)
+  * @param  摇杆数据结构体指针
+  * @retval None
+  * @notice 
+  */	
+void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
+{
+		static int16 left_speed  = 0;
+		static int16 right_speed = 0;
+		static float speed;			   //速度总和
+		static float left_precent;	 //左推进器数值百分比
+		static float right_precent; //右推进器数值百分比
+		speed = sqrt(pow(rc->X,2)+pow(rc->Y,2));	//速度总和
+		if(rc->Y >= 0)						//当Y轴 >= 0 时，左推进器速度 >=右推进器
+		{
+				left_precent  = rc->X / (abs(rc->X)+1);		
+				right_precent = rc->X / speed;
+		}
+		else										  //当Y轴 < 0 时， 右推进器速度 >=左推进器
+		{
+				left_precent  = rc->X / speed;
+				right_precent = rc->X / (abs(rc->X)+1);
+		}
+		left_speed  = left_precent  * speed;			//拟合速度
+		right_speed = right_precent * speed;
+		
+		Speed_Buffer(left_speed, 4);	//输出速度缓冲
+		Speed_Buffer(right_speed,4);	
+		
+		PropellerPower.leftDown = PropellerDir.leftDown *left_speed; 		//驱动推进器
+		PropellerPower.rightDown =PropellerDir.rightDown*right_speed;
+}
+
+
+void SixAxis_Control(Rocker_Type *rc)
+{
+		static int16 LeftUp,LeftDown,LeftMid,RightUp,RightDown,RightMid;
+		static int16 LeftUpFlag,LeftDownFlag,LeftMidFlag,RightUpFlag,RightDownFlag,RightMidFlag;
+		static int16 LeftUpCoe_X,LeftDownCoe_X,LeftMidCoe = 1,RightUpCoe_X,RightDonwCoe_X,RightMidCoe = 1;
+		static int16 LeftUpCoe_Y,LeftDownCoe_Y,RightUpCoe_Y,RightDonwCoe_Y;
+	
+		LeftUpCoe_X   = 0; 						
+		LeftDownCoe_X = 0;
+		RightUpCoe_X  = 0;
+		RightDonwCoe_X= 0;
+		LeftUpCoe_Y   = 0;
+		LeftDownCoe_Y = 0;
+		RightUpCoe_Y  = 0;
+		RightDonwCoe_Y= 0;
+				
+		if(rc->X != 0 && rc->Y != 0)
+		{		
+				LeftUpCoe_Y   =  1;
+				LeftDownCoe_Y =  1;
+				RightUpCoe_Y  = -1;
+				RightDonwCoe_Y= -1;		
+		}
+		else
+		{
+				if(abs(rc->X) > 0)
+				{
+						LeftUpCoe_X   = 1;
+						LeftDownCoe_X = 1;
+						RightUpCoe_X  = 1;
+						RightDonwCoe_X= 1;
+				}
+								
+				if(abs(rc->Y) > 0)
+				{
+						LeftUpCoe_Y   =  1;
+						LeftDownCoe_Y = -1;
+						RightUpCoe_Y  = -1;
+						RightDonwCoe_Y=  1;
+				}
+		}
+		
+		LeftUpFlag    = LeftUpCoe_X   * rc->X + LeftUpCoe_Y   * rc->Y ;
+		LeftDownFlag  = LeftDownCoe_X * rc->X + LeftDownCoe_Y * rc->Y ;
+		RightUpFlag   = RightUpCoe_X  * rc->X + RightUpCoe_Y  * rc->Y ;
+		RightDownFlag = RightDonwCoe_X* rc->X + RightDonwCoe_Y* rc->Y ;
+		
+		Speed_Buffer(LeftUpFlag   ,4);
+		Speed_Buffer(LeftDownFlag ,4);
+		Speed_Buffer(RightUpFlag  ,4);
+		Speed_Buffer(RightDownFlag,4);
+
+		
+		PropellerPower.leftUp     = PropellerDir.leftUp     * (LeftUpFlag   + LeftUp)   ;
+		PropellerPower.leftDown   = PropellerDir.leftDown   * (LeftDownFlag + LeftDown) ;
+		PropellerPower.rightUp    = PropellerDir.rightUp    * (RightUpFlag  + RightUp)  ;
+		PropellerPower.rightDown  = PropellerDir.rightDown  * (RightDownFlag+ RightDown);
+
+	
+}
 /**
   * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
   * @param  摇杆数据结构体指针
@@ -56,198 +177,28 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
 		}
 
-		if(abs(abs(LastRcX) - abs(rc->X))>=ShutDown*4) //如果差值大于9，启动减速器
-		{
-				if(rc->X < LastRcX)														//判断前进还是后退
-				{
-						rc->X = LastRcX - ShutDown;									//减小加速度
-				}
-				else
-				{
-						rc->X = LastRcX + ShutDown;
-				}
-				LastRcX = rc->X;	
-		}
-		if(abs(abs(LastRcY) - abs(rc->Y))>=ShutDown*4)
-		{
-				if(rc->Y < LastRcY)
-				{
-						rc->Y = LastRcY - ShutDown;
-				}
-				else
-				{
-						rc->Y = LastRcY + ShutDown;
-				}
-				LastRcY = rc->Y;	
-		}
+
 		
 		
 
-		if(FourAxis == VehicleMode){
-				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
-				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
-																				
-				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
-				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
-				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
-				   
-				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
-				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
-				
+//		if(SIX_AXIS == VehicleMode){
+//				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
+//				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
+//																				
+//				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
+//				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
+//				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
+//				   
+//				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
+//				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
+//				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+//				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
+//				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
+//				
 
-		}
-
-		else if(SixAxis == VehicleMode){
-				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */ 
-				PropellerPower.leftUp =    (PropellerDir.leftUp    * ((PowerPercent) * ( rc->X ) /70 ))	+ ACC1 + PropellerError.leftUp  ;  //死区值为 10 Power为推进器系数0~100%
-				PropellerPower.rightUp =   (PropellerDir.rightUp   * ((PowerPercent) * ( rc->Y ) /70 )) + ACC2 + PropellerError.rightUp ;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-				PropellerPower.leftDown =  (PropellerDir.leftDown  * ((PowerPercent) * ( rc->X ) /70 )) + ACC3 + PropellerError.leftDown ; 
-				PropellerPower.rightDown = (PropellerDir.rightDown * ((PowerPercent) * ( rc->Y ) /70 )) + ACC4 + PropellerError.rightDown;
-			
-		}
-}
-
-int16 LeftFlag = 0,RightFlag = 0 ;	//	最终推进器的拟合系数
-float X_FLAG1 = 0,X_FLAG2 = 0,Y_FLAG1 = 0 ,Y_FLAG2 = 0;//  转弯加速减速比例系数
-float TurnFlag = 0;
-
-void FourtAxis_RovControl(Rocker_Type *rc)
-{
-	
-		if(rc->X>=0)					//如果遥感X大于等于0，判断为前进,并将前进系数赋给推进器X方向的拟合系数
-		{
-				X_FLAG1 =1;//Direction.UP_P1;			
-				X_FLAG2 = 1;//Direction.UP_P2;
-		}
-		else							//如果要搞X小于0，判断为后退，并将后退系数赋给推进器X方向的拟合系数
-		{
-				X_FLAG1 = 1;//Direction.DOWN_P1;
-				X_FLAG2 =1;// Direction.DOWN_P2;
-		}
-		if(abs(abs(rc->Y)-abs(rc->X))>=50&&abs(rc->X <= 50))   //如果遥感X轴较小并且Y轴远大于X，则启用Y方向系数,不启用转向系数
-		{
-				if(rc->Y >= 0 )					
-				{
-						Y_FLAG1  = 1;//Direction.LEFT_P;		//如果遥感Y大于等于0，判断为右转,并将右转系数赋给推进器Y方向的拟合系数
-						Y_FLAG2  = 0;
-						TurnFlag = 0;
-				}
-				else						//如果遥感Y小于0，判断为左转,并将左转系数赋给推进器Y方向的拟合系数
-				{
-						Y_FLAG1  = 0;
-						Y_FLAG2  = -1;//Direction.RIGHT_P;
-						TurnFlag = 0;
-				}
-		}
-		else							//X,Y差值较小或转向系数较大，启用转向系数，关闭方向系数。		
-		{
-				Y_FLAG1   = 0;
-				Y_FLAG2   = 0;
-				TurnFlag  = (float)rc->X / 128;
-		}
-		
-		LeftFlag  = X_FLAG1 * rc->X + ( TurnFlag * rc->Y /1.3f ) + Y_FLAG1 * rc->Y;		//最终推进器拟合系数：X轴速度+转向系数*Y+Y轴方向系数*Y
-		RightFlag = X_FLAG2 * rc->X - ( TurnFlag * rc->Y /1.3f ) + Y_FLAG2 * rc->Y;
-		PropellerPower.leftDown = PropellerDir.leftDown*LeftFlag; 
-		PropellerPower.rightDown = PropellerDir.rightDown*RightFlag;
-		
-}
-
-
-/**
-  * @brief  highSpeed Devices_Control(高速设备控制)
-  * @param  * parameter
-  * @retval None
-  * @notice 
-  */
-void control_highSpeed_thread_entry(void *parameter)//高速控制线程
-{
-		
-		rt_thread_mdelay(5000);//等待外部设备初始化成功
-
-		while(1)
-		{
-				Control_Cmd_Get(&ControlCmd); //控制命令获取 所有上位控制命令都来自于此【Important】
-
-				if(UNLOCK == ControlCmd.All_Lock){ //如果解锁
-						Convert_RockerValue(&Rocker); //遥控数据 转换 为推进器动力
-						Focus_Zoom_Camera(&ControlCmd.Focus);//变焦聚焦摄像头控制
-			
-				}
-				FourtAxis_RovControl(&Rocker);
-				
-				AUV_Depth_Control(&Rocker);
-				ROV_Depth_Control(&Rocker);
-				ROV_Rotate_Control(&Rocker); //ROV旋转控制
-				
-				Propeller_Control(); //推进器真实PWM输出
-
-				rt_thread_mdelay(10);
-		}
+//		}
 
 }
-
-/**
-  * @brief  lowSpeed Devices_Control(低速设备控制)
-  * @param  None
-  * @retval None
-  * @notice 
-  */
-void control_lowSpeed_thread_entry(void *parameter)//低速控制线程
-{
-
-		rt_thread_mdelay(5000);//等待外部设备初始化成功
-		
-		while(1)
-		{
-
-				Light_Control(&ControlCmd.Light);  //探照灯控制
-				YunTai_Control(&ControlCmd.Yuntai); //云台控制
-				RoboticArm_Control(&ControlCmd.Arm);//机械臂控制	
-			
-				rt_thread_mdelay(20);
-		}
-}
-
-
-
-int control_thread_init(void)
-{
-		rt_thread_t control_lowSpeed_tid;
-		rt_thread_t control_highSpeed_tid;
-		/*创建动态线程*/
-    control_lowSpeed_tid = rt_thread_create("control_low",//线程名称
-                    control_lowSpeed_thread_entry,				 //线程入口函数【entry】
-                    RT_NULL,							   //线程入口函数参数【parameter】
-                    2048,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
-
-			/*创建动态线程*/
-    control_highSpeed_tid = rt_thread_create("control_high",//线程名称
-                    control_highSpeed_thread_entry,				 //线程入口函数【entry】
-                    RT_NULL,							   //线程入口函数参数【parameter】
-                    2048,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
-	
-    if (control_lowSpeed_tid != RT_NULL && control_highSpeed_tid != RT_NULL  ){
-				rt_thread_startup(control_lowSpeed_tid);
-				rt_thread_startup(control_highSpeed_tid);
-				log_i("Control_Init()");
-		}
-		else {
-				log_e("Control Error!");
-		}
-		return 0;
-}
-INIT_APP_EXPORT(control_thread_init);
-
-
-
 
 
 void Angle_Control(void)

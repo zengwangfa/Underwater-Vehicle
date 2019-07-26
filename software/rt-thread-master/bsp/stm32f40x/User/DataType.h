@@ -144,8 +144,8 @@ typedef enum
 
 /* ----------【航行器 总推进器数量】-----------*/
 
-#define FourAxis  0// ROV标志
-#define SixAxis   1// AUV标志
+#define FOUR_AXIS  0// ROV标志
+#define SIX_AXIS   1// AUV标志
 
 /* -----------【解锁、锁定 标志】--------------*/
 
@@ -165,7 +165,7 @@ typedef enum
 
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
-extern volatile uint8 VehicleMode;   //【FourAxis】 or 【SixAxis】
+extern volatile uint8 VehicleMode;   //【FOUR_AXIS】 or 【SIX_AXIS】
 
 extern Sensor_Type Sensor;
 

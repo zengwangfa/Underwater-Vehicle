@@ -554,14 +554,14 @@
               <FilePath>applications\led.c</FilePath>
             </File>
             <File>
-              <FileName>oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\oled.c</FilePath>
-            </File>
-            <File>
               <FileName>propeller.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\propeller.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\oled.c</FilePath>
             </File>
             <File>
               <FileName>servo.c</FileName>
