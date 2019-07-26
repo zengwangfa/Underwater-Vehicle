@@ -99,6 +99,24 @@ void TIM11_PWM_CH1_F7(short duty)
 */
 
 
+void All_TIM_Enable(void)
+{
+		
+
+
+
+
+}
+
+void All_TIM_Disable(void)
+{
+		TIM_Cmd(TIM1, DISABLE);  //失能TIM1
+		TIM_Cmd(TIM3, DISABLE);  //失能
+		TIM_Cmd(TIM4, DISABLE);  //失能
+		TIM_Cmd(TIM10, DISABLE); //失能
+		TIM_Cmd(TIM11, DISABLE); //失能
+}
+
 //TIM1 PWM部分初始化 
 //PWM输出初始化
 //arr：自动重装值
@@ -150,7 +168,7 @@ void TIM1_PWM_Init(uint32 arr,uint32 psc)
 		
 		TIM_CtrlPWMOutputs(TIM1,ENABLE);
 		
-		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
+		TIM_Cmd(TIM1, DISABLE);  //失能TIM1
 				
 }  
 
@@ -201,7 +219,7 @@ void TIM3_PWM_Init(uint32 arr,uint32 psc)//吸取器
 				
 		TIM_CtrlPWMOutputs(TIM3,ENABLE);		  
 		
-		TIM_Cmd(TIM3, ENABLE);  //使能TIM3
+		TIM_Cmd(TIM3, DISABLE);  //失能TIM3
 				
 } 
 
@@ -256,7 +274,7 @@ void TIM4_PWM_Init(uint32 arr,uint32 psc)
 		
 		TIM_CtrlPWMOutputs(TIM4,ENABLE);
 		
-		TIM_Cmd(TIM4, ENABLE);  //使能TIM4						  
+		TIM_Cmd(TIM4, DISABLE);  //失能TIM4						  
 } 
 
 
@@ -306,7 +324,7 @@ void TIM10_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F6
 		
 		TIM_CtrlPWMOutputs(TIM10,ENABLE);
 		
-		TIM_Cmd(TIM10, ENABLE);  //使能TIM10					  
+		TIM_Cmd(TIM10, DISABLE);  //失能TIM10					  
 } 
 
 
@@ -341,7 +359,7 @@ void TIM11_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F7
 		TIM_TimeBaseStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
 		TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
 		
-		TIM_TimeBaseInit(TIM11,&TIM_TimeBaseStructure);//初始化定时器4
+		TIM_TimeBaseInit(TIM11,&TIM_TimeBaseStructure);//初始化定时器11
 		
 		//初始化TIM11 Channel PWM模式	 
 		TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //选择定时器模式:TIM脉冲宽度调制模式2
@@ -356,6 +374,6 @@ void TIM11_PWM_Init(uint32 arr,uint32 psc)//探照灯90K Hz -> F7
 		
 		TIM_CtrlPWMOutputs(TIM11,ENABLE);		  
 		
-		TIM_Cmd(TIM11, ENABLE);  //使能TIM10		
+		TIM_Cmd(TIM11, DISABLE);  //使能TIM10		
 } 
 

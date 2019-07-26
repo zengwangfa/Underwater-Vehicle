@@ -19,6 +19,7 @@
 #include "drv_MS5837.h"
 #include "PID.h"
 #include "oled.h"
+#include "propeller.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
@@ -108,15 +109,15 @@ void Vcan_Send_Data(void)
 
 		static short list[8]= {0};
 
-	
-		list[0] = (short)Total_Controller.Yaw_Angle_Control.Err; 	//ºá¹ö½Ç Roll 
-		list[1] = (short)Total_Controller.Yaw_Angle_Control.Control_OutPut;  //¸©Ñö½Ç Pitch
-		list[2] = (short)Sensor.JY901.Euler.Yaw; 	  //Æ«º½½Ç Yaw
-		list[3] = (short)Yaw;    //CPUÎÂ¶È temp
-		list[4] = (short)0;//
-		list[5] = (short)Total_Controller.High_Position_Control.Err;//MS_TEMP;//get_vol();
-		list[6] = (short)Total_Controller.High_Position_Control.Control_OutPut;//MS5837_Pressure;	
-		list[7] = (short)Total_Controller.High_Position_Control.Expect;	//camera_center;
+		list[0] = (short)Sensor.PowerSource.Voltage;  //¸©Ñö½Ç Pitch
+		list[1] = (short)Sensor.PowerSource.Current; 	  //Æ«º½½Ç Yaw
+
+		list[2] = (short)PropellerPower.leftUp;    //CPUÎÂ¶È temp
+		list[3] = (short)PropellerPower.leftDown;//
+		list[4] = (short)PropellerPower.rightUp;//MS_TEMP;//get_vol();
+		list[5] = (short)PropellerPower.rightDown;//MS5837_Pressure;	
+		list[6] = (short)PropellerPower.leftMiddle;	//camera_center;
+		list[7] = (short)PropellerPower.rightMiddle;
 		
 		Vcan_Send_Cmd(list,sizeof(list));
 }

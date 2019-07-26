@@ -18,6 +18,7 @@ void SixAxis_Control(Rocker_Type *rc);
 
 void Convert_RockerValue(Rocker_Type *rc); //ªÒ»°“°∏À÷µ
 
+void Speed_Buffer(short *BufferMember,short *LastMember,short BufferRange);
 
 
 

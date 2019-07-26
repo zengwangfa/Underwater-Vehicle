@@ -15,12 +15,12 @@ typedef struct //推进器中值、最大值、最小值
 
 typedef struct //推进器方向
 {
-		char leftUp;  //左上
-		char rightUp;
-		char leftDown; //左下
-		char rightDown;
-		char leftMiddle; //左中
-		char rightMiddle;		
+		int leftUp;  //左上
+		int rightUp;
+		int leftDown; //左下
+		int rightDown;
+		int leftMiddle; //左中
+		int rightMiddle;		
 
 }PropellerDir_Type;
 

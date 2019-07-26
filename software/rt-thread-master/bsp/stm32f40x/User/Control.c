@@ -36,33 +36,79 @@ extern uint8 Frame_EndFlag;
 
 
 
-#define STEP_VLAUE  1 
+#define STEP_VLAUE  1
+
+/**
+  * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
+  * @param  摇杆数据结构体指针
+  * @retval None
+  * @notice 
+  */
+void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
+{
+
+		static int16 last_rc_x = 0 ,last_rc_y = 0;
+		if(Frame_EndFlag){	
+
+				rc->X = ControlCmd.Move - 126; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
+				rc->Y = ControlCmd.Translation - 128  ;//					  Y轴摇杆值 -127 ~ +127
+				rc->Z = ControlCmd.Vertical - 127;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
+				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
+		}
+		Speed_Buffer(&rc->X,&last_rc_x, 4);	//输出摇杆缓冲
+		Speed_Buffer(&rc->Y,&last_rc_y,4);	
+
+		
+		
+
+//		if(SIX_AXIS == VehicleMode){
+//				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
+//				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
+//																				
+//				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
+//				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
+//				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
+//				   
+//				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
+//				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
+//				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
+//				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
+//				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
+//				
+
+//		}
+
+}
 
 /*******************************************
-* 函 数 名：void BufferMember(int BufferMember,int BufferRange)
+* 函 数 名：void BufferMember(int *BufferMember,int BufferRange)
 * 功    能：速度缓冲器
-* 输入参数：1.待缓冲成员（BufferMenber） 2.触发值（BufferRange）     
+* 输入参数：1.待缓冲成员地址（*BufferMenber） 2.触发值（BufferRange）     
 * 返 回 值：none
 * 注    意：步进值为 宏STEP_VALUE
 ********************************************/
-void Speed_Buffer(int BufferMember,int BufferRange)
+void Speed_Buffer(short *BufferMember,short *LastMember,short BufferRange)
 {		
-		static int LastMember = 0 ;
-		if(abs(abs(LastMember) - abs(BufferMember))>=BufferRange)
+
+		if(abs(abs(*LastMember) - abs(*BufferMember))>=BufferRange)
 		{
-				if(BufferMember < LastMember)
+				if(*BufferMember < *LastMember)
 				{
-						BufferMember = LastMember - STEP_VLAUE;
+						*BufferMember = *LastMember - STEP_VLAUE;
 				}
 				else
 				{
-						BufferMember = LastMember + STEP_VLAUE;
+						*BufferMember = *LastMember + STEP_VLAUE;
 				}
-						LastMember = BufferMember;	
+						*LastMember = *BufferMember;	
 		}
 }
 
-
+ int left_speed  = 0;
+ int right_speed = 0;
+ float speed = 0;			   //速度总和
+ float left_precent = 0;	 //左推进器数值百分比
+ float right_precent = 0; //右推进器数值百分比
 
 /**
   * @brief  FourtAxis_Control(四推进器水平控制)
@@ -72,27 +118,21 @@ void Speed_Buffer(int BufferMember,int BufferRange)
   */	
 void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 {
-		static int16 left_speed  = 0;
-		static int16 right_speed = 0;
-		static float speed;			   //速度总和
-		static float left_precent;	 //左推进器数值百分比
-		static float right_precent; //右推进器数值百分比
+
+	
 		speed = sqrt(pow(rc->X,2)+pow(rc->Y,2));	//速度总和
-		if(rc->Y >= 0)						//当Y轴 >= 0 时，左推进器速度 >=右推进器
+		if(rc->Y >= 0 )						//当Y轴 >= 0 时，左推进器速度 >=右推进器
 		{
-				left_precent  = rc->X / (abs(rc->X)+1);		
+				left_precent  = rc->X / abs(rc->X);		
 				right_precent = rc->X / speed;
 		}
 		else										  //当Y轴 < 0 时， 右推进器速度 >=左推进器
 		{
 				left_precent  = rc->X / speed;
-				right_precent = rc->X / (abs(rc->X)+1);
+				right_precent = rc->X / abs(rc->X);
 		}
 		left_speed  = left_precent  * speed;			//拟合速度
 		right_speed = right_precent * speed;
-		
-		Speed_Buffer(left_speed, 4);	//输出速度缓冲
-		Speed_Buffer(right_speed,4);	
 		
 		PropellerPower.leftDown = PropellerDir.leftDown *left_speed; 		//驱动推进器
 		PropellerPower.rightDown =PropellerDir.rightDown*right_speed;
@@ -146,10 +186,7 @@ void SixAxis_Control(Rocker_Type *rc)
 		RightUpFlag   = RightUpCoe_X  * rc->X + RightUpCoe_Y  * rc->Y ;
 		RightDownFlag = RightDonwCoe_X* rc->X + RightDonwCoe_Y* rc->Y ;
 		
-		Speed_Buffer(LeftUpFlag   ,4);
-		Speed_Buffer(LeftDownFlag ,4);
-		Speed_Buffer(RightUpFlag  ,4);
-		Speed_Buffer(RightDownFlag,4);
+
 
 		
 		PropellerPower.leftUp     = PropellerDir.leftUp     * (LeftUpFlag   + LeftUp)   ;
@@ -158,46 +195,6 @@ void SixAxis_Control(Rocker_Type *rc)
 		PropellerPower.rightDown  = PropellerDir.rightDown  * (RightDownFlag+ RightDown);
 
 	
-}
-/**
-  * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
-  * @param  摇杆数据结构体指针
-  * @retval None
-  * @notice 
-  */
-void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
-{
-
-		static int16 LastRcX = 0 ,LastRcY = 0;
-		if(Frame_EndFlag){	
-
-				rc->X = ControlCmd.Move - 128; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
-				rc->Y = ControlCmd.Translation - 128  ;//					  Y轴摇杆值 -127 ~ +127
-				rc->Z = ControlCmd.Vertical - 128;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
-				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
-		}
-
-
-		
-		
-
-//		if(SIX_AXIS == VehicleMode){
-//				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
-//				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
-//																				
-//				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
-//				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
-//				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
-//				   
-//				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-//				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-//				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-//				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
-//				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
-//				
-
-//		}
-
 }
 
 

@@ -32,7 +32,6 @@
 #include <easyflash.h>
 #include <elog_flash.h>
 #include <spi_flash_sfud.h>
-
 #include "flash.h"
 /*----------------------- Variable Declarations -----------------------------*/
 
@@ -83,6 +82,7 @@ void sys_init_thread(void* parameter){
         log_e("init event failed.\n");
 		}
 		Normal_Parameter_Init_With_Flash(); //Flash参数初始化读取
+
 		//rt_kprintf("file:%s,function:%s,line:%d\n",__FILE__,__FUNCTION__,__LINE__); //打印所在 文件、函数名、行号
 }
 

@@ -42,29 +42,7 @@ extern int16 PowerPercent;
 
 /*----------------------- Function Implement --------------------------------*/
 
-int propeller_thread_init(void)
-{
-    rt_thread_t servo_tid;
-		/*创建动态线程*/
-    servo_tid = rt_thread_create("propoller",//线程名称
-                    propeller_thread_entry,			 //线程入口函数【entry】
-                    RT_NULL,							   //线程入口函数参数【parameter】
-                    1024,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
-                    10);										 //线程的时间片大小【tick】= 100ms
 
-    if (servo_tid != RT_NULL){
-
-				TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
-				TIM3_PWM_Init(20000-1,84-1);  //吸取器
-
-				rt_thread_startup(servo_tid);
-
-		}
-
-		return 0;
-}
-INIT_APP_EXPORT(propeller_thread_init);
 
 
 void PWM_Update(PropellerPower_Type* propeller)
@@ -148,6 +126,8 @@ MSH_CMD_EXPORT(Propoller_Test,ag: Propoller_Test <0~100>);
 ********************************************/
 void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 {
+
+	
 		rt_thread_mdelay(1000);//等待外部设备初始化成功
 	
 		TIM1_PWM_CH1_E9 (PropellerPower_Max);  		//最高转速信号   	水平推进器1号  右上	 E9	
@@ -174,7 +154,9 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 		rt_thread_mdelay(1000);  //1s
 		
 		Propeller_Init_Flag = 1;
-		log_i("Propoller_init()");
+		log_i("Propeller_init()");
+
+
 }
 
 
@@ -257,7 +239,7 @@ static int propeller_dir_set(int argc, char **argv) //只能是 -1 or 1
     int result = 0;
     if (argc != 7){ //6个推进器
 				log_i("Propeller: rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle");   //其标志只能是 1  or  -1 
-        log_e("Error! Proper Usage: propeller_dir_set 1 1 1 1 1 1 or propeller_dir_set -1 -1 -1 -1 -1 -1 ");
+        log_e("Error! Proper Usage: propeller_dir_set <1 1 1 1 1 1>  ");
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -271,12 +253,13 @@ static int propeller_dir_set(int argc, char **argv) //只能是 -1 or 1
 				PropellerDir.rightDown   = atoi(argv[4]);
 				PropellerDir.leftMiddle  = atoi(argv[5]);
 				PropellerDir.rightMiddle = atoi(argv[6]);
-				
-				Flash_Update();//FLASH更新
-				rt_kprintf("\n");
+				 
 				log_i("Propeller: rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle");   //其标志只能是 1  or  -1 
 				log_i("Propeller:    %d           %d          %d          %d            %d             %d",\
-				 atoi(argv[1]),atoi(argv[2]),atoi(argv[3]),atoi(argv[4]),atoi(argv[5]),atoi(argv[6]));
+				 PropellerDir.rightUp,PropellerDir.leftDown,PropellerDir.leftUp,PropellerDir.rightDown,PropellerDir.leftMiddle ,PropellerDir.rightMiddle);
+				Flash_Update();//FLASH更新
+				rt_kprintf("\n");
+
 		}
 		
 		else {
