@@ -36,7 +36,7 @@ extern uint8 Frame_EndFlag;
 
 
 
-#define STEP_VLAUE  1
+#define STEP_VLAUE  2
 
 /**
   * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
@@ -131,8 +131,16 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 				left_precent  = rc->X / speed;
 				right_precent = rc->X / abs(rc->X);
 		}
-		left_speed  = left_precent  * speed;			//拟合速度
-		right_speed = right_precent * speed;
+		if(rc->X >= 0)
+		{
+				left_speed  = left_precent  * speed ;			//拟合速度
+				right_speed = right_precent * (speed +30);
+		}
+		else
+		{
+				left_speed  = left_precent  * (speed + 30);			//拟合速度
+				right_speed = right_precent * speed ;
+		}
 		
 		PropellerPower.leftDown = PropellerDir.leftDown *left_speed; 		//驱动推进器
 		PropellerPower.rightDown =PropellerDir.rightDown*right_speed;

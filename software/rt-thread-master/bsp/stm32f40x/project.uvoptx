@@ -215,6 +215,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>right_precent</ItemText>
         </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PropellerPower.leftDown</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>

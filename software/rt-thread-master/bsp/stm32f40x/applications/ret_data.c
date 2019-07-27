@@ -95,7 +95,6 @@ void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 		Return_Data[7] = (int)(sensor->DepthSensor.Depth) >> 8 ;//中8位
 		Return_Data[8] = (int)(sensor->DepthSensor.Depth) ; //低8位
 	
-	
 		Return_Data[9]  = temp_Yaw>> 8 ; // Yaw 高8位
 		Return_Data[10] = (uint8)temp_Yaw; //低8位
 	
