@@ -51,7 +51,7 @@ void Remote_Control_Data_Analysis(uint8 Data); //控制数据解析
 
 // is_raspi_start(树莓派是否开机)
 uint8 is_raspi_start(void);
-
+uint8 get_button_value(ControlCmd_Type *cmd);
 #endif 
 
 

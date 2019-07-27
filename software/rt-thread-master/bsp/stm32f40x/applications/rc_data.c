@@ -146,10 +146,103 @@ uint8 is_raspi_start(void)
 		return ControlCmd.Raspi; 
 }
 			
+uint8 up_down_ret_test = 0;
+/**
+	* @brief  get_up_down_Key(树莓派是否启动)
+  * @param  None
+  * @retval
+  * @notice 
+  */
+uint8 get_up_down_key(ControlCmd_Type *cmd)// 0 - 50 - 100 -150 -255
+{
+		static uint8 last_cmd_power = 0;
 
-
-
+		if(cmd->Power > last_cmd_power  )//变大
+		{
+				up_down_ret_test =  1;	//向上
+		}
+		else if(cmd->Power < last_cmd_power )//变小
+		{
+				up_down_ret_test =  2; //向下
+		}
+		
+		last_cmd_power = cmd->Power;
+		cmd->Power = 0;//清零
+		return up_down_ret_test;
+}
 	
+
+
+
+uint8 get_button_value(ControlCmd_Type *cmd)
+{
+	
+		if(1 == cmd->Focus)	{
+//				cmd->Focus = 0;
+				return 1;
+		}
+		if(2 == cmd->Focus)	{
+//				cmd->Focus = 0;
+				return 2;
+		}
+		if(0x12 == cmd->Focus)	{
+//				cmd->Focus = 0;
+				return 3;
+		}
+		if(0x11 == cmd->Focus)	{
+//				cmd->Focus = 0;
+				return 4;
+		}		
+		if(1 == get_up_down_key(cmd)){
+  			up_down_ret_test = 0;
+				return 5;
+		}
+//		if(2 == get_up_down_key(cmd)){
+//				up_down_ret_test = 0;
+//				return 6;
+//		}	
+	
+		if(2 == cmd->Light ){
+				cmd->Light = 0;
+				return 7;
+		}	
+		if(1 == cmd->Light ){
+				cmd->Light = 0;
+				return 8;
+		}	
+	
+		if(1 == cmd->Yuntai ){
+				cmd->Yuntai = 0;
+				return 9;
+		}	
+		if(2 == cmd->Yuntai ){
+				cmd->Yuntai = 0;
+				return 10;
+		}	
+	
+		if(1 == cmd->Arm ){
+				cmd->Arm = 0;
+				return 11;
+		}	
+		if(2 == cmd->Arm ){
+				cmd->Arm = 0;
+				return 12;
+		}		
+		return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	
 	

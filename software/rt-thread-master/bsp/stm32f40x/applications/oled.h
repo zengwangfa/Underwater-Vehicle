@@ -34,6 +34,7 @@ typedef enum
 	
 }MENU_LIST_Enum; //菜单枚举
 
+extern char *WorkModeName[2]; //定义用于显示的 工作模式
 extern char *VehicleModeName[2];
 extern Oled_Type oled;
 extern volatile MENU_LIST_Enum MENU;

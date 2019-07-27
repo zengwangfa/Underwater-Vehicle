@@ -6,7 +6,6 @@
 #include "sys.h"
 #include <stdlib.h>
 #include "drv_pwm.h"
-
 #include <drivers/pin.h>
 
 short light_value = 0;
@@ -20,13 +19,13 @@ short light_value = 0;
 ********************************************/
 int Light_Output_Limit(short *value)
 {
-		*value = *value >  100 ? 100 : *value ;//限幅
-		*value = *value <= 0   ? 0   : *value ;//限幅
+		*value = *value >= 90 ? 90 : *value ;//限幅
+		*value = *value <= 0  ? 0   : *value ;//限幅
 		return *value;
 }
 
 
-/*【云台】舵机 修改 【当前】 MSH方法 */
+/*【探照灯】 修改 【当前】 MSH方法 */
 static int light(int argc, char **argv)
 {
     int result = 0;
@@ -49,27 +48,40 @@ _exit:
 MSH_CMD_EXPORT(light,ag: light <0~100>);
 
 
+/**
+  * @brief  Light_Control(探照灯控制)
+  * @param  控制指令 0x00：不动作  0x01：向上  0x02：向下
+  * @retval None
+  * @notice 
+  */
+
+void Explore_Light_Control(uint8 *action)
+{
+		switch(*action)
+		{
+				case 0x01:light_value += 10;  //向上
+									break;  		
+				case 0x02:light_value -=10; //向下
+									break;  
+				default: break;
+		}
+		Light_Output_Limit(&light_value);
+		TIM10_PWM_CH1_F6(light_value);
+		TIM11_PWM_CH1_F7(light_value);
+		*action = 0x00; //清除控制字
+}
 
 /**
-  * @brief  light_thread_entry(舵机初始化任务函数)
+  * @brief  explore_light_thread_entry(任务函数)
   * @param  void* parameter
   * @retval None
   * @notice 
   */
 void explore_light_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% volatil
 {
-//		TIM_Cmd(TIM10, ENABLE); //使能TIM10
-//		TIM_Cmd(TIM11, ENABLE); //使能TIM11
-		while(1)
-		{
-
-				light_value = Light_Output_Limit(&light_value);
-				TIM10_PWM_CH1_F6(light_value);
-				TIM11_PWM_CH1_F7(light_value);
-			
-				rt_thread_mdelay(10);
-		}
 	
+	
+
 }
 
 
@@ -86,10 +98,13 @@ int light_thread_init(void)
 
     if (servo_tid != RT_NULL){
 			
-				//TIM10_PWM_Init(100-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
-				//TIM11_PWM_Init(100-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
-
-				//log_i("light_init()");
+				TIM10_PWM_Init(100-1,1680-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)100，所以PWM频率为 1M/100=10KHz. 
+				TIM11_PWM_Init(100-1,1680-1);	
+				TIM_Cmd(TIM10, ENABLE); //使能TIM10
+				TIM_Cmd(TIM11, ENABLE); //使能TIM11
+				TIM10_PWM_CH1_F6(0);
+				TIM11_PWM_CH1_F7(0);
+				log_i("light_init()");
 			
 				rt_thread_startup(servo_tid);
 		}

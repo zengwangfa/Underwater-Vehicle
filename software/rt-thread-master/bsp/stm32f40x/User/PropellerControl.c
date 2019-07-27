@@ -151,9 +151,9 @@ void Propeller_Output(void)
 	
 		PropellerPower.leftDown = Propeller_Output_Limit(PropellerPower.leftDown);
 	
-//		PropellerPower.leftMiddle = Propeller_Output_Limit(PropellerPower.leftMiddle);
-//	
-//		PropellerPower.rightMiddle = Propeller_Output_Limit(PropellerPower.rightMiddle);
+		PropellerPower.leftMiddle = Propeller_Output_Limit(PropellerPower.leftMiddle);
+	
+		PropellerPower.rightMiddle = Propeller_Output_Limit(PropellerPower.rightMiddle);
 		
 		PWM_Update(&PropellerPower);//PWMÖµ¸üÐÂ
 	

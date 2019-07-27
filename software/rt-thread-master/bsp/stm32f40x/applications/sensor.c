@@ -163,8 +163,8 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 			
 						Sensor.DepthSensor.Init_PessureValue = Sensor.DepthSensor.PessureValue;
 				}
-					 				                              /* 深度数值 单位为cm   定标系数为 1.3 单位/cm */
-				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/1.3f);		
+					 				                              /* 深度数值 单位为cm   定标系数为 1.95 单位/cm */
+				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/1.95f);		
 			
 																													
 				

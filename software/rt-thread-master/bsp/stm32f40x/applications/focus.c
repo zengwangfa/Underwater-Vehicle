@@ -27,22 +27,22 @@ uint8 minZoom_Data[6]  = {0xAA,0x55,0x02,0x00,0x02,0x03}; //放焦
 uint8 Camera_Clear_Data[6] = {0xAA,0x55,0x02,0x88,0x88,0x11}; //恢复初始值
 uint8 Camera_Stop_Data[6]  = {0xAA,0x55,0x02,0x00,0x00,0x01}; //停止
 /*----------------------- Function Implement --------------------------------*/
-float Adjust1= 1,Adjust2 = 1;
 uint8 focus_data[10] = {0};
+
 /**
   * @brief  Focus_Zoom_Camera(摄像头变焦、放大)
   * @param  控制字符数据action [0x01聚焦、0x02放焦、0x11放大、0x12缩小]
   * @retval None
   * @notice 
   */
-void Focus_Zoom_Camera(uint8 *action)
+void Focus_Zoom_Camera_Control(uint8 *action)
 {		
 		switch(*action){
-				case 0x01:Adjust1 += 0.01f;break;         //rt_device_write(focus_uart_device, 0,addFocus_Data,   6); break;
-				case 0x02:Adjust1 -= 0.01f;break;         //rt_device_write(focus_uart_device, 0,minFocus_Data,   6); break;
-				case 0x11:Adjust2 += 0.01f;break;         //rt_device_write(focus_uart_device, 0,addZoom_Data,    6); break;
-				case 0x12:Adjust2 -= 0.01f;break;    	 //rt_device_write(focus_uart_device, 0,minZoom_Data,    6); break;
-				case 0x88:Adjust1 = 1,Adjust2 = 1;break; //rt_device_write(focus_uart_device, 0,Camera_Clear_Data,    6); break; //恢复初始值
+				case 0x01:rt_device_write(focus_uart_device, 0,addFocus_Data,   6); break;
+				case 0x02:rt_device_write(focus_uart_device, 0,minFocus_Data,   6); break;
+				case 0x11:rt_device_write(focus_uart_device, 0,addZoom_Data,    6); break;
+				case 0x12:rt_device_write(focus_uart_device, 0,minZoom_Data,    6); break;
+				case 0x88:rt_device_write(focus_uart_device, 0,Camera_Clear_Data,    6); break; //恢复初始值
 				default  :break; //可能为错误命令 停止控制
 		}
 		*action = 0x00;
@@ -110,14 +110,4 @@ void focus_camera_clear(void)
 }
 MSH_CMD_EXPORT(focus_camera_clear,focus camera clear);
 
-
-/* 设置 放大 */
-void focus_camera_add(void)
-{
-		static int *p;
-		*p = 0x0l;
-		Focus_Zoom_Camera((uint8 *)p);
-		log_i("focus_camera_add ");
-}
-MSH_CMD_EXPORT(focus_camera_add,focus camera add);
 

@@ -46,8 +46,8 @@ ServoType  YunTai = {
 
 uint16 propeller_power = 1500;
 short _test_value = 0;
-extern float Adjust1,Adjust2 ;
 
+extern int Extractor_Value;
 /*----------------------- Function Implement --------------------------------*/
 
 
@@ -95,49 +95,33 @@ void RoboticArm_Control(uint8 *action)
 
 
 /**
+  * @brief  Extractor_Control(吸取器控制)
+  * @param  控制指令 0x00：不动作  0x01：吸取  0x02：关闭
+  * @retval None
+  * @notice 
+  */
+void Extractor_Control(uint8 *action)
+{
+		static int power_value = 0;
+		switch(*action)
+		{
+				case 0x01:power_value = Extractor_Value;
+									break;
+				case 0x02:power_value = 0;
+									break;
+				default:break;
+		}
+
+		TIM3_PWM_CH3_B0(power_value);
+}
+
+
+/**
   * @brief  YunTai_Control(云台控制)
   * @param  控制指令 0x00：不动作  0x01：向上  0x02：向下
   * @retval None
   * @notice 
   */
-
-//void YunTai_Control(uint8 *action)
-//{		
-//		static int DirectionMode = 1;
-//		
-//		switch(*action)
-//		{
-//				case 0x01:DirectionMode++;
-//						  DirectionMode = DirectionMode<=DirectionMode_MAX?DirectionMode:1;	
-//						  Buzzer_Set(&Beep,1,1);			
-//						break;  
-//						
-//				case 0x02:DirectionProportion(DirectionMode);
-//						break;  
-
-//				case 0x03:DirectionMode = 0;break;   //归中
-//				default: break;
-//		}
-//		Servo_Output_Limit(&YunTai);
-//		TIM4_PWM_CH4_D15(YunTai.CurrentValue); 
-//		*action = 0x00; //清除控制字
-//}
-
-//void DirectionProportion(int Mode)
-//{
-//	switch(Mode)
-//	{
-//		case DirectionUp   :Direction.UP_P1 = Adjust1;
-//							Direction.UP_P2 = Adjust2;	
-//							break;
-//		case DirectionDown :Direction.DOWN_P1 = Adjust1;
-//						    Direction.DOWN_P2 = Adjust2;
-//							break;
-//		case DirectionLeft :Direction.LEFT_P = Adjust1;
-//		case DirectionRight:Direction.RIGHT_P = Adjust1;
-//		default: break;
-//	}
-//}
 
 void YunTai_Control(uint8 *action)
 {
@@ -448,5 +432,27 @@ MSH_CMD_EXPORT(yuntai,ag: yuntai_currentValue_set 1500);
 
 
 
+/*【吸取器】推进器 修改 【推力】 MSH方法 */
+static int extractor_value_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc > 1){
+        log_e("Error! Proper Usage: extractor_value_set <1000~2000>");
+				result = -RT_ERROR;
+        goto _exit;
+    }
 
+		if(atoi(argv[1]) <= 2000 ){		
+				Extractor_Value = atoi(argv[1]);
+				Flash_Update();
+				log_i("Write_Successed! extractor_value  %d",Extractor_Value);
+		}
+		else {
+				log_e("Error! The value is out of range!");
+		}
+
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(extractor_value_set,ag: extractor_value_set <1000~2000>);
 

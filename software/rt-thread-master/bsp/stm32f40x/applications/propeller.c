@@ -38,6 +38,12 @@ PropellerError_Type  PropellerError = {0,0,0,0,0,0};   //推进器偏差值
 
 PropellerPower_Type power_test; //调试用的变量
 
+PropellerError_Type Forward   = {0,0,0,0,0,0};
+PropellerError_Type Retreat   = {0,0,0,0,0,0};
+PropellerError_Type TurnLeft  = {0,0,0,0,0,0};
+PropellerError_Type TurnRight = {0,0,0,0,0,0};
+Adjust_Parameter AdjustParameter = {1,1,1,1};
+
 extern int16 PowerPercent;
 
 /*----------------------- Function Implement --------------------------------*/
@@ -137,7 +143,9 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 	
 		TIM4_PWM_CH1_D12(PropellerPower_Max); 	 	//最高转速信号  	垂直推进器1号  左中   D12
 		TIM4_PWM_CH2_D13(PropellerPower_Max);	    //最高转速信号  	垂直推进器2号  右中   D13
-
+	
+		TIM3_PWM_CH3_B0(PropellerPower_Max);	    //最高转速信号  	吸取器   B0
+	
 		rt_thread_mdelay(2000);  //2s
 
 		TIM1_PWM_CH1_E9 (PropellerPower_Med);			//停转信号
@@ -147,7 +155,9 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 	
 		TIM4_PWM_CH1_D12(PropellerPower_Med);		  //停转信号
 		TIM4_PWM_CH2_D13(PropellerPower_Med);		  //停转信号
-
+		
+		TIM3_PWM_CH3_B0(PropellerPower_Med);	    //停转信号  	吸取器   B0
+		
 		TIM4_PWM_CH3_D14(1500);		//机械臂中值 1000~2000
 		TIM4_PWM_CH4_D15(2000);		//云台中值
 		

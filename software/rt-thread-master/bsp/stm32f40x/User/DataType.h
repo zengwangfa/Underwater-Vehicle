@@ -147,6 +147,11 @@ typedef enum
 #define FOUR_AXIS  0// ROV标志
 #define SIX_AXIS   1// AUV标志
 
+/* ---------【工作模式 工作、调试】------------*/
+
+#define WORK  0// 工作模式
+#define DEBUG 1// 调试模式
+
 /* -----------【解锁、锁定 标志】--------------*/
 
 #define UNLOCK    1   //全局解锁【启动】  宏定义
@@ -166,6 +171,7 @@ typedef enum
 
 /* 最重要定义 直接从设定好的模式(Flash中读取)*/
 extern volatile uint8 VehicleMode;   //【FOUR_AXIS】 or 【SIX_AXIS】
+extern volatile uint8 WorkMode;      //【WORK】or 【DEBUG】
 
 extern Sensor_Type Sensor;
 
