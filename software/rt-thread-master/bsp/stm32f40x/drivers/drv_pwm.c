@@ -21,6 +21,38 @@
 
 /*----------------------- Function Implement --------------------------------*/
 
+void PWM_Init(void)
+{
+		TIM1_PWM_Init(20000-1,168-1);	//168M/168=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  【现在为500Hz】
+		TIM3_PWM_Init(20000-1,84-1);  //吸取器	
+		TIM4_PWM_Init(20000-1,84-1);	//84M/84=1Mhz的计数频率,重装载值(即PWM精度)20000，所以PWM频率为 1M/20000=50Hz.  
+		TIM_Cmd(TIM1, ENABLE);  //使能TIM1
+		TIM_Cmd(TIM3, ENABLE);  //使能TIM1
+		TIM_Cmd(TIM4, ENABLE);  //使能TIM4
+
+		TIM1_PWM_CH1_E9 (0); //右上	 E9	
+		TIM1_PWM_CH2_E11(0); //左下	 E11
+		TIM1_PWM_CH3_E13(0); //左上   E13
+		TIM1_PWM_CH4_E14(0); //右下   E14
+	
+		TIM4_PWM_CH1_D12(0); //左中   D12
+		TIM4_PWM_CH2_D13(0); //右中   D13
+
+		TIM3_PWM_CH3_B0(0);  //吸取器
+		TIM3_PWM_CH4_B1(0);
+}
+
+void Light_PWM_Init(void)
+{
+
+		TIM10_PWM_Init(100-1,16800-1);	//168M/1680=100Khz的计数频率,重装载值(即PWM精度)100，所以PWM频率为 100K/100=1KHz. 
+		TIM11_PWM_Init(100-1,16800-1);	
+		TIM_Cmd(TIM10, ENABLE); //使能TIM10
+		TIM_Cmd(TIM11, ENABLE); //使能TIM11
+		TIM10_PWM_CH1_F6(0);
+		TIM11_PWM_CH1_F7(0);
+}
+
 /*------------- TIM1 推进器---------------*/
 
 void TIM1_PWM_CH1_E9(short duty)
@@ -89,6 +121,8 @@ void TIM11_PWM_CH1_F7(short duty)
 {
 			TIM_SetCompare1(TIM11,duty);
 }
+
+
 /*
 （1）当APB1和APB2分频数为1的时候，TIM1、TIM8~TIM11的时钟为APB2的时钟，TIM2~TIM7、TIM12~TIM14的时钟为APB1的时钟；
 

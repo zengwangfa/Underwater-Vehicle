@@ -3,8 +3,14 @@
 
 #include "DataType.h"
 
-void All_TIM_Enable(void);
-void All_TIM_Disable(void);
+void PWM_Init(void);
+
+
+void Light_PWM_Init(void);
+
+
+
+
 
 void TIM1_PWM_Init(uint32 arr,uint32 psc);//ÍÆ½øÆ÷
 void TIM3_PWM_Init(uint32 arr,uint32 psc);//ÎüÈ¡Æ÷
