@@ -81,10 +81,12 @@ void devices_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% v
 		{
 			
 				if(WORK == WorkMode){
+					
+						Extractor_Control(&ControlCmd.Arm); //吸取器控制
+						//RoboticArm_Control(&ControlCmd.Arm);//机械臂控制
 						Explore_Light_Control(&ControlCmd.Light);  //探照灯控制
-						YunTai_Control(&ControlCmd.Yuntai); //云台控制
-						RoboticArm_Control(&ControlCmd.Arm);//机械臂控制
-						Focus_Zoom_Camera_Control(&ControlCmd.Focus);//变焦摄像头控制
+						YunTai_Control(&ControlCmd.Yuntai); //云台控制				
+						Focus_Zoom_Camera_Control(&ControlCmd.Focus);//变焦摄像头控制					
 				}
 				else if(DEBUG == WorkMode)
 				{	

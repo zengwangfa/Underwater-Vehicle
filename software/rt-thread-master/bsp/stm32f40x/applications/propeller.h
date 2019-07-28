@@ -68,6 +68,7 @@ typedef enum
 void Propeller_Init(void);
 
 void PWM_Update(PropellerPower_Type* power);//推进器PWM 更新
+void Extractor_Control(uint8 *action);
 
 extern PropellerDir_Type PropellerDir;
 extern PropellerParameter_Type PropellerParameter; 

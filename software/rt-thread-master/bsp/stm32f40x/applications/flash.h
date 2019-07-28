@@ -6,8 +6,6 @@
 
 #include "DataType.h"
 
-extern float Adjust1,Adjust2;
-
 typedef struct
 {
 		uint8 No_0xFF[PID_USE_NUM];

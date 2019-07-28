@@ -45,7 +45,7 @@ PropellerError_Type TurnRight = {0,0,0,0,0,0};
 Adjust_Parameter AdjustParameter = {1,1,1,1};
 
 extern int16 PowerPercent;
-
+extern int Extractor_Value;//吸取器推进器的值
 /*----------------------- Function Implement --------------------------------*/
 
 
@@ -74,6 +74,27 @@ void PWM_Update(PropellerPower_Type* propeller)
 
 }
 
+/**
+  * @brief  Extractor_Control(吸取器控制)
+  * @param  控制指令 0x00：不动作  0x01：吸取  0x02：关闭
+  * @retval None
+  * @notice 
+  */
+void Extractor_Control(uint8 *action)
+{
+		static int power_value = 0;
+		switch(*action)
+		{
+				case 0x01:power_value = Extractor_Value;
+									break;
+				case 0x02:power_value = 0;
+									break;
+				default:break;
+		}
+
+		TIM3_PWM_CH3_B0(power_value);
+}
+
 
 PropellerPower_Type power_test_msh; //调试用的变量
 
@@ -98,13 +119,6 @@ static int Propoller_Test(int argc, char **argv)
 						power_test_msh.leftMiddle  = PropellerPower_Med + atoi(argv[1]);
 						power_test_msh.rightMiddle = PropellerPower_Med + atoi(argv[1]);
 					
-						TIM1_PWM_CH1_E9 (power_test_msh.rightUp);      //右上	 E9	
-						TIM1_PWM_CH2_E11(power_test_msh.leftDown);    //左下	 E11
-						TIM1_PWM_CH3_E13(power_test_msh.leftUp); 	   //左上   E13
-						TIM1_PWM_CH4_E14(power_test_msh.rightDown);   //右下   E14
-					
-						TIM4_PWM_CH1_D12(power_test_msh.leftMiddle);  //左中   D12
-						TIM4_PWM_CH2_D13(power_test_msh.rightMiddle); //右中   D13
 				}
 				log_i("Current propeller power:  %d",atoi(argv[1]) );
 		}
@@ -307,4 +321,29 @@ _exit:
 }
 MSH_CMD_EXPORT(propeller_power_set,propeller_power_set <0~300> %);
 
+
+
+/*【吸取器】推进器 修改 【推力】 MSH方法 */
+static int extractor_value_set(int argc, char **argv)
+{
+    int result = 0;
+    if (argc != 2){
+        log_e("Error! Proper Usage: extractor_value_set <1000~2000>");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+
+		if(atoi(argv[1]) <= 2000 ){		
+				Extractor_Value = atoi(argv[1]);
+				Flash_Update();
+				log_i("Write_Successed! extractor_value  %d",Extractor_Value);
+		}
+		else {
+				log_e("Error! The value is out of range!");
+		}
+
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(extractor_value_set,ag: extractor_value_set <1000~2000>);
 

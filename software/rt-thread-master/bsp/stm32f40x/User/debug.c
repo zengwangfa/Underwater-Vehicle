@@ -78,11 +78,11 @@ void AdjustPropeller(int DebugMode,Adjust_Parameter *Adjust_Parameter)
 	}
 }
 
-
+int Adjust1=0,Adjust2=0,Adjust3=0,Adjust4 =0 ;
 void Debug_Mode(int button)
 {
 	static int DebugMode=0;
-	static int Adjust1=0,Adjust2=0,Adjust3=0,Adjust4 =0 ;
+
 	switch(button)
 	{
 		case 1:Adjust1++;break;			//  ÊÖ±úY¼ü

@@ -83,9 +83,9 @@ int Normal_Parameter_Init_With_Flash(void)
 
 		log_i("Flash_Read()");
 		log_i("                      ----------");
-		log_i("VehicleMode           |%s|",VehicleModeName[VehicleMode]);
-		log_i("WorkMode              |%s|",WorkModeName[WorkMode]);
-		log_i("Depth Sensor Type     |%s |",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
+		log_i("VehicleMode           |%s  |",VehicleModeName[VehicleMode]);
+		log_i("WorkMode              |%s   |",WorkModeName[WorkMode]);
+		log_i("Depth Sensor Type     |%s  |",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
 		log_i("debug_tool            |%s     |",debug_tool_name[debug_tool]);
 		log_i("                      ----------");
 		return 0;
@@ -191,7 +191,7 @@ void Flash_Update(void)
 		
 		ef_port_write(Nor_FLASH_ADDRESS+4*EXTRACTOR_VALUE_e ,(uint32 *)&Extractor_Value,4); //吸取器吸力
 
-		ef_port_write(Nor_FLASH_ADDRESS+4*WORK_MODE_e ,(uint32 *)&WorkMode,4); //吸取器吸力
+		ef_port_write(Nor_FLASH_ADDRESS+4*WORK_MODE_e ,(uint32 *)&WorkMode,4); //
 }	
 MSH_CMD_EXPORT(Flash_Update,Flash Update);
 

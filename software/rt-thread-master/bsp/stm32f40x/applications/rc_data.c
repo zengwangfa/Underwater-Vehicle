@@ -178,25 +178,25 @@ uint8 get_button_value(ControlCmd_Type *cmd)
 {
 	
 		if(1 == cmd->Focus)	{
-//				cmd->Focus = 0;
+				cmd->Focus = 0;
 				return 1;
 		}
 		if(2 == cmd->Focus)	{
-//				cmd->Focus = 0;
+				cmd->Focus = 0;
 				return 2;
 		}
 		if(0x12 == cmd->Focus)	{
-//				cmd->Focus = 0;
+				cmd->Focus = 0;
 				return 3;
 		}
 		if(0x11 == cmd->Focus)	{
-//				cmd->Focus = 0;
+				cmd->Focus = 0;
 				return 4;
 		}		
-		if(1 == get_up_down_key(cmd)){
-  			up_down_ret_test = 0;
-				return 5;
-		}
+//		if(1 == get_up_down_key(cmd)){
+//  			up_down_ret_test = 0;
+//				return 5;
+//		}
 //		if(2 == get_up_down_key(cmd)){
 //				up_down_ret_test = 0;
 //				return 6;
