@@ -104,12 +104,12 @@ void Speed_Buffer(short *BufferMember,short *LastMember,short BufferRange)
 		}
 }
 
- int left_speed  = 0;
- int right_speed = 0;
- float speed = 0;			   //速度总和
- float left_precent = 0;	 //左推进器数值百分比
- float right_precent = 0; //右推进器数值百分比
-
+int left_speed  = 0;
+int right_speed = 0;
+float speed = 0;			   //速度总和
+float left_precent = 0;	 //左推进器数值百分比
+float right_precent = 0; //右推进器数值百分比
+float Angle_Rad = 0.0f;
 /**
   * @brief  FourtAxis_Control(四推进器水平控制)
   * @param  摇杆数据结构体指针
@@ -121,26 +121,35 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 
 	
 		speed = sqrt(pow(rc->X,2)+pow(rc->Y,2));	//速度总和
-		if(rc->Y >= 0 )						//当Y轴 >= 0 时，左推进器速度 >=右推进器
-		{
-				left_precent  = rc->X / abs(rc->X);		
-				right_precent = rc->X / speed;
-		}
-		else										  //当Y轴 < 0 时， 右推进器速度 >=左推进器
-		{
-				left_precent  = rc->X / speed;
-				right_precent = rc->X / abs(rc->X);
-		}
-		if(rc->X >= 0)
-		{
-				left_speed  = left_precent  * speed ;			//拟合速度
-				right_speed = right_precent * (speed +30);
-		}
-		else
-		{
-				left_speed  = left_precent  * (speed + 30);			//拟合速度
-				right_speed = right_precent * speed ;
-		}
+	
+		rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
+		if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 
+
+		Angle_Rad = Deg2Rad(rc->Angle);
+
+
+		left_speed   = abs(rc->X) * sin(Angle_Rad) + abs(rc->Y) * cos(Angle_Rad);
+		right_speed  = abs(rc->X) * sin(Angle_Rad) - abs(rc->Y) * cos(Angle_Rad);
+//		if(rc->Y >= 0 )						//当Y轴 >= 0 时，左推进器速度 >= 右推进器
+//		{
+//				left_precent  = rc->X / abs(rc->X);		
+//				right_precent = rc->X / speed;
+//		}
+//		else										  //当Y轴 < 0 时， 右推进器速度 >=左推进器
+//		{
+//				left_precent  = rc->X / speed;
+//				right_precent = rc->X / abs(rc->X);
+//		}
+//		if(rc->X >= 0)
+//		{
+//				left_speed  = left_precent  * speed ;			//拟合速度
+//				right_speed = right_precent * (speed +30);
+//		}
+//		else
+//		{
+//				left_speed  = left_precent  * (speed + 30);			//拟合速度
+//				right_speed = right_precent * speed ;
+//		}
 		
 		PropellerPower.leftDown = PropellerDir.leftDown *left_speed; 		//驱动推进器
 		PropellerPower.rightDown =PropellerDir.rightDown*right_speed;
@@ -230,7 +239,7 @@ void Depth_PID_Control(float expect_depth,float sensor_depth)
 		Total_Controller.High_Position_Control.FeedBack = sensor_depth;  //当前深度反馈
 		PID_Control(&Total_Controller.High_Position_Control);//高度位置控制器
 	
-		robot_upDown(Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制
+		robot_upDown(&Total_Controller.High_Position_Control.Control_OutPut);		//竖直推进器控制
 }
 
 

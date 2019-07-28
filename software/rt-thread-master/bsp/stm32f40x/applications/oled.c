@@ -48,8 +48,8 @@ static uint32 total_mem,used_mem,max_used_mem;
 
 /*--------------------------- Variable Declarations --------------------------------*/
 
-char *VehicleModeName[2] = {"4_axis","6_axis"}; //定义用于显示的 模式字符 0->AUV  1->ROV
-char *WorkModeName[2] = {"work","debug"}; //定义用于显示的 工作模式
+char *VehicleModeName[2] = {"4_Axis","6_Axis"}; //定义用于显示的 模式字符 0->AUV  1->ROV
+char *WorkModeName[2] = {"Work","Debug"}; //定义用于显示的 工作模式
 volatile MENU_LIST_Enum MENU = StatusPage;//OLED初始页面为 状态页. volatile是一种类型修饰符。
 																				  //volatile 的作用 是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接在其内存中读值。
 
