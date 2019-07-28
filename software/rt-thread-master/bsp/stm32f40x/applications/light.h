@@ -4,10 +4,7 @@
 #include "DataType.h"
 
 
-void Explore_Light_Control(uint8 *action);
-
-
-
+void Search_Light_Control(uint8 *action);
 
 
 
