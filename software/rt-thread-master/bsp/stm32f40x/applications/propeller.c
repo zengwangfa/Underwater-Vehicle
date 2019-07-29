@@ -75,6 +75,9 @@ void Propeller_Init(void)//这边都需要经过限幅在给定  原先为2000->1500
 	
 		TIM3_PWM_CH3_B0(PropellerPower_Max);	    //最高转速信号  	吸取器   B0
 	
+	/**/
+		//TIM4_PWM_CH3_D14(PropellerPower_Max);	    //最高转速信号  	吸取器   B0
+	/**/
 		rt_thread_mdelay(2000);  //2s
 
 		TIM1_PWM_CH1_E9 (PropellerPower_Med);			//停转信号
@@ -127,7 +130,7 @@ void PWM_Update(PropellerPower_Type* propeller)
 
 
 
-
+int power_value = 1500;
 /**
   * @brief  Extractor_Control(吸取器控制)
   * @param  控制指令 0x00：不动作  0x01：吸取  0x02：关闭
@@ -136,17 +139,17 @@ void PWM_Update(PropellerPower_Type* propeller)
   */
 void Extractor_Control(uint8 *action)
 {
-		static int power_value = 0;
+
 		switch(*action)
 		{
-				case 0x01:power_value = Extractor_Value;
+				case 0x01:power_value = Extractor_Value; //设定吸力值
 									break;
-				case 0x02:power_value = 0;
+				case 0x02:power_value = PropellerPower_Med; //推进器中值 停转
 									break;
 				default:break;
 		}
 
-		TIM3_PWM_CH3_B0(power_value);
+		//TIM4_PWM_CH3_D14(power_value);
 }
 
 

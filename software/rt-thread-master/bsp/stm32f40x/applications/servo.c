@@ -174,7 +174,7 @@ static int robotic_arm_currentValue_set(int argc, char **argv)
 		if(atoi(argv[1]) <= 3000 ){		
 				RoboticArm.CurrentValue = atoi(argv[1]);
 				log_i(" Value:  %d",RoboticArm.CurrentValue);
-				TIM_SetCompare3(TIM4,RoboticArm.CurrentValue);
+				TIM4_PWM_CH3_D14(RoboticArm.CurrentValue);
 
 
 		}

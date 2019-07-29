@@ -36,7 +36,7 @@ extern uint8 Frame_EndFlag;
 
 
 
-#define STEP_VLAUE  2
+#define STEP_VLAUE  1
 
 /**
   * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
@@ -56,7 +56,7 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
 		}
 		Speed_Buffer(&rc->X,&last_rc_x, 4);	//输出摇杆缓冲
-		Speed_Buffer(&rc->Y,&last_rc_y,4);	
+		Speed_Buffer(&rc->Y,&last_rc_y, 4);	
 
 		
 		
@@ -100,12 +100,12 @@ void Speed_Buffer(short *BufferMember,short *LastMember,short BufferRange)
 				{
 						*BufferMember = *LastMember + STEP_VLAUE;
 				}
-						*LastMember = *BufferMember;	
+				*LastMember = *BufferMember;	
 		}
 }
 
-int left_speed  = 0;
-int right_speed = 0;
+short left_speed  = 0;
+short right_speed = 0;
 float speed = 0;			   //速度总和
 float left_precent = 0;	 //左推进器数值百分比
 float right_precent = 0; //右推进器数值百分比
@@ -119,17 +119,30 @@ float Angle_Rad = 0.0f;
 void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 {
 
-	
+		static short last_right_speed = 0;
+		static short last_left_speed  = 0;
 		speed = sqrt(pow(rc->X,2)+pow(rc->Y,2));	//速度总和
 	
 		rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
-		if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 
+		if(rc->Angle < 0){rc->Angle += 360;}     /*角度变换 以极坐标定义 角度顺序 0~360°*/ 
 
 		Angle_Rad = Deg2Rad(rc->Angle);
 
-
-		left_speed   = abs(rc->X) * sin(Angle_Rad) + abs(rc->Y) * cos(Angle_Rad);
+		/* 左右推进器 运动控制公式*/
+		left_speed   = abs(rc->X) * sin(Angle_Rad) + abs(rc->Y) * cos(Angle_Rad);//解算摇杆获取
 		right_speed  = abs(rc->X) * sin(Angle_Rad) - abs(rc->Y) * cos(Angle_Rad);
+		
+		 /* 推进器差速补偿*/
+		if(rc->X >= 0){
+				right_speed += 30;
+		}
+		else{
+			  left_speed   -=30;			
+		}
+		
+		Speed_Buffer(&right_speed,&last_right_speed, 4);	//输出速度缓冲
+		Speed_Buffer(&left_speed,&last_left_speed,   4);	
+
 //		if(rc->Y >= 0 )						//当Y轴 >= 0 时，左推进器速度 >= 右推进器
 //		{
 //				left_precent  = rc->X / abs(rc->X);		
@@ -153,6 +166,8 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 		
 		PropellerPower.leftDown = PropellerDir.leftDown *left_speed; 		//驱动推进器
 		PropellerPower.rightDown =PropellerDir.rightDown*right_speed;
+
+
 }
 
 

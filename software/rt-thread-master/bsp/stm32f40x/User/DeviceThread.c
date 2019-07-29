@@ -38,19 +38,18 @@ void propeller_thread_entry(void *parameter)
 						Convert_RockerValue(&Rocker); //遥控数据 转换 为推进器动力
 				}
 
-				if(FOUR_AXIS == VehicleMode){
+				if(FOUR_AXIS == VehicleMode && UNLOCK == ControlCmd.All_Lock ){ //安全保护措施
 						FourtAxis_Control(&Rocker);
 						ROV_Depth_Control(&Rocker);
 				}
-				else if(SIX_AXIS == VehicleMode){
+				else if(SIX_AXIS == VehicleMode && UNLOCK == ControlCmd.All_Lock){
 						SixAxis_Control(&Rocker);
+						ROV_Depth_Control(&Rocker);
 				}
-				else{
-						log_e("not yet set vehicle mode !");
-				}
+
 				
 				Propeller_Output(); //推进器真实PWM输出		
-				rt_thread_mdelay(10);
+				rt_thread_mdelay(10); //10ms
 		}
 	
 }
@@ -82,8 +81,8 @@ void devices_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% v
 			
 				if(WORK == WorkMode){//工作模式
 					
-						Extractor_Control(&ControlCmd.Arm); //吸取器控制
-						//RoboticArm_Control(&ControlCmd.Arm);//机械臂控制
+						//Extractor_Control(&ControlCmd.Arm); //吸取器控制
+						RoboticArm_Control(&ControlCmd.Arm);//机械臂控制
 						Search_Light_Control(&ControlCmd.Light);  //探照灯控制
 						YunTai_Control(&ControlCmd.Yuntai); //云台控制				
 						Focus_Zoom_Camera_Control(&ControlCmd.Focus);//变焦摄像头控制					

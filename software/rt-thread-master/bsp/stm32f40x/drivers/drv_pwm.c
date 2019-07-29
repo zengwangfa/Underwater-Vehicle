@@ -37,7 +37,9 @@ void PWM_Init(void)
 	
 		TIM4_PWM_CH1_D12(0); //×óÖÐ   D12
 		TIM4_PWM_CH2_D13(0); //ÓÒÖÐ   D13
-
+		//TIM4_PWM_CH3_D14(0); //
+		TIM4_PWM_CH4_D15(0); //
+	
 		TIM3_PWM_CH3_B0(0);  //ÎüÈ¡Æ÷
 		TIM3_PWM_CH4_B1(0);
 }

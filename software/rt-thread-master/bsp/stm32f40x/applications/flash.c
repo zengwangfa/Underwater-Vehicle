@@ -84,7 +84,7 @@ int Normal_Parameter_Init_With_Flash(void)
 		log_i("Flash_Read()");
 		log_i("                      ----------");
 		log_i("VehicleMode           |%s  |",VehicleModeName[VehicleMode]);
-		log_i("WorkMode              |%s   |",WorkModeName[WorkMode]);
+		log_i("WorkMode              |%s    |",WorkModeName[WorkMode]);
 		log_i("Depth Sensor Type     |%s  |",Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
 		log_i("debug_tool            |%s     |",debug_tool_name[debug_tool]);
 		log_i("                      ----------");

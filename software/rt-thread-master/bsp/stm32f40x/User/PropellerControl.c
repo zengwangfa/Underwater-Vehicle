@@ -124,8 +124,8 @@ void ROV_Rotate_Control(Rocker_Type *rc){
 uint16 Propeller_Output_Limit(int16 value)
 {
 		//不超过+500   不超过-500
-		value = (value) > 150  ? 150  : value ;//正向限幅
-		value = (value) < -150 ? -150 : value;//反向限幅
+		value = (value) > 100  ? 100  : value ;//正向限幅
+		value = (value) < -100 ? -100 : value;//反向限幅
 	
 		return value ;
 }

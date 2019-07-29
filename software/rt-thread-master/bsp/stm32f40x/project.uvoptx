@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>210</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245496</Address>
+          <Address>134245540</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -170,7 +170,7 @@
           <Type>0</Type>
           <LineNumber>206</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245482</Address>
+          <Address>134245526</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,7 +186,7 @@
           <Type>0</Type>
           <LineNumber>215</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245510</Address>
+          <Address>134245554</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -202,7 +202,7 @@
           <Type>0</Type>
           <LineNumber>219</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245524</Address>
+          <Address>134245568</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -218,7 +218,7 @@
           <Type>0</Type>
           <LineNumber>224</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245538</Address>
+          <Address>134245582</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -234,7 +234,7 @@
           <Type>0</Type>
           <LineNumber>228</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245552</Address>
+          <Address>134245596</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -250,7 +250,7 @@
           <Type>0</Type>
           <LineNumber>181</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245426</Address>
+          <Address>134245470</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -266,7 +266,7 @@
           <Type>0</Type>
           <LineNumber>185</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245440</Address>
+          <Address>134245484</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -282,7 +282,7 @@
           <Type>0</Type>
           <LineNumber>189</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245454</Address>
+          <Address>134245498</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -298,7 +298,7 @@
           <Type>0</Type>
           <LineNumber>193</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245468</Address>
+          <Address>134245512</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -425,6 +425,31 @@
           <count>22</count>
           <WinNumber>1</WinNumber>
           <ItemText>Angle_Rad</ItemText>
+        </Ww>
+        <Ww>
+          <count>23</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Sensor</ItemText>
+        </Ww>
+        <Ww>
+          <count>24</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Expect_Depth</ItemText>
+        </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Extractor_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>26</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>power_value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>RoboticArm,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
