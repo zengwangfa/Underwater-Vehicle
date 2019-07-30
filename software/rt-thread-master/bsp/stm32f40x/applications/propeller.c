@@ -352,3 +352,45 @@ _exit:
 }
 MSH_CMD_EXPORT(extractor_value_set,ag: extractor_value_set <1000~2000>);
 
+
+
+uint8 is_in_range(short value)
+{
+		return abs(value) < 100?1:0;
+}
+
+/*【推进器】 修改 【偏差值】MSH方法 */
+static int propeller_error_set(int argc, char **argv){ 
+    int result = 0;
+    if (argc != 7){ //6个推进器
+				log_i("Propeller: rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle");   //其标志只能是 1  or  -1 
+        log_e("Error! Proper Usage: propeller_dir_set <-100~+100>  ");
+				result = -RT_ERROR;
+        goto _exit;
+    }
+		
+		if(is_in_range(atoi(argv[1])) && is_in_range(atoi(argv[2]))  && is_in_range(atoi(argv[3]))   && \
+			 is_in_range(atoi(argv[4])) && is_in_range(atoi(argv[5])) && is_in_range(atoi(argv[6]))  ) {
+				 
+				PropellerError.rightUp     = atoi(argv[1]);
+				PropellerError.leftDown    = atoi(argv[2]);
+				PropellerError.leftUp      = atoi(argv[3]);
+				PropellerError.rightDown   = atoi(argv[4]);
+				PropellerError.leftMiddle  = atoi(argv[5]);
+				PropellerError.rightMiddle = atoi(argv[6]);
+				 
+				log_i("Propeller: rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle");
+				log_i("Propeller:    %d           %d          %d          %d            %d             %d",\
+				 PropellerError.rightUp,PropellerError.leftDown,PropellerError.leftUp,PropellerError.rightDown,PropellerError.leftMiddle ,PropellerError.rightMiddle);
+				Flash_Update();//FLASH更新
+				rt_kprintf("\n");
+
+		}
+		
+		else {
+				log_e("Error! Input Error!");
+		}
+_exit:
+    return result;
+}
+MSH_CMD_EXPORT(propeller_error_set,propeller_error_set <-100~+100>);

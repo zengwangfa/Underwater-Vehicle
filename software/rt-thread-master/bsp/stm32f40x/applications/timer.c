@@ -77,7 +77,7 @@ int timer1_init(void)
 
     return 0;
 }
-INIT_APP_EXPORT(timer1_init);
+//INIT_APP_EXPORT(timer1_init);
 
 
 

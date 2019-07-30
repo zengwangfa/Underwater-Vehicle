@@ -24,19 +24,15 @@
 #include "propeller.h"
 #include "sensor.h"
 
-
 float Yaw_Control = 0.0f;//Yaw—— 偏航控制 
 float Yaw = 0.0f;
-char ACC1 = 0,ACC2 = 0,ACC3 = 0,ACC4 = 0;
-Direction_Type Direction = {1,1,1,1,1,1};
-
 
 extern int16 PowerPercent;
 extern uint8 Frame_EndFlag;
 
 
 
-#define STEP_VLAUE  1
+#define STEP_VLAUE  3
 
 /**
   * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
@@ -46,7 +42,7 @@ extern uint8 Frame_EndFlag;
   */
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
-
+		rt_enter_critical();/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
 		static int16 last_rc_x = 0 ,last_rc_y = 0;
 		if(Frame_EndFlag){	
 
@@ -55,10 +51,10 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Z = ControlCmd.Vertical - 127;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
 				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
 		}
-		Speed_Buffer(&rc->X,&last_rc_x, 4);	//输出摇杆缓冲
-		Speed_Buffer(&rc->Y,&last_rc_y, 4);	
+		//Speed_Buffer(&rc->X,&last_rc_x, 4);	//输出摇杆缓冲
+		//Speed_Buffer(&rc->Y,&last_rc_y, 4);	
 
-		
+		rt_exit_critical();		/* 调度器解锁 */		
 		
 
 //		if(SIX_AXIS == VehicleMode){
@@ -80,30 +76,36 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 
 }
 
+
+uint16 diff_value = 0;
+	
 /*******************************************
-* 函 数 名：void BufferMember(int *BufferMember,int BufferRange)
+* 函 数 名：void Speed_Buffer(int *BufferMember,int BufferRange)
 * 功    能：速度缓冲器
 * 输入参数：1.待缓冲成员地址（*BufferMenber） 2.触发值（BufferRange）     
 * 返 回 值：none
 * 注    意：步进值为 宏STEP_VALUE
 ********************************************/
-void Speed_Buffer(short *BufferMember,short *LastMember,short BufferRange)
+void Speed_Buffer(short *now_value,short *last_value,short range)
 {		
 
-		if(abs(abs(*LastMember) - abs(*BufferMember))>=BufferRange)
+		diff_value = abs((*last_value) - (*now_value));//暂存差值的绝对值
+		
+		if(diff_value >= range)//微分大于预设值，启动缓冲
 		{
-				if(*BufferMember < *LastMember)
-				{
-						*BufferMember = *LastMember - STEP_VLAUE;
+				if(*now_value <= *last_value){
+						*now_value = *last_value - STEP_VLAUE;
 				}
-				else
-				{
-						*BufferMember = *LastMember + STEP_VLAUE;
+				else{
+						*now_value = *last_value + STEP_VLAUE;
 				}
-				*LastMember = *BufferMember;	
+				*last_value = *now_value;	
 		}
 }
 
+
+short last_left_speed  = 0;
+short last_right_speed = 0;
 short left_speed  = 0;
 short right_speed = 0;
 float speed = 0;			   //速度总和
@@ -119,8 +121,11 @@ float Angle_Rad = 0.0f;
 void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 {
 
-		static short last_right_speed = 0;
-		static short last_left_speed  = 0;
+	
+		rt_enter_critical();/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
+	
+		PropellerPower.PowerPercent = (float)ControlCmd.Power/128;//计算动力百分比 最大时为200%
+	
 		speed = sqrt(pow(rc->X,2)+pow(rc->Y,2));	//速度总和
 	
 		rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
@@ -128,21 +133,39 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 
 		Angle_Rad = Deg2Rad(rc->Angle);
 
-		/* 左右推进器 运动控制公式*/
+		/* 左右推进器 运动控制公式 */
 		left_speed   = abs(rc->X) * sin(Angle_Rad) + abs(rc->Y) * cos(Angle_Rad);//解算摇杆获取
 		right_speed  = abs(rc->X) * sin(Angle_Rad) - abs(rc->Y) * cos(Angle_Rad);
 		
-		 /* 推进器差速补偿*/
-		if(rc->X >= 0){
-				right_speed += 30;
-		}
-		else{
-			  left_speed   -=30;			
+		
+		/* 直线前进/后退保护   90°±15°    270°±15°*/
+		if( (rc->Angle >= 75 && rc->Angle <= 105) || (rc->Angle >= 255 && rc->Angle <= 285)   )//当摇杆 较为归中时，无视Y轴摇杆值【即仅为前进/后退】
+		{
+				left_speed   = abs(rc->X) * sin(Angle_Rad);
+				right_speed  = abs(rc->X) * sin(Angle_Rad);
 		}
 		
-		Speed_Buffer(&right_speed,&last_right_speed, 4);	//输出速度缓冲
-		Speed_Buffer(&left_speed,&last_left_speed,   4);	
 
+
+		if(rc->X >= 0){ /* 推力公式 = 方向系数*(动力百分比*摇杆对应的推力值+偏差值) */
+				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed   ) ;//推力公式 = 
+				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed + PropellerError.rightDown);
+					
+		}
+		else{
+				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed  + PropellerError.leftDown) ;//推力公式 = 动力百分比*方向系数*(摇杆对应的推力值+偏差值)
+				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed  );		
+		}
+		
+		Speed_Buffer(&PropellerPower.leftDown , &last_left_speed, 4);	//输出速度缓冲
+		Speed_Buffer(&PropellerPower.rightDown, &last_right_speed,4);		
+
+		rt_exit_critical();		/* 调度器解锁 */
+		
+		
+		
+		
+		
 //		if(rc->Y >= 0 )						//当Y轴 >= 0 时，左推进器速度 >= 右推进器
 //		{
 //				left_precent  = rc->X / abs(rc->X);		
@@ -163,10 +186,6 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 //				left_speed  = left_precent  * (speed + 30);			//拟合速度
 //				right_speed = right_precent * speed ;
 //		}
-		
-		PropellerPower.leftDown = PropellerDir.leftDown *left_speed; 		//驱动推进器
-		PropellerPower.rightDown =PropellerDir.rightDown*right_speed;
-
 
 }
 

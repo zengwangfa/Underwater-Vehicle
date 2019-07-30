@@ -12,7 +12,7 @@ void ROV_Rotate_Control(Rocker_Type *rc);
 
 void robot_upDown(float *depth_output);
 void Horizontal_Propeller_Power_Clear(void);//水平方向推力清零
-void Propller_stop(void);  //推进器停转
+void Propller_Stop(void);  //推进器停转
 
 void robotForward(void);  //前进
 void robotBackAway(void); //后退

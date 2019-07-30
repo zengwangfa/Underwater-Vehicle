@@ -4,8 +4,6 @@
 #include "DataType.h"
 #include "rc_data.h"
 
-extern Direction_Type Direction;
-extern char ACC1,ACC2,ACC3,ACC4 ;
 
 void Angle_Control(void);
 void Depth_PID_Control(float expect_depth,float sensor_depth);
@@ -18,7 +16,7 @@ void SixAxis_Control(Rocker_Type *rc);
 
 void Convert_RockerValue(Rocker_Type *rc); //ªÒ»°“°∏À÷µ
 
-void Speed_Buffer(short *BufferMember,short *LastMember,short BufferRange);
+void Speed_Buffer(short *now_value,short *last_value,short BufferRange);
 
 
 

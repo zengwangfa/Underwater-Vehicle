@@ -23,7 +23,7 @@
 #include "drv_spl1301.h"
 
 /*----------------------- Variable Declarations -----------------------------*/
-char *Depth_Sensor_Name[2] = {"MS5837","SPL1301"};
+char *Depth_Sensor_Name[3] = {"MS5837","SPL1301","null"};
 
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
@@ -113,6 +113,11 @@ int sensor_thread_init(void)
 						if(spl1301_init()){log_i("SPL1301_Init()");}
 						else {log_e("SPL1301 Init Failed!");}
 				}
+				else if(DS_NULL == Sensor.DepthSensor.Type){
+						log_e("not set Depth Senor");
+
+				}
+
 
 				if(adc_init()){ log_i("Adc_Init()");}//ADC电压采集初始化
 
@@ -164,10 +169,7 @@ void Depth_Sensor_Data_Convert(void)//深度传感器数据转换
 						Sensor.DepthSensor.Init_PessureValue = Sensor.DepthSensor.PessureValue;
 				}
 					 				                              /* 深度数值 单位为cm   定标系数为 1.95 单位/cm */
-				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/1.95f);		
-			
-																													
-				
+				Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue)/1.95f);			
 		}
 
 }
@@ -218,7 +220,7 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 {
     int result = 0;
     if (argc != 2){ //6个推进器
-        log_e("Error! Proper Usage: set_depth_sensor_type <ms5837/spl1301> % ");
+        log_e("Error! Proper Usage: set_depth_sensor_type <ms5837/spl1301/null>");
 				result = -RT_ERROR;
         goto _exit;
     }
@@ -238,14 +240,23 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 
 				log_i("Sensor.DepthSensor.Type :%s",Depth_Sensor_Name[Sensor.DepthSensor.Type]);
 				log_i("Please reboot now");				
-		}		
+		}	
+
+	  else if( !strcmp(argv[1],"null") ) {
+				 
+				Sensor.DepthSensor.Type = DS_NULL; //无深度传感器
+				Flash_Update();
+
+				log_i("Sensor.DepthSensor.Type :%s",Depth_Sensor_Name[Sensor.DepthSensor.Type]);
+				log_i("Please reboot now");				
+		}				
 		else {
 				log_e("Error! Input Error!");
 		}
 _exit:
     return result;
 }
-MSH_CMD_EXPORT(set_depth_sensor_type,depth_sensor_type_set <ms5837/spl1301> );
+MSH_CMD_EXPORT(set_depth_sensor_type,depth_sensor_type_set <ms5837/spl1301/null> );
 
 
 

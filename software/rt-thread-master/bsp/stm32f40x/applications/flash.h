@@ -45,6 +45,14 @@ typedef enum  // _e 表示枚举
 		EXTRACTOR_VALUE_e,  //吸取器吸力固定值
 	
 		WORK_MODE_e,  //吸取器吸力固定值	
+		
+		/* 推进器偏差值 */
+		PROPELLER_RIGHT_UP_ERROR_e,  //右上推进器 偏差值
+		PROPELLER_LEFT_DOWN_ERROR_e,
+		PROPELLER_LEFT_UP_ERROR_e,
+		PROPELLER_RIGHT_DOWN_ERROR_e,
+		PROPELLER_LEFT_MED_ERROR_e,
+		PROPELLER_RIGHT_MED_ERROR_e,
 	/******************************************/
 		PARAMEMER_MAX_NUMBER_e,    //最大参数值
 	

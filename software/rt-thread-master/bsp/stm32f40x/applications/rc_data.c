@@ -118,13 +118,13 @@ void Control_Cmd_Clear(ControlCmd_Type *cmd) //memset(&addr,0,sizeof(addr));
 		//cmd->Depth_Lock     = 0; //深度锁定
 		//cmd->Direction_Lock = 0; //方向锁定
 		//cmd->Raspi          = 0; //树莓派启动位
-	
+		//cmd->Power 				  = 0;  //动力控制  推进器动力系数
 		cmd->Move					  = 0; //前后
 		cmd->Translation	  = 0; //左右平移
 		cmd->Vertical 			= 0; //垂直
 		cmd->Rotate 				= 0; //旋转
 		
-		cmd->Power 				  = 0;  //动力控制  推进器动力系数
+
 		cmd->Light 				  = 0; //灯光控制
 		cmd->Focus 				  = 0; //变焦摄像头控制
 		cmd->Yuntai 				= 0; //云台控制

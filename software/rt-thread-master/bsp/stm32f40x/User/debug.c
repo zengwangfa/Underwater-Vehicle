@@ -21,6 +21,7 @@
 #include "oled.h"
 #include "propeller.h"
 #include <stdlib.h>
+#include "rc_data.h"
 /*---------------------- Constant / Macro Definitions -----------------------*/		
 
 
@@ -30,6 +31,9 @@
 extern rt_device_t debug_uart_device;	
 extern uint8 uart_startup_flag;
 extern float  Yaw;
+extern short left_speed  ;
+extern short right_speed ;
+
 
 enum 
 {
@@ -106,8 +110,6 @@ void Debug_Mode(int button)
 }
 
 
-
-
 /*-----------------------Debug Thread Begin-----------------------------*/
 void debug_send_thread_entry(void* parameter)
 {
@@ -151,6 +153,11 @@ INIT_APP_EXPORT(Debug_thread_init);
 /*-----------------------Debug Thread End-----------------------------*/
 
 
+extern short last_left_speed  ;
+extern short last_right_speed ;
+extern short left_speed  ;
+extern short right_speed ;
+extern uint16 diff_value ;
 
 #define CMD_WARE    3
 /* VCANÉ½ÍâÉÏÎ»»úµ÷ÊÔ BEGIN */
@@ -171,15 +178,15 @@ void Vcan_Send_Data(void)
 
 		static short list[8]= {0};
 
-		list[0] = (short)Sensor.PowerSource.Voltage;  //¸©Ñö½Ç Pitch
-		list[1] = (short)Sensor.PowerSource.Current; 	  //Æ«º½½Ç Yaw
+		list[0] = (short)diff_value;  //¸©Ñö½Ç Pitch
+		list[1] = (short)Rocker.Y; 	  //Æ«º½½Ç Yaw
 
-		list[2] = (short)PropellerPower.leftUp;    //CPUÎÂ¶È temp
-		list[3] = (short)PropellerPower.leftDown;//
-		list[4] = (short)PropellerPower.rightUp;//MS_TEMP;//get_vol();
+		list[2] = (short)last_left_speed;    //CPUÎÂ¶È temp
+		list[3] = (short)left_speed;//
+		list[4] = (short)PropellerPower.leftDown;//MS_TEMP;//get_vol();
 		list[5] = (short)PropellerPower.rightDown;//MS5837_Pressure;	
-		list[6] = (short)PropellerPower.leftMiddle;	//camera_center;
-		list[7] = (short)PropellerPower.rightMiddle;
+		list[6] = (short)last_right_speed;	//camera_center;
+		list[7] = (short)right_speed;
 		
 		Vcan_Send_Cmd(list,sizeof(list));
 }

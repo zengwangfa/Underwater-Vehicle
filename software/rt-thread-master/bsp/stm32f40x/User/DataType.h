@@ -1,6 +1,7 @@
 #ifndef __DATA_TYPE_H
 #define __DATA_TYPE_H
 
+
 #define int8 	 char
 #define uint8  unsigned char
 	
@@ -161,6 +162,7 @@ typedef enum
 
 #define MS5837    0   //深度传感器：MS5837
 #define SPL1301   1   //深度传感器：SPL1301
+#define DS_NULL   2   //无深度传感器 Depth_Sensor:null
 
 /* ---------------【推进器 参数】--------------*/
 

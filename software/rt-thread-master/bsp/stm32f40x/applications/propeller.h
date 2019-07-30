@@ -45,14 +45,14 @@ typedef struct
 
 typedef struct
 {
-	  int16 Power; //推进器动力系数 【不能为负】
+	  float PowerPercent; //推进器动力百分比
 	
-		int16 leftUp;
-		int16 rightUp;
-		int16 leftDown;
-		int16 rightDown;
-		int16 leftMiddle;
-		int16 rightMiddle;
+		short leftUp;
+		short rightUp;
+		short leftDown;
+		short rightDown;
+		short leftMiddle;
+		short rightMiddle;
 
 }PropellerPower_Type;//各个推进器推力
 

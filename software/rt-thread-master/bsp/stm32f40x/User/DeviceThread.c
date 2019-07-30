@@ -15,11 +15,10 @@
 #include "rc_data.h"
 #include "Control.h"
 #include "PropellerControl.h"
-
 #include "focus.h"
 #include "debug.h"
 
-int button_value_test = 0;
+
 /**
   * @brief  propeller_thread_entry(推进器控制任务函数)
   * @param  void* parameter
@@ -37,6 +36,9 @@ void propeller_thread_entry(void *parameter)
 				if(UNLOCK == ControlCmd.All_Lock){ //如果解锁
 						Convert_RockerValue(&Rocker); //遥控数据 转换 为推进器动力
 				}
+				else{
+						Propller_Stop();
+				}
 
 				if(FOUR_AXIS == VehicleMode && UNLOCK == ControlCmd.All_Lock ){ //安全保护措施
 						FourtAxis_Control(&Rocker);
@@ -47,9 +49,8 @@ void propeller_thread_entry(void *parameter)
 						ROV_Depth_Control(&Rocker);
 				}
 
-				
 				Propeller_Output(); //推进器真实PWM输出		
-				rt_thread_mdelay(10); //10ms
+				rt_thread_mdelay(1); //5ms
 		}
 	
 }
@@ -89,8 +90,7 @@ void devices_thread_entry(void *parameter)//高电平1.5ms 总周期20ms  占空比7.5% v
 				}
 				else if(DEBUG == WorkMode)//调试模式
 				{	
-						button_value_test = get_button_value(&ControlCmd);
-						Debug_Mode(button_value_test);
+						Debug_Mode(get_button_value(&ControlCmd));
 				}
 				rt_thread_mdelay(20);
 		}
@@ -106,7 +106,7 @@ int propeller_thread_init(void)
                     propeller_thread_entry,			 //线程入口函数【entry】
                     RT_NULL,							   //线程入口函数参数【parameter】
                     2048,										 //线程栈大小，单位是字节【byte】
-                    10,										 	 //线程优先级【priority】
+                    8,										 	 //线程优先级【priority】
                     10);										 //线程的时间片大小【tick】= 100ms
 
     if (propeller_tid != RT_NULL){

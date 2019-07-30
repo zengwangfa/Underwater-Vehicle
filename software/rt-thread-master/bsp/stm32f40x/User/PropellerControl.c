@@ -113,19 +113,19 @@ void ROV_Rotate_Control(Rocker_Type *rc){
 * 注    意：最大值为Propeller.PowerMax 初始化为1800
 						最小值为Propeller.PowerMin 初始化为1300
 ********************************************/
-//uint16 Output_Limit(int16 *PowerValue)
+//uint16 Propeller_Output_Limit(int16 value)
 //{
-//		//不超过+500   不超过-500
-//		*PowerValue = (*PowerValue) > (16000 - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMax - PropellerParameter.PowerMed ): *PowerValue ;//正向限幅
-//		*PowerValue = (*PowerValue) < (PropellerParameter.PowerMin - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMin - PropellerParameter.PowerMed ): *PowerValue ;//反向限幅
-//	
-//		return *PowerValue ;
+//	//不超过+500   不超过-500
+//	value = (value) > (PropellerParameter.PowerMax - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMax - PropellerParameter.PowerMed ): value ;//正向限幅
+//	value = (value) < (PropellerParameter.PowerMin - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMin - PropellerParameter.PowerMed ): value ;//反向限幅
+
+//	return value ;
 //}
 uint16 Propeller_Output_Limit(int16 value)
 {
 		//不超过+500   不超过-500
-		value = (value) > 100  ? 100  : value ;//正向限幅
-		value = (value) < -100 ? -100 : value;//反向限幅
+		value = (value) > 160  ? 160  : value ;//正向限幅
+		value = (value) < -160 ? -160 : value;//反向限幅
 	
 		return value ;
 }
@@ -189,7 +189,7 @@ void turnLeft(uint16 power)  //左旋
 
 
 
-void Propller_stop(void)  //推进器停转
+void Propller_Stop(void)  //推进器停转
 {
 		PropellerPower.leftUp =    0 + PropellerError.leftUp;
 		PropellerPower.rightUp =   0 + PropellerError.rightUp;
@@ -199,7 +199,7 @@ void Propller_stop(void)  //推进器停转
 		PropellerPower.leftMiddle = 0 + PropellerError.leftMiddle;
 		PropellerPower.rightMiddle = 0+ PropellerError.rightMiddle; 
 }
-MSH_CMD_EXPORT(Propller_stop,ag: propller_stop);
+MSH_CMD_EXPORT(Propller_Stop,ag: propller_stop);
 
 
 /*******************************************
