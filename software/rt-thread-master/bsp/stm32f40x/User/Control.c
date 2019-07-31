@@ -32,7 +32,7 @@ extern uint8 Frame_EndFlag;
 
 
 
-#define STEP_VLAUE  3
+#define STEP_VLAUE  1
 
 /**
   * @brief  Convert_RockerValue(遥控器数据转换为推进器动力值)
@@ -138,8 +138,8 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 		right_speed  = abs(rc->X) * sin(Angle_Rad) - abs(rc->Y) * cos(Angle_Rad);
 		
 		
-		/* 直线前进/后退保护   90°±15°    270°±15°*/
-		if( (rc->Angle >= 75 && rc->Angle <= 105) || (rc->Angle >= 255 && rc->Angle <= 285)   )//当摇杆 较为归中时，无视Y轴摇杆值【即仅为前进/后退】
+		/* 直线前进/后退保护   90°±12°    270°±12°*/
+		if( (rc->Angle >= 78 && rc->Angle <= 102) || (rc->Angle >= 258 && rc->Angle <= 282)   )//当摇杆 较为归中时，无视Y轴摇杆值【即仅为前进/后退】
 		{
 				left_speed   = abs(rc->X) * sin(Angle_Rad);
 				right_speed  = abs(rc->X) * sin(Angle_Rad);
@@ -148,13 +148,12 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 
 
 		if(rc->X >= 0){ /* 推力公式 = 方向系数*(动力百分比*摇杆对应的推力值+偏差值) */
-				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed   ) ;//推力公式 = 
+				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed );//推力公式 = 
 				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed + PropellerError.rightDown);
-					
 		}
 		else{
 				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed  + PropellerError.leftDown) ;//推力公式 = 动力百分比*方向系数*(摇杆对应的推力值+偏差值)
-				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed  );		
+				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed );		
 		}
 		
 		Speed_Buffer(&PropellerPower.leftDown , &last_left_speed, 4);	//输出速度缓冲

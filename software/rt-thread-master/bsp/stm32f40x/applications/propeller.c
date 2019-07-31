@@ -24,10 +24,10 @@
 
 uint8 Propeller_Init_Flag = 0;
 
-PropellerParameter_Type PropellerParameter = {//初始化推进器参数值
-		 .PowerMax = 2000,//正向最大值
+PropellerParameter_Type PropellerParameter = {//初始化推进器参数值【限幅】
+		 .PowerMax = 1750,//正向最大值
 		 .PowerMed = 1500,//中值
-		 .PowerMin = 1000,//反向最小值【反向推力最大】
+		 .PowerMin = 1250,//反向最小值【反向推力最大】
 	
 	   .PowerDeadband = 10	//死区值
 }; 

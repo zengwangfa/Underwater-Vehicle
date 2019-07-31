@@ -113,22 +113,22 @@ void ROV_Rotate_Control(Rocker_Type *rc){
 * 注    意：最大值为Propeller.PowerMax 初始化为1800
 						最小值为Propeller.PowerMin 初始化为1300
 ********************************************/
-//uint16 Propeller_Output_Limit(int16 value)
-//{
-//	//不超过+500   不超过-500
-//	value = (value) > (PropellerParameter.PowerMax - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMax - PropellerParameter.PowerMed ): value ;//正向限幅
-//	value = (value) < (PropellerParameter.PowerMin - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMin - PropellerParameter.PowerMed ): value ;//反向限幅
-
-//	return value ;
-//}
 uint16 Propeller_Output_Limit(int16 value)
 {
-		//不超过+500   不超过-500
-		value = (value) > 160  ? 160  : value ;//正向限幅
-		value = (value) < -160 ? -160 : value;//反向限幅
-	
-		return value ;
+	//不超过+500   不超过-500
+	value = (value) > (PropellerParameter.PowerMax - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMax - PropellerParameter.PowerMed ): value ;//正向限幅
+	value = (value) < (PropellerParameter.PowerMin - PropellerParameter.PowerMed ) ? (PropellerParameter.PowerMin - PropellerParameter.PowerMed ): value ;//反向限幅
+
+	return value ;
 }
+//uint16 Propeller_Output_Limit(int16 value)
+//{
+//		//不超过+500   不超过-500
+//		value = (value) > 160  ? 160  : value ;//正向限幅
+//		value = (value) < -160 ? -160 : value;//反向限幅
+//	
+//		return value ;
+//}
 
 
 
@@ -191,13 +191,13 @@ void turnLeft(uint16 power)  //左旋
 
 void Propller_Stop(void)  //推进器停转
 {
-		PropellerPower.leftUp =    0 + PropellerError.leftUp;
-		PropellerPower.rightUp =   0 + PropellerError.rightUp;
-		PropellerPower.leftDown =  0 + PropellerError.leftDown;
-		PropellerPower.rightDown = 0 + PropellerError.rightDown;
+		PropellerPower.leftUp =    0;
+		PropellerPower.rightUp =   0;
+		PropellerPower.leftDown =  0;
+		PropellerPower.rightDown = 0;
 	
-		PropellerPower.leftMiddle = 0 + PropellerError.leftMiddle;
-		PropellerPower.rightMiddle = 0+ PropellerError.rightMiddle; 
+		PropellerPower.leftMiddle = 0;
+		PropellerPower.rightMiddle = 0; 
 }
 MSH_CMD_EXPORT(Propller_Stop,ag: propller_stop);
 
