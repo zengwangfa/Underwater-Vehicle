@@ -33,7 +33,7 @@ extern uint8 uart_startup_flag;
 extern float  Yaw;
 extern short left_speed  ;
 extern short right_speed ;
-
+extern float temp_current;
 
 enum 
 {
@@ -178,8 +178,8 @@ void Vcan_Send_Data(void)
 
 		static short list[8]= {0};
 
-		list[0] = (short)diff_value;  //¸©Ñö½Ç Pitch
-		list[1] = (short)Rocker.Y; 	  //Æ«º½½Ç Yaw
+		list[0] = (short)(temp_current*1000);  //¸©Ñö½Ç Pitch
+		list[1] = (short)(Sensor.PowerSource.Current*1000); 	  //Æ«º½½Ç Yaw
 
 		list[2] = (short)last_left_speed;    //CPUÎÂ¶È temp
 		list[3] = (short)left_speed;//

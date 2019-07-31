@@ -158,7 +158,7 @@ void OLED_StatusPage(void)
 		sprintf(str,"Vol:%.2fV",Sensor.PowerSource.Voltage);//电压
 		OLED_ShowString(0,16,(uint8 *)str,12); 
 		
-		sprintf(str,"Cur:%.2fA",Sensor.PowerSource.Current);//电流
+		sprintf(str,"Cur:%.3f",Sensor.PowerSource.Current);//电流
 		OLED_ShowString(70,16,(uint8 *)str,12); 	
 		
 	  sprintf(str,"CPU:%.2f%% ",Sensor.CPU.Usage);//%字符的转义字符是%%  %这个字符在输出语句是向后匹配的原则

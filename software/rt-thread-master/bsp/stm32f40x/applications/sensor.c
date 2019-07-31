@@ -28,6 +28,7 @@ char *Depth_Sensor_Name[3] = {"MS5837","SPL1301","null"};
 extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
 Sensor_Type Sensor;//传感器参数
+		float temp_current = 0.0f;
 
 /*----------------------- Function Implement --------------------------------*/
 /**
@@ -39,6 +40,7 @@ Sensor_Type Sensor;//传感器参数
 void sensor_lowSpeed_thread_entry(void* parameter)
 {
 		uint8 cpu_usage_major, cpu_usage_minor; //整数位、小数位
+
 		rt_thread_mdelay(3000);//等待3s系统稳定再获取数据
 
 		while(1)
@@ -48,13 +50,15 @@ void sensor_lowSpeed_thread_entry(void* parameter)
 				Sensor.PowerSource.Voltage = get_voltage_value();  //获取电源电压值
 				if(Sensor.PowerSource.Voltage > 6.0f ){							//当未接入电源时，不检测电流值
 						Sensor.PowerSource.Current = get_current_value();  //获取INA169电流值
-						Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);//电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较小】
+						temp_current = Sensor.PowerSource.Current ;
+						Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);
+						 //电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较大】
 				}
-			cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
-			Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
+				cpu_usage_get(&cpu_usage_major, &cpu_usage_minor); //获取CPU使用率
+				Sensor.CPU.Usage = cpu_usage_major + (float)cpu_usage_minor/100;
 			
 
-				rt_thread_mdelay(1000);
+				rt_thread_mdelay(100);
 		}
 }
 
