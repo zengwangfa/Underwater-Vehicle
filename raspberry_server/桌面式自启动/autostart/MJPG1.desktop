@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=MJPG-Video1
 Comment=Start USB CAMERA Video1 Stream 
-Exec=/usr/local/bin/mjpg_streamer -i "/usr/local/lib/mjpg-streamer/input_uvc.so -d /dev/video1 -n -f 10 -r 1280x720" -o "/usr/local/lib/mjpg-streamer/output_http.so -p 8086 -w /usr/local/share/mjpg-streamer/www"
+Exec=/usr/local/bin/mjpg_streamer -i "/usr/local/lib/mjpg-streamer/input_uvc.so -d /dev/video1 -n -f 30 -r 1280x720" -o "/usr/local/lib/mjpg-streamer/output_http.so -p 8086 -w /usr/local/share/mjpg-streamer/www"
 Icon=/home/pi/python_games/4row_black.png
 Terminal=false
 MultipleArgs=false

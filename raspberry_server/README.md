@@ -16,7 +16,7 @@
 
 - 3.shell输入：
 `
-chmod +x runserver.sh
+sudo chmod +x runserver.sh
 `
 使脚本生效（可执行）
 	
