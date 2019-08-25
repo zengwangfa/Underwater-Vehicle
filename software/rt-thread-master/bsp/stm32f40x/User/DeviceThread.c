@@ -45,7 +45,7 @@ void propeller_thread_entry(void *parameter)
 						ROV_Depth_Control(&Rocker);
 				}
 				else if(SIX_AXIS == VehicleMode && UNLOCK == ControlCmd.All_Lock){
-						SixAxis_Control(&Rocker);
+						//SixAxis_Control(&Rocker);
 						ROV_Depth_Control(&Rocker);
 				}
 

@@ -20,7 +20,7 @@
 
 char GYRO_UART_NAME[]    = "uart2";  //JY901 uart2
 
-char DEBUG_UART_NAME[]  =  "uart1" ; //WIFI uart3
+char DEBUG_UART_NAME[]  =  "uart3" ; //WIFI uart3
 
 char CONTROL_UART_NAME[] = "uart4";  //CP2101 uart4
 

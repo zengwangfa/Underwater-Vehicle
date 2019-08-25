@@ -113,9 +113,9 @@ void menu_define(void) //菜单定义
 	else {oled.pagechange_flag = 0;}
 	oled.pagechange = oled.pagenum;
 	
-	if(ControlCmd.All_Lock == LOCK){// 当拨码不是强制解锁 锁定页面
-			oled.pagenum = LockPage;
-	}
+//	if(ControlCmd.All_Lock == LOCK){// 当拨码不是强制解锁 锁定页面
+//			oled.pagenum = LockPage;
+//	}
 	switch(oled.pagenum){
 			case 1:{
 					MENU = StatusPage;	 OLED_StatusPage();		break;

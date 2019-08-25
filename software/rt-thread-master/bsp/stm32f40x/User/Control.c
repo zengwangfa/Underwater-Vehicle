@@ -43,7 +43,7 @@ extern uint8 Frame_EndFlag;
 void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 {
 		rt_enter_critical();/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
-		static int16 last_rc_x = 0 ,last_rc_y = 0;
+
 		if(Frame_EndFlag){	
 
 				rc->X = ControlCmd.Move - 126; 			  //摇杆值变换：X轴摇杆值 -127 ~ +127
@@ -51,33 +51,16 @@ void Convert_RockerValue(Rocker_Type *rc) //获取摇杆值
 				rc->Z = ControlCmd.Vertical - 127;    //当大于128时上浮,小于128时下潜，差值越大，速度越快
 				rc->Yaw = ControlCmd.Rotate - 128;    //偏航
 		}
-		//Speed_Buffer(&rc->X,&last_rc_x, 4);	//输出摇杆缓冲
-		//Speed_Buffer(&rc->Y,&last_rc_y, 4);	
+
 
 		rt_exit_critical();		/* 调度器解锁 */		
 		
 
-//		if(SIX_AXIS == VehicleMode){
-//				rc->Angle = Rad2Deg(atan2(rc->X,rc->Y));// 求取atan角度：180 ~ -180
-//				if(rc->Angle < 0){rc->Angle += 360;}  /*角度变换 以极坐标定义 角度顺序 0~360°*/ 	
-//																				
-//				rc->Force = sqrt(rc->X*rc->X + rc->Y*rc->Y);	//求合力斜边
-//				rc->Fx = (sqrt(2)/2)*(rc->X - rc->Y);//转换的 X轴分力	  因为四浆对置为45°角
-//				rc->Fy = (sqrt(2)/2)*(rc->X + rc->Y);//转换的 Y轴分力	  因为四浆对置为45°角
-//				   
-//				/* 推力F = 推进器方向*推力系数*摇杆打杆程度 + 偏差值 */   //ControlCmd.Power
-//				PropellerPower.leftUp =    (PropellerDir.leftUp    * (PowerPercent) * ( rc->Fy) )/70 + ACC1 + PropellerError.leftUp;  //Power为推进器系数 0~300%
-//				PropellerPower.rightUp =   (PropellerDir.rightUp   * (PowerPercent) * ( rc->Fx) )/70 + ACC2 + PropellerError.rightUp;  //处于70为   128(摇杆打杆最大程度)*255(上位机的动力系数)/70 = 466≈500(推进器最大动力)
-//				PropellerPower.leftDown =  (PropellerDir.leftDown  * (PowerPercent) * ( rc->Fx) )/70 + ACC3 + PropellerError.leftDown ; 
-//				PropellerPower.rightDown = (PropellerDir.rightDown * (PowerPercent) * ( rc->Fy) )/70 + ACC4 + PropellerError.rightDown;
-//				
-
-//		}
 
 }
 
 
-uint16 diff_value = 0;
+
 	
 /*******************************************
 * 函 数 名：void Speed_Buffer(int *BufferMember,int BufferRange)
@@ -88,7 +71,7 @@ uint16 diff_value = 0;
 ********************************************/
 void Speed_Buffer(short *now_value,short *last_value,short range)
 {		
-
+		static uint16 diff_value = 0;
 		diff_value = abs((*last_value) - (*now_value));//暂存差值的绝对值
 		
 		if(diff_value >= range)//微分大于预设值，启动缓冲
@@ -189,63 +172,6 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 }
 
 
-void SixAxis_Control(Rocker_Type *rc)
-{
-		static int16 LeftUp,LeftDown,LeftMid,RightUp,RightDown,RightMid;
-		static int16 LeftUpFlag,LeftDownFlag,LeftMidFlag,RightUpFlag,RightDownFlag,RightMidFlag;
-		static int16 LeftUpCoe_X,LeftDownCoe_X,LeftMidCoe = 1,RightUpCoe_X,RightDonwCoe_X,RightMidCoe = 1;
-		static int16 LeftUpCoe_Y,LeftDownCoe_Y,RightUpCoe_Y,RightDonwCoe_Y;
-	
-		LeftUpCoe_X   = 0; 						
-		LeftDownCoe_X = 0;
-		RightUpCoe_X  = 0;
-		RightDonwCoe_X= 0;
-		LeftUpCoe_Y   = 0;
-		LeftDownCoe_Y = 0;
-		RightUpCoe_Y  = 0;
-		RightDonwCoe_Y= 0;
-				
-		if(rc->X != 0 && rc->Y != 0)
-		{		
-				LeftUpCoe_Y   =  1;
-				LeftDownCoe_Y =  1;
-				RightUpCoe_Y  = -1;
-				RightDonwCoe_Y= -1;		
-		}
-		else
-		{
-				if(abs(rc->X) > 0)
-				{
-						LeftUpCoe_X   = 1;
-						LeftDownCoe_X = 1;
-						RightUpCoe_X  = 1;
-						RightDonwCoe_X= 1;
-				}
-								
-				if(abs(rc->Y) > 0)
-				{
-						LeftUpCoe_Y   =  1;
-						LeftDownCoe_Y = -1;
-						RightUpCoe_Y  = -1;
-						RightDonwCoe_Y=  1;
-				}
-		}
-		
-		LeftUpFlag    = LeftUpCoe_X   * rc->X + LeftUpCoe_Y   * rc->Y ;
-		LeftDownFlag  = LeftDownCoe_X * rc->X + LeftDownCoe_Y * rc->Y ;
-		RightUpFlag   = RightUpCoe_X  * rc->X + RightUpCoe_Y  * rc->Y ;
-		RightDownFlag = RightDonwCoe_X* rc->X + RightDonwCoe_Y* rc->Y ;
-		
-
-
-		
-		PropellerPower.leftUp     = PropellerDir.leftUp     * (LeftUpFlag   + LeftUp)   ;
-		PropellerPower.leftDown   = PropellerDir.leftDown   * (LeftDownFlag + LeftDown) ;
-		PropellerPower.rightUp    = PropellerDir.rightUp    * (RightUpFlag  + RightUp)  ;
-		PropellerPower.rightDown  = PropellerDir.rightDown  * (RightDownFlag+ RightDown);
-
-	
-}
 
 
 void Angle_Control(void)

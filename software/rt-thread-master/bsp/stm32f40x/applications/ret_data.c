@@ -12,7 +12,7 @@
 #include <rtthread.h>
 #include "uart.h"
 #include "gyroscope.h"
-
+#include "Control.h"
 /*----------------------- Variable Declarations -----------------------------*/
 
 uint8 Return_Data[22] = {0};
@@ -78,11 +78,11 @@ void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 		static short temp_Pitch = 0;
 		static short temp_Yaw = 0;
 	
-		temp_Roll  = (short)((sensor->JY901.Euler.Roll+180) *100);  //数据转换:将角度数据转为正值并放大100倍
-		temp_Pitch = (short)((sensor->JY901.Euler.Pitch+180)*100);
-		temp_Yaw   = (short)((sensor->JY901.Euler.Yaw+180)*100);
-	
-		Return_Data[0] = sensor->PowerSource.Voltage; //整数倍
+		temp_Roll  = (short)((sensor->JY901.Euler.Roll  + 180) * 100);  //数据转换:将角度数据转为正值并放大100倍
+		temp_Pitch = (short)((sensor->JY901.Euler.Pitch + 180) * 100);
+		temp_Yaw   = (short)((sensor->JY901.Euler.Yaw   + 180) * 100);
+
+		Return_Data[0] = (int)sensor->PowerSource.Voltage; //整数倍
 		Return_Data[1] = get_decimal(sensor->PowerSource.Voltage);//小数的100倍
 	
 		Return_Data[2] = (int)sensor->CPU.Temperature; //整数倍
@@ -104,8 +104,15 @@ void Convert_Return_Computer_Data(Sensor_Type *sensor) //返回上位机数据 转换
 		Return_Data[13] = temp_Roll >> 8; // Roll 高8位
 		Return_Data[14] = (uint8)temp_Roll; //低8位
 
-		Return_Data[15] = (uint8)sensor->JY901.Speed.x;//x轴航速
+		Return_Data[15] = (uint8)10;//x轴航速
 		Return_Data[16] = 0x02;//device_hint_flag;  //设备提示字符
+		
+		Return_Data[17] = ControlCmd.All_Lock; //解锁位
+
+		Return_Data[18] = (int)sensor->PowerSource.Current;//device_hint_flag;  //设备提示字符
+		Return_Data[19] = get_decimal(sensor->PowerSource.Current);//小数的10倍;//device_hint_flag;  //设备提示字符
+		
+		
 }
 
 /**
@@ -135,7 +142,9 @@ uint8 Calculate_Check_Byte(uint8 *begin_buff,uint8 *buff,uint8 len)
   */
 void Send_Buffer_Agreement(uint8 *begin_buff,uint8 *buff,uint8 len)
 {
-		uint8 Check_Byte = Calculate_Check_Byte(begin_buff ,buff ,len); //计算校验位
+		static uint8 Check_Byte = 0;
+	
+		Check_Byte = Calculate_Check_Byte(begin_buff ,buff ,len); //计算校验位
 		
 		begin_buff[2] = len; //长度位
 		rt_device_write(control_uart_device,0,begin_buff, 3);    //发送包头
