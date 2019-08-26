@@ -74,6 +74,12 @@ void Servo_Output_Limit(ServoType *Servo)
   */
 void RoboticArm_Control(uint8 *action)
 {
+		static uint8 on_off = 0;//自锁开关
+		if(0 == on_off){
+				on_off = 1;
+				RoboticArm.CurrentValue = RoboticArm.MedValue;
+		}
+	
 		switch(*action)
 		{
 				case 0x01:RoboticArm.CurrentValue += RoboticArm.Speed;
@@ -105,22 +111,28 @@ void RoboticArm_Control(uint8 *action)
 
 void YunTai_Control(uint8 *action)
 {
+		static uint8 on_off = 0;//自锁开关
+		if(0 == on_off){
+				on_off = 1;
+				YunTai.CurrentValue = YunTai.MedValue;
+		}
 		switch(*action)
 		{
 				case 0x01:YunTai.CurrentValue += YunTai.Speed;  //向上
 						if(YunTai.CurrentValue <= YunTai.MaxValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-
 						break;  
 						
 				case 0x02:YunTai.CurrentValue -= YunTai.Speed; //向下
 						if(YunTai.CurrentValue >= YunTai.MinValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
-
 						break;  
 
-				case 0x03:YunTai.CurrentValue = YunTai.MedValue;break;   //归中
-				default: break;
+				case 0x03:YunTai.CurrentValue = YunTai.MedValue;
+						break;   //归中
+						
+				default: 
+						break;
 		}
 		Servo_Output_Limit(&YunTai);
 		TIM4_PWM_CH4_D15(YunTai.CurrentValue); 
@@ -373,7 +385,7 @@ static int yuntai_currentValue_set(int argc, char **argv)
     }
 		if(atoi(argv[1]) <= 3000 && atoi(argv[1]) >= 500){
 				YunTai.CurrentValue = atoi(argv[1]);
-				log_i("Write_Successed! Current YunTai.CurrentValue:  %d",YunTai.CurrentValue);
+				log_i("Current YunTai.CurrentValue:  %d",YunTai.CurrentValue);
 		}
 		else {
 				log_e("Error! The value is out of range!");
