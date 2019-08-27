@@ -29,7 +29,7 @@ void return_computer_thread_entry(void* parameter)
 			
 				Convert_Return_Computer_Data(&Sensor); //转换返回上位机的数据
 				Send_Buffer_Agreement(begin_buff,Return_Data,22); //发送数据包协议
-				rt_thread_mdelay(100);
+				rt_thread_mdelay(1000);
 		}
 }
 

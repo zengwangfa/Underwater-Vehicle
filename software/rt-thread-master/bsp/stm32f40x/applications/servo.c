@@ -118,12 +118,12 @@ void YunTai_Control(uint8 *action)
 		}
 		switch(*action)
 		{
-				case 0x01:YunTai.CurrentValue += YunTai.Speed;  //向上
+				case 0x01:YunTai.CurrentValue -= YunTai.Speed;  //向上
 						if(YunTai.CurrentValue <= YunTai.MaxValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
 						break;  
 						
-				case 0x02:YunTai.CurrentValue -= YunTai.Speed; //向下
+				case 0x02:YunTai.CurrentValue += YunTai.Speed; //向下
 						if(YunTai.CurrentValue >= YunTai.MinValue){device_hint_flag |= 0x02;}//云台到头标志
 						else {device_hint_flag &= 0xFD;}; //清除云台到头标志
 						break;  

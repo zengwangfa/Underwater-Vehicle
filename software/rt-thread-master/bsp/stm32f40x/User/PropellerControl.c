@@ -71,7 +71,7 @@ void ROV_Depth_Control(Rocker_Type *rc){
 //						}
 				}
 				else if(rc->Z < -5){
-						if(Total_Controller.High_Position_Control.Control_OutPut < 150){ //超过输出范围 停止累积
+						if(Total_Controller.High_Position_Control.Control_OutPut < 300){ //超过输出范围 停止累积
 								Expect_Depth += (fabs((float)rc->Z)/100);
 						}
 				}
@@ -212,19 +212,28 @@ MSH_CMD_EXPORT(Propller_Stop,ag: propller_stop);
 void robot_upDown(float *depth_output)  
 {
 		//限幅 限制在推进器 设定的最大油门值-停转值(中值)
-		*depth_output = *depth_output >  (150 ) ?  (150) :*depth_output; //正为下潜
-		*depth_output = *depth_output < -(150 ) ? -(150 ):*depth_output;
+		*depth_output = *depth_output >  (300 ) ?  (300) :*depth_output; //正为下潜
+		*depth_output = *depth_output < -(300 ) ? -(300 ):*depth_output;
+		
+//		if(depth_output >= 0){//ROVmaker
+//				PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -*depth_output - PropellerError.leftMiddle ) ;//正反桨
+//				PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -*depth_output - PropellerError.rightMiddle );//输出为负值
+//		}
+//		else{
+//				PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -*depth_output + PropellerError.leftMiddle )   ;//正反桨
+//				PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -*depth_output + PropellerError.rightMiddle) ;//输出为负值
+//		
+//		}
 		
 		if(depth_output >= 0){
-				PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -*depth_output + PropellerError.leftMiddle -32) ;//正反桨
-				PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -*depth_output + PropellerError.rightMiddle );//输出为负值
+				PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -*depth_output - PropellerError.leftMiddle ) ;//正反桨
+				PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -*depth_output );//输出为负值
 		}
 		else{
-				PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -*depth_output + PropellerError.leftMiddle )   ;//正反桨
-				PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -*depth_output + PropellerError.rightMiddle+30) ;//输出为负值
+				PropellerPower.leftMiddle   =  PropellerDir.leftMiddle  * ( -*depth_output  )   ;//正反桨
+				PropellerPower.rightMiddle  =  PropellerDir.rightMiddle * ( -*depth_output + PropellerError.rightMiddle) ;//输出为负值
 		
-		}
-		
+		}	
 		
 		if(FOUR_AXIS == VehicleMode){ //这个是为了平衡两边推力(以为正反推进器，其特有推力不一致)
 

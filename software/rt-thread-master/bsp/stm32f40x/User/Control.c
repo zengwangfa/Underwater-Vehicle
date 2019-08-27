@@ -131,12 +131,12 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 
 
 		if(rc->X >= 0){ /* 推力公式 = 方向系数*(动力百分比*摇杆对应的推力值+偏差值) */
-				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed );//推力公式 = 
+				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed  + PropellerError.rightUp);//推力公式 = 
 				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed + PropellerError.rightDown);
 		}
 		else{
-				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed  + PropellerError.leftDown) ;//推力公式 = 动力百分比*方向系数*(摇杆对应的推力值+偏差值)
-				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed );		
+				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed  - PropellerError.leftDown) ;//推力公式 = 动力百分比*方向系数*(摇杆对应的推力值+偏差值)
+				PropellerPower.rightDown =  PropellerDir.rightDown * (PropellerPower.PowerPercent * right_speed - PropellerError.leftUp);		
 		}
 		
 		Speed_Buffer(&PropellerPower.leftDown , &last_left_speed, 4);	//输出速度缓冲
