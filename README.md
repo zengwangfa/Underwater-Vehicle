@@ -4,7 +4,7 @@
 [个人主页🕺](https://zengwangfa.top/) |
 [软件说明💻](./software/README.md) |
 [硬件说明📚](./hardware/README.md) |
-[机械结构说明🎮](./graphic_model/README.md)
+[机械说明🎮](./graphic_model/README.md)
 
 
 ### 简介
@@ -31,49 +31,38 @@
 ## 2、目录说明
 ```
 +——Underwater_vehicle
-|--------+ docs: 【设计参考文档】
-|--------+ hardware:【相关电路设计】      
-|            ├──README.md
-|            ├──.SchDoc
-|            ├──.PcbDoc
-|            └──.pdf
-|--------+ software:【相关软件设计】
-|            ├──README.md
-|            ├──rt-thread-master
-|                 └──bsp
-|                    └──stm32f40x 【主要系统控制程序】
-|--------+ graphic_model:【机械模型】
-|--------+ raspberry_server:【树莓派服务】
-|--------+ README.md
+|---+ docs: 【设计文档】
+|---+ hardware:【电路设计】      
+|---+ software:【软件设计】
+|       ├──README.md
+|       ├──rt-thread-master
+|            └──bsp
+|               └──stm32f407【控制程序】
+|---+ graphic_model:【机械模型】
+|---+ raspberry_server:【树莓派服务】
+|---+ README.md
 ```
 
 ## 3、机械结构
 
 - 3维模型
-
-![ROV 3D](/docs/pictures/ROV-Model.jpg "ROV-Model.jpg")
+![ROV 3D](/docs/pictures/ROV-Model.jpg "掌舵一号")![ROV 3D](/docs/pictures/ROV_Master2.jpg "ROVMaser Model")
 
 - 实物图
-
-![Entity](/docs/pictures/Entity.jpg "ROV-Entity.jpg")
+![Entity](/docs/pictures/Entity.jpg "ROV Entity")
 
 ## 4、软件结构
 
-```mermaid
-graph TD
-A[RT-Thread系统初始化] --> B(外设初始化)
-B --> C{是否初始化成功}
-C -->|YES| D[采集各个传感器数据并进行数据处理]
-C -->|YES| E[树莓派通信 上行与下行]
-C -->|NO| F[软件异常中断 卡死 亮红灯]
-```
+![Connect Flow](/docs/pictures/Connect_Flow.jpg "Connect Flow")
 
 
-- 💻 🎮 Computer Connect【C#】--Ethernet - Optical Fiber -- Ethernet--> Raspberry Pi【Python】 ---> MCU Control 【C】
+- 💻🎮 Computer Connect ![language](https://img.shields.io/badge/language-C%23-blue.svg)
+- Raspberry Pi ![language](https://img.shields.io/badge/language-Python-ff69b4.svg)
+- MCU Controller ![language](https://img.shields.io/badge/language-C-brightgreen.svg)
 
 
 ## 5、硬件结构
-![Controller PCB 3D](/docs/pictures/Controller_3D.jpg "Controller 3D.jpg")
+![Controller PCB 3D](/docs/pictures/Controller_3D.jpg "Controller 3D")
 
 - 核心板(Core Controller)拥有外设：
 
@@ -81,6 +70,8 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |  --- | --- |  --- |  --- | --- |
 | 控制(通讯)方式 | GPIO | GPIO | GPIO | GPIO | I2C | SPI | SPI | ADC | ADC | USART | USART | USART  | USART | DCMI-DMA | PWM | PWM | PWM |
 | 功能描述 | 指示灯 | 按键 | 蜂鸣器 | 拨码开关 | 深度传感器 | 显示屏 | 闪存芯片 | 电压检测 | 电流检测 | 2.4G无线通信 | 九轴 | WiFi模块 | 串口转USB | 摄像头 | 舵机  | 探照灯 | ESC |
+
+---
 
 - 树莓派拥有有外设：
 
@@ -97,13 +88,11 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 - [X] 电路设计
 	- [X] Core Controller核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
 	- [X] Underwater_Vehicle主板 by [@zengwangfa](https://github.com/zengwangfa)	
-	- [X] 变焦摄像头驱动控制板 by [@李昕凯]
+	- [X] 变焦摄像头驱动控制板 by [@李昕凯](https://github.com/Okurarisona)
 	- [X] 电源主板设计 by [@zengwangfa](https://github.com/zengwangfa)🆕
 	
 - [X] 控制程序
     - [X] 外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
-    - [X] 内置MSH方法 by [@zengwangfa](https://github.com/zengwangfa)
-    - [X] debug上位机:(Vcan【山外】/Ano【匿名】) by [@zengwangfa](https://github.com/zengwangfa)
 	- [X] 控制简易框架 by [@zengwangfa](https://github.com/zengwangfa)
 	- [X] 通信控制 by [@zengwangfa](https://github.com/zengwangfa)🆕
 
@@ -125,15 +114,10 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 
 ## 7、使用说明
 
-- set_vehicle_mode <parameter> 
-> 设置工作模式（auv/rov）
-- propeller_dir_set <parameter parameter parameter parameter parameter parameter>
-> propeller_dir_set rightUp      leftDown     leftUp     rightDown     leftMiddle    rightMiddle 设置六个推进器方向(1代表正方向，-1代表反方向)
-
 - propeller_power_set <parameter>
 > 设置推进器动力 0~300%
 - set_depth_sensor_type <parameter>
-> 修改深度传感器 类型<ms5737/spl1301>
+> 修改深度传感器 类型<ms5737/spl1301/null>
 
 #### 参与贡献
 
@@ -142,9 +126,6 @@ C -->|NO| F[软件异常中断 卡死 亮红灯]
 - 提交代码
 - 新建 Pull Request
 
-#### 个人主页
-
-[淹死的鱼](https://zengwangfa.top/)
 
 
 
