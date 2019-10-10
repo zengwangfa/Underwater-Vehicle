@@ -1,4 +1,4 @@
-# 1、ROV/AUV航行器控制中心
+# ROV/AUV航行器控制中心
 
 
 [个人主页🕺](https://zengwangfa.top/) |
@@ -7,7 +7,7 @@
 [机械说明🎮](./graphic_model/README.md)
 
 
-### 简介
+## 1、简介
 ![language](https://img.shields.io/badge/language-C-brightgreen.svg) | 
 ![language](https://img.shields.io/badge/language-Python-ff69b4.svg) | 
 ![language](https://img.shields.io/badge/language-C%23-blue.svg)
@@ -31,16 +31,17 @@
 ## 2、目录说明
 ```
 +——Underwater_vehicle
-|---+ docs: 【设计文档】
-|---+ hardware:【电路设计】      
+|---- docs: 【设计文档】
+|---- hardware:【电路设计】      
 |---+ software:【软件设计】
 |       ├──README.md
 |       ├──rt-thread-master
 |            └──bsp
 |               └──stm32f407【控制程序】
-|---+ graphic_model:【机械模型】
-|---+ raspberry_server:【树莓派服务】
-|---+ README.md
+|---- graphic_model:【机械模型】
+|---- raspberry_server:【树莓派服务】
+|---- tools:【调试工具】
+|---- README.md
 ```
 
 ## 3、机械结构
@@ -72,6 +73,8 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 控制(通讯)方式 | GPIO | GPIO | GPIO | GPIO | I2C | SPI | SPI | ADC | ADC | USART | USART | USART  | USART | DCMI-DMA | PWM | PWM | PWM |
 | 功能描述 | 指示灯 | 按键 | 蜂鸣器 | 拨码开关 | 深度传感器 | 显示屏 | 闪存芯片 | 电压检测 | 电流检测 | 2.4G无线通信 | 九轴 | WiFi模块 | 串口转USB | 摄像头 | 舵机  | 探照灯 | ESC |
+
+![Hardware PCB 3D](/docs/pictures/hardware.jpg "Hardware PCB 3D")
 
 ---
 
