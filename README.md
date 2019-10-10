@@ -45,14 +45,10 @@
 
 ## 3、机械结构
 
-<figure class="half">
-    <img src="/docs/pictures/ROV_Master2.png">
-	<img src="/docs/pictures/ROV-Model.jpg">
-</figure>
 
 
 - 3维模型
-![ROV 3D](/docs/pictures/ROV-Model.jpg "掌舵一号")![ROV 3D](/docs/pictures/ROV_Master2.png "ROVMaser Model")
+![ROV 3D](/docs/pictures/ROVMasetr_Model.png "ROVMaser Model")
 
 - 实物图
 ![Entity](/docs/pictures/Entity.jpg "ROV Entity")
