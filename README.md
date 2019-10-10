@@ -46,7 +46,7 @@
 ## 3、机械结构
 
 - 3维模型
-![ROV 3D](/docs/pictures/ROV-Model.jpg "掌舵一号")![ROV 3D](/docs/pictures/ROV_Master2.jpg "ROVMaser Model")
+![ROV 3D](/docs/pictures/ROV-Model.jpg "掌舵一号")![ROV 3D](/docs/pictures/ROV_Master2.png "ROVMaser Model")
 
 - 实物图
 ![Entity](/docs/pictures/Entity.jpg "ROV Entity")
@@ -56,9 +56,9 @@
 ![Connect Flow](/docs/pictures/Connect_Flow.jpg "Connect Flow")
 
 
-- 💻🎮 Computer Connect ![language](https://img.shields.io/badge/language-C%23-blue.svg)
-- Raspberry Pi ![language](https://img.shields.io/badge/language-Python-ff69b4.svg)
-- MCU Controller ![language](https://img.shields.io/badge/language-C-brightgreen.svg)
+- Computer Connect![language](https://img.shields.io/badge/language-C%23-blue.svg)
+- Raspberry Pi    ![language](https://img.shields.io/badge/language-Python-ff69b4.svg)
+- MCU Controller  ![language](https://img.shields.io/badge/language-C-brightgreen.svg)
 
 
 ## 5、硬件结构
@@ -67,7 +67,7 @@
 - 核心板(Core Controller)拥有外设：
 
 | 外设名称 | RGB LED | Key | Buzzer | Dial Switch | MS5837 | OLED | W25Q128 | Voltage Detection | Current Detection | Zigbee |  JY901 | USR-C216 | CP2102 | OV2640 Camera | Servo Motor | Searchlights | Perpellers |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |  --- | --- |  --- |  --- | --- |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 控制(通讯)方式 | GPIO | GPIO | GPIO | GPIO | I2C | SPI | SPI | ADC | ADC | USART | USART | USART  | USART | DCMI-DMA | PWM | PWM | PWM |
 | 功能描述 | 指示灯 | 按键 | 蜂鸣器 | 拨码开关 | 深度传感器 | 显示屏 | 闪存芯片 | 电压检测 | 电流检测 | 2.4G无线通信 | 九轴 | WiFi模块 | 串口转USB | 摄像头 | 舵机  | 探照灯 | ESC |
 
@@ -76,7 +76,7 @@
 - 树莓派拥有有外设：
 
 | 外设名称 | Camera 1 | Camera 2 | Core Controller | PLC / Optical-to-electrical Transducer |
-| --- | --- | --- | --- | --- |
+| :---: | :---: | :---: | :---: | :---: |
 | 控制(通讯)方式 | USB | USB | USB | Ethernet |
 | 功能描述 | 外置光学变焦摄像头 | 内置云台摄像头 | 核心控制器 | 电力载波模块/光电转换器 | 
 
@@ -86,15 +86,15 @@
 
 ## 6、Underwater Vehicle 的进展
 - [X] 电路设计
-	- [X] Core Controller核心控制板 by [@zengwangfa](https://github.com/zengwangfa)	
-	- [X] Underwater_Vehicle主板 by [@zengwangfa](https://github.com/zengwangfa)	
-	- [X] 变焦摄像头驱动控制板 by [@李昕凯](https://github.com/Okurarisona)
-	- [X] 电源主板设计 by [@zengwangfa](https://github.com/zengwangfa)🆕
+	- [X] Core Controller核心控制板 by [@Ian](https://github.com/zengwangfa)	
+	- [X] Underwater_Vehicle主板 by [@Ian](https://github.com/zengwangfa)	
+	- [X] 变焦摄像头驱动控制板 by [@Okurarisona](https://github.com/Okurarisona)
+	- [X] 电源主板设计 by [@Ian](https://github.com/zengwangfa)
 	
 - [X] 控制程序
-    - [X] 外设驱动 by [@zengwangfa](https://github.com/zengwangfa)
-	- [X] 控制简易框架 by [@zengwangfa](https://github.com/zengwangfa)
-	- [X] 通信控制 by [@zengwangfa](https://github.com/zengwangfa)🆕
+    - [X] 外设驱动 by [@Ian](https://github.com/zengwangfa)
+	- [X] 控制简易框架 by [@Ian](https://github.com/zengwangfa)
+	- [X] 通信控制 by [@Ian](https://github.com/zengwangfa)🆕
 
 - [X] 上位机
 	- [X] C#上位机界面 by [@陈信任] 🆕
@@ -106,7 +106,7 @@
 	- [X] 云台3D打印模型 by [@洪华霖]
 
 - [X] 树莓派
-	- [X] 数据Server服务器 by [@FatihBo](https://github.com/FatihBo)🆕
+	- [X] 数据Server服务器 by [@FatihBo](https://github.com/FatihBo)
 
 
 
@@ -114,9 +114,9 @@
 
 ## 7、使用说明
 
-- propeller_power_set <parameter>
-> 设置推进器动力 0~300%
-- set_depth_sensor_type <parameter>
+- propeller_power_set [parameter]
+> 设置推进器动力 <0~300%>
+- set_depth_sensor_type [parameter]
 > 修改深度传感器 类型<ms5737/spl1301/null>
 
 #### 参与贡献
