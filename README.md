@@ -45,9 +45,10 @@
 
 ## 3、机械结构
 
-<center class="half">
-    <img src="/docs/pictures/ROV_Master2.png" /><img src="/docs/pictures/ROV-Model.jpg" />
-</center>
+<figure class="half">
+    <img src="/docs/pictures/ROV_Master2.png">
+	<img src="/docs/pictures/ROV-Model.jpg">
+</figure>
 
 
 - 3维模型
