@@ -1,7 +1,6 @@
 # ROV/AUV航行器控制中心
 
 <p align="center">
-
 [个人主页🕺](https://zengwangfa.top/) |
 [软件说明💻](./software/README.md) |
 [硬件说明📚](./hardware/README.md) |
@@ -15,7 +14,9 @@
   <a href="https://img.shields.io/badge/language-C-RED.svg?style=flat-square"><img src="https://img.shields.io/github/repo-size/zengwangfa/Underwater-Vehicle?style=flat-square" alt="Size"></a>
   <a href="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square"><img src="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square" alt="Python"></a>
 </p>
+
 ## 1、简介
+
 
 | 硬件 | 描述 |
 | -- | -- |

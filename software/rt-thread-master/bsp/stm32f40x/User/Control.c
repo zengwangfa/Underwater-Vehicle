@@ -103,11 +103,14 @@ float Angle_Rad = 0.0f;
   */	
 void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 {
-
+/*
+			50 		100		150		255
+			16%		32%		48%		82%
+*/
 	
 		rt_enter_critical();/* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
 	
-		PropellerPower.PowerPercent = (float)ControlCmd.Power/128;//计算动力百分比 最大时为200%
+		PropellerPower.PowerPercent = (float)ControlCmd.Power/80;//计算动力百分比 最大时为400%
 	
 		speed = sqrt(pow(rc->X,2)+pow(rc->Y,2));	//速度总和
 	
@@ -122,13 +125,12 @@ void FourtAxis_Control(Rocker_Type *rc)		//推进器控制函数
 		
 		
 		/* 直线前进/后退保护   90°±12°    270°±12°*/
-		if( (rc->Angle >= 78 && rc->Angle <= 102) || (rc->Angle >= 258 && rc->Angle <= 282)   )//当摇杆 较为归中时，无视Y轴摇杆值【即仅为前进/后退】
+		if( (rc->Angle >= 78 && rc->Angle <= 102) || (rc->Angle >= 258 && rc->Angle <= 282)  )//当摇杆 较为归中时，无视Y轴摇杆值【即仅为前进/后退】
 		{
 				left_speed   = abs(rc->X) * sin(Angle_Rad);
 				right_speed  = abs(rc->X) * sin(Angle_Rad);
 		}
 		
-
 
 		if(rc->X >= 0){ /* 推力公式 = 方向系数*(动力百分比*摇杆对应的推力值+偏差值) */
 				PropellerPower.leftDown  =  PropellerDir.leftDown  * (PropellerPower.PowerPercent * left_speed  + PropellerError.rightUp);//推力公式 = 
