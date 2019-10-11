@@ -2,11 +2,10 @@
 
 <p align="center">
 
-[个人主页🕺](https://zengwangfa.top/) |
+[个人主页🕺](https://zengwangfa.top/) | 
 [软件说明💻](./software/README.md) |
 [硬件说明📚](./hardware/README.md) |
 [机械说明🎮](./graphic_model/README.md)
-
 </p>
 
 ---
@@ -20,6 +19,7 @@
 
 ## 1、简介
 
+<p align="center">
 
 | 硬件 | 描述 |
 | -- | -- |
@@ -29,6 +29,7 @@
 |FLASH| 1MB |
 |SRAM| 192KB |
 |单元| FPU、DSP |
+</p>
 
 - 系统结构简图：
 ![系统结构简图](/docs/pictures/Structure.jpg "系统结构简图")
