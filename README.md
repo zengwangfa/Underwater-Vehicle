@@ -1,17 +1,21 @@
 # ROV/AUV航行器控制中心
 
+<p align="center">
 
 [个人主页🕺](https://zengwangfa.top/) |
 [软件说明💻](./software/README.md) |
 [硬件说明📚](./hardware/README.md) |
 [机械说明🎮](./graphic_model/README.md)
+</p>
 
 
+<p align="center">
+  <a href="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square"><img src="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square" alt="C"></a>
+  <a href="https://img.shields.io/badge/language-Python-ff69b4.svg?style=flat-square"><img src="https://img.shields.io/badge/language-Python-ff69b4.svg?style=flat-square" alt="Python"></a>
+  <a href="https://img.shields.io/badge/language-C-RED.svg?style=flat-square"><img src="https://img.shields.io/github/repo-size/zengwangfa/Underwater-Vehicle?style=flat-square" alt="Size"></a>
+  <a href="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square"><img src="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square" alt="Python"></a>
+</p>
 ## 1、简介
-![language](https://img.shields.io/badge/language-C-brightgreen.svg) | 
-![language](https://img.shields.io/badge/language-Python-ff69b4.svg) | 
-![language](https://img.shields.io/badge/language-C%23-blue.svg)
----
 
 | 硬件 | 描述 |
 | -- | -- |
@@ -22,10 +26,8 @@
 |SRAM| 192KB |
 |单元| FPU、DSP |
 
-- 系统架构简图：
-![构建图](/docs/pictures/Structure.jpg "构建图")
-
-
+- 系统结构简图：
+![系统结构简图](/docs/pictures/Structure.jpg "系统结构简图")
 
 
 ## 2、目录说明
@@ -45,9 +47,6 @@
 ```
 
 ## 3、机械结构
-
-
-
 - 3维模型
 ![ROV 3D](/docs/pictures/ROVMasetr_Model.png "ROVMaser Model")
 
@@ -55,9 +54,7 @@
 ![Entity](/docs/pictures/Entity.jpg "ROV Entity")
 
 ## 4、软件结构
-
 ![Connect Flow](/docs/pictures/Connect_Flow.jpg "Connect Flow")
-
 
 - Computer Connect![language](https://img.shields.io/badge/language-C%23-blue.svg)
 - Raspberry Pi    ![language](https://img.shields.io/badge/language-Python-ff69b4.svg)
@@ -91,30 +88,24 @@
 
 ## 6、Underwater Vehicle 的进展
 - [X] 电路设计
-	- [X] Core Controller核心控制板 by [@Ian](https://github.com/zengwangfa)	
+    - [X] Core Controller核心控制板 by [@Ian](https://github.com/zengwangfa)	
 	- [X] Underwater_Vehicle主板 by [@Ian](https://github.com/zengwangfa)	
-	- [X] 变焦摄像头驱动控制板 by [@Okurarisona](https://github.com/Okurarisona)
 	- [X] 电源主板设计 by [@Ian](https://github.com/zengwangfa)
 	
 - [X] 控制程序
     - [X] 外设驱动 by [@Ian](https://github.com/zengwangfa)
 	- [X] 控制简易框架 by [@Ian](https://github.com/zengwangfa)
-	- [X] 通信控制 by [@Ian](https://github.com/zengwangfa)🆕
-
+	- [X] 通信控制 by [@Ian](https://github.com/zengwangfa)
+	- [X] 定向控制算法 by [@Okurarisona](https://github.com/Okurarisona)🆕
 - [X] 上位机
-	- [X] C#上位机界面 by [@陈信任] 🆕
-	- [X] 遥控器通信控制 by [@陈信任]	
-	
+	- [X] C#上位机 by [@陈信任] 🆕
+
 - [X] 机械结构
 	- [X] 框架式结构CAD设计 by [@林麟亮] 🆕
 	- [X] 电子仓、电源仓设计 by [@林麟亮]
-	- [X] 云台3D打印模型 by [@洪华霖]
 
 - [X] 树莓派
 	- [X] 数据Server服务器 by [@FatihBo](https://github.com/FatihBo)
-
-
-
 
 
 ## 7、使用说明
@@ -130,6 +121,7 @@
 - 新建 Feat_xxx 分支
 - 提交代码
 - 新建 Pull Request
+- [点击联系我](Mailto:zengwangfa@outlook.com)
 
 
 
