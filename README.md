@@ -7,6 +7,7 @@
 [机械说明🎮](./graphic_model/README.md)
 </p>
 
+---
 
 <p align="center">
   <a href="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square"><img src="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square" alt="C"></a>
