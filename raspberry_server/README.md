@@ -14,7 +14,7 @@
 - 二、桌面式自启动
 
 
-## 2.1系统脚本式自启动
+## 2.1 系统脚本式自启动
 
 - 1.将/etc/rc.local中的rc.local替换掉（如果需要多个摄像头，）
 - 2.server.py 放 /home/pi 下
@@ -25,11 +25,12 @@ sudo chmod +x /etc/rc.local
 `
 使脚本生效（可执行）
 
-> 当发现rc.local中的服务未自启动，输入命令： `sudo systemctl status rc-local` 可以检查服务状态（正常状态如下图），如未启动可根据提示的报错信息进行相应的修改
+---
+- 当发现rc.local中的服务**并未自启动**，输入命令： `sudo systemctl status rc-local` 可以检查服务状态（正常状态如下图），如未启动可根据提示的**报错信息**进行相应的修改
 
 ![rc.local服务状态](../docs/pictures/status_rc-local.jpg "rc.local服务状态")
 
-## 2.2桌面式启动器	
+## 2.2 桌面式启动器	
 - 1.server.py 放 /home/pi 下
 - 2.autostart文件夹为 放置在树莓派 /home/pi/.config 文件夹下 **实现开机自启动**【树莓派服务器】以及【MJPG视频推流】
 	- Server.desktop :【树莓派服务器】
@@ -39,6 +40,6 @@ sudo chmod +x /etc/rc.local
 
 
 ## 3.延迟测试
-- 硬件平台：树莓派3B+
+- 硬件平台：树莓派3B+（粗略测试）
 
 ![video_delay_test_on_raspberry_pi](../docs/pictures/video_delay_test_on_raspberry_pi.png "树莓派推流延迟测试")
