@@ -11,10 +11,10 @@
 ---
 
 <p align="center">
-  <a href="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square"><img src="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square" alt="C"></a>
-  <a href="https://img.shields.io/badge/language-Python-ff69b4.svg?style=flat-square"><img src="https://img.shields.io/badge/language-Python-ff69b4.svg?style=flat-square" alt="Python"></a>
-  <a href="https://img.shields.io/badge/language-C-RED.svg?style=flat-square"><img src="https://img.shields.io/github/repo-size/zengwangfa/Underwater-Vehicle?style=flat-square" alt="Size"></a>
-  <a href="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square"><img src="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square" alt="Python"></a>
+  <a href="https://zh.wikipedia.org/wiki/C%E8%AF%AD%E8%A8%80"><img src="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square" alt="C"></a>
+  <a href="https://zh.wikipedia.org/wiki/Python"><img src="https://img.shields.io/badge/language-Python-ff69b4.svg?style=flat-square" alt="Python"></a>
+  <a href="https://img.shields.io"><img src="https://img.shields.io/github/repo-size/zengwangfa/Underwater-Vehicle?style=flat-square" alt="Size"></a>
+  <a href="https://zh.wikipedia.org/wiki/%E6%A0%91%E8%8E%93%E6%B4%BE"><img src="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square" alt="Python"></a>
 </p>
 
 ## 1、简介
@@ -41,10 +41,10 @@
 |---- docs: 【设计文档】
 |---- hardware:【电路设计】      
 |---+ software:【软件设计】
-|       ├──README.md
-|       ├──rt-thread-master
-|            └──bsp
-|               └──stm32f407【控制程序】
+       ├──README.md
+       ├──rt-thread-master
+            └──bsp
+               └──stm32f407【控制程序】
 |---- graphic_model:【机械模型】
 |---- raspberry_server:【树莓派服务】
 |---- tools:【调试工具】
