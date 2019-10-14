@@ -1,8 +1,8 @@
+#2019.10.14 修复了兼容平台问题
 
 import socket
 import time
 import sys
-import RPi.GPIO as GPIO
 import serial
 import threading
 
@@ -32,9 +32,6 @@ print("Connection accepted from %s." %client_ip)
 #socket_con.send("Welcome to RPi TCP server!".encode())
 
 
-
-
-
 close_flag = 0
 
 def ser_read():
@@ -57,11 +54,6 @@ def ser_read():
 thread_read = threading.Thread(target=ser_read)
 thread_read.start()
 
-
-#GPIO.setwarnings(Flase)
-#GPIO.setmode(GPIO.BOARD)
-#GPIO.setup(11,GPIO.OUT)
-
 print("Receiving package...")
 while True:
     try:
@@ -70,14 +62,9 @@ while True:
         print(len(data))
         if len(data) > 0:
             print("Received:%s" % data)
-            #if data == '1':
-                #GPIO.output(11, GPIO.HIGH)
-            #elif data == '0':
-                #GPIO.output(11, GPIO.LOW)
             #socket_con.send(data)
             print(data)
             ser.write(data)
-           # time.sleep(1)
             continue
     except Exception:
         print('I close')
