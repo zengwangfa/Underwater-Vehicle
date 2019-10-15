@@ -19,8 +19,8 @@
 
 ## 1、简介
 
-<p align="center">
 
+<center>
 | 硬件 | 描述 |
 | -- | -- |
 |芯片型号| STM32F407ZGT6 |
@@ -29,7 +29,7 @@
 |FLASH| 1MB |
 |SRAM| 192KB |
 |单元| FPU、DSP |
-</p>
+</center>
 
 - 系统结构简图：
 ![系统结构简图](/docs/pictures/Structure.jpg "系统结构简图")
