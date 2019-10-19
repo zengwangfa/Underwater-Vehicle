@@ -22,6 +22,12 @@
 #include "filter.h"
 #include "drv_spl1301.h"
 
+/* 
+ * strcmp 函数风格改写 
+ * Usage: if(STRCMP(str1, ==,str2)) 
+ */
+#define STRCMP(str1,E,str2) strcmp(str1,str2) E 0
+
 /*----------------------- Variable Declarations -----------------------------*/
 char *Depth_Sensor_Name[3] = {"MS5837","SPL1301","null"};
 
@@ -229,7 +235,7 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
         goto _exit;
     }
 		
-	  if( !strcmp(argv[1],"ms5837") ) {
+	  if( STRCMP(argv[1],==,"ms5837") ) {
 				 
 				Sensor.DepthSensor.Type = MS5837; //
 				Flash_Update();
@@ -237,7 +243,7 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 				log_i("Sensor.DepthSensor.Type :%s",Depth_Sensor_Name[Sensor.DepthSensor.Type]);
 				log_i("Please reboot now");		
 		}
-	  else if( !strcmp(argv[1],"spl1301") ) {
+	  else if( STRCMP(argv[1],==,"spl1301") ) {
 				 
 				Sensor.DepthSensor.Type = SPL1301; //
 				Flash_Update();
@@ -246,7 +252,7 @@ static int set_depth_sensor_type(int argc, char **argv) //只能是 0~3.0f
 				log_i("Please reboot now");				
 		}	
 
-	  else if( !strcmp(argv[1],"null") ) {
+	  else if( STRCMP(argv[1],==,"null") ) {
 				 
 				Sensor.DepthSensor.Type = DS_NULL; //无深度传感器
 				Flash_Update();
@@ -274,14 +280,14 @@ static int set_battery_capacity(int argc, char **argv)
         goto _exit;
     }
 		
-	  if( !strcmp(argv[1],"3s") ) {
+	  if( STRCMP(argv[1],==,"3s") ) {
 				 
 				Sensor.PowerSource.Capacity = 4.2*3; // 3s->12.6v的满电压
 				Flash_Update();
 	
 				log_i("Sensor.PowerSource.Capacity :%f v",Sensor.PowerSource.Capacity);
 		}
-	  else if( !strcmp(argv[1],"4s") ) {
+	  else if( STRCMP(argv[1],==,"4s") ) {
 				 
 				Sensor.PowerSource.Capacity = 4.2*4; // 4s->16.8v的满电压
 				Flash_Update();
@@ -289,7 +295,7 @@ static int set_battery_capacity(int argc, char **argv)
 				log_i("Sensor.PowerSource.Capacity :%f v",Sensor.PowerSource.Capacity);
 		}		
 		
-		else if( !strcmp(argv[1],"6s") ) {
+		else if( STRCMP(argv[1],==,"6s") ) {
 				 
 				Sensor.PowerSource.Capacity = 4.2*6; // 6s->25.2v的满电压
 				Flash_Update();
