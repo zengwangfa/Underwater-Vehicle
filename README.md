@@ -20,7 +20,7 @@
 ## 1、简介
 
 
-<center>
+
 | 硬件 | 描述 |
 | -- | -- |
 |芯片型号| STM32F407ZGT6 |
@@ -29,7 +29,6 @@
 |FLASH| 1MB |
 |SRAM| 192KB |
 |单元| FPU、DSP |
-</center>
 
 - 系统结构简图：
 ![系统结构简图](/docs/pictures/Structure.jpg "系统结构简图")
@@ -106,8 +105,8 @@
 	- [X] C#上位机 by [@陈信任] 🆕
 
 - [X] 机械结构
-	- [X] 框架式结构CAD设计 by [@林麟亮] 🆕
-	- [X] 电子仓、电源仓设计 by [@林麟亮]
+	- [X] 框架式结构CAD设计 by [@JackyLin](https://github.com/JackyLin1205) 🆕
+	- [X] 电子仓、电源仓设计 by [@JackyLin](https://github.com/JackyLin1205)
 
 - [X] 树莓派
 	- [X] 数据Server服务器 by [@FatihBo](https://github.com/FatihBo)
