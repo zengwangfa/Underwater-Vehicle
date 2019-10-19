@@ -21,14 +21,14 @@
 
 
 
-| 硬件 | 描述 |
-| -- | -- |
-|芯片型号| STM32F407ZGT6 |
-|CPU| Cortex-M4 |
-|主频| 168MHz |
-|FLASH| 1MB |
-|SRAM| 192KB |
-|单元| FPU、DSP |
+| 硬件 | 主控制器(STM32) | 视频与指令服务器(Raspberry Pi) | 
+| :--: | :--: | :--: |
+|芯片型号| [STM32F407ZGT6](/docs/DataSheet/STM32F407ZGT6.pdf) | [BCM2837B0](/docs/DataSheet/BCM2835-ARM-Peripherals.pdf) |
+|CPU| 32位 Cortex-M4(ARMv7) | 64位 Cortex-A53(ARMv8) |
+|主频| 168MHz | 1.4GHz |
+|RAM| 192KB | 1GB |
+|外存| 1MB(FLASH) | SD Card(MAX:128GB) |
+|单元| FPU、DSP | 千兆以太网 |
 
 - 系统结构简图：
 ![系统结构简图](/docs/pictures/Structure.jpg "系统结构简图")
