@@ -1,11 +1,10 @@
 # ROV/AUV航行器控制中心
 
 <p align="center">
-
-[个人主页🕺](https://zengwangfa.top/) | 
-[软件说明💻](./software/README.md) |
-[硬件说明📚](./hardware/README.md) |
-[机械说明🎮](./graphic_model/README.md)
+  <a href="https://zengwangfa.top/">个人主页🕺|</a>
+  <a href="./software/README.md">软件说明💻|</a>
+  <a href="./hardware/README.md">硬件说明📚|</a>
+  <a href="./graphic_model/README.md">机械说明🎮|</a>
 </p>
 
 ---
@@ -21,15 +20,15 @@
 
 
 
-| 硬件 | 主控制器(STM32) | 视频与指令服务器(Raspberry Pi) | 
+| 硬件 | 主控制器(STM32) | 视频与指令服务器(树莓派3B+) | 
 | :--: | :--: | :--: |
 |芯片型号| [STM32F407ZGT6](/docs/DataSheet/STM32F407ZGT6.pdf) | [BCM2837B0](/docs/DataSheet/BCM2835-ARM-Peripherals.pdf) |
 |CPU| 32位 Cortex-M4(ARMv7) | 64位 Cortex-A53(ARMv8) |
 |主频| 168MHz | 1.4GHz |
 |RAM| 192KB | 1GB |
-|外存| 1MB(FLASH) | SD Card(MAX:128GB) |
+|外存| 1MB(FLASH) | 32GB(SD) |
 |单元| FPU、DSP | 千兆以太网 |
-
+|操作系统| [RT-Thread](https://www.rt-thread.org/) | [Liunx](https://www.linux.org/) |
 - 系统结构简图：
 ![系统结构简图](/docs/pictures/Structure.jpg "系统结构简图")
 
@@ -40,10 +39,10 @@
 |---- docs: 【设计文档】
 |---- hardware:【电路设计】      
 |---+ software:【软件设计】
-       ├──README.md
-       ├──rt-thread-master
-            └──bsp
-               └──stm32f407【控制程序】
+|       ├──README.md
+|       ├──rt-thread-master
+|            └──bsp
+|               └──stm32f407【控制程序】
 |---- graphic_model:【机械模型】
 |---- raspberry_server:【树莓派服务】
 |---- tools:【调试工具】
@@ -100,7 +99,7 @@
     - [X] 外设驱动 by [@Ian](https://github.com/zengwangfa)
 	- [X] 控制简易框架 by [@Ian](https://github.com/zengwangfa)
 	- [X] 通信控制 by [@Ian](https://github.com/zengwangfa)
-	- [X] 定向控制算法 by [@Okurarisona](https://github.com/Okurarisona)🆕
+	- [X] 定向控制算法 by [@Okurarisona](https://github.com/Okurarisona) 🆕
 - [X] 上位机
 	- [X] C#上位机 by [@陈信任] 🆕
 
@@ -118,7 +117,7 @@
 > 设置推进器动力 <0~300%>
 - set_depth_sensor_type [parameter]
 > 修改深度传感器 类型<ms5737/spl1301/null>
-
+...
 #### 参与贡献
 
 - Fork 本仓库
