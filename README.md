@@ -4,7 +4,7 @@
   <a href="https://zengwangfa.top/">个人主页🕺|</a>
   <a href="./software/README.md">软件说明💻|</a>
   <a href="./hardware/README.md">硬件说明📚|</a>
-  <a href="./graphic_model/README.md">机械说明🎮|</a>
+  <a href="./graphic_model/README.md">机械说明🎮</a>
 </p>
 
 ---
@@ -13,7 +13,7 @@
   <a href="https://zh.wikipedia.org/wiki/C%E8%AF%AD%E8%A8%80"><img src="https://img.shields.io/badge/language-C-brigreen.svg?style=flat-square" alt="C"></a>
   <a href="https://zh.wikipedia.org/wiki/Python"><img src="https://img.shields.io/badge/language-Python-ff69b4.svg?style=flat-square" alt="Python"></a>
   <a href="https://img.shields.io"><img src="https://img.shields.io/github/repo-size/zengwangfa/Underwater-Vehicle?style=flat-square" alt="Size"></a>
-  <a href="https://zh.wikipedia.org/wiki/%E6%A0%91%E8%8E%93%E6%B4%BE"><img src="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square" alt="Python"></a>
+  <a href="https://zh.wikipedia.org/wiki/%E6%A0%91%E8%8E%93%E6%B4%BE"><img src="https://img.shields.io/badge/-Raspberry%20Pi-pink.svg?style=flat-square" alt="Raspberry"></a>
 </p>
 
 ## 1、简介
@@ -54,7 +54,7 @@
 ![ROV 3D](/docs/pictures/ROVMasetr_Model.png "ROVMaser Model")
 
 - 实物图
-![Entity](/docs/pictures/Entity.jpg "ROV Entity")
+![Entity](/docs/pictures/ROV3.jpg "ROV Entity")
 
 ## 4、软件结构
 ![Connect Flow](/docs/pictures/Connect_Flow.jpg "Connect Flow")
