@@ -20,7 +20,7 @@
 
 
 
-| 硬件 | 主控制器(STM32) | 视频与指令服务器(树莓派3B+) | 
+| 硬件 | 主控制器(STM32) | 视频与数据服务器(树莓派3B+) | 
 | :--: | :--: | :--: |
 |芯片型号| [STM32F407ZGT6](/docs/DataSheet/STM32F407ZGT6.pdf) | [BCM2837B0](/docs/DataSheet/BCM2835-ARM-Peripherals.pdf) |
 |CPU| 32位 Cortex-M4(ARMv7) | 64位 Cortex-A53(ARMv8) |
